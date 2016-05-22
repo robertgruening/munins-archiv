@@ -1,0 +1,31 @@
+body,
+select,
+input, input:disabled,
+.linkList a,
+select, input[type="text"],
+textarea{
+font-size: 1em;
+	color: Black;
+}
+
+select,
+input, input:disabled,
+textarea{
+	background-color: White;
+	border: none;	
+}
+
+.formBlock .fieldBlock{
+	border-top: 1px dashed Black;
+}
+
+.linkList a{
+	text-decoration: none;
+}
+
+.notToPrint,
+input[type="button"].delete{
+	display: none;
+}
+
+--webstorms

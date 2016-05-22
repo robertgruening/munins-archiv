@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script src="js/jquery-1.11.3.min.js"></script>
+	<script src="js/ui/jquery-ui-1.11.4/jquery-ui.js"></script>
+	<script src="js/ui/controls/control.List.js"></script>
+	<script src="js/ui/controls/control.FilteredMultiDropdown.js"></script>
+	<script src="js/ui/FundAttribut.html.js"></script>
+	<link rel="stylesheet" type="text/css" href="js/ui/jquery-ui-1.11.4/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="css/print.css" media="print" />
+	<link rel=icon type="image/png" href="images/system/IconMunin_001.png">
+	<title>Fundattribut</title>
+</head>
+<body>		
+	<div class="mainNavigation notToPrint">
+		<ul>
+			<li><a href=Ablage.html>zum Formular: Ablage</a></li>
+			<li><a href=Fund.html>zum Formular: Fund</a></li>
+			<li><a href=FundAttribut.html>zum Formular: Fundattribut</a></li>
+			<li><a href=Kontext.html>zum Formular: Kontext</a></li>
+		</ul>
+	</div>
+	<div id=form>
+		<h1>Formular: Fundattribut</h1>
+		<div class="formBlock notToPrint">
+			<h2>Elemente 1. Ordnung</h2>
+			<div id=divRootFundAttribute class=fieldBlock>
+				<img src="images/system/IconHelp.png" class="help notToPrint" title="Diese Elemente dienen als Einstieg, um durch die Gesamtstruktur zu navigieren."/>
+				<label>Fundattribute: </label></br>
+				<div id=divList class=field></div>
+			</div>
+		</div>
+		<div class=formBlock>
+			<h2>Formularfelder</h2>
+			<div class=fieldBlock>
+				<div class=fieldDescription>
+					<img src="images/system/IconHelp.png" class="help notToPrint" title="Vom System vergebene Identifikationsnummer."/>
+					<label>Id: </label>
+				</div>
+				<div class=fieldValue>
+					<input id=textboxId type=text class=field></input>	
+				</div>			
+			</div>
+			<div class=fieldBlock>
+				<div class=fieldDescription>
+					<img src="images/system/IconHelp.png" class="help notToPrint" title="Gibt an, um was für eine Art Attribut es sich handelt."/>
+					<label>Typ: </label>
+				</div>
+				<div class=fieldValue>
+					<select id=selectTypen onchange=selectTypen_onChange() class=field></select>
+				</div>		
+			</div>
+			<div class=fieldBlock>
+				<div class=fieldDescription>
+					<img src="images/system/IconHelp.png" class="help notToPrint" title="Kann ein Merkmal oder ein Charakteristikum sein."/>
+					<label>Bezeichnung: </label>
+				</div>
+				<div class=fieldValue>
+					<input id=textboxBezeichnung type=text class=field></input>		
+				</div>		
+			</div>
+			<div id=divParent class=fieldBlock>
+				<div class=fieldDescription>
+					<img src="images/system/IconHelp.png" class="help notToPrint" title="Elemente können in einer hierarchischen Beziehung mit anderen stehen. Hier befindet sich das übergeordnete Element."/>
+					<label>Übergeordnete Fundattribute: </label>
+				</div>
+				<div class=fieldValue>
+					<input type=text id=textboxParentId class="field notToPrint"></input><br/>
+					<div id=divParentSelections class=field></div>
+				</div>		
+			</div>
+			<div id=divFundAttribute class=fieldBlock>
+				<div class=fieldDescription>
+					<img src="images/system/IconHelp.png" class="help notToPrint" title="Elemente können in einer hierarchischen Beziehung mit anderen stehen. Hier befinden sich die untergeortneten Elemente."/>
+					<label>Kinder: </label>
+				</div>
+				<div class=fieldValue>
+					<div id=divList class=field></div>
+				</div>		
+			</div>
+			<div class="buttonBlock notToPrint">
+				<input type=button id=buttonDelete value=Löschen onclick=buttonDelete_onClick() />
+				<input type=button id=buttonSpeichern value=Speichern onclick=buttonSpeichern_onClick() />
+				<input type=button id=buttonNeu value=Neu onclick=buttonNeu_onClick() />
+			</div>
+		</div>
+	</div>
+</body>
+</html>

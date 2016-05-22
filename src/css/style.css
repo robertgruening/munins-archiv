@@ -1,0 +1,218 @@
+body {
+	font-size: 1.3em;
+}
+
+.linkList li {
+	margin-bottom: 5px;
+}
+
+input, select, textarea {
+	border: 1px solid;
+}
+
+input[type="button"] {
+	border: 1px solid;
+}
+
+.form {
+}
+
+.formBlock .fieldBlock {
+	margin-bottom: 10px;
+	padding-top: 5px;
+	border-top: 1px dashed;
+	overflow: hidden;
+}
+
+.formBlock .buttonBlock {
+	margin-top: 10px;
+	padding-top: 20px;
+	border-top: 1px dashed;
+}
+
+#divKontextSelections select, 
+#divAblageSelections select, 
+#divFundAttributSelections select,
+#divParentSelections select {
+	display: block;
+	margin-top: 5px;
+}
+
+#buttonNeu, #buttonSpeichern {
+	float: right;
+	margin-left: 5px;
+}
+
+.help {
+	height: 14px;
+	width: 14px;
+}
+
+select option {
+	background-repeat: no-repeat;
+	padding-left: 20px;
+}
+
+.mainNavigation ul {
+	display: inline;
+	margin: 0px;
+	padding: 0px;
+}
+
+.mainNavigation ul li{
+	display: inline;
+	margin-right: 6px;
+	height:100%;
+}
+
+.mainNavigation ul li a{
+	padding: 3px 15px 3px 15px;
+	text-decoration: none;
+	border: 1px solid;
+}
+
+-- colors
+
+body {
+	background-color: Ivory;
+	color: black;
+}
+
+a {
+	color: RoyalBlue;
+}
+
+select, input[type="text"],
+textarea {
+	color: RoyalBlue;
+}
+
+select:enabled:hover, select:enabled:focus,
+input[type="text"]:enabled:hover, input[type="text"]:enabled:focus,
+textarea {
+	background-color: LightCyan;
+}
+
+input, select, textarea {
+	background-color: white;
+	border-color: DarkGray;
+}
+
+input:disabled, textarea:disabled {
+	background-color: #EEEEEE;
+	border: 1px solid #AAAAAA;
+}
+
+input[type="button"] {
+	border-color: RoyalBlue;
+	color: RoyalBlue;
+}
+
+input[type="button"]:hover {
+	background-color: LightCyan;
+}
+
+.formBlock .fieldBlock {
+	border-color: DarkGray;
+}
+
+.formBlock .buttonBlock {
+	border-color: DarkGray;
+}
+
+.mainNavigation ul li a {
+	border-color: RoyalBlue;
+	background-color: white;
+}
+
+.mainNavigation ul li a:hover {
+	background-color: LightCyan;
+}
+
+-- boxing and sizing
+
+body {
+	margin: 0px;
+	padding: 0px;
+}
+
+.mainNavigation,
+.form {
+	margin: 0px;
+	padding: 0px 0px 0px 10px;
+	height: 100%;
+}
+
+.noLinkList {
+	display:block;
+}
+
+.linkList {
+	margin-top: 0px;
+	padding-left: 20px;
+}
+
+#divRootFundAttribute {
+	max-width: 300px;
+}
+
+input[type="button"] {
+	width: 100px;
+}
+
+.formBlock {
+	float: left;
+	padding-right: 20px;
+}
+
+.formBlock .fieldBlock {
+	min-height: 25px;
+}
+
+.formBlock .fieldBlock input[type="text"] {
+	min-width: 200px;
+	width: 99%;
+}
+
+.formBlock .fieldBlock textarea {
+	min-width: 200px;
+	width: 99%;
+	height: 100px;
+	resize: vertical;
+}
+
+.formBlock .fieldBlock select {
+	min-width: 204px;
+	width: 100%;
+}
+
+.formBlock .fieldBlock 
+
+input[type="button"] {
+	float: right;
+}
+
+#divParentSelections,
+#divKontextSelections,
+#divFundAttributSelections,
+#divAblageSelections,
+.formButton{
+	clear: right;
+}
+
+.fieldDescription {
+	min-width: 125px;
+	width: 25%;
+	float: left;
+	display: block;
+	--background-color: red;
+}
+
+.fieldValue {
+	min-width: 375px;
+	width: 75%;
+	float: right;
+	display: block;
+	--padding-left: 10px;
+	--background-color: yellow;
+}
