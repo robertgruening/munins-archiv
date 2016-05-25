@@ -160,7 +160,7 @@ function AddAttribut()
 	$("body").append(dialog);
 	LoadMultiDropdownAttribut();
 	$("#dialogAddAttribut").dialog({
-		resizable: false,
+		resizable: true,
 		modal: true,
 		buttons: {
 			"Hinzufügen": function() {
@@ -280,7 +280,7 @@ function buttonDelete_onClick()
 	dialog += "</div>";
 	$("body").append(dialog);
 	$("#dialogDelete").dialog({
-		resizable: false,
+		resizable: true,
 		modal: true,
 		buttons: {
 			"Ja": function() {

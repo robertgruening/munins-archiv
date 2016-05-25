@@ -355,7 +355,7 @@ function buttonDelete_onClick()
 	dialog += "</div>";
 	$("body").append(dialog);
 	$("#dialogDelete").dialog({
-		resizable: false,
+		resizable: true,
 		modal: true,
 		buttons: {
 			"Ja": function() {
@@ -505,7 +505,7 @@ function AddAblage()
 	$("body").append(dialog);
 	LoadMultiDropdownAblage();
 	$("#dialogAddAblage").dialog({
-		resizable: false,
+		resizable: true,
 		modal: true,
 		buttons: {
 			"Hinzufügen": function() {
@@ -588,7 +588,7 @@ function AddLfD()
 	dialog += "</div>";
 	$("body").append(dialog);
 	$("#dialogAddLfD").dialog({
-		resizable: false,
+		resizable: true,
 		modal: true,
 		buttons: {
 			"Ja": function() {
