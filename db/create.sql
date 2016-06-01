@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 4.4.15.5
+-- version 4.4.15.6
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 22, 2016 at 07:55 PM
+-- Generation Time: Jun 01, 2016 at 06:45 PM
 -- Server version: 10.0.22-MariaDB
 -- PHP Version: 5.6.1
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `Munins_Archiv`
 --
-CREATE DATABASE IF NOT EXISTS `Munins_Archiv` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `Munins_Archiv`;
 
 -- --------------------------------------------------------
 
@@ -112,17 +110,6 @@ CREATE TABLE IF NOT EXISTS `FundAttributTyp` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Fund_FundAttribut`
---
-
-CREATE TABLE IF NOT EXISTS `Fund_FundAttribut` (
-  `Fund_Id` int(11) NOT NULL,
-  `FundAttribut_Id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `Fundstelle`
 --
 
@@ -150,6 +137,17 @@ CREATE TABLE IF NOT EXISTS `Fundstelle` (
 CREATE TABLE IF NOT EXISTS `Fundstelle_Flurstuecke` (
   `Fundstelle_Id` int(11) NOT NULL,
   `Flurstueck` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Fund_FundAttribut`
+--
+
+CREATE TABLE IF NOT EXISTS `Fund_FundAttribut` (
+  `Fund_Id` int(11) NOT NULL,
+  `FundAttribut_Id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -201,6 +199,17 @@ CREATE TABLE IF NOT EXISTS `Kontext_LfD` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `Kontext_Ort`
+--
+
+CREATE TABLE IF NOT EXISTS `Kontext_Ort` (
+  `Kontext_Id` int(11) NOT NULL,
+  `Ort_Id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `LfD`
 --
 
@@ -208,6 +217,40 @@ CREATE TABLE IF NOT EXISTS `LfD` (
   `Id` int(11) NOT NULL,
   `TK25Nr` int(11) NOT NULL,
   `Nr` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Ort`
+--
+
+CREATE TABLE IF NOT EXISTS `Ort` (
+  `Id` int(11) NOT NULL,
+  `Bezeichnung` int(11) NOT NULL,
+  `Typ_Id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `OrtTyp`
+--
+
+CREATE TABLE IF NOT EXISTS `OrtTyp` (
+  `Id` int(11) NOT NULL,
+  `Bezeichnung` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Ort_Ort`
+--
+
+CREATE TABLE IF NOT EXISTS `Ort_Ort` (
+  `Ort_Id` int(11) NOT NULL,
+  `ElternOrt_Id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -269,13 +312,6 @@ ALTER TABLE `FundAttributTyp`
   ADD UNIQUE KEY `FundAttributTyp_Bezeichnung` (`Bezeichnung`);
 
 --
--- Indexes for table `Fund_FundAttribut`
---
-ALTER TABLE `Fund_FundAttribut`
-  ADD PRIMARY KEY (`Fund_Id`,`FundAttribut_Id`),
-  ADD KEY `Material_Id` (`FundAttribut_Id`);
-
---
 -- Indexes for table `Fundstelle`
 --
 ALTER TABLE `Fundstelle`
@@ -288,6 +324,13 @@ ALTER TABLE `Fundstelle`
 --
 ALTER TABLE `Fundstelle_Flurstuecke`
   ADD PRIMARY KEY (`Fundstelle_Id`,`Flurstueck`);
+
+--
+-- Indexes for table `Fund_FundAttribut`
+--
+ALTER TABLE `Fund_FundAttribut`
+  ADD PRIMARY KEY (`Fund_Id`,`FundAttribut_Id`),
+  ADD KEY `Material_Id` (`FundAttribut_Id`);
 
 --
 -- Indexes for table `Karton`
@@ -319,11 +362,41 @@ ALTER TABLE `Kontext_LfD`
   ADD KEY `Kontext_Id` (`Kontext_Id`);
 
 --
+-- Indexes for table `Kontext_Ort`
+--
+ALTER TABLE `Kontext_Ort`
+  ADD PRIMARY KEY (`Kontext_Id`,`Ort_Id`),
+  ADD KEY `Kontext_Id` (`Kontext_Id`),
+  ADD KEY `Ort_Id` (`Ort_Id`);
+
+--
 -- Indexes for table `LfD`
 --
 ALTER TABLE `LfD`
   ADD PRIMARY KEY (`Id`),
   ADD UNIQUE KEY `TK25Nummer` (`TK25Nr`,`Nr`) USING BTREE;
+
+--
+-- Indexes for table `Ort`
+--
+ALTER TABLE `Ort`
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `Typ_Id` (`Typ_Id`);
+
+--
+-- Indexes for table `OrtTyp`
+--
+ALTER TABLE `OrtTyp`
+  ADD PRIMARY KEY (`Id`);
+
+--
+-- Indexes for table `Ort_Ort`
+--
+ALTER TABLE `Ort_Ort`
+  ADD PRIMARY KEY (`Ort_Id`,`ElternOrt_Id`),
+  ADD KEY `Ort_Id` (`Ort_Id`),
+  ADD KEY `Ort_Id_2` (`Ort_Id`),
+  ADD KEY `ElternOrt_Id` (`ElternOrt_Id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -370,6 +443,16 @@ ALTER TABLE `KontextTyp`
 ALTER TABLE `LfD`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `Ort`
+--
+ALTER TABLE `Ort`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `OrtTyp`
+--
+ALTER TABLE `OrtTyp`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- Constraints for dumped tables
 --
 
@@ -408,13 +491,6 @@ ALTER TABLE `FundAttribut`
   ADD CONSTRAINT `FundAttribut_ibfk_2` FOREIGN KEY (`Typ_Id`) REFERENCES `FundAttributTyp` (`Id`);
 
 --
--- Constraints for table `Fund_FundAttribut`
---
-ALTER TABLE `Fund_FundAttribut`
-  ADD CONSTRAINT `Fund_FundAttribut_ibfk_1` FOREIGN KEY (`Fund_Id`) REFERENCES `Fund` (`Id`),
-  ADD CONSTRAINT `Fund_FundAttribut_ibfk_2` FOREIGN KEY (`FundAttribut_Id`) REFERENCES `FundAttribut` (`Id`);
-
---
 -- Constraints for table `Fundstelle`
 --
 ALTER TABLE `Fundstelle`
@@ -425,6 +501,13 @@ ALTER TABLE `Fundstelle`
 --
 ALTER TABLE `Fundstelle_Flurstuecke`
   ADD CONSTRAINT `Fundstelle_Flurstuecke_ibfk_1` FOREIGN KEY (`Fundstelle_Id`) REFERENCES `Fundstelle` (`Id`);
+
+--
+-- Constraints for table `Fund_FundAttribut`
+--
+ALTER TABLE `Fund_FundAttribut`
+  ADD CONSTRAINT `Fund_FundAttribut_ibfk_1` FOREIGN KEY (`Fund_Id`) REFERENCES `Fund` (`Id`),
+  ADD CONSTRAINT `Fund_FundAttribut_ibfk_2` FOREIGN KEY (`FundAttribut_Id`) REFERENCES `FundAttribut` (`Id`);
 
 --
 -- Constraints for table `Karton`
@@ -445,6 +528,26 @@ ALTER TABLE `Kontext`
 ALTER TABLE `Kontext_LfD`
   ADD CONSTRAINT `Kontext_LfD_ibfk_2` FOREIGN KEY (`Kontext_Id`) REFERENCES `Kontext` (`Id`),
   ADD CONSTRAINT `Kontext_LfD_ibfk_3` FOREIGN KEY (`LfD_Id`) REFERENCES `LfD` (`Id`);
+
+--
+-- Constraints for table `Kontext_Ort`
+--
+ALTER TABLE `Kontext_Ort`
+  ADD CONSTRAINT `Kontext_Ort_ibfk_1` FOREIGN KEY (`Kontext_Id`) REFERENCES `Kontext` (`Id`),
+  ADD CONSTRAINT `Kontext_Ort_ibfk_2` FOREIGN KEY (`Ort_Id`) REFERENCES `Ort` (`Id`);
+
+--
+-- Constraints for table `Ort`
+--
+ALTER TABLE `Ort`
+  ADD CONSTRAINT `Ort_ibfk_1` FOREIGN KEY (`Typ_Id`) REFERENCES `OrtTyp` (`Id`);
+
+--
+-- Constraints for table `Ort_Ort`
+--
+ALTER TABLE `Ort_Ort`
+  ADD CONSTRAINT `Ort_Ort_ibfk_1` FOREIGN KEY (`Ort_Id`) REFERENCES `Ort` (`Id`),
+  ADD CONSTRAINT `Ort_Ort_ibfk_2` FOREIGN KEY (`ElternOrt_Id`) REFERENCES `Ort` (`Id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
