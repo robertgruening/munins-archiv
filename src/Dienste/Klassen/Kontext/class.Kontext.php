@@ -27,6 +27,25 @@ class Kontext extends TreeElement
 	public function AddAblage($ablage)
 	{
 		$this->SaveAssociationWithAblage($ablage);
+	}
+			
+	// Orte
+	public function GetOrte()
+	{
+		return $this->LoadOrte();
+	}
+	
+	public function SetOrte($orte)
+	{
+		for ($i = 0; $i < count($orte); $i++)
+		{
+			$this->AddOrt($orte[$i]);
+		}
+	}
+	
+	public function AddOrt($ort)
+	{
+		$this->SaveAssociationWithOrt($ort);
 	}	
 	
 	// Funde
@@ -139,6 +158,100 @@ class Kontext extends TreeElement
 		{
 			array_push($assocArrayAblagen, $ablagen[$i]->ConvertRootChainToAssocArray());
 			$assocArray["Ablagen"] =  $assocArrayAblagen;
+		}
+		
+		// Funde
+		$assocArrayFunde = array();
+		$funde = $this->GetFunde();			
+		for ($i = 0; $i < count($funde); $i++)
+		{
+			array_push($assocArrayFunde, $funde[$i]->ConvertToAssocArray());
+			$assocArray["Funde"] =  $assocArrayFunde;
+		}
+		
+		return $assocArray;
+	}
+	
+	protected function LoadOrte()
+	{
+		$id = $this->GetId();
+		$orte = array();
+		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{			
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query("SELECT Ort_Id
+							FROM Kontext_Ort
+							WHERE Kontext_Id = ".$id.";");
+			if (!$mysqli->errno)
+			{
+				while ($datensatz = $ergebnis->fetch_assoc())
+				{
+					$ort = new Ort();
+					$ort->LoadById(intval($datensatz["Ort_Id"]));
+					array_push($orte, $ort);
+				}
+			}
+		}
+		
+		$mysqli->close();
+		return $orte;
+	}
+
+	protected function SaveAssociationWithOrt($ort)
+	{
+		if (!$this->IsAssociatedWithOrt($ort))
+		{
+			$id = $this->GetId();
+			$ort_Id = $ort->GetId();
+				
+			$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+			
+			if (!$mysqli->connect_errno)
+			{
+				$mysqli->set_charset("utf8");
+				$ergebnis = $mysqli->query("INSERT INTO Kontext_Ort(Kontext_Id, Ort_Id)
+											VALUES(".$id.", ".$ort_Id.");");
+			}
+			$mysqli->close();
+		}
+	}
+
+	protected function IsAssociatedWithOrt($ort)
+	{
+		$isAssociatedWithAblage = false;
+		$id = $this->GetId();
+		$ort_Id = $ort->GetId();
+		
+		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query("SELECT COUNT(Kontext_Id) AS Anzahl
+										FROM Kontext_Ort
+										WHERE Kontext_Id = ".$id." AND
+										Ort_Id = ".$ort_Id.";");
+			$datensatz = $ergebnis->fetch_assoc();
+			$isAssociatedWithOrt = intval($datensatz["Anzahl"]) == 0 ? false : true;
+		}
+		$mysqli->close();
+		
+		return $isAssociatedWithAblage;
+	}
+	
+	public function ConvertToAssocArrayWithOrten($childrenDepth)
+	{
+		$assocArray = $this->ConvertToAssocArray($childrenDepth);
+		
+		// Orte
+		$assocArrayOrte = array();
+		$orte = $this->GetOrte();			
+		for ($i = 0; $i < count($orte); $i++)
+		{
+			array_push($assocArrayOrte, $orte[$i]->ConvertToAssocArray(0));
+			$assocArray["Orte"] =  $assocArrayOrte;
 		}
 		
 		// Funde

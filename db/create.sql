@@ -227,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `LfD` (
 
 CREATE TABLE IF NOT EXISTS `Ort` (
   `Id` int(11) NOT NULL,
-  `Bezeichnung` int(11) NOT NULL,
+  `Bezeichnung` varchar(25) NOT NULL,
   `Typ_Id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -250,7 +250,7 @@ CREATE TABLE IF NOT EXISTS `OrtTyp` (
 
 CREATE TABLE IF NOT EXISTS `Ort_Ort` (
   `Ort_Id` int(11) NOT NULL,
-  `ElternOrt_Id` int(11) NOT NULL
+  `Parent_Id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
