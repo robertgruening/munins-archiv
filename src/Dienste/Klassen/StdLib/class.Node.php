@@ -150,7 +150,7 @@ class Node
 		return "SELECT Id
 				FROM ".$this->GetTableName()."
 				WHERE Parent_Id IS NULL
-				ORDER BY Typ_Id ASC, Bezeichnung ASC;";
+				ORDER BY Bezeichnung ASC;";
 	}
 	
 	public function LoadChildren()
