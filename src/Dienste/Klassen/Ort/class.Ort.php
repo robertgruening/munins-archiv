@@ -1,10 +1,10 @@
 <?php
 include_once(__DIR__."/../config.php");
-include_once(__DIR__."/../StdLib/class.TypedNetNode.php");
+include_once(__DIR__."/../StdLib/class.TypedNode.php");
 include_once(__DIR__."/class.OrtTyp.php");
 include_once(__DIR__."/../Kontext/class.Kontext.php");
 
-class Ort extends TypedNetNode
+class Ort extends TypedNode
 {
 	// variables
 	protected $_tableName = "Ort";
