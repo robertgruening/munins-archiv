@@ -92,8 +92,10 @@ function LoadAblagen()
 function LoadCounts()
 {
 	LoadCount("Ablage");
-	LoadCount("Kontext");
 	LoadCount("Fund");
+	LoadCount("FundAttribut");
+	LoadCount("Kontext");
+	LoadCount("Ort");
 }
 
 function LoadCount(typ)

@@ -69,8 +69,8 @@ class Ablage extends TreeElement
 		{			
 			$mysqli->set_charset("utf8");
 			$ergebnis = $mysqli->query("SELECT Kontext_Id
-							FROM Ablage_Kontext
-							WHERE Ablage_Id = ".$id.";");
+										FROM Ablage_Kontext
+										WHERE Ablage_Id = ".$id.";");
 			if (!$mysqli->errno)
 			{
 				while ($datensatz = $ergebnis->fetch_assoc())

@@ -3,8 +3,10 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
 require_once("Klassen/Ablage/class.Ablage.php");
-require_once("Klassen/Kontext/class.Kontext.php");
 require_once("Klassen/Fund/class.Fund.php");
+require_once("Klassen/Fund/class.FundAttribut.php");
+require_once("Klassen/Kontext/class.Kontext.php");
+require_once("Klassen/Ort/class.Ort.php");
 
 if (isset($_POST["Typ"]))
 {
@@ -13,11 +15,6 @@ if (isset($_POST["Typ"]))
 	
 	switch($typ)
 	{
-		case "Kontext" : 
-		{
-			$element = new Kontext();
-			break;
-		}
 		case "Ablage" : 
 		{
 			$element = new Ablage();
@@ -26,6 +23,21 @@ if (isset($_POST["Typ"]))
 		case "Fund" : 
 		{
 			$element = new Fund();
+			break;
+		}
+		case "FundAttribut" : 
+		{
+			$element = new FundAttribut();
+			break;
+		}
+		case "Kontext" : 
+		{
+			$element = new Kontext();
+			break;
+		}
+		case "Ort" : 
+		{
+			$element = new Ort();
 			break;
 		}
 		default :

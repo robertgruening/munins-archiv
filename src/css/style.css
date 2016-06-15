@@ -14,9 +14,6 @@ input[type="button"] {
 	border: 1px solid;
 }
 
-.form {
-}
-
 .formBlock .fieldBlock {
 	margin-bottom: 10px;
 	padding-top: 5px;
@@ -51,6 +48,15 @@ input[type="button"] {
 select option {
 	background-repeat: no-repeat;
 	padding-left: 20px;
+}
+
+.mainNavigation {
+	margin: 0;
+	padding: 10px 0 15px 10px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	border-bottom: 1px solid;
 }
 
 .mainNavigation ul {
@@ -120,12 +126,21 @@ input[type="button"]:hover {
 	border-color: DarkGray;
 }
 
+.mainNavigation {
+	background-color: white;
+	border-color: DarkGray;
+}
+
 .mainNavigation ul li a {
 	border-color: RoyalBlue;
 	background-color: white;
 }
 
 .mainNavigation ul li a:hover {
+	background-color: LightCyan;
+}
+
+.mainNavigation ul li a.activeFormular {
 	background-color: LightCyan;
 }
 
@@ -136,10 +151,9 @@ body {
 	padding: 0px;
 }
 
-.mainNavigation,
 .form {
 	margin: 0px;
-	padding: 0px 0px 0px 10px;
+	padding: 40px 0px 0px 10px;
 	height: 100%;
 }
 
@@ -215,4 +229,12 @@ input[type="button"] {
 	display: block;
 	--padding-left: 10px;
 	--background-color: yellow;
+}
+
+.mainNavigation ul li a{
+	min-width: 150px;
+}
+
+.mainNavigation {
+	width: 100%;
 }

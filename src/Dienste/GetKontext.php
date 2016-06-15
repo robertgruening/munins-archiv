@@ -6,6 +6,7 @@ require_once("Klassen/Kontext/class.Kontext.php");
 require_once("Klassen/Kontext/class.Begehungsflaeche.php");
 require_once("Klassen/Kontext/class.Begehung.php");
 require_once("Klassen/Ablage/class.Ablage.php");
+require_once("Klassen/Ort/class.Ort.php");
 
 if (isset($_POST["Id"]))
 {
@@ -31,6 +32,18 @@ else if (isset($_POST["AblageId"]))
 	$ablage = new Ablage();
 	$ablage->LoadById(intval($_POST["AblageId"]));
 	$kontexte = $ablage->GetKontexte();
+	for ($i = 0; $i < count($kontexte); $i++)
+	{
+		array_push($assocArrayKontexte, $kontexte[$i]->ConvertToAssocArray(1000));
+	}
+	echo json_encode($assocArrayKontexte);
+}
+else if (isset($_POST["OrtId"]))
+{
+	$assocArrayKontexte = array();
+	$ort = new Ort();
+	$ort->LoadById(intval($_POST["OrtId"]));
+	$kontexte = $ort->GetKontexte();
 	for ($i = 0; $i < count($kontexte); $i++)
 	{
 		array_push($assocArrayKontexte, $kontexte[$i]->ConvertToAssocArray(1000));
