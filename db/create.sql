@@ -284,8 +284,7 @@ ALTER TABLE `Ablage_Kontext`
 -- Indexes for table `Begehung`
 --
 ALTER TABLE `Begehung`
-  ADD PRIMARY KEY (`Id`),
-  ADD FULLTEXT KEY `Kommentar` (`Kommentar`);
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indexes for table `Fund`
@@ -293,8 +292,7 @@ ALTER TABLE `Begehung`
 ALTER TABLE `Fund`
   ADD PRIMARY KEY (`Id`),
   ADD KEY `Kontext_Id` (`Kontext_Id`),
-  ADD KEY `Ablage_Id` (`Ablage_Id`),
-  ADD FULLTEXT KEY `Beschriftung` (`Bezeichnung`);
+  ADD KEY `Ablage_Id` (`Ablage_Id`);
 
 --
 -- Indexes for table `FundAttribut`
@@ -393,10 +391,9 @@ ALTER TABLE `OrtTyp`
 -- Indexes for table `Ort_Ort`
 --
 ALTER TABLE `Ort_Ort`
-  ADD PRIMARY KEY (`Ort_Id`,`ElternOrt_Id`),
+  ADD PRIMARY KEY (`Ort_Id`,`Parent_Id`),
   ADD KEY `Ort_Id` (`Ort_Id`),
-  ADD KEY `Ort_Id_2` (`Ort_Id`),
-  ADD KEY `ElternOrt_Id` (`ElternOrt_Id`);
+  ADD KEY `Parent_Id` (`Parent_Id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -547,7 +544,7 @@ ALTER TABLE `Ort`
 --
 ALTER TABLE `Ort_Ort`
   ADD CONSTRAINT `Ort_Ort_ibfk_1` FOREIGN KEY (`Ort_Id`) REFERENCES `Ort` (`Id`),
-  ADD CONSTRAINT `Ort_Ort_ibfk_2` FOREIGN KEY (`ElternOrt_Id`) REFERENCES `Ort` (`Id`);
+  ADD CONSTRAINT `Ort_Ort_ibfk_2` FOREIGN KEY (`Parent_Id`) REFERENCES `Ort` (`Id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
