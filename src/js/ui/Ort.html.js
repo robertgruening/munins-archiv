@@ -332,7 +332,7 @@ function LoadOrtById(id)
 					ort.Children.length > 0)
 				{
 					parent = ort;
-					ablage = ort.Children[0];				
+					ort = ort.Children[0];				
 				}
 				ort.Parent = parent;
 				SetOrtJSON(ort);
