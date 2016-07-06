@@ -5,18 +5,18 @@ ini_set("display_errors", 1);
 require_once("Klassen/Ort/class.Ort.php");
 require_once("Klassen/Kontext/class.Kontext.php");
 
-if (isset($_GET["Id"]))
+if (isset($_POST["Id"]))
 {
 	$ort = new Ort();
-	$ort->LoadById(intval($_GET["Id"]));
+	$ort->LoadById(intval($_POST["Id"]));
 	
 	echo json_encode($ort->ConvertToAssocArray(0));
 }
-else if (isset($_GET["KontextId"]))
+else if (isset($_POST["KontextId"]))
 {
 	$assocArrayOrte = array();
 	$kontext = new Kontext();
-	$kontext->LoadById(intval($_GET["KontextId"]));
+	$kontext->LoadById(intval($_POST["KontextId"]));
 	$orte = $kontext->GetOrte();
 	for ($i = 0; $i < count($orte); $i++)
 	{

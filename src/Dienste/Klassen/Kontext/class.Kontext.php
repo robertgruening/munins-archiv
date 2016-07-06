@@ -3,6 +3,7 @@ include_once(__DIR__."/../config.php");
 include_once(__DIR__."/../StdLib/class.TreeElement.php");
 include_once(__DIR__."/class.KontextTyp.php");
 include_once(__DIR__."/../Ablage/class.Ablage.php");
+include_once(__DIR__."/../Ort/class.Ort.php");
 
 class Kontext extends TreeElement
 {
@@ -182,8 +183,8 @@ class Kontext extends TreeElement
 		{			
 			$mysqli->set_charset("utf8");
 			$ergebnis = $mysqli->query("SELECT Ort_Id
-							FROM Kontext_Ort
-							WHERE Kontext_Id = ".$id.";");
+										FROM Kontext_Ort
+										WHERE Kontext_Id = ".$id.";");
 			if (!$mysqli->errno)
 			{
 				while ($datensatz = $ergebnis->fetch_assoc())

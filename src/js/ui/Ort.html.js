@@ -8,6 +8,7 @@ $(document).ready(function() {
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
 	
+	$("#buttonAddTeil").click(function() { AddTeil(); });
 	$("#buttonAddKontext").click(function() { AddKontext(); });
 	
 	LoadSelectionTyp();
@@ -86,6 +87,7 @@ function SetOrtJSON(ort)
 	SelectTypId(ort.Typ.Id);
 	LoadListChildren(ort.Id);
 	LoadListKontexte(ort.Id);
+	LoadListTeile(ort.Id);
 	
 	if (ort.Parent == undefined ||
 		ort.Parent == null)
@@ -143,10 +145,7 @@ function LoadListChildren(ortId)
 		Data : data,
 		SetListItemText : function(element)
 		{
-			if (element.FullBezeichnung == "")
-				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
-			
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
 		ListItemLink : "Ort.html"
 	});
@@ -165,6 +164,12 @@ function LoadListKontexte(ortId)
 	$("#divKontexte #divList").List(
 	{
 		UrlGetElements : "Dienste/GetKontext.php",
+		UrlDeleteAssociation : "Dienste/DeleteAssociation.php",
+		SetData : function(kontextId)
+		{
+			return data = { OrtId : ortId,
+							KontextId : kontextId };
+		},
 		Data : data,
 		SetListItemText : function(element)
 		{
@@ -173,7 +178,40 @@ function LoadListKontexte(ortId)
 				
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
-		ListItemLink : "Kontext.html"
+		ListItemLink : "Kontext.html",
+		IsDeletable : true
+	});
+}
+
+function LoadListTeile(ortId)
+{
+	var data = null;
+	
+	if (ortId != undefined &&
+		ortId != null)
+	{
+		data = { Id : ortId };
+	}
+	
+	$("#divTeile #divList").List(
+	{
+		UrlGetElements : "Dienste/GetOrtTeile.php",
+		UrlDeleteAssociation : "Dienste/DeleteAssociation.php",
+		SetData : function(ort_B_Id)
+		{
+			return data = { OrtAId : ortId,
+							OrtBId : ort_B_Id};
+		},
+		Data : data,
+		SetListItemText : function(element)
+		{
+			if (element.FullBezeichnung == "")
+				return element.Bezeichnung+" ("+element.Id+")";
+				
+			return element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+		},
+		ListItemLink : "Ort.html",
+		IsDeletable : true
 	});
 }
 
@@ -430,6 +468,76 @@ function SaveAssociationWithKontext(kontextId)
 		success:function(data, textStatus, jqXHR)
 		{
 			LoadListKontexte(GetCurrentElementId());
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			alert("error");
+		}
+	});	
+}
+
+function AddTeil()
+{
+	var dialog = "<div id=dialogAddTeil title='Teil hinzufügen'>";
+	dialog += "<p>";
+	dialog += "<span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 20px 0;'></span>";
+	dialog += "Bitte wählen Sie ein Ortelement aus, das Sie hinzufügen möchten:</p>";
+	dialog += "<div id=divAddTeil class=field></div>";
+	dialog += "<input id=hiddenfieldTeilId type=hidden></input>"
+	dialog += "</div>";
+	$("body").append(dialog);
+	LoadMultiDropdownTeil();
+	$("#dialogAddTeil").dialog({
+		resizable: true,
+		modal: true,
+		buttons: {
+			"Hinzufügen": function() {
+				$(this).dialog("close");
+				SaveAssociationWithTeil($("#hiddenfieldTeilId").val());
+				$("#dialogAddTeil").remove();
+			},
+			"Abbrechen": function() {
+				$(this).dialog("close");
+				$("#dialogAddTeil").remove();
+			}
+		}
+	});
+}
+
+function LoadMultiDropdownTeil()
+{
+	$("#divAddTeil").MultiDropdown(
+	{
+		UrlGetParents : "Dienste/GetOrtMitParents.php",
+		UrlGetChildren : "Dienste/GetOrtChildren.php",
+		//SelectedElementId : null,
+		SetOptionText : function(element)
+		{
+			if (element.FullBezeichnung == "")
+				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+			
+			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+		},
+		SetSelectedElementId : function(elementId)
+		{
+			$("#hiddenfieldTeilId").val(elementId);
+		}
+	});
+}
+
+function SaveAssociationWithTeil(ortId)
+{
+	$.ajax(
+	{
+		type:"POST",
+		url:"Dienste/SaveAssociation.php",
+		data: {
+			OrtAId : GetCurrentElementId(),
+			OrtBId : ortId
+		},
+		success:function(data, textStatus, jqXHR)
+		{
+			LoadListTeile(GetCurrentElementId());
 		},
 		error:function(jqXHR, textStatus, errorThrown)
 		{

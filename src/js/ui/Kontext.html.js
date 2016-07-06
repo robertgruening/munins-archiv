@@ -10,6 +10,7 @@ $(document).ready(function() {
 	
 	$("#buttonAddAblage").click(function() { AddAblage(); });
 	$("#buttonAddLfD").click(function() { AddLfD(); });
+	$("#buttonAddOrt").click(function() { AddOrt(); });
 	
 	LoadSelectionTyp();
 	LoadListRootKontexte();
@@ -88,6 +89,7 @@ function ClearFields()
 	setTimeout(LoadListAblagen(), 1000);
 	setTimeout(LoadListFunde(), 1000);
 	setTimeout(LoadListLfDs(), 1000);
+	setTimeout(LoadListOrte(), 1000);
 	
 	document.title = "Kontext";
 }
@@ -120,6 +122,7 @@ function SetKontextJSON(kontext)
 	LoadListChildren(kontext.Id);
 	LoadListAblagen(kontext.Id);
 	LoadListFunde(kontext.Id);
+	LoadListOrte(kontext.Id);
 	
 	if (kontext.Parent == undefined ||
 		kontext.Parent == null)
@@ -566,6 +569,74 @@ function SaveAssociationWithAblage(ablageId)
 		}
 	});	
 }
+function AddOrt()
+{
+	var dialog = "<div id=dialogAddOrt title='Ort hinzufügen'>";
+	dialog += "<p>";
+	dialog += "<span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 20px 0;'></span>";
+	dialog += "Bitte wählen Sie ein Ortelement aus, das Sie hinzufügen möchten:</p>";
+	dialog += "<div id=divAddOrt class=field></div>";
+	dialog += "<input id=hiddenfieldOrtId type=hidden></input>"
+	dialog += "</div>";
+	$("body").append(dialog);
+	LoadMultiDropdownOrt();
+	$("#dialogAddOrt").dialog({
+		resizable: true,
+		modal: true,
+		buttons: {
+			"Hinzufügen": function() {
+				$(this).dialog("close");
+				SaveAssociationWithOrt($("#hiddenfieldOrtId").val());
+				$("#dialogAddOrt").remove();
+			},
+			"Abbrechen": function() {
+				$(this).dialog("close");
+				$("#dialogAddOrt").remove();
+			}
+		}
+	});
+}
+
+function LoadMultiDropdownOrt()
+{
+	$("#divAddOrt").MultiDropdown(
+	{
+		UrlGetParents : "Dienste/GetOrtMitParents.php",
+		UrlGetChildren : "Dienste/GetOrtChildren.php",
+		SetOptionText : function(element)
+		{
+			if (element.FullBezeichnung == "")
+				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+				
+			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+		},
+		SetSelectedElementId : function(elementId)
+		{
+			$("#hiddenfieldOrtId").val(elementId);
+		}
+	});
+}
+
+function SaveAssociationWithOrt(ortId)
+{
+	$.ajax(
+	{
+		type:"POST",
+		url:"Dienste/SaveAssociation.php",
+		data: {
+			KontextId : GetCurrentElementId(),
+			OrtId : ortId
+		},
+		success:function(data, textStatus, jqXHR)
+		{
+			LoadListOrte(GetCurrentElementId());
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			alert("error");
+		}
+	});	
+}
 
 function GetValueForNoSelection()
 {
@@ -671,4 +742,36 @@ function SaveAssociationWithLfD(lfdId)
 			alert("error");
 		}
 	});	
+}
+
+function LoadListOrte(kontextId)
+{
+	var data = null;
+	
+	if (kontextId != undefined &&
+		kontextId != null)
+	{
+		data = { KontextId : kontextId };
+	}
+	
+	$("#divOrte #divList").List(
+	{
+		UrlGetElements : "Dienste/GetOrt.php",
+		UrlDeleteAssociation : "Dienste/DeleteAssociation.php",
+		SetData : function(ortId)
+		{
+			return data = { OrtId : ortId,
+							KontextId : kontextId };
+		},
+		Data : data,
+		SetListItemText : function(element)
+		{
+			if (element.FullBezeichnung == "")
+				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+				
+			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+		},
+		ListItemLink : "Ort.html",
+		IsDeletable : true
+	});
 }
