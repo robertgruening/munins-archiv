@@ -7,7 +7,6 @@ var _selectorTextboxAblageId = "#textboxId";
 $(document).ready(function() {
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
-	$("#textboxKartonGUID").attr("disabled",true);
 	
 	$("#buttonAddKontext").click(function() { AddKontext(); });
 	
@@ -40,15 +39,9 @@ function SelectTypId(typId)
 function ShowFormFieldBlocksByTyp()
 {	
 	$("#divParent").hide();
-	$("#divKartonGUID").hide();
 	
 	if ($("#selectTypen option:selected").text() == "Raum")
 	{
-	}
-	else if ($("#selectTypen option:selected").text() == "Karton")
-	{
-		$("#divParent").show();
-		$("#divKartonGUID").show();
 	}
 	else
 	{

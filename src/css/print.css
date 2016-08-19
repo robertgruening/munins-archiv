@@ -4,7 +4,7 @@ input, input:disabled,
 .linkList a,
 select, input[type="text"],
 textarea{
-font-size: 1em;
+	font-size: 1em;
 	color: Black;
 }
 
@@ -28,4 +28,8 @@ input[type="button"].delete{
 	display: none;
 }
 
---webstorms
+body,
+.form{
+	padding: 0px;
+	margin: 0px;
+}

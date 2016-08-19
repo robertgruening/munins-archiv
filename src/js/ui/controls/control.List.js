@@ -48,7 +48,7 @@
 			list += "<a href='"+options.ListItemLink+"?Id="+elements[i].Id+"'>"+options.SetListItemText(elements[i])+"</a>";
 			if (options.IsDeletable != undefined &&
 				options.IsDeletable == true)
-				list += "<input type=button elementId="+elements[i].Id+" value=Löschen></input>"
+				list += "<input type=button elementId="+elements[i].Id+" value=Löschen class=notToPrint></input>"
 			list += "</li>";
 		}
 		list += "</ul>";

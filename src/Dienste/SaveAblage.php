@@ -3,7 +3,6 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
 require_once("Klassen/Ablage/class.Ablage.php");
-require_once("Klassen/Ablage/class.Karton.php");
 require_once("Klassen/Ablage/class.AblageTyp.php");
 
 if (isset($_POST["Ablage"]))
@@ -13,10 +12,7 @@ if (isset($_POST["Ablage"]))
 	$ablageTyp->LoadById(intval($ablageJSON["AblageTyp_Id"]));
 	
 	$ablage = new Ablage();	
-	
-	if ($ablageTyp->GetBezeichnung() == "Karton")
-		$ablage = new Karton();
-	
+		
 	if ($ablageJSON["Id"] != NULL &&
 		$ablageJSON["Id"] != "")
 		$ablage->LoadById($ablageJSON["Id"]);

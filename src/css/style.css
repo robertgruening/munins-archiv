@@ -238,3 +238,33 @@ input[type="button"] {
 .mainNavigation {
 	width: 100%;
 }
+
+.page{
+	margin: 0px;
+	padding: 0px;
+	width: 296mm;
+	height: 209mm;
+	border: 1px dashed red;
+}
+
+.kartonschild{
+	float: left;
+	margin: 0.3mm;
+	padding: 2mm;
+	width: 68.8mm;
+	height: 29.7mm;
+	border: 0.5mm solid black;
+	font-family: Liberation Sans;
+}
+
+.kartonschild .labelKennung{
+	margin: 0mm;
+	padding: 0mm;
+	font-size: 10pt;
+}
+
+.kartonschild .kennung{
+	margin: 0mm;
+	padding: 0mm;
+	font-size: 26pt;
+}

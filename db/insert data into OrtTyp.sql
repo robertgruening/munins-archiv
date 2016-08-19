@@ -29,7 +29,7 @@ INSERT INTO `OrtTyp` (`Id`, `Bezeichnung`) VALUES
 (2, 'Gemeinde'),
 (3, 'Gemarkung'),
 (4, 'Flurname'),
-(5, 'Flurstrück');
+(5, 'Flurstück');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

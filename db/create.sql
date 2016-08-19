@@ -176,18 +176,6 @@ CREATE TABLE IF NOT EXISTS `Fund_FundAttribut` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Karton`
---
-
-CREATE TABLE IF NOT EXISTS `Karton` (
-  `Id` int(11) NOT NULL,
-  `GUID` int(11) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `Kontext`
 --
 
@@ -353,12 +341,6 @@ ALTER TABLE `Fundstelle_Flurstuecke`
 ALTER TABLE `Fund_FundAttribut`
   ADD CONSTRAINT `Fund_FundAttribut_ibfk_1` FOREIGN KEY (`Fund_Id`) REFERENCES `Fund` (`Id`),
   ADD CONSTRAINT `Fund_FundAttribut_ibfk_2` FOREIGN KEY (`FundAttribut_Id`) REFERENCES `FundAttribut` (`Id`);
-
---
--- Constraints for table `Karton`
---
-ALTER TABLE `Karton`
-  ADD CONSTRAINT `Karton_ibfk_1` FOREIGN KEY (`Id`) REFERENCES `Ablage` (`Id`);
 
 --
 -- Constraints for table `Kontext`
