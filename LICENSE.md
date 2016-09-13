@@ -1,4 +1,4 @@
-Munins Archiv, Software zur Verwaltung archäologischer Funde
+Munins Archiv, Software zur Verwaltung archäologischer Funde  
 Copyright (C) 2015-2016  Robert Grüning
 
 This program is free software: you can redistribute it and/or modify
@@ -15,6 +15,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-Robert Grüning
-r.gruening@web.de
+Robert Grüning  
+r.gruening@web.de  
 https://github.com/robertgruening/Munins-Archiv
