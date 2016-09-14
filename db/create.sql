@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `Ablage` (
   `Typ_Id` int(11) DEFAULT NULL,
   `Bezeichnung` varchar(30) DEFAULT NULL,
   `Parent_Id` int(11) DEFAULT NULL,
+  `Ebene` int(11) DEFAULT 0,
   PRIMARY KEY (`Id`),
   KEY `AblageTyp_Id` (`Typ_Id`),
   KEY `Parent_Id` (`Parent_Id`),
@@ -106,6 +107,7 @@ CREATE TABLE IF NOT EXISTS `FundAttribut` (
   `Typ_Id` int(11) NOT NULL,
   `Bezeichnung` varchar(30) NOT NULL,
   `Parent_Id` int(11) DEFAULT NULL,
+  `Ebene` int(11) DEFAULT 0,
   PRIMARY KEY (`Id`),
   KEY `Parent_Id` (`Parent_Id`),
   KEY `FundAttributTyp_Id` (`Typ_Id`)
@@ -184,6 +186,7 @@ CREATE TABLE IF NOT EXISTS `Kontext` (
   `Typ_Id` int(11) DEFAULT NULL,
   `Bezeichnung` varchar(30) DEFAULT NULL,
   `Parent_Id` int(11) DEFAULT NULL,
+  `Ebene` int(11) DEFAULT 0,
   PRIMARY KEY (`Id`),
   KEY `KontextTyp_Id` (`Typ_Id`),
   KEY `Parent_Id` (`Parent_Id`),
@@ -255,6 +258,7 @@ CREATE TABLE IF NOT EXISTS `Ort` (
   `Bezeichnung` varchar(50) NOT NULL,
   `Typ_Id` int(11) NOT NULL,
   `Parent_Id` int(11) DEFAULT NULL,
+  `Ebene` int(11) DEFAULT 0,
   PRIMARY KEY (`Id`),
   KEY `Typ_Id` (`Typ_Id`),
   KEY `Parent_Id` (`Parent_Id`)
