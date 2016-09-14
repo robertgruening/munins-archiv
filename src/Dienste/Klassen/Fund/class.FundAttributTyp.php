@@ -1,10 +1,12 @@
 <?php
-include_once(__DIR__."/../StdLib/class.ListType.php");
+include_once(__DIR__."/../StdLib/class.ListElement.php");
 
-class FundAttributTyp extends ListType
+class FundAttributTyp extends ListElement
 {
 	// variables
 	protected $_tableName = "FundAttributTyp";
+
+	// constructors
 	
 	// methods
 	public function GetInstance()

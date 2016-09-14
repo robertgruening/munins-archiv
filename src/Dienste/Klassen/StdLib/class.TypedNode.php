@@ -1,7 +1,7 @@
 <?php
 include_once(__DIR__."/../config.php");
 include_once(__DIR__."/class.Node.php");
-include_once(__DIR__."/class.ListType.php");
+include_once(__DIR__."/class.ListElement.php");
 
 class TypedNode extends Node
 {
@@ -21,54 +21,104 @@ class TypedNode extends Node
 	}
 
 	// constructors
-	public function __constructor()
-	{
-	}
 
 	// methods	
-	public function GetInstance()
+	
+	protected function GetInstance()
 	{
 		return new TypedNode();
 	}
 	
-	public function GetTypeInstance()
+	protected function GetTypeInstance()
 	{
-		return new ListType();
+		return new ListElement();
 	}
 	
-	protected function GetSQLStatementToLoadById($id)
+	protected function FillThisInstance($datensatz)
 	{
-		return "SELECT Id, Bezeichnung, Typ_Id
-				FROM ".$this->GetTableName()."
-				WHERE Id = ".$id.";";
-	}
-	
-	protected function Fill($datensatz)
-	{
-		$this->SetId(intval($datensatz["Id"]));
-		$this->SetBezeichnung($datensatz["Bezeichnung"]);
+		parent::FillThisInstance($datensatz);
 		$typ = $this->GetTypeInstance();
 		$typ->LoadById(intval($datensatz["Typ_Id"]));
 		$this->SetTyp($typ);
 	}
 	
+	protected function CreateAndFillNewInstance($datensatz)
+	{
+		$instance = parent::CreateAndFillNewInstance($datensatz);
+		$typ = $this->GetTypeInstance();
+		$typ->LoadById(intval($datensatz["Typ_Id"]));
+		$instance->SetTyp($typ);
+		
+		return $instance;
+	}
+	
+	protected function GetSQLStatementToLoadByIds($ids)
+	{
+		$sqlStatement = "SELECT Id, Bezeichnung, Ebene, Typ_Id
+						FROM ".$this->GetTableName()."
+						WHERE ";
+		
+		for ($i = 0; $i < count($ids); $i++)
+		{
+			$sqlStatement .= "Id = ".$ids[$i]." ";
+			
+			if ($i < (count($ids) - 1))
+				$sqlStatement .= "OR ";
+		}
+		
+		$sqlStatement .= "ORDER BY ".$this->GetSQLOrderByStatement().";";
+		
+		return $sqlStatement;
+	}
+	
+	protected function GetSQLOrderByStatement()
+	{
+		return "Typ_Id ASC, ".parent::GetSQLOrderByStatement();
+	}
+	
+	protected function GetSQLStatementToLoadRoots()
+	{
+		return "SELECT Id, Bezeichnung, Ebene, Typ_Id
+				FROM ".$this->GetTableName()."
+				WHERE Parent_Id IS NULL
+				ORDER BY ".$this->GetSQLOrderByStatement().";";
+	}
+	
+	protected function GetSQLStatementToLoadChildren()
+	{
+		return "SELECT Id, Bezeichnung, Ebene, Typ_Id
+				FROM ".$this->GetTableName()."
+				WHERE Parent_Id = ".$this->GetId()."
+				ORDER BY ".$this->GetSQLOrderByStatement().";";
+	}
+	
+	protected function GetSQLStatementToLoadParent()
+	{
+		return "SELECT Id, Bezeichnung, Ebene, Typ_Id
+				FROM ".$this->GetTableName()."
+				WHERE Id = (SELECT Parent_Id
+							FROM ".$this->GetTableName()."
+							WHERE Id = ".$this->GetId().");";
+	}
+	
 	protected function GetSQLStatementToInsert()
 	{
-		return "INSERT INTO ".$this->GetTableName()."(Bezeichnung, Typ_Id)
-				VALUES('".$this->GetBezeichnung()."', ".$this->GetTyp()->GetId().");";
+		return "INSERT INTO ".$this->GetTableName()."(Bezeichnung, Ebene, Typ_Id)
+				VALUES('".$this->GetBezeichnung()."', ".$this->GetEbene().", ".$this->GetTyp()->GetId().");";
 	}
 	
 	protected function GetSQLStatementToUpdate()
 	{
 		return "UPDATE ".$this->GetTableName()."
 				SET Bezeichnung='".$this->GetBezeichnung()."',
-					Typ_Id=".$this->GetTyp()->GetId()."
+				Ebene=".$this->GetEbene().",
+				Typ_Id=".$this->GetTyp()->GetId()."
 				WHERE Id = ".$this->GetId().";";
 	}
 	
-	protected function FillAssocArray()
+	public function ConvertToSimpleAssocArray()
 	{
-		$assocArray = parent::FillAssocArray();
+		$assocArray = parent::ConvertToSimpleAssocArray();
 		$assocArray["Typ"] = $this->GetTyp()->ConvertToAssocArray();
 		
 		return $assocArray;
@@ -87,9 +137,7 @@ class TypedNode extends Node
 			{				
 				while ($datensatz = $ergebnis->fetch_assoc())
 				{
-					$element = $this->GetInstance();
-					$element->LoadById(intval($datensatz["Id"]));
-					array_push($elements, $element);
+					array_push($elements, CreateAndFillNewInstance($datensatz));
 				}
 			}		
 		}
@@ -101,19 +149,11 @@ class TypedNode extends Node
 	
 	protected function GetSQLStatementToLoadRootsByTypId($typId)
 	{
-		return "SELECT Id
+		return "SELECT Id, Bezeichnung, Ebene, Typ_Id
 				FROM ".$this->GetTableName()."
 				WHERE Parent_Id IS NULL AND
 				Typ_Id = ".$typId."
 				ORDER BY Typ_Id ASC, Bezeichnung ASC;";
 	}
-	
-	protected function GetSQLStatementToLoadRoots()
-	{
-		return "SELECT Id
-				FROM ".$this->GetTableName()."
-				WHERE Parent_Id IS NULL
-				ORDER BY Typ_Id ASC, Bezeichnung ASC;";
-	}	
 }
 ?>

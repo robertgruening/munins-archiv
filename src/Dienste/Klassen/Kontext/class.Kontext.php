@@ -1,11 +1,11 @@
 <?php
 include_once(__DIR__."/../config.php");
-include_once(__DIR__."/../StdLib/class.TreeElement.php");
+include_once(__DIR__."/../StdLib/class.TypedNode.php");
 include_once(__DIR__."/class.KontextTyp.php");
 include_once(__DIR__."/../Ablage/class.Ablage.php");
 include_once(__DIR__."/../Ort/class.Ort.php");
 
-class Kontext extends TreeElement
+class Kontext extends TypedNode
 {
 	// variables
 	protected $_tableName = "Kontext";
@@ -68,13 +68,15 @@ class Kontext extends TreeElement
 		$this->SaveAssociationWithFund($fund);
 	}
 
+	// constructors
+
 	// methods		
-	public function GetInstance()
+	protected function GetInstance()
 	{
 		return new Kontext();
 	}
 	
-	public function GetTypeInstance()
+	protected function GetTypeInstance()
 	{
 		return new KontextTyp();
 	}
@@ -148,26 +150,41 @@ class Kontext extends TreeElement
 		return $isAssociatedWithAblage;
 	}
 	
-	public function ConvertToAssocArrayWithAblagen($childrenDepth)
+	public function ConvertToAssocArrayWithProperties($withAblagen, $withFunden, $withOrten)
 	{
-		$assocArray = $this->ConvertToAssocArray($childrenDepth);
+		$assocArray = parent::ConvertToAssocArray();
 		
-		// Ablagen
-		$assocArrayAblagen = array();
-		$ablagen = $this->GetAblagen();			
-		for ($i = 0; $i < count($ablagen); $i++)
+		if ($withAblagen)
 		{
-			array_push($assocArrayAblagen, $ablagen[$i]->ConvertRootChainToAssocArray());
-			$assocArray["Ablagen"] =  $assocArrayAblagen;
+			$assocArray["Ablagen"] = array();
+			$ablagen = $this->GetAblagen();	
+					
+			for ($i = 0; $i < count($ablagen); $i++)
+			{
+				array_push($assocArray["Ablagen"], $ablagen[$i]->ConvertToAssocArray());
+			}
 		}
 		
-		// Funde
-		$assocArrayFunde = array();
-		$funde = $this->GetFunde();			
-		for ($i = 0; $i < count($funde); $i++)
+		if ($withFunden)
 		{
-			array_push($assocArrayFunde, $funde[$i]->ConvertToAssocArray());
-			$assocArray["Funde"] =  $assocArrayFunde;
+			$assocArray["Funde"] = array();
+			$funde = $this->GetFunde();		
+				
+			for ($i = 0; $i < count($funde); $i++)
+			{
+				array_push($assocArray["Funde"], $funde[$i]->ConvertToAssocArray());
+			}
+		}
+		
+		if ($withOrten)
+		{
+			$assocArray["Orte"] = array();
+			$orte = $this->GetOrte();		
+				
+			for ($i = 0; $i < count($orte); $i++)
+			{
+				array_push($assocArray["Orte"], $orte[$i]->ConvertRootChainToSimpleAssocArray());
+			}
 		}
 		
 		return $assocArray;
@@ -242,31 +259,6 @@ class Kontext extends TreeElement
 		return $isAssociatedWithAblage;
 	}
 	
-	public function ConvertToAssocArrayWithOrten($childrenDepth)
-	{
-		$assocArray = $this->ConvertToAssocArray($childrenDepth);
-		
-		// Orte
-		$assocArrayOrte = array();
-		$orte = $this->GetOrte();			
-		for ($i = 0; $i < count($orte); $i++)
-		{
-			array_push($assocArrayOrte, $orte[$i]->ConvertToAssocArray(0));
-			$assocArray["Orte"] =  $assocArrayOrte;
-		}
-		
-		// Funde
-		$assocArrayFunde = array();
-		$funde = $this->GetFunde();			
-		for ($i = 0; $i < count($funde); $i++)
-		{
-			array_push($assocArrayFunde, $funde[$i]->ConvertToAssocArray());
-			$assocArray["Funde"] =  $assocArrayFunde;
-		}
-		
-		return $assocArray;
-	}
-	
 	protected function LoadFunde()
 	{
 		$id = $this->GetId();
@@ -335,23 +327,6 @@ class Kontext extends TreeElement
 			}
 			$mysqli->close();
 		}
-	}
-	
-	public function GetFullBezeichnung()
-	{
-		$fullBezeichnung = "";
-		
-		if ($this->GetParent() != NULL)
-			$fullBezeichnung = $this->GetParent()->GetFullBezeichnung();
-			
-		if ($this->GetParent() != NULL &&
-			$this->GetBezeichnung() != "")
-			$fullBezeichnung .= "-";
-			
-		if ($this->GetBezeichnung() != "")
-			$fullBezeichnung .= $this->GetBezeichnung();
-		
-		return $fullBezeichnung;
 	}
 }
 ?>

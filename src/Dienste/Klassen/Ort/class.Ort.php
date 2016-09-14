@@ -58,13 +58,16 @@ class Ort extends TypedNode
 		$this->DeleteAssociationWithKontext($kontext);
 	}
 
-	// methods		
-	public function GetInstance()
+	// constructors
+
+	// methods
+		
+	protected function GetInstance()
 	{
 		return new Ort();
 	}
 	
-	public function GetTypeInstance()
+	protected function GetTypeInstance()
 	{
 		return new OrtTyp();
 	}
@@ -158,17 +161,18 @@ class Ort extends TypedNode
 		}
 	}
 	
-	public function ConvertToAssocArrayWithKontexten($childrenDepth)
+	public function ConvertToAssocArrayWithProperties($withKontexten)
 	{
 		$assocArray = $this->ConvertToAssocArray($childrenDepth);
 		
-		// Kontexte
-		$assocArrayKontexte = array();
-		$kontexte = $this->GetKontexte();			
-		for ($i = 0; $i < count($kontexte); $i++)
+		if ($withKontexten)
 		{
-			array_push($assocArrayKontexte, $kontexte[$i]->ConvertRootChainToAssocArray());
-			$assocArray["Kontexte"] =  $assocArrayKontexte;
+			$assocArray["Kontexte"] = array();
+			$kontexte = $this->GetKontexte();			
+			for ($i = 0; $i < count($kontexte); $i++)
+			{
+				array_push($assocArray["Kontexte"], $kontexte[$i]->ConvertToAssocArray());
+			}
 		}
 		
 		return $assocArray;

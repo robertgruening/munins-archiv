@@ -26,20 +26,17 @@ class Begehungsflaeche extends Kontext
 	public function AddLfD($lfd)
 	{
 		$this->SaveAssociationWithLfD($lfd);
-	}	
-	
-	// constructor
-	public function __constructor()
-	{
 	}
+
+	// constructors	
 		
 	// methods
-	public function GetInstance()
+	protected function GetInstance()
 	{
 		return new Begehungsflaeche();
 	}
 	
-	public function GetTypeInstance()
+	protected function GetTypeInstance()
 	{
 		return new KontextTyp();
 	}
@@ -71,17 +68,16 @@ class Begehungsflaeche extends Kontext
 		return $lfds;
 	}
 	
-	public function ConvertToAssocArray($childrenDepth)
+	public function ConvertToAssocArrayWithProperties($withAblagen, $withFunden, $withOrten)
 	{
-		$assocArray = parent::ConvertToAssocArray($childrenDepth);
+		$assocArray = parent::ConvertToAssocArrayWithProperties($withAblagen, $withFunden, $withOrten);
 		
 		// LfDs
-		$assocArrayLfDs = array();
+		$assocArray["LfDs"] = array();
 		$lfds = $this->GetLfDs();			
 		for ($i = 0; $i < count($lfds); $i++)
 		{
-			array_push($assocArrayLfDs, $lfds[$i]->ConvertToAssocArray());
-			$assocArray["LfDs"] =  $assocArrayLfDs;
+			array_push($assocArray["LfDs"], $lfds[$i]->ConvertToAssocArray());
 		}
 		
 		return $assocArray;

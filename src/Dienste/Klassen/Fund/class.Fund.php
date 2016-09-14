@@ -1,10 +1,11 @@
 <?php
 include_once(__DIR__."/../config.php");
-include_once(__DIR__."/../StdLib/class.Node.php");
-include_once(__DIR__."/class.FundAttribut.php");
+include_once(__DIR__."/../StdLib/class.ListElement.php");
 include_once(__DIR__."/../Ablage/class.Ablage.php");
+include_once(__DIR__."/../Kontext/class.Kontext.php");
+include_once(__DIR__."/class.FundAttribut.php");
 
-class Fund extends Node
+class Fund extends ListElement
 {
 	// variables
 	protected $_tableName = "Fund";
@@ -21,8 +22,8 @@ class Fund extends Node
 	{
 		$this->_anzahl = $anzahl;
 	}
-		
-	// Ablagen
+	
+	// Ablage
 	public function GetAblage()
 	{
 		return $this->LoadAblage();
@@ -31,9 +32,9 @@ class Fund extends Node
 	public function SetAblage($ablage)
 	{
 		$this->SaveAssociationWithAblage($ablage);
-	}	
+	}
 	
-	// Kontexte
+	// Kontext
 	public function GetKontext()
 	{
 		return $this->LoadKontext();
@@ -42,7 +43,7 @@ class Fund extends Node
 	public function SetKontexte($kontext)
 	{
 		$this->SaveAssociationWithKontext($kontext);
-	}	
+	}
 	
 	// Attribute
 	public function GetAttribute()
@@ -68,52 +69,47 @@ class Fund extends Node
 		$this->DeleteAssociationWithAttribut($attribut);
 	}
 
-	// methods		
-	public function GetInstance()
+	// constructors
+	
+	// methods
+	protected function GetInstance()
 	{
 		return new Fund();
 	}
-
-	public function LoadById($id)
-	{		
-		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-		
-		if (!$mysqli->connect_errno)
-		{
-			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query("SELECT Id, Bezeichnung, Anzahl
-										FROM ".$this->GetTableName()."
-										WHERE Id = ".$id.";");	
-			if (!$mysqli->errno)
-			{
-				$datensatz = $ergebnis->fetch_assoc();
-				$this->SetId(intval($datensatz["Id"]));
-				$this->SetBezeichnung($datensatz["Bezeichnung"]);
-				$this->SetAnzahl($datensatz["Anzahl"]);
-			}		
-		}
-		
-		$mysqli->close();
-	}
-
-	public function Save()
+	
+	protected function GetSQLStatementLoadById($id)
 	{
-		parent::Save();
+		return "SELECT Id, Bezeichnung, Anzahl
+				FROM ".$this->GetTableName()."
+				WHERE Id = ".$id.";";
+	}
+	
+	protected function FillThisInstance($datensatz)
+	{
+		parent::FillThisInstance($datensatz);
+		$this->SetAnzahl($datensatz["Anzahl"]);
+	}
+	
+	protected function CreateAndFillNewInstance($datensatz)
+	{
+		$instance = parent::CreateAndFillNewInstance($datensatz);
+		$instance->SetAnzahl(intval($datensatz["Anzahl"]));
 		
-		$id = $this->GetId();
-		$anzahl = $this->GetAnzahl();
-		
-		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-		
-		if (!$mysqli->connect_errno)
-		{
-			$mysqli->set_charset("utf8");
-			
-			$ergebnis = $mysqli->query("UPDATE ".$this->GetTableName()."
-										SET Anzahl=".$anzahl."
-										WHERE Id = ".$id.";");
-		}
-		$mysqli->close();
+		return $instance;
+	}
+	
+	protected function GetSQLStatementToInsert()
+	{
+		return "INSERT INTO ".$this->GetTableName()."(Bezeichnung, Anzahl)
+				VALUES('".$this->GetBezeichnung()."', ".$this->GetAnzahl().";";
+	}
+	
+	protected function GetSQLStatementToUpdate()
+	{
+		return "UPDATE ".$this->GetTableName()."
+				SET Bezeichnung='".$this->GetBezeichnung()."',				
+				SET Anzahl=".$this->GetAnzahl()."
+				WHERE Id = ".$this->GetId().";";
 	}	
 	
 	protected function LoadAblage()
@@ -126,8 +122,8 @@ class Fund extends Node
 		{			
 			$mysqli->set_charset("utf8");
 			$ergebnis = $mysqli->query("SELECT Ablage_Id
-							FROM ".$this->GetTableName()."
-							WHERE Id = ".$id.";");
+										FROM ".$this->GetTableName()."
+										WHERE Id = ".$id.";");
 			if (!$mysqli->errno)
 			{
 				$datensatz = $ergebnis->fetch_assoc();
@@ -167,8 +163,8 @@ class Fund extends Node
 		{			
 			$mysqli->set_charset("utf8");
 			$ergebnis = $mysqli->query("SELECT Kontext_Id
-							FROM ".$this->GetTableName()."
-							WHERE Id = ".$id.";");
+										FROM ".$this->GetTableName()."
+										WHERE Id = ".$id.";");
 			if (!$mysqli->errno)
 			{
 				$datensatz = $ergebnis->fetch_assoc();
@@ -198,31 +194,6 @@ class Fund extends Node
 		$mysqli->close();
 	}
 	
-	public function ConvertToAssocArray($childrenDepth)
-	{
-		$assocArray = parent::ConvertToAssocArray($childrenDepth);
-		$assocArray["Anzahl"] = $this->GetAnzahl();
-		
-		// Ablage
-		$ablage = $this->GetAblage();
-		$assocArray["Ablage"] = $ablage->ConvertToAssocArray(0);
-		
-		// Kontext
-		$kontext = $this->GetKontext();	
-		$assocArray["Kontext"] = $kontext->ConvertToAssocArray(0);		
-		
-		// Fundattribute
-		$assocArrayAttribute = array();
-		$attribute = $this->GetAttribute();			
-		for ($i = 0; $i < count($attribute); $i++)
-		{
-			array_push($assocArrayAttribute, $attribute[$i]->ConvertToAssocArray(0));
-			$assocArray["Attribute"] =  $assocArrayAttribute;
-		}
-		
-		return $assocArray;
-	}
-	
 	protected function LoadAttribute()
 	{
 		$id = $this->GetId();
@@ -233,8 +204,8 @@ class Fund extends Node
 		{			
 			$mysqli->set_charset("utf8");
 			$ergebnis = $mysqli->query("SELECT FundAttribut_Id
-							FROM Fund_FundAttribut
-							WHERE Fund_Id = ".$id.";");
+										FROM Fund_FundAttribut
+										WHERE Fund_Id = ".$id.";");
 			if (!$mysqli->errno)
 			{
 				while ($datensatz = $ergebnis->fetch_assoc())
@@ -310,6 +281,31 @@ class Fund extends Node
 		$mysqli->close();
 		
 		return $isAssociatedWithAttribut;
+	}
+	
+	public function ConvertToAssocArray()
+	{
+		$assocArray = parent::ConvertToAssocArray();
+		$assocArray["Anzahl"] = $this->GetAnzahl();
+		
+		// Ablage
+		$ablage = $this->GetAblage();
+		$assocArray["Ablage"] = $ablage->ConvertToAssocArray();
+		
+		// Kontext
+		$kontext = $this->GetKontext();	
+		$assocArray["Kontext"] = $kontext->ConvertToAssocArray();		
+		
+		// Fundattribute
+		$assocArrayAttribute = array();
+		$attribute = $this->GetAttribute();			
+		for ($i = 0; $i < count($attribute); $i++)
+		{
+			array_push($assocArrayAttribute, $attribute[$i]->ConvertToAssocArray());
+		}
+		$assocArray["Attribute"] =  $assocArrayAttribute;
+		
+		return $assocArray;
 	}
 }
 ?>

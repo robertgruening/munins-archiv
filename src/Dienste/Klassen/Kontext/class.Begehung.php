@@ -54,19 +54,16 @@ class Begehung extends Kontext
 	{
 		$this->_kommentar = $kommentar;
 	}
-	
-	// constructor
-	public function __constructor()
-	{
-	}
+
+	// constructors
 		
 	// methods
-	public function GetInstance()
+	protected function GetInstance()
 	{
 		return new Begehung();
 	}
 	
-	public function GetTypeInstance()
+	protected function GetTypeInstance()
 	{
 		return new KontextTyp();
 	}
@@ -96,29 +93,16 @@ class Begehung extends Kontext
 		$mysqli->close();
 	}
 	
-	public function ConvertToAssocArray($childrenDepth)
+	public function ConvertToAssocArrayWithProperties($withAblagen, $withFunden, $withOrten)
 	{
-		$assocArray = parent::ConvertToAssocArray($childrenDepth);
+		$assocArray = parent::ConvertToAssocArrayWithProperties($withAblagen, $withFunden, $withOrten);
 		$assocArray["LfDErfassungsJahr"] = $this->GetLfDErfassungsJahr();
 		$assocArray["LfDErfassungsNr"] = $this->GetLfDErfassungsNr();
 		$assocArray["Datum"] = $this->GetDatum();
 		$assocArray["Kommentar"] = $this->GetKommentar();
 		
 		return $assocArray;
-	}
-	/*
-	public function ConvertToAssocArrayWithAblagen($childrenDepth)
-	{
-		$assocArray = $this->ConvertToAssocArray($childrenDepth);
-		$assocArray["LfDErfassungsJahr"] = $this->GetLfDErfassungsJahr();
-		$assocArray["LfDErfassungsNr"] = $this->GetLfDErfassungsNr();
-		$assocArray["Datum"] = $this->GetDatum();
-		$assocArray["Kommentar"] = $this->GetKommentar();
-		
-		return $assocArray;
-	}
-	*/
-	
+	}	
 
 	public function Save()
 	{

@@ -1,13 +1,15 @@
 <?php
 include_once(__DIR__."/../config.php");
-include_once(__DIR__."/../StdLib/class.TreeElement.php");
+include_once(__DIR__."/../StdLib/class.TypedNode.php");
 include_once(__DIR__."/class.AblageTyp.php");
 include_once(__DIR__."/../Kontext/class.Kontext.php");
 
-class Ablage extends TreeElement
+class Ablage extends TypedNode
 {
 	// variables
 	protected $_tableName = "Ablage";
+
+	// constructors
 	
 	// properties	
 	// Kontexte
@@ -49,12 +51,12 @@ class Ablage extends TreeElement
 	}
 
 	// methods		
-	public function GetInstance()
+	protected function GetInstance()
 	{
 		return new Ablage();
 	}
 	
-	public function GetTypeInstance()
+	protected function GetTypeInstance()
 	{
 		return new AblageTyp();
 	}
@@ -128,26 +130,30 @@ class Ablage extends TreeElement
 		return $isAssociatedWithKontext;
 	}
 	
-	public function ConvertToAssocArrayWithKontexten($childrenDepth)
+	public function ConvertToAssocArrayWithProperties($withKontexten, $withFunden)
 	{
-		$assocArray = $this->ConvertToAssocArray($childrenDepth);
+		$assocArray = parent::ConvertToAssocArray();
 		
-		// Kontexte
-		$assocArrayKontexte = array();
-		$kontexte = $this->GetKontexte();			
-		for ($i = 0; $i < count($kontexte); $i++)
+		if ($withKontexten)
 		{
-			array_push($assocArrayKontexte, $kontexte[$i]->ConvertRootChainToAssocArray());
-			$assocArray["Kontexte"] =  $assocArrayKontexte;
+			$assocArray["Kontexte"] = array();
+			$kontexte = $this->GetKontexte();	
+					
+			for ($i = 0; $i < count($kontexte); $i++)
+			{
+				array_push($assocArray["Kontexte"], $kontexte[$i]->ConvertToAssocArray());
+			}
 		}
 		
-		// Funde
-		$assocArrayFunde = array();
-		$funde = $this->GetFunde();			
-		for ($i = 0; $i < count($funde); $i++)
+		if ($withFunden)
 		{
-			array_push($assocArrayFunde, $funde[$i]->ConvertToAssocArray());
-			$assocArray["Funde"] =  $assocArrayFunde;
+			$assocArray["Funde"] = array();
+			$funde = $this->GetFunde();		
+				
+			for ($i = 0; $i < count($funde); $i++)
+			{
+				array_push($assocArray["Funde"], $funde[$i]->ConvertToAssocArray());
+			}
 		}
 		
 		return $assocArray;
@@ -229,9 +235,7 @@ class Ablage extends TreeElement
 		$kontexte = $this->GetKontexte();			
 		
 		if (count($kontexte) > 0)
-		{
 			$fullBezeichnung .= $kontexte[0]->GetFullBezeichnung()."-".$this->GetBezeichnung();
-		}
 		
 		return $fullBezeichnung;
 	}

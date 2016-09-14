@@ -1,10 +1,12 @@
 <?php
-include_once(__DIR__."/../StdLib/class.ListType.php");
+include_once(__DIR__."/../StdLib/class.ListElement.php");
 
-class KontextTyp extends ListType
+class KontextTyp extends ListElement
 {
 	// variables
 	protected $_tableName = "KontextTyp";
+
+	// constructors
 	
 	// methods
 	public function GetInstance()

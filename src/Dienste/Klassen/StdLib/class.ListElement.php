@@ -1,6 +1,5 @@
 <?php
 include_once(__DIR__."/../config.php");
-include_once(__DIR__."/class.ListType.php");
 
 class ListElement
 {
@@ -8,7 +7,6 @@ class ListElement
 	protected $_tableName = NULL;
 	protected $_id = NULL;
 	protected $_bezeichnung = NULL;
-	protected $_typ = NULL;
 	
 	// properties
 	// table name
@@ -23,7 +21,7 @@ class ListElement
 		return $this->_id;
 	}
 	
-	protected function SetId($id)
+	public function SetId($id)
 	{
 		$this->_id = $id;
 	}
@@ -38,73 +36,133 @@ class ListElement
 	{
 		$this->_bezeichnung = $bezeichnung;
 	}
-	
-	// Typ
-	public function GetTyp()
-	{
-		return $this->_typ;
-	}
-	
-	public function SetTyp($typ)
-	{
-		$this->_typ = $typ;
-	}
 
 	// constructors
-	public function __constructor()
-	{
-	}
 
 	// methods	
-	public function GetInstance()
+	protected function GetInstance()
 	{
 		return new ListElement();
 	}
 	
-	public function GetTypeInstance()
+	public function LoadById($id)
 	{
-		return new ListType();
+		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->GetSQLStatementLoadById($id));	
+			
+			if (!$mysqli->errno)
+				$this->FillThisInstance($ergebnis->fetch_assoc());
+		}
+		
+		$mysqli->close();
+	}
+	
+	protected function GetSQLStatementLoadById($id)
+	{
+		return $this->GetSQLStatementLoadByIds([$id]);
+	}
+	
+	protected function FillThisInstance($datensatz)
+	{
+		$this->SetId(intval($datensatz["Id"]));
+		$this->SetBezeichnung($datensatz["Bezeichnung"]);
+	}
+	
+	protected function CreateAndFillNewInstance($datensatz)
+	{
+		$instance = $this->GetInstance();
+		$instance->SetId(intval($datensatz["Id"]));
+		$instance->SetBezeichnung($datensatz["Bezeichnung"]);
+		
+		return $instance;
+	}
+	
+	public function LoadAll()
+	{		
+		$rootElements = array();
+		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->GetSQLStatementLoadAll());	
+			if (!$mysqli->errno)
+			{				
+				while ($datensatz = $ergebnis->fetch_assoc())
+				{
+					array_push($rootElements, $this->CreateAndFillNewInstance($datensatz));
+				}
+			}		
+		}
+		
+		$mysqli->close();
+		
+		return $rootElements;
+	}
+	
+	protected function GetSQLStatementLoadAll()
+	{
+		return "SELECT Id, Bezeichnung
+				FROM ".$this->GetTableName()."
+				ORDER BY Bezeichnung ASC;";
+	}
+	
+	public function LoadByIds($ids)
+	{
+		$treeElements = array();
+		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->GetSQLStatementLoadByIds($ids));	
+			if (!$mysqli->errno)
+			{				
+				while ($datensatz = $ergebnis->fetch_assoc())
+				{
+					array_push($treeElements, $this->CreateAndFillNewInstance($datensatz));
+				}
+			}	
+		}
+		
+		$mysqli->close();
+		
+		return $treeElements;
+	}
+	
+	protected function GetSQLStatementLoadByIds($ids)
+	{
+		$sqlStatement = "SELECT Id, Bezeichnung
+						FROM ".$this->GetTableName()."
+						WHERE ";
+		
+		for ($i = 0; $i < count($ids); $i++)
+		{
+			$sqlStatement .= "Id = ".$ids[$i]." ";
+			
+			if ($i < (count($ids) - 1))
+				$sqlStatement .= "OR ";
+		}
+		
+		$sqlStatement .= "ORDER BY Bezeichnung;";
+		
+		return $sqlStatement;
 	}
 
-	public function LoadById($id)
+	public function Save()
 	{		
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query("SELECT Id, Bezeichnung, Typ_Id
-										FROM ".$this->GetTableName()."
-										WHERE Id = ".$id.";");	
-			if (!$mysqli->errno)
-			{
-				$datensatz = $ergebnis->fetch_assoc();
-				$this->SetId(intval($datensatz["Id"]));
-				$this->SetBezeichnung($datensatz["Bezeichnung"]);
-				$typ = $this->GetTypeInstance();
-				$typ->LoadById(intval($datensatz["Typ_Id"]));
-				$this->SetTyp($typ);
-			}		
-		}
-		
-		$mysqli->close();
-	}
-
-	public function Save()
-	{
-		$id = $this->GetId();
-		$bezeichnung = $this->GetBezeichnung();
-		$typ_Id = $this->GetTyp()->GetId();
-		
-		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-		
-		if (!$mysqli->connect_errno)
-		{
-			$mysqli->set_charset("utf8");
-			if ($id == NULL)
+			if ($this->GetId() == NULL)
 			{			
-				$ergebnis = $mysqli->query("INSERT INTO ".$this->GetTableName()."(Bezeichnung, Typ_Id)
-											VALUES('".$bezeichnung."', ".$typ_Id.");");
+				$ergebnis = $mysqli->query($this->GetSQLStatementToInsert());
 				if (!$mysqli->errno)
 				{
 					$id = intval($mysqli->insert_id);
@@ -113,29 +171,42 @@ class ListElement
 			}
 			else
 			{
-				$ergebnis = $mysqli->query("UPDATE ".$this->GetTableName()."
-											SET Bezeichnung='".$bezeichnung."',
-												Typ_Id=".$typ_Id."
-											WHERE Id = ".$id.";");
+				$ergebnis = $mysqli->query($this->GetSQLStatementToUpdate());
 			}
 		}
 		$mysqli->close();
 	}
+	
+	protected function GetSQLStatementToInsert()
+	{
+		return "INSERT INTO ".$this->GetTableName()."(Bezeichnung)
+				VALUES('".$this->GetBezeichnung()."');";
+	}
+	
+	protected function GetSQLStatementToUpdate()
+	{
+		return "UPDATE ".$this->GetTableName()."
+				SET Bezeichnung='".$this->GetBezeichnung()."'
+				WHERE Id = ".$this->GetId().";";
+	}
 
 	public function Delete()
-	{
-		$id = $this->GetId();
-		
+	{		
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query("DELETE
-										FROM ".$this->GetTableName()."
-										WHERE Id = ".$id.";");
+			$ergebnis = $mysqli->query($this->GetSQLStatementToDelete());
 		}
 		$mysqli->close();
+	}
+	
+	protected function GetSQLStatementToDelete()
+	{
+		return "DELETE
+				FROM ".$this->GetTableName()."
+				WHERE Id = ".$this->GetId().";";
 	}
 	
 	public function ConvertToAssocArray()
@@ -143,7 +214,6 @@ class ListElement
 		$assocArray = array();
 		$assocArray["Id"] = $this->GetId();
 		$assocArray["Bezeichnung"] = $this->GetBezeichnung();
-		$assocArray["Typ"] = $this->GetTyp()->ConvertToAssocArray();		
 		
 		return $assocArray;
 	}

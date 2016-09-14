@@ -1,13 +1,15 @@
 <?php
-include_once(__DIR__."/../StdLib/class.ListType.php");
+include_once(__DIR__."/../StdLib/class.ListElement.php");
 
-class AblageTyp extends ListType
+class AblageTyp extends ListElement
 {
 	// variables
 	protected $_tableName = "AblageTyp";
+
+	// constructors
 	
 	// methods
-	public function GetInstance()
+	protected function GetInstance()
 	{
 		return new AblageTyp();
 	}

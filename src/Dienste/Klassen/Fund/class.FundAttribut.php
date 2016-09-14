@@ -10,13 +10,16 @@ class FundAttribut extends TypedNode
 	
 	// properties
 
+	// constructors
+
 	// methods		
-	public function GetInstance()
+	
+	protected function GetInstance()
 	{
 		return new FundAttribut();
 	}
 	
-	public function GetTypeInstance()
+	protected function GetTypeInstance()
 	{
 		return new FundAttributTyp();
 	}

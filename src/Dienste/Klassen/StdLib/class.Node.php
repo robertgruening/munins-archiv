@@ -7,6 +7,7 @@ class Node
 	protected $_tableName = NULL;
 	protected $_id = NULL;
 	protected $_bezeichnung = NULL;
+	protected $_ebene = NULL;
 	
 	// properties
 	// table name
@@ -21,7 +22,7 @@ class Node
 		return $this->_id;
 	}
 	
-	protected function SetId($id)
+	public function SetId($id)
 	{
 		$this->_id = $id;
 	}
@@ -46,6 +47,18 @@ class Node
 	public function SetParent($parent)
 	{
 		$this->SaveAssociationWithParent($parent);
+		$this->SetEbene($parent->GetEbene() + 1);
+	}
+	
+	// Ebene
+	public function GetEbene()
+	{
+		return $this->_ebene;
+	}
+	
+	public function SetEbene($ebene)
+	{
+		$this->_ebene = $ebene;
 	}
 	
 	// children
@@ -68,12 +81,10 @@ class Node
 	}
 
 	// constructors
-	public function __constructor()
-	{
-	}
 
 	// methods	
-	public function GetInstance()
+	
+	protected function GetInstance()
 	{
 		return new Node();
 	}
@@ -81,6 +92,7 @@ class Node
 	public function GetKennung()
 	{
 		$parent = $this->GetParent();
+		
 		if ($parent)
 		{
 			return $parent->GetKennung()."-".$this->GetBezeichnung();
@@ -97,11 +109,9 @@ class Node
 		{
 			$mysqli->set_charset("utf8");
 			$ergebnis = $mysqli->query($this->GetSQLStatementToLoadById($id));	
+			
 			if (!$mysqli->errno)
-			{
-				$datensatz = $ergebnis->fetch_assoc();
-				$this->Fill($datensatz);
-			}		
+				$this->FillThisInstance($ergebnis->fetch_assoc());
 		}
 		
 		$mysqli->close();
@@ -109,20 +119,76 @@ class Node
 	
 	protected function GetSQLStatementToLoadById($id)
 	{
-		return "SELECT Id, Bezeichnung
-				FROM ".$this->GetTableName()."
-				WHERE Id = ".$id.";";
+		return $this->GetSQLStatementToLoadByIds([$id]);
 	}
 	
-	protected function Fill($datensatz)
+	protected function FillThisInstance($datensatz)
 	{
 		$this->SetId(intval($datensatz["Id"]));
+		$this->SetEbene(intval($datensatz["Ebene"]));
 		$this->SetBezeichnung($datensatz["Bezeichnung"]);
+	}
+	
+	protected function CreateAndFillNewInstance($datensatz)
+	{
+		$instance = $this->GetInstance();
+		$instance->SetId(intval($datensatz["Id"]));
+		$instance->SetEbene(intval($datensatz["Ebene"]));
+		$instance->SetBezeichnung($datensatz["Bezeichnung"]);
+		
+		return $instance;
+	}
+	
+	public function LoadByIds($ids)
+	{
+		$nodes = array();
+		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->GetSQLStatementToLoadByIds($ids));	
+			if (!$mysqli->errno)
+			{				
+				while ($datensatz = $ergebnis->fetch_assoc())
+				{
+					array_push($nodes, $this->CreateAndFillNewInstance($datensatz));
+				}
+			}	
+		}
+		
+		$mysqli->close();
+		
+		return $nodes;
+	}
+	
+	protected function GetSQLStatementToLoadByIds($ids)
+	{
+		$sqlStatement = "SELECT Id, Bezeichnung, Ebene
+						FROM ".$this->GetTableName()."
+						WHERE ";
+		
+		for ($i = 0; $i < count($ids); $i++)
+		{
+			$sqlStatement .= "Id = ".$ids[$i]." ";
+			
+			if ($i < (count($ids) - 1))
+				$sqlStatement .= "OR ";
+		}
+		
+		$sqlStatement .= "ORDER BY ".$this->GetSQLOrderByStatement().";";
+		
+		return $sqlStatement;
+	}
+	
+	protected function GetSQLOrderByStatement()
+	{
+		return "Bezeichnung ASC";
 	}
 	
 	public function LoadRoots()
 	{
-		$elements = array();
+		$rootNodes = array();
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
 		if (!$mysqli->connect_errno)
@@ -133,24 +199,22 @@ class Node
 			{				
 				while ($datensatz = $ergebnis->fetch_assoc())
 				{
-					$element = $this->GetInstance();
-					$element->LoadById(intval($datensatz["Id"]));
-					array_push($elements, $element);
+					array_push($rootNodes, $this->CreateAndFillNewInstance($datensatz));
 				}
 			}		
 		}
 		
 		$mysqli->close();
 		
-		return $elements;
+		return $rootNodes;
 	}
 	
 	protected function GetSQLStatementToLoadRoots()
 	{
-		return "SELECT Id
+		return "SELECT Id, Bezeichnung, Ebene
 				FROM ".$this->GetTableName()."
 				WHERE Parent_Id IS NULL
-				ORDER BY Bezeichnung ASC;";
+				ORDER BY ".$this->GetSQLOrderByStatement().";";
 	}
 	
 	public function LoadChildren()
@@ -162,13 +226,12 @@ class Node
 		{			
 			$mysqli->set_charset("utf8");
 			$ergebnis = $mysqli->query($this->GetSQLStatementToLoadChildren());
+			
 			if (!$mysqli->errno)
 			{
 				while ($datensatz = $ergebnis->fetch_assoc())
 				{
-					$child = $this->GetInstance();
-					$child->LoadById(intval($datensatz["Id"]));
-					array_push($children, $child);
+					array_push($children, $this->CreateAndFillNewInstance($datensatz));
 				}
 			}
 		}
@@ -179,10 +242,10 @@ class Node
 	
 	protected function GetSQLStatementToLoadChildren()
 	{
-		return "SELECT Id
+		return "SELECT Id, Bezeichnung, Ebene
 				FROM ".$this->GetTableName()."
 				WHERE Parent_Id = ".$this->GetId()."
-				ORDER BY Bezeichnung ASC;";
+				ORDER BY ".$this->GetSQLOrderByStatement().";";
 	}
 	
 	public function LoadParent()
@@ -196,12 +259,8 @@ class Node
 			$ergebnis = $mysqli->query($this->GetSQLStatementToLoadParent());
 			if (!$mysqli->errno)
 			{
-				$datensatz = $ergebnis->fetch_assoc();
-				if ($datensatz["Parent_Id"] != NULL)
-				{
-					$parent = $this->GetInstance();
-					$parent->LoadById(intval($datensatz["Parent_Id"]));
-				}
+				if ($datensatz = $ergebnis->fetch_assoc())
+					$parent = $this->CreateAndFillNewInstance($datensatz);
 			}
 		}
 		
@@ -211,8 +270,29 @@ class Node
 	
 	protected function GetSQLStatementToLoadParent()
 	{
-		return "SELECT Parent_Id
+		return "SELECT Id, Bezeichnung, Ebene
 				FROM ".$this->GetTableName()."
+				WHERE Id = (SELECT Parent_Id
+							FROM ".$this->GetTableName()."
+							WHERE Id = ".$this->GetId().");";
+	}
+
+	protected function SaveAssociationWithParent($parent)
+	{			
+		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->GetSQLStatementToSaveAssociationWithParent($parent));
+		}
+		$mysqli->close();
+	}
+	
+	protected function GetSQLStatementToSaveAssociationWithParent($parent)
+	{
+		return "Update ".$this->GetTableName()."
+				SET Parent_Id = ".$parent->GetId()."
 				WHERE Id = ".$this->GetId().";";
 	}
 
@@ -226,6 +306,7 @@ class Node
 			if ($this->GetId() == NULL)
 			{			
 				$ergebnis = $mysqli->query($this->GetSQLStatementToInsert());
+				
 				if (!$mysqli->errno)
 				{
 					$id = intval($mysqli->insert_id);
@@ -242,14 +323,15 @@ class Node
 	
 	protected function GetSQLStatementToInsert()
 	{
-		return "INSERT INTO ".$this->GetTableName()."(Bezeichnung)
-				VALUES('".$this->GetBezeichnung()."');";
+		return "INSERT INTO ".$this->GetTableName()."(Bezeichnung, Ebene)
+				VALUES('".$this->GetBezeichnung()."', ".$this->GetEbene().");";
 	}
 	
 	protected function GetSQLStatementToUpdate()
 	{
 		return "UPDATE ".$this->GetTableName()."
-				SET Bezeichnung='".$this->GetBezeichnung()."'
+				SET Bezeichnung='".$this->GetBezeichnung()."',
+				Ebene=".$this->GetEbene()."
 				WHERE Id = ".$this->GetId().";";
 	}
 
@@ -271,65 +353,48 @@ class Node
 				FROM ".$this->GetTableName()."
 				WHERE Id = ".$this->GetId().";";
 	}
-
-	protected function SaveAssociationWithParent($parent)
-	{			
-		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-		
-		if (!$mysqli->connect_errno)
-		{
-			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->GetSQLStatementToSaveAssociationWithParent($parent));
-		}
-		$mysqli->close();
-	}
 	
-	protected function GetSQLStatementToSaveAssociationWithParent($parent)
-	{
-		return "Update ".$this->GetTableName()."
-				SET Parent_Id = ".$parent->GetId()."
-				WHERE Id = ".$this->GetId().";";
-	}
-	
-	public function ConvertToAssocArray($childrenDepth)
-	{
-		$assocArray = $this->FillAssocArray();
-		
-		if ($childrenDepth > 0)
-		{
-			$children = $this->GetChildren();
-			$assocArray["Children"] = array();		
-			for ($i = 0; $i < count($children); $i++)
-			{
-				array_push($assocArray["Children"], $children[$i]->ConvertToAssocArray($childrenDepth - 1));
-			}
-		}
-		
-		return $assocArray;
-	}
-	
-	protected function FillAssocArray()
+	public function ConvertToSimpleAssocArray()
 	{
 		$assocArray = array();
 		$assocArray["Id"] = $this->GetId();
 		$assocArray["Bezeichnung"] = $this->GetBezeichnung();
+		$assocArray["Ebene"] = $this->GetEbene();
 		$assocArray["FullBezeichnung"] = $this->GetFullBezeichnung();
 		
 		return $assocArray;
 	}
 	
-	public function ConvertRootChainToAssocArray()
+	public function ConvertToAssocArray()
 	{
-		$root = $this;
-		$assocArrayRoot = $root->ConvertToAssocArray(0, false);
+		$assocArray = $this->ConvertRootChainToSimpleAssocArray();		
+		$children = $this->GetChildren();
 		
-		while ($root->GetParent() != NULL)
+		if ($children)
 		{
-			$root = $root->GetParent();
-			$tmp = $root->ConvertToAssocArray(0, false);
-			$tmp["Children"] = array();
-			array_push($tmp["Children"], $assocArrayRoot);
-			$assocArrayRoot = $tmp;
+			$assocArray["Children"] = array();
+			
+			for ($i = 0; $i < count($children); $i++)
+			{
+				 array_push($assocArray["Children"], $children[$i]->ConvertToSimpleAssocArray());
+			}
+		}		
+		
+		return $assocArray;
+	}
+	
+	public function ConvertRootChainToSimpleAssocArray()
+	{
+		$assocArrayRoot = $this->ConvertToSimpleAssocArray();
+		$parent = $this->GetParent();
+		
+		while ($parent)
+		{
+			$assocArrayParent = $parent->ConvertToSimpleAssocArray();
+			$assocArrayParent["Children"] = array();
+			array_push($assocArrayParent["Children"], $assocArrayRoot);
+			$assocArrayRoot = $assocArrayParent;
+			$parent = $parent->GetParent();
 		}
 		
 		return $assocArrayRoot;
@@ -360,11 +425,12 @@ class Node
 	public function GetFullBezeichnung()
 	{
 		$fullBezeichnung = "";
+		$parent = $this->GetParent();
 		
-		if ($this->GetParent() != NULL)
-			$fullBezeichnung = $this->GetParent()->GetFullBezeichnung();
+		if ($parent)
+			$fullBezeichnung = $parent->GetFullBezeichnung();
 			
-		if ($this->GetParent() != NULL &&
+		if ($parent &&
 			$this->GetBezeichnung() != "")
 			$fullBezeichnung .= "-";
 			
