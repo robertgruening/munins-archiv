@@ -131,7 +131,7 @@ function SetKontextJSON(kontext)
 	}
 	else
 	{
-		LoadMultiDropdownParent(kontext.Parent.Id);	
+		LoadMultiDropdownParent(kontext);	
 	}
 	
 	if (kontext.Typ.Bezeichnung == "Begehungsfläche")
@@ -322,13 +322,14 @@ function LoadListRootKontexte()
 	});
 }
 
-function LoadMultiDropdownParent(kontextId)
+function LoadMultiDropdownParent(kontext)
 {
 	$(_selectorMultiDropdownParent).MultiDropdown(
 	{
 		UrlGetParents : "Dienste/GetKontextMitParents.php",
 		UrlGetChildren : "Dienste/GetKontextChildren.php",
-		SelectedElementId : kontextId,
+		SelectedElementId : kontext.Parent.Id,
+		Blacklist : [kontext.Id],
 		SetOptionBackgroundImage : function(element)
 		{		
 			return "images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";

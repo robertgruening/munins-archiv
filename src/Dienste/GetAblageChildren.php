@@ -15,7 +15,7 @@ if (isset($_POST["Id"]) &&
 	
 	for ($i = 0; $i < count($children); $i++)
 	{
-		array_push($assocArrayChildren, $children[$i]->ConvertToAssocArray(0));
+		array_push($assocArrayChildren, $children[$i]->ConvertToSimpleAssocArray());
 	}
 	echo json_encode($assocArrayChildren);
 }
@@ -26,7 +26,7 @@ else
 	$ablagen = $ablage->LoadRoots();
 	for ($i = 0; $i < count($ablagen); $i++)
 	{
-		array_push($assocArrayAblagen, $ablagen[$i]->ConvertToAssocArrayWithKontexten(0));
+		array_push($assocArrayAblagen, $ablagen[$i]->ConvertToSimpleAssocArray());
 	}
 	echo json_encode($assocArrayAblagen);
 }

@@ -96,7 +96,7 @@ function SetOrtJSON(ort)
 	}
 	else
 	{
-		LoadMultiDropdownParent(ort.Parent.Id);
+		LoadMultiDropdownParent(ort);
 	}
 		
 	document.title = "("+ort.Id+") "+ort.Typ.Bezeichnung+": "+ort.Bezeichnung;
@@ -229,13 +229,14 @@ function LoadListRootOrte()
 	});
 }
 
-function LoadMultiDropdownParent(ortId)
+function LoadMultiDropdownParent(ort)
 {
 	$(_selectorMultiDropdownParent).MultiDropdown(
 	{
 		UrlGetParents : "Dienste/GetOrtMitParents.php",
 		UrlGetChildren : "Dienste/GetOrtChildren.php",
-		SelectedElementId : ortId,
+		SelectedElementId : ort.Parent.Id,
+		Blacklist : [ort.Id],
 		SetOptionText : function(element)
 		{
 			if (element.FullBezeichnung == "")

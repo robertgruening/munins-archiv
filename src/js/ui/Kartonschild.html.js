@@ -2,35 +2,6 @@ var _kartonschildIndex = 0;
 
 $(document).ready(function() {
 	$("#buttonAddKarton").click(function() { AddAblage(); });
-	LoadAblageById(2);
-	LoadAblageById(2);
-	LoadAblageById(2);
-	LoadAblageById(2);
-	
-	LoadAblageById(2);
-	LoadAblageById(2);
-	LoadAblageById(2);
-	LoadAblageById(2);
-	
-	LoadAblageById(2);
-	LoadAblageById(2);
-	LoadAblageById(2);
-	LoadAblageById(2);
-	
-	LoadAblageById(2);
-	LoadAblageById(2);
-	LoadAblageById(2);
-	LoadAblageById(2);
-	
-	LoadAblageById(2);
-	LoadAblageById(2);
-	LoadAblageById(2);
-	LoadAblageById(2);
-	
-	LoadAblageById(2);
-	LoadAblageById(2);
-	LoadAblageById(2);
-	LoadAblageById(2);
 });
 
 function AddAblage()
@@ -118,7 +89,7 @@ function LoadAblageById(id)
 					ablage = ablage.Children[0];				
 				}
 				ablage.Parent = parent;
-				LoadNewKarton(ablage);
+				LoadKontexte(ablage);
 			}
 		},
 		error:function(jqXHR, textStatus, errorThrown)
@@ -128,20 +99,126 @@ function LoadAblageById(id)
 	});	
 }
 
-function LoadNewKarton(kontext)
+function LoadKontexte(ablage)
+{	
+	$.ajax(
+	{
+		type:"POST",
+		url:"Dienste/GetKontext.php",
+		data: {
+			AblageId : ablage.Id
+		},
+		success:function(data, textStatus, jqXHR)
+		{
+			if (data)
+			{	
+				var kontext = $.parseJSON(data)[0];
+				LoadKontextMitParents(ablage, kontext.Id);
+			}
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			alert("error");
+		}
+	});	
+}
+
+function LoadKontextMitParents(ablage, kontextId)
+{	
+	$.ajax(
+	{
+		type:"POST",
+		url:"Dienste/GetKontextMitParents.php",
+		data: {
+			Id : kontextId
+		},
+		success:function(data, textStatus, jqXHR)
+		{
+			if (data)
+			{					
+				var parents = $.parseJSON(data);
+				var kontext = parents[0];
+				var parent = null;
+				
+				while (kontext.Children != undefined &&
+					kontext.Children.length > 0)
+				{
+					parent = kontext;
+					kontext = kontext.Children[0];				
+				}
+				kontext.Parent = parent;
+				// Annahme:
+				// Die Ablage ist mit einem Kontext der Zeit verbunden,
+				// aber mit dem darüberliegenden Kontext des Ortes ist
+				// der Ort verbunden.
+				// Beispiel:
+				// Karton ist verknüpft mit Begehung und
+				// Ort ist verknüpft mit Begehungsfläche
+				LoadOrte(ablage, kontext.Parent);
+			}
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			alert("error");
+		}
+	});	
+}
+
+function LoadOrte(ablage, kontext)
+{	
+	$.ajax(
+	{
+		type:"POST",
+		url:"Dienste/GetOrtMitParents.php",
+		data: {
+			KontextId : kontext.Id
+		},
+		success:function(data, textStatus, jqXHR)
+		{
+			if (data)
+			{	
+				var ort = $.parseJSON(data)[0];
+				LoadNewKarton(ablage, ort);
+			}
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			alert("error");
+		}
+	});	
+}
+
+function LoadNewKarton(ablage, ort)
 {
-	$("#page").append(CreateNewKartonschild(_kartonschildIndex, kontext));
+	$("#page").append(CreateNewKartonschild(_kartonschildIndex, ablage, ort));
 	_kartonschildIndex++;
 }
 
-function CreateNewKartonschild(index, kontext)
+function CreateNewKartonschild(index, ablage, ort)
 {
 	var kartonschild = "<div class=kartonschild>";
 	kartonschild += "<p class=labelKennung>Kennung</p>";
-	kartonschild += "<p class=kennung>"+kontext.FullBezeichnung+"</p>";
+	kartonschild += "<p class=kennung>"+ablage.FullBezeichnung+"</p>";
+	kartonschild += "<table>";
+	kartonschild += GetOrtsTabelle(ort);
+	kartonschild += "<table>";
 	kartonschild += "<div>";
 	
 	return kartonschild;
+}
+
+function GetOrtsTabelle(ort)
+{
+	var zeile = "";
+	zeile += "<tr>";
+	zeile += "<td class=ortsTypBezeichnung>" + ort.Typ.Bezeichnung + "<td>";
+	zeile += "<td class=ortsBezeichnung>" + ort.Bezeichnung + "<td>";
+	zeile += "</tr>";
+	
+	if (ort.Children != undefined)
+		zeile += GetOrtsTabelle(ort.Children[0]);
+		
+	return zeile;
 }
 
 function GetValueForNoSelection()

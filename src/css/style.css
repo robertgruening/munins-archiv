@@ -242,29 +242,45 @@ input[type="button"] {
 .page{
 	margin: 0px;
 	padding: 0px;
-	width: 296mm;
-	height: 209mm;
-	border: 1px dashed red;
+	width: 209mm;
+	height: 296mm;
+	border: 1px dashed white;
 }
 
 .kartonschild{
 	float: left;
 	margin: 0.3mm;
 	padding: 2mm;
-	width: 68.8mm;
-	height: 29.7mm;
-	border: 0.5mm solid black;
+	width: 99.3mm;
+	height: 68.8mm;
+	--height: 29.7mm;
+	border: 0.5mm solid white;
 	font-family: Liberation Sans;
 }
 
 .kartonschild .labelKennung{
 	margin: 0mm;
 	padding: 0mm;
-	font-size: 10pt;
+	font-size: 12pt;
 }
 
 .kartonschild .kennung{
 	margin: 0mm;
 	padding: 0mm;
-	font-size: 26pt;
+	font-size: 55pt;
+	font-family: Times New Roman, Liberation Serif;
+}
+
+.kartonschild table{
+	margin-top: 2mm;
+}
+
+.kartonschild table .ortsTypBezeichnung{
+	font-size: 12pt;
+	vertical-align: top;
+}
+
+.kartonschild table .ortsBezeichnung{
+	font-size: 14pt;
+	vertical-align: top;
 }

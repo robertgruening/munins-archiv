@@ -6,32 +6,15 @@ require_once("Klassen/Ablage/class.Ablage.php");
 
 if (isset($_POST["Id"]))
 {
-	$ids = preg_split("/[;]/", $_POST["Id"]);
-	$assocArrayAblagen = array();	
-	for ($i = 0; $i < count($ids); $i++)
+	$assocArrayAblagen = array();
+	$ablage = new Ablage();
+	$ablagen = $ablage->LoadByIds(preg_split("/[;]/", $_POST["Id"]));
+	
+	for ($i = 0; $i < count($ablagen); $i++)
 	{
-		$rootAblage = new Ablage();
-		$rootAblage->LoadById($ids[$i]);
-		$assocArrayRootAblage = $rootAblage->ConvertToAssocArray(0);
-		
-		$isRoot = false;
-		while ($isRoot == false)
-		{	
-			if ($rootAblage->GetParent() == NULL)
-			{
-				$isRoot = true;
-			}
-			else
-			{
-				$rootAblage = $rootAblage->GetParent();
-				$tmp = $rootAblage->ConvertToAssocArray(0);
-				$tmp["Children"] = array();
-				array_push($tmp["Children"], $assocArrayRootAblage);
-				$assocArrayRootAblage = $tmp;
-			}
-		}
-		array_push($assocArrayAblagen, $assocArrayRootAblage);
+		array_push($assocArrayAblagen, $ablagen[$i]->ConvertRootChainToSimpleAssocArray());
 	}
+	
 	echo json_encode($assocArrayAblagen);
 }
 else
@@ -41,7 +24,7 @@ else
 	$assocArrayAblagen = array();	
 	for ($i = 0; $i < count($rootAblagen); $i++)
 	{
-		array_push($assocArrayAblagen, $rootAblagen[$i]->ConvertToAssocArrayWithKontexten(1000));
+		array_push($assocArrayAblagen, $rootAblagen[$i]->ConvertRootChainToSimpleAssocArray());
 	}
 	echo json_encode($assocArrayAblagen);
 }

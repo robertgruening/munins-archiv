@@ -12,6 +12,7 @@ if (isset($_POST["Ablage"]))
 	$ablage->LoadById(intval($ablageJSON["Id"]));
 	
 	if (count($ablage->GetChildren()) == 0)
+	// ToDo: Und keine Verknüpfung zu Funden oder Kontexten!
 	{
 		$ablage->Delete();
 		$ablage = NULL;

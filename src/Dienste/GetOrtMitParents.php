@@ -34,6 +34,38 @@ if (isset($_POST["Id"]))
 	}
 	echo json_encode($assocArrayOrte);
 }
+else if (isset($_POST["KontextId"]))
+{
+	$kontext = new Kontext();
+	$kontext->LoadById(intval($_POST["KontextId"]));
+	$orte = $kontext->GetOrte();
+	
+	$assocArrayOrte = array();	
+	for ($i = 0; $i < count($orte); $i++)
+	{
+		$rootOrt = $orte[$i];
+		$assocArrayRootOrt = $rootOrt->ConvertToAssocArray(0);
+		
+		$isRoot = false;
+		while ($isRoot == false)
+		{	
+			if ($rootOrt->GetParent() == NULL)
+			{
+				$isRoot = true;
+			}
+			else
+			{
+				$rootOrt = $rootOrt->GetParent();
+				$tmp = $rootOrt->ConvertToAssocArray(0);
+				$tmp["Children"] = array();
+				array_push($tmp["Children"], $assocArrayRootOrt);
+				$assocArrayRootOrt = $tmp;
+			}
+		}
+		array_push($assocArrayOrte, $assocArrayRootOrt);
+	}
+	echo json_encode($assocArrayOrte);
+}
 else
 {
 	$ort = new Ort();

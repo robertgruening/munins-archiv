@@ -96,7 +96,7 @@ function SetAblageJSON(ablage)
 	}
 	else
 	{
-		LoadMultiDropdownParent(ablage.Parent.Id);
+		LoadMultiDropdownParent(ablage);
 	}
 		
 	document.title = "("+ablage.Id+") "+ablage.Typ.Bezeichnung+": "+ablage.Bezeichnung;
@@ -257,13 +257,14 @@ function LoadListRootAblagen()
 	});
 }
 
-function LoadMultiDropdownParent(ablageId)
+function LoadMultiDropdownParent(ablage)
 {
 	$(_selectorMultiDropdownParent).MultiDropdown(
 	{
 		UrlGetParents : "Dienste/GetAblageMitParents.php",
 		UrlGetChildren : "Dienste/GetAblageChildren.php",
-		SelectedElementId : ablageId,		
+		SelectedElementId : ablage.Parent.Id,
+		Blacklist : [ablage.Id],
 		SetOptionBackgroundImage : function(element)
 		{		
 			return "images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";

@@ -94,7 +94,7 @@ function SetFundAttributJSON(fundAttribut)
 	}
 	else
 	{
-		LoadMultiDropdownParent(fundAttribut.Parent.Id, GetSelectedTypId());
+		LoadMultiDropdownParent(fundAttribut, GetSelectedTypId());
 	}
 		
 	document.title = "("+fundAttribut.Id+") "+fundAttribut.Typ.Bezeichnung+": "+fundAttribut.Bezeichnung;
@@ -188,14 +188,15 @@ function LoadListRootFundAttribute()
 	});
 }
 
-function LoadMultiDropdownParent(fundAttributId, fundAttributTypId)
+function LoadMultiDropdownParent(fundAttribut, fundAttributTypId)
 {
 	$(_selectorMultiDropdownParent).FilteredMultiDropdown(
 	{
 		UrlGetParents : "Dienste/GetFundAttributMitParents.php",
 		UrlGetChildren : "Dienste/GetFundAttributChildren.php",
 		FilterTypId : fundAttributTypId,
-		SelectedElementId : fundAttributId,
+		SelectedElementId : fundAttribut.Parent.Id,
+		Blacklist : [fundAttribut.Id],
 		SetOptionText : function(element)
 		{
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";

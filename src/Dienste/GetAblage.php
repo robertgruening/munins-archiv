@@ -10,7 +10,7 @@ if (isset($_POST["Id"]))
 	$ablage = new Ablage();
 	$ablage->LoadById(intval($_POST["Id"]));
 	
-	echo json_encode($ablage->ConvertToAssocArray(0));
+	echo json_encode($ablage->ConvertToAssocArray());
 }
 else if (isset($_POST["KontextId"]))
 {
@@ -20,7 +20,7 @@ else if (isset($_POST["KontextId"]))
 	$ablagen = $kontext->GetAblagen();
 	for ($i = 0; $i < count($ablagen); $i++)
 	{
-		array_push($assocArrayAblagen, $ablagen[$i]->ConvertToAssocArray(1000));
+		array_push($assocArrayAblagen, $ablagen[$i]->ConvertToAssocArray());
 	}
 	echo json_encode($assocArrayAblagen);
 }
@@ -31,7 +31,7 @@ else
 	$ablagen = $ablage->LoadRoots();
 	for ($i = 0; $i < count($ablagen); $i++)
 	{
-		array_push($assocArrayAblagen, $ablagen[$i]->ConvertToAssocArrayWithKontexten(1000));
+		array_push($assocArrayAblagen, $ablagen[$i]->ConvertToAssocArrayWithProperties(true, true));
 	}
 	echo json_encode($assocArrayAblagen);
 }

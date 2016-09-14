@@ -194,13 +194,23 @@
 		return "<option value="+GetValueForNoSelection()+" selected=selected>keine Auswahl</option>";
 	}
 
-	function CreateOptionAblage(options, ablage)
+	function CreateOptionAblage(options, element)
 	{
+		if (options.Blacklist != undefined &&
+			options.Blacklist != null)
+		{
+			for (var i = 0; i < options.Blacklist.length; i++)
+			{
+				if (element.Id == options.Blacklist[i])
+					return "";
+			}
+		}
+			
 		var option = "<option ";
 		if (options.SetOptionBackgroundImage != null)
-			option += "style=\"background-image:url("+options.SetOptionBackgroundImage(ablage)+"\" ";
-		option += "value=" + ablage.Id + ">";
-		option += options.SetOptionText(ablage);
+			option += "style=\"background-image:url("+options.SetOptionBackgroundImage(element)+"\" ";
+		option += "value=" + element.Id + ">";
+		option += options.SetOptionText(element);
 		option += "</option>";
 		
 		return option;
