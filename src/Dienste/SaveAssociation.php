@@ -18,8 +18,10 @@ if (isset($_POST["KontextId"]) &&
 	$kontext = new Kontext();
 	$kontext->LoadById(intval($_POST["KontextId"]));
 	$kontext->AddAblage($ablage);
+	return;
 }
-else if (isset($_POST["KontextId"]) && 
+
+if (isset($_POST["KontextId"]) && 
 	isset($_POST["FundId"]))
 {
 	$fund = new Fund();
@@ -28,8 +30,10 @@ else if (isset($_POST["KontextId"]) &&
 	$kontext = new Kontext();
 	$kontext->LoadById(intval($_POST["KontextId"]));
 	$kontext->AddFund($fund);
+	return;
 }
-else if (isset($_POST["FundId"]) && 
+
+if (isset($_POST["FundId"]) && 
 	isset($_POST["AblageId"]))
 {
 	$fund = new Fund();
@@ -38,8 +42,10 @@ else if (isset($_POST["FundId"]) &&
 	$ablage = new Ablage();
 	$ablage->LoadById(intval($_POST["AblageId"]));
 	$ablage->AddFund($fund);
+	return;
 }
-else if (isset($_POST["KontextId"]) && 
+
+if (isset($_POST["KontextId"]) && 
 	isset($_POST["LfDId"]))
 {
 	$lfd = new LfD();
@@ -48,8 +54,10 @@ else if (isset($_POST["KontextId"]) &&
 	$kontext = new Begehungsflaeche();
 	$kontext->LoadById(intval($_POST["KontextId"]));
 	$kontext->AddLfD($lfd);
+	return;
 }
-else if (isset($_POST["FundId"]) && 
+
+if (isset($_POST["FundId"]) && 
 	isset($_POST["FundAttributId"]))
 {
 	$fundAttribut = new FundAttribut();
@@ -58,8 +66,10 @@ else if (isset($_POST["FundId"]) &&
 	$fund = new Fund();
 	$fund->LoadById(intval($_POST["FundId"]));	
 	$fund->AddAttribut($fundAttribut);
+	return;
 }
-else if (isset($_POST["OrtAId"]) && 
+
+if (isset($_POST["OrtAId"]) && 
 	isset($_POST["OrtBId"]))
 {
 	$ortA = new Ort();
@@ -68,17 +78,19 @@ else if (isset($_POST["OrtAId"]) &&
 	$ortB = new Ort();
 	$ortB->LoadById(intval($_POST["OrtBId"]));
 	$ortB->AddTeil($ortA);
+	return;
 	
 }
-else if (isset($_POST["OrtId"]) && 
+
+if (isset($_POST["OrtId"]) && 
 	isset($_POST["KontextId"]))
-{
-	
+{	
 	$kontext = new Kontext();
 	$kontext->LoadById(intval($_POST["KontextId"]));
 	
 	$ort = new Ort();
 	$ort->LoadById(intval($_POST["OrtId"]));
-	$ort->AddKontext($kontext);	
+	$ort->AddKontext($kontext);
+	return;
 }
 

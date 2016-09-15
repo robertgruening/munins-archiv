@@ -11,15 +11,25 @@ if (isset($_POST["Ablage"]))
 	$ablage = new Ablage();
 	$ablage->LoadById(intval($ablageJSON["Id"]));
 	
-	if (count($ablage->GetChildren()) == 0)
-	// ToDo: Und keine Verknüpfung zu Funden oder Kontexten!
-	{
-		$ablage->Delete();
-		$ablage = NULL;
-		echo "INFO: Ablage (".$ablageJSON["Id"].") wurde gelöscht";
-	}
-	else
+	if (count($ablage->GetChildren()) > 0)
 	{
 		echo "ERROR: Ablage hat Kind-Ablagen";
+		return;
 	}
+	
+	if (count($ablage->GetKontexte()) > 0)
+	{
+		echo "ERROR: Ablage hat Kontexte";
+		return;
+	}
+	
+	if (count($ablage->GetFunde()) > 0)
+	{
+		echo "ERROR: Ablage hat Funde";
+		return;
+	}
+	
+	$ablage->Delete();
+	$ablage = NULL;
+	echo "INFO: Ablage (".$ablageJSON["Id"].") wurde gelöscht";
 }

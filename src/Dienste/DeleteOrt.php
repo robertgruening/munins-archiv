@@ -9,16 +9,21 @@ if (isset($_POST["Ort"]))
 	$ortJSON = json_decode($_POST["Ort"], true);
 	
 	$ort = new Ort();
-	$ort->LoadById(intval($ortJSON["Id"]));
+	$ort->LoadById(intval($ortJSON["Id"]));	
 	
-	if (count($ort->GetChildren()) == 0)
-	{
-		$ort->Delete();
-		$ort = NULL;
-		echo "INFO: Ort (".$ortJSON["Id"].") wurde gelöscht";
-	}
-	else
-	{
+	if (count($ort->GetChildren()) > 0)
+	{		
 		echo "ERROR: Ort hat Kind-Ort";
+		return;
 	}
+	
+	if (count($ort->GetKontexte()) > 0)
+	{		
+		echo "ERROR: Ort hat Kontexte";
+		return;
+	}
+
+	$ort->Delete();
+	$ort = NULL;
+	echo "INFO: Ort (".$ortJSON["Id"].") wurde gelöscht";
 }

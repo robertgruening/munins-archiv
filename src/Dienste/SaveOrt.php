@@ -15,7 +15,9 @@ if (isset($_POST["Ort"]))
 	
 	if ($ortJSON["Id"] != NULL &&
 		$ortJSON["Id"] != "")
+	{
 		$ort->LoadById($ortJSON["Id"]);
+	}
 	
 	$ort->SetBezeichnung($ortJSON["Bezeichnung"]);
 	$ort->SetTyp($ortTyp);

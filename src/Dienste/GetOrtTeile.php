@@ -15,7 +15,8 @@ if (isset($_POST["Id"]) &&
 	
 	for ($i = 0; $i < count($parts); $i++)
 	{
-		array_push($assocArrayParts, $parts[$i]->ConvertToAssocArray(0));
+		array_push($assocArrayParts, $parts[$i]->ConvertToAssocArray());
 	}
+	
 	echo json_encode($assocArrayParts);
 }

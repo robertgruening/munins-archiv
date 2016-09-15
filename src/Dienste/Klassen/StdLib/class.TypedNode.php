@@ -137,7 +137,7 @@ class TypedNode extends Node
 			{				
 				while ($datensatz = $ergebnis->fetch_assoc())
 				{
-					array_push($elements, CreateAndFillNewInstance($datensatz));
+					array_push($elements, $this->CreateAndFillNewInstance($datensatz));
 				}
 			}		
 		}

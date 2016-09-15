@@ -11,14 +11,25 @@ if (isset($_POST["Kontext"]))
 	$kontext = new Kontext();
 	$kontext->LoadById(intval($kontextJSON["Id"]));
 	
-	if (count($kontext->GetChildren()) == 0)
+	if (count($kontext->GetChildren()) > 0)
 	{
-		$kontext->Delete();
-		$kontext = NULL;
-		echo "INFO: Kontext (".$kontextJSON["Id"].") wurde gelöscht";
+		echo "ERROR: Kontext hat Kind-Kontexte";
+		return;
 	}
-	else
+	
+	if (count($kontext->GetAblagen()) > 0)
 	{
-		echo "ERROR: Kontext hat Kind-Ablagen";
+		echo "ERROR: Kontext hat Ablagen";
+		return;
 	}
+	
+	if (count($kontext->GetFunde()) > 0)
+	{
+		echo "ERROR: Kontext hat Funde";
+		return;
+	}
+	
+	$kontext->Delete();
+	$kontext = NULL;
+	echo "INFO: Kontext (".$kontextJSON["Id"].") wurde gelöscht";
 }

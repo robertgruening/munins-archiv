@@ -13,7 +13,9 @@ if (isset($_POST["Fund"]))
 	
 	if ($fundJSON["Id"] != NULL &&
 		$fundJSON["Id"] != "")
+	{
 		$fund->LoadById($fundJSON["Id"]);
+	}
 	
 	$fund->SetBezeichnung($fundJSON["Bezeichnung"]);
 	$fund->SetAnzahl(intval($fundJSON["Anzahl"]));
@@ -36,6 +38,6 @@ if (isset($_POST["Fund"]))
 			$fund->SetAblage($ablage);
 		}
 		
-		echo $fund->GetId();
+		echo "Das Element (".$fund->GetId().") wurde gespeichert.";
 	}
 }

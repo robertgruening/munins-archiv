@@ -15,7 +15,9 @@ if (isset($_POST["FundAttribut"]))
 		
 	if ($fundAttributJSON["Id"] != NULL &&
 		$fundAttributJSON["Id"] != "")
+	{
 		$fundAttribut->LoadById($fundAttributJSON["Id"]);
+	}
 	
 	$fundAttribut->SetBezeichnung($fundAttributJSON["Bezeichnung"]);
 	$fundAttribut->SetTyp($fundAttributTyp);

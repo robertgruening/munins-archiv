@@ -22,7 +22,9 @@ if (isset($_POST["Kontext"]))
 	
 	if ($kontextJSON["Id"] != NULL &&
 		$kontextJSON["Id"] != "")
+	{
 		$kontext->LoadById($kontextJSON["Id"]);
+	}
 		
 	$kontext->SetBezeichnung($kontextJSON["Bezeichnung"]);
 	$kontext->SetTyp($kontextTyp);

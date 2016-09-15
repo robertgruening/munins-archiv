@@ -6,84 +6,38 @@ require_once("Klassen/Kontext/class.Kontext.php");
 require_once("Klassen/Kontext/class.Begehungsflaeche.php");
 require_once("Klassen/Kontext/class.Begehung.php");
 
+$assocArrayKontexte = array();
+$parents = array();
+$kontext = new Kontext();
+
 if (isset($_POST["Id"]))
 {
-	$ids = preg_split("/[;]/", $_POST["Id"]);
-	$assocArrayKontexte = array();	
-	for ($i = 0; $i < count($ids); $i++)
-	{
-		$rootKontext = new Kontext();
-		$rootKontext->LoadById($ids[$i]);
-		
-		if ($rootKontext->GetTyp()->GetBezeichnung() == "Begehungsfläche")
-		{
-			$id = $rootKontext->GetId();
-			$rootKontext = new Begehungsflaeche();
-			$rootKontext->LoadById($id);
-		}
-		else if ($rootKontext->GetTyp()->GetBezeichnung() == "Begehung")
-		{
-			$id = $rootKontext->GetId();
-			$rootKontext = new Begehung();
-			$rootKontext->LoadById($id);
-		}
-	
-		$assocArrayRootKontext = $rootKontext->ConvertToAssocArray(0);
-		
-		$isRoot = false;
-		while ($isRoot == false)
-		{	
-			if ($rootKontext->GetParent() == NULL)
-			{
-				$isRoot = true;
-			}
-			else
-			{
-				$rootKontext = $rootKontext->GetParent();
-				
-				if ($rootKontext->GetTyp()->GetBezeichnung() == "Begehungsfläche")
-				{
-					$id = $rootKontext->GetId();
-					$rootKontext = new Begehungsflaeche();
-					$rootKontext->LoadById($id);
-				}
-				else if ($rootKontext->GetTyp()->GetBezeichnung() == "Begehung")
-				{
-					$id = $rootKontext->GetId();
-					$rootKontext = new Begehung();
-					$rootKontext->LoadById($id);
-				}
-		
-				$tmp = $rootKontext->ConvertToAssocArray(0);
-				$tmp["Children"] = array();
-				array_push($tmp["Children"], $assocArrayRootKontext);
-				$assocArrayRootKontext = $tmp;
-			}
-		}
-		array_push($assocArrayKontexte, $assocArrayRootKontext);
-	}
-	echo json_encode($assocArrayKontexte);
+	$parents = $kontext->LoadByIds(preg_split("/[;]/", $_POST["Id"]));		
 }
 else
 {
-	$kontext = new Kontext();
-	$rootKontexte = $kontext->LoadRoots();
-	$assocArrayKontexte = array();	
-	for ($i = 0; $i < count($rootKontexte); $i++)
-	{		
-		if ($rootKontext[$i]->GetTyp()->GetBezeichnung() == "Begehungsfläche")
-		{
-			$id = $rootKontexte[$i]->GetId();
-			$rootKontexte[$i] = new Begehungsflaeche();
-			$rootKontexte[$i]->LoadById($id);
-		}
-		else if ($rootKontext[$i]->GetTyp()->GetBezeichnung() == "Begehung")
-		{
-			$id = $rootKontexte[$i]->GetId();
-			$rootKontexte[$i] = new Begehung();
-			$rootKontexte[$i]->LoadById($id);
-		}
-		array_push($assocArrayKontexte, $rootKontexte[$i]->ConvertToAssocArrayWithAblagen(1000));
-	}
-	echo json_encode($assocArrayKontexte);
+	$parents = $kontext->LoadRoots();
 }
+
+for ($i = 0; $i < count($parents); $i++)
+{
+	if ($parents[$i]->GetTyp()->GetBezeichnung() == "Begehungsfläche")
+	{
+		$id = $parents[$i]->GetId();
+		$parents[$i] = new Begehungsflaeche();
+		$parents[$i]->LoadById($id);
+	}
+	else if ($parents[$i]->GetTyp()->GetBezeichnung() == "Begehung")
+	{
+		$id = $parents[$i]->GetId();
+		$parents[$i] = new Begehung();
+		$parents[$i]->LoadById($id);
+	}
+}
+
+for ($i = 0; $i < count($parents); $i++)
+{
+	array_push($assocArrayKontexte, $parents[$i]->ConvertRootChainToSimpleAssocArray());
+}
+
+echo json_encode($assocArrayKontexte);

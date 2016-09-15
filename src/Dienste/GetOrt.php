@@ -10,29 +10,28 @@ if (isset($_POST["Id"]))
 	$ort = new Ort();
 	$ort->LoadById(intval($_POST["Id"]));
 	
-	echo json_encode($ort->ConvertToAssocArray(0));
+	echo json_encode($ort->ConvertToAssocArray());
+	return;
 }
-else if (isset($_POST["KontextId"]))
+
+$assocArrayOrte = array();
+$orte = array();
+
+if (isset($_POST["KontextId"]))
 {
-	$assocArrayOrte = array();
 	$kontext = new Kontext();
 	$kontext->LoadById(intval($_POST["KontextId"]));
 	$orte = $kontext->GetOrte();
-	for ($i = 0; $i < count($orte); $i++)
-	{
-		array_push($assocArrayOrte, $orte[$i]->ConvertToAssocArray(1000));
-	}
-	echo json_encode($assocArrayOrte);
 }
 else
 {
-	$assocArrayOrte = array();
 	$ort = new Ort();
 	$orte = $ort->LoadRoots();
-	for ($i = 0; $i < count($orte); $i++)
-	{
-		array_push($assocArrayOrte, $orte[$i]->ConvertToAssocArrayWithKontexten(1000));
-	}
-	echo json_encode($assocArrayOrte);
 }
 
+for ($i = 0; $i < count($orte); $i++)
+{
+	array_push($assocArrayOrte, $orte[$i]->ConvertToAssocArray());
+}
+
+echo json_encode($assocArrayOrte);

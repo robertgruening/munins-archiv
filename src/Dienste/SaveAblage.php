@@ -15,7 +15,9 @@ if (isset($_POST["Ablage"]))
 		
 	if ($ablageJSON["Id"] != NULL &&
 		$ablageJSON["Id"] != "")
+	{
 		$ablage->LoadById($ablageJSON["Id"]);
+	}
 	
 	$ablage->SetBezeichnung($ablageJSON["Bezeichnung"]);
 	$ablage->SetTyp($ablageTyp);

@@ -24,40 +24,35 @@ if (isset($_POST["Id"]))
 		$kontext->LoadById(intval($_POST["Id"]));
 	}
 	
-	echo json_encode($kontext->ConvertToAssocArray(0));
+	echo json_encode($kontext->ConvertToAssocArray());
+	return;
 }
-else if (isset($_POST["AblageId"]))
+
+$assocArrayKontexte = array();
+$kontexte = array();
+
+if (isset($_POST["AblageId"]))
 {
-	$assocArrayKontexte = array();
 	$ablage = new Ablage();
 	$ablage->LoadById(intval($_POST["AblageId"]));
 	$kontexte = $ablage->GetKontexte();
-	for ($i = 0; $i < count($kontexte); $i++)
-	{
-		array_push($assocArrayKontexte, $kontexte[$i]->ConvertToAssocArray(1000));
-	}
-	echo json_encode($assocArrayKontexte);
 }
 else if (isset($_POST["OrtId"]))
 {
-	$assocArrayKontexte = array();
 	$ort = new Ort();
 	$ort->LoadById(intval($_POST["OrtId"]));
 	$kontexte = $ort->GetKontexte();
-	for ($i = 0; $i < count($kontexte); $i++)
-	{
-		array_push($assocArrayKontexte, $kontexte[$i]->ConvertToAssocArray(1000));
-	}
-	echo json_encode($assocArrayKontexte);
 }
 else
-{
-	$assocArrayKontexte = array();
-	$kontexte = Kontext::LoadRootKontexte();
-	for ($i = 0; $i < count($kontexte); $i++)
-	{
-		array_push($assocArrayKontexte, $kontexte[$i]->ConvertToAssocArray(1000));
-	}
-	echo json_encode($assocArrayKontexte);
+{	
+	$kontext = new Kontext();
+	$kontexte = $kontext->LoadRoots();
 }
+
+for ($i = 0; $i < count($kontexte); $i++)
+{
+	array_push($assocArrayKontexte, $kontexte[$i]->ConvertToAssocArray());
+}
+
+echo json_encode($assocArrayKontexte);
 

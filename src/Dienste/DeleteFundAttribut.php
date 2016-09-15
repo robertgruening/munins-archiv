@@ -11,14 +11,19 @@ if (isset($_POST["FundAttribut"]))
 	$fundattribut = new FundAttribut();
 	$fundattribut->LoadById(intval($fundattributJSON["Id"]));
 	
-	if (count($fundattribut->GetChildren()) == 0)
-	{
-		$fundattribut->Delete();
-		$fundattribut = NULL;
-		echo "INFO: Fundattribut (".$fundattributJSON["Id"].") wurde gelöscht";
-	}
-	else
+	if (count($fundattribut->GetChildren()) > 0)
 	{
 		echo "ERROR: Fundattribut hat Kind-Fundattribute";
+		return;
 	}
+	
+	if (count($fundattribut->GetFunde()) > 0)
+	{
+		echo "ERROR: Fundattribut ist Funden zugewiesen";
+		return;
+	}
+	
+	$fundattribut->Delete();
+	$fundattribut = NULL;
+	echo "INFO: Fundattribut (".$fundattributJSON["Id"].") wurde gelöscht";	
 }

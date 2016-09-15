@@ -18,8 +18,10 @@ if (isset($_POST["FundId"]) &&
 	$fund = new Fund();
 	$fund->LoadById(intval($_POST["FundId"]));	
 	$fund->RemoveAttribut($fundAttribut);
+	return;
 }
-else if (isset($_POST["OrtAId"]) && 
+
+if (isset($_POST["OrtAId"]) && 
 	isset($_POST["OrtBId"]))
 {
 	$ortA = new Ort();
@@ -28,8 +30,10 @@ else if (isset($_POST["OrtAId"]) &&
 	$ortB = new Ort();
 	$ortB->LoadById(intval($_POST["OrtBId"]));
 	$ortB->RemoveTeil($ortA);
+	return;
 }
-else if (isset($_POST["OrtId"]) && 
+
+if (isset($_POST["OrtId"]) && 
 	isset($_POST["KontextId"]))
 {	
 	$kontext = new Kontext();
@@ -38,5 +42,6 @@ else if (isset($_POST["OrtId"]) &&
 	$ort = new Ort();
 	$ort->LoadById(intval($_POST["OrtId"]));
 	$ort->RemoveKontext($kontext);
+	return;
 }
 
