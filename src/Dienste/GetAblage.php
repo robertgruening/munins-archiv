@@ -31,7 +31,7 @@ else
 
 for ($i = 0; $i < count($ablagen); $i++)
 {
-	array_push($assocArrayAblagen, $ablagen[$i]->ConvertToAssocArray());
+	array_push($assocArrayAblagen, $ablagen[$i]->ConvertToSimpleAssocArray());
 }
 
 echo json_encode($assocArrayAblagen);

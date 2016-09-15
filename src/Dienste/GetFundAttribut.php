@@ -36,7 +36,7 @@ else
 
 for ($i = 0; $i < count($attribute); $i++)
 {
-	array_push($assocArrayFundAttribute, $attribute[$i]->ConvertToAssocArray());
+	array_push($assocArrayFundAttribute, $attribute[$i]->ConvertToSimpleAssocArray());
 }
 
 echo json_encode($assocArrayFundAttribute);

@@ -51,7 +51,7 @@ else
 
 for ($i = 0; $i < count($kontexte); $i++)
 {
-	array_push($assocArrayKontexte, $kontexte[$i]->ConvertToAssocArray());
+	array_push($assocArrayKontexte, $kontexte[$i]->ConvertToSimpleAssocArray());
 }
 
 echo json_encode($assocArrayKontexte);

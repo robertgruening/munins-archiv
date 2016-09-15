@@ -290,18 +290,18 @@ class Fund extends ListElement
 		
 		// Ablage
 		$ablage = $this->GetAblage();
-		$assocArray["Ablage"] = $ablage->ConvertToAssocArray();
+		$assocArray["Ablage"] = $ablage->ConvertToSimpleAssocArray();
 		
 		// Kontext
 		$kontext = $this->GetKontext();	
-		$assocArray["Kontext"] = $kontext->ConvertToAssocArray();		
+		$assocArray["Kontext"] = $kontext->ConvertToSimpleAssocArray();		
 		
 		// Fundattribute
 		$assocArrayAttribute = array();
 		$attribute = $this->GetAttribute();			
 		for ($i = 0; $i < count($attribute); $i++)
 		{
-			array_push($assocArrayAttribute, $attribute[$i]->ConvertToAssocArray());
+			array_push($assocArrayAttribute, $attribute[$i]->ConvertToSimpleAssocArray());
 		}
 		$assocArray["Attribute"] =  $assocArrayAttribute;
 		

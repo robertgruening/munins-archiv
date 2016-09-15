@@ -31,7 +31,7 @@ else
 
 for ($i = 0; $i < count($orte); $i++)
 {
-	array_push($assocArrayOrte, $orte[$i]->ConvertToAssocArray());
+	array_push($assocArrayOrte, $orte[$i]->ConvertToSimpleAssocArray());
 }
 
 echo json_encode($assocArrayOrte);
