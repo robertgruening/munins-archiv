@@ -399,6 +399,19 @@ class Node
 		
 		return $assocArrayRoot;
 	}
+	
+	public function ConvertRootChainToSimpleAssocArrayList()
+	{
+		$assocArrayRoot = array();
+		$parent = $this->GetParent();
+		
+		if ($parent)
+			$assocArrayRoot = $parent->ConvertRootChainToSimpleAssocArrayList();
+			
+		array_push($assocArrayRoot, $this->ConvertToSimpleAssocArray());		
+		
+		return $assocArrayRoot;
+	}
 
 	public function Count()
 	{

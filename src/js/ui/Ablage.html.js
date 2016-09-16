@@ -8,6 +8,7 @@ $(document).ready(function() {
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
 	
+	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddKontext").click(function() { AddKontext(); });
 	
 	LoadSelectionTyp();
@@ -60,7 +61,7 @@ function ClearFields()
 	SelectTypId();
 	$("#textboxBezeichnung").val("");
 	$(_selectorTextboxParentId).val("");
-	LoadMultiDropdownParent(null);
+	setTimeout(LoadListParents(), 1000);
 	setTimeout(LoadListChildren(), 1000);
 	setTimeout(LoadListKontexte(), 1000);
 	setTimeout(LoadListFunde(), 1000);
@@ -89,15 +90,10 @@ function SetAblageJSON(ablage)
 	LoadListKontexte(ablage.Id);
 	LoadListFunde(ablage.Id);
 	
-	if (ablage.Parent == undefined ||
-		ablage.Parent == null)
-	{
-		LoadMultiDropdownParent(null);
-	}
-	else
-	{
-		LoadMultiDropdownParent(ablage);
-	}
+	if (ablage.Parent)
+		$(_selectorTextboxParentId).val(ablage.Parent.Id);
+
+	LoadListParents();
 		
 	document.title = "("+ablage.Id+") "+ablage.Typ.Bezeichnung+": "+ablage.Bezeichnung;
 }
@@ -126,6 +122,34 @@ function SaveAblage()
 			alert(data);
 			LoadListRootAblagen();
 		}
+	});
+}
+
+function LoadListParents()
+{	
+	var data = null;
+	
+	if ($("#textboxParentId").val() != undefined &&
+		$("#textboxParentId").val() != "")
+	{	
+		data = { 
+			Id : $("#textboxParentId").val(), 
+			ReturnDataStructure : "list"
+		};
+	}
+		
+	$("#divParent #divList").List(
+	{
+		UrlGetElements : "Dienste/GetAblageMitParents.php",
+		Data : data,
+		SetListItemText : function(element)
+		{
+			if (element.FullBezeichnung == "")
+				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+			
+			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+		},
+		ListItemLink : "Ablage.html"
 	});
 }
 
@@ -257,14 +281,43 @@ function LoadListRootAblagen()
 	});
 }
 
-function LoadMultiDropdownParent(ablage)
+function SetParent()
+{	
+	var dialog = "<div id=dialogSetParent title='Übergeordnete Ablage auswählen'>";
+	dialog += "<p>";
+	dialog += "<span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 20px 0;'></span>";
+	dialog += "Bitte wählen Sie eine Ablage aus, unter das Sie die neue Ablage hinzufügen möchten:</p>";
+	dialog += "<div id=divSetParent class=field></div>";
+	dialog += "<input id=hiddenfieldParentId type=hidden></input>"
+	dialog += "</div>";
+	$("body").append(dialog);
+	LoadMultiDropdownParent();
+	$("#dialogSetParent").dialog({
+		resizable: true,
+		modal: true,
+		buttons: {
+			"Auswählen": function() {
+				$(this).dialog("close");
+				$(_selectorTextboxParentId).val($("#hiddenfieldParentId").val());
+				$("#dialogSetParent").remove();
+				LoadListParents();
+			},
+			"Abbrechen": function() {
+				$(this).dialog("close");
+				$("#dialogSetParent").remove();
+			}
+		}
+	});
+}
+
+function LoadMultiDropdownParent()
 {
-	$(_selectorMultiDropdownParent).MultiDropdown(
+	$("#divSetParent").MultiDropdown(
 	{
 		UrlGetParents : "Dienste/GetAblageMitParents.php",
 		UrlGetChildren : "Dienste/GetAblageChildren.php",
-		SelectedElementId : ablage.Parent.Id,
-		Blacklist : [ablage.Id],
+		//SelectedElementId : null,
+		//Blacklist : [],
 		SetOptionBackgroundImage : function(element)
 		{		
 			return "images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
@@ -278,7 +331,7 @@ function LoadMultiDropdownParent(ablage)
 		},
 		SetSelectedElementId : function(elementId)
 		{
-			$(_selectorTextboxParentId).val(elementId);
+			$("#hiddenfieldParentId").val(elementId);
 		}
 	});
 }
@@ -405,7 +458,7 @@ function LoadAblageById(id)
 					parent = ablage;
 					ablage = ablage.Children[0];				
 				}
-				ablage.Parent = parent;
+				ablage.Parent = parent;				
 				SetAblageJSON(ablage);
 			}
 		},

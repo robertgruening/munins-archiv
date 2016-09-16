@@ -17,9 +17,18 @@ else
 	$parents = $ablage->LoadRoots();
 }
 
-for ($i = 0; $i < count($parents); $i++)
+if (isset($_POST["ReturnDataStructure"]) &&
+	$_POST["ReturnDataStructure"] == "list" && 
+	count($parents) == 1)
 {
-	array_push($assocArrayAblagen, $parents[$i]->ConvertRootChainToSimpleAssocArray());
+	$assocArrayAblagen = $parents[0]->ConvertRootChainToSimpleAssocArrayList();
+}
+else
+{
+	for ($i = 0; $i < count($parents); $i++)
+	{
+		array_push($assocArrayAblagen, $parents[$i]->ConvertRootChainToSimpleAssocArray());
+	}
 }
 
 echo json_encode($assocArrayAblagen);
