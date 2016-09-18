@@ -8,6 +8,7 @@ $(document).ready(function() {
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
 	
+	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddAblage").click(function() { AddAblage(); });
 	$("#buttonAddLfD").click(function() { AddLfD(); });
 	$("#buttonAddOrt").click(function() { AddOrt(); });
@@ -84,7 +85,7 @@ function ClearFields()
 	$("#textboxBegehungDatum").val("");
 	$("#textboxBegehungKommentar").val("");
 	$(_selectorTextboxParentId).val("");
-	LoadMultiDropdownParent(null);
+	setTimeout(LoadListParents(), 1000);
 	setTimeout(LoadListChildren(), 1000);
 	setTimeout(LoadListAblagen(), 1000);
 	setTimeout(LoadListFunde(), 1000);
@@ -124,15 +125,10 @@ function SetKontextJSON(kontext)
 	LoadListFunde(kontext.Id);
 	LoadListOrte(kontext.Id);
 	
-	if (kontext.Parent == undefined ||
-		kontext.Parent == null)
-	{
-		LoadMultiDropdownParent(null);
-	}
-	else
-	{
-		LoadMultiDropdownParent(kontext);	
-	}
+	if (kontext.Parent)
+		$(_selectorTextboxParentId).val(kontext.Parent.Id);
+
+	LoadListParents();
 	
 	if (kontext.Typ.Bezeichnung == "Begehungsfläche")
 	{
@@ -175,6 +171,32 @@ function SaveKontext()
 		}
 	});
 }
+
+function LoadListParents()
+{	
+	var data = null;
+	
+	if ($("#textboxParentId").val() != undefined &&
+		$("#textboxParentId").val() != "")
+	{	
+		data = { 
+			Id : $("#textboxParentId").val(), 
+			ReturnDataStructure : "list"
+		};
+	}
+		
+	$("#divParent #divList").List(
+	{
+		UrlGetElements : "Dienste/GetKontextMitParents.php",
+		Data : data,
+		SetListItemText : function(element)
+		{
+			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+		},
+		ListItemLink : "Kontext.html"
+	});
+}
+
 function LoadListChildren(kontextId)
 {
 	var data = null;
@@ -322,25 +344,57 @@ function LoadListRootKontexte()
 	});
 }
 
-function LoadMultiDropdownParent(kontext)
+function SetParent()
+{	
+	var dialog = "<div id=dialogSetParent title='Übergeordneten Kontext auswählen'>";
+	dialog += "<p>";
+	dialog += "<span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 20px 0;'></span>";
+	dialog += "Bitte wählen Sie einen Kontext aus, unter den Sie den neue Kontext hinzufügen möchten:</p>";
+	dialog += "<div id=divSetParent class=field></div>";
+	dialog += "<input id=hiddenfieldParentId type=hidden></input>"
+	dialog += "</div>";
+	$("body").append(dialog);
+	LoadMultiDropdownParent();
+	$("#dialogSetParent").dialog({
+		resizable: true,
+		modal: true,
+		buttons: {
+			"Auswählen": function() {
+				$(this).dialog("close");
+				$(_selectorTextboxParentId).val($("#hiddenfieldParentId").val());
+				$("#dialogSetParent").remove();
+				LoadListParents();
+			},
+			"Abbrechen": function() {
+				$(this).dialog("close");
+				$("#dialogSetParent").remove();
+			}
+		}
+	});
+}
+
+function LoadMultiDropdownParent()
 {
-	$(_selectorMultiDropdownParent).MultiDropdown(
+	$("#divSetParent").MultiDropdown(
 	{
 		UrlGetParents : "Dienste/GetKontextMitParents.php",
 		UrlGetChildren : "Dienste/GetKontextChildren.php",
-		SelectedElementId : kontext.Parent.Id,
-		Blacklist : [kontext.Id],
+		//SelectedElementId : null,
+		//Blacklist : [],
 		SetOptionBackgroundImage : function(element)
 		{		
 			return "images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
 		},
 		SetOptionText : function(element)
 		{
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+			if (element.FullBezeichnung == "")
+				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+				
+			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
 		SetSelectedElementId : function(elementId)
 		{
-			$(_selectorTextboxParentId).val(elementId);
+			$("#hiddenfieldParentId").val(elementId);
 		}
 	});
 }

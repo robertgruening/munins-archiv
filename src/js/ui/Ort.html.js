@@ -8,6 +8,7 @@ $(document).ready(function() {
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
 	
+	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddTeil").click(function() { AddTeil(); });
 	$("#buttonAddKontext").click(function() { AddKontext(); });
 	
@@ -61,7 +62,7 @@ function ClearFields()
 	SelectTypId();
 	$("#textboxBezeichnung").val("");
 	$(_selectorTextboxParentId).val("");
-	LoadMultiDropdownParent(null);
+	setTimeout(LoadListParents(), 1000);
 	setTimeout(LoadListChildren(), 1000);
 	setTimeout(LoadListKontexte(), 1000);
 	
@@ -89,15 +90,10 @@ function SetOrtJSON(ort)
 	LoadListKontexte(ort.Id);
 	LoadListTeile(ort.Id);
 	
-	if (ort.Parent == undefined ||
-		ort.Parent == null)
-	{
-		LoadMultiDropdownParent(null);
-	}
-	else
-	{
-		LoadMultiDropdownParent(ort);
-	}
+	if (ort.Parent)
+		$(_selectorTextboxParentId).val(ort.Parent.Id);
+
+	LoadListParents();
 		
 	document.title = "("+ort.Id+") "+ort.Typ.Bezeichnung+": "+ort.Bezeichnung;
 }
@@ -126,6 +122,31 @@ function SaveOrt()
 			alert(data);
 			LoadListRootOrte();
 		}
+	});
+}
+
+function LoadListParents()
+{	
+	var data = null;
+	
+	if ($("#textboxParentId").val() != undefined &&
+		$("#textboxParentId").val() != "")
+	{	
+		data = { 
+			Id : $("#textboxParentId").val(), 
+			ReturnDataStructure : "list"
+		};
+	}
+		
+	$("#divParent #divList").List(
+	{
+		UrlGetElements : "Dienste/GetOrtMitParents.php",
+		Data : data,
+		SetListItemText : function(element)
+		{
+			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+		},
+		ListItemLink : "Ort.html"
 	});
 }
 
@@ -229,14 +250,47 @@ function LoadListRootOrte()
 	});
 }
 
-function LoadMultiDropdownParent(ort)
+function SetParent()
+{	
+	var dialog = "<div id=dialogSetParent title='Übergeordneten Ort auswählen'>";
+	dialog += "<p>";
+	dialog += "<span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 20px 0;'></span>";
+	dialog += "Bitte wählen Sie einen Ort aus, unter den Sie den neuen Ort hinzufügen möchten:</p>";
+	dialog += "<div id=divSetParent class=field></div>";
+	dialog += "<input id=hiddenfieldParentId type=hidden></input>"
+	dialog += "</div>";
+	$("body").append(dialog);
+	LoadMultiDropdownParent();
+	$("#dialogSetParent").dialog({
+		resizable: true,
+		modal: true,
+		buttons: {
+			"Auswählen": function() {
+				$(this).dialog("close");
+				$(_selectorTextboxParentId).val($("#hiddenfieldParentId").val());
+				$("#dialogSetParent").remove();
+				LoadListParents();
+			},
+			"Abbrechen": function() {
+				$(this).dialog("close");
+				$("#dialogSetParent").remove();
+			}
+		}
+	});
+}
+
+function LoadMultiDropdownParent()
 {
-	$(_selectorMultiDropdownParent).MultiDropdown(
+	$("#divSetParent").MultiDropdown(
 	{
 		UrlGetParents : "Dienste/GetOrtMitParents.php",
 		UrlGetChildren : "Dienste/GetOrtChildren.php",
-		SelectedElementId : ort.Parent.Id,
-		Blacklist : [ort.Id],
+		//SelectedElementId : null,
+		//Blacklist : [],
+		SetOptionBackgroundImage : function(element)
+		{		
+			return "images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
+		},
 		SetOptionText : function(element)
 		{
 			if (element.FullBezeichnung == "")
@@ -246,7 +300,7 @@ function LoadMultiDropdownParent(ort)
 		},
 		SetSelectedElementId : function(elementId)
 		{
-			$(_selectorTextboxParentId).val(elementId);
+			$("#hiddenfieldParentId").val(elementId);
 		}
 	});
 }

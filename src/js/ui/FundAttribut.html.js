@@ -5,6 +5,7 @@ $(document).ready(function() {
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
 	
+	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddKontext").click(function() { AddKontext(); });
 	
 	LoadSelectionTyp();
@@ -60,7 +61,7 @@ function ClearFields()
 	SelectTypId();
 	$("#textboxBezeichnung").val("");
 	$(_selectorTextboxParentId).val("");
-	LoadMultiDropdownParent(null, GetSelectedTypId());
+	setTimeout(LoadListParents(), 1000);
 	setTimeout(LoadListChildren(), 1000);
 	setTimeout(LoadListFunde(), 1000);
 	
@@ -87,15 +88,10 @@ function SetFundAttributJSON(fundAttribut)
 	LoadListChildren(fundAttribut.Id);
 	LoadListFunde(fundAttribut.Id);
 	
-	if (fundAttribut.Parent == undefined ||
-		fundAttribut.Parent == null)
-	{
-		LoadMultiDropdownParent(null, GetSelectedTypId());
-	}
-	else
-	{
-		LoadMultiDropdownParent(fundAttribut, GetSelectedTypId());
-	}
+	if (fundAttribut.Parent)
+		$(_selectorTextboxParentId).val(fundAttribut.Parent.Id);
+
+	LoadListParents();
 		
 	document.title = "("+fundAttribut.Id+") "+fundAttribut.Typ.Bezeichnung+": "+fundAttribut.Bezeichnung;
 }
@@ -124,6 +120,31 @@ function SaveFundAttribut()
 			alert(data);
 			LoadListRootFundAttribute();
 		}
+	});
+}
+
+function LoadListParents()
+{	
+	var data = null;
+	
+	if ($("#textboxParentId").val() != undefined &&
+		$("#textboxParentId").val() != "")
+	{	
+		data = { 
+			Id : $("#textboxParentId").val(), 
+			ReturnDataStructure : "list"
+		};
+	}
+		
+	$("#divParent #divList").List(
+	{
+		UrlGetElements : "Dienste/GetFundAttributMitParents.php",
+		Data : data,
+		SetListItemText : function(element)
+		{
+			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+		},
+		ListItemLink : "FundAttribut.html"
 	});
 }
 
@@ -188,22 +209,57 @@ function LoadListRootFundAttribute()
 	});
 }
 
-function LoadMultiDropdownParent(fundAttribut, fundAttributTypId)
+function SetParent()
+{	
+	var dialog = "<div id=dialogSetParent title='Übergeordnetes Fundattribut auswählen'>";
+	dialog += "<p>";
+	dialog += "<span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 20px 0;'></span>";
+	dialog += "Bitte wählen Sie ein Fundattribut aus, unter das Sie das neue Fundattribut hinzufügen möchten:</p>";
+	dialog += "<div id=divSetParent class=field></div>";
+	dialog += "<input id=hiddenfieldParentId type=hidden></input>"
+	dialog += "</div>";
+	$("body").append(dialog);
+	LoadMultiDropdownParent();
+	$("#dialogSetParent").dialog({
+		resizable: true,
+		modal: true,
+		buttons: {
+			"Auswählen": function() {
+				$(this).dialog("close");
+				$(_selectorTextboxParentId).val($("#hiddenfieldParentId").val());
+				$("#dialogSetParent").remove();
+				LoadListParents();
+			},
+			"Abbrechen": function() {
+				$(this).dialog("close");
+				$("#dialogSetParent").remove();
+			}
+		}
+	});
+}
+
+function LoadMultiDropdownParent()
 {
-	$(_selectorMultiDropdownParent).FilteredMultiDropdown(
+	$("#divSetParent").MultiDropdown(
 	{
 		UrlGetParents : "Dienste/GetFundAttributMitParents.php",
 		UrlGetChildren : "Dienste/GetFundAttributChildren.php",
-		FilterTypId : fundAttributTypId,
-		SelectedElementId : fundAttribut.Parent.Id,
-		Blacklist : [fundAttribut.Id],
+		//SelectedElementId : null,
+		//Blacklist : [],
+		SetOptionBackgroundImage : function(element)
+		{		
+			return "images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
+		},
 		SetOptionText : function(element)
 		{
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+			if (element.FullBezeichnung == "")
+				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+				
+			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
 		SetSelectedElementId : function(elementId)
 		{
-			$(_selectorTextboxParentId).val(elementId);
+			$("#hiddenfieldParentId").val(elementId);
 		}
 	});
 }

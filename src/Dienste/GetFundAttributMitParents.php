@@ -17,9 +17,18 @@ else
 	$parents = $fundAttribut->LoadRoots();
 }
 
-for ($i = 0; $i < count($parents); $i++)
+if (isset($_POST["ReturnDataStructure"]) &&
+	$_POST["ReturnDataStructure"] == "list" && 
+	count($parents) == 1)
 {
-	array_push($assocArrayFundAttribute, $parents[$i]->ConvertRootChainToSimpleAssocArray());
+	$assocArrayFundAttribute = $parents[0]->ConvertRootChainToSimpleAssocArrayList();
+}
+else
+{
+	for ($i = 0; $i < count($parents); $i++)
+	{
+		array_push($assocArrayFundAttribute, $parents[$i]->ConvertRootChainToSimpleAssocArray());
+	}
 }
 
 echo json_encode($assocArrayFundAttribute);

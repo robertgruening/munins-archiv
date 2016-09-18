@@ -144,10 +144,7 @@ function LoadListParents()
 		Data : data,
 		SetListItemText : function(element)
 		{
-			if (element.FullBezeichnung == "")
-				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
-			
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
 		ListItemLink : "Ablage.html"
 	});
@@ -169,10 +166,7 @@ function LoadListChildren(ablageId)
 		Data : data,
 		SetListItemText : function(element)
 		{
-			if (element.FullBezeichnung == "")
-				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
-			
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
 		ListItemLink : "Ablage.html"
 	});
@@ -286,7 +280,7 @@ function SetParent()
 	var dialog = "<div id=dialogSetParent title='Übergeordnete Ablage auswählen'>";
 	dialog += "<p>";
 	dialog += "<span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 20px 0;'></span>";
-	dialog += "Bitte wählen Sie eine Ablage aus, unter das Sie die neue Ablage hinzufügen möchten:</p>";
+	dialog += "Bitte wählen Sie eine Ablage aus, unter die Sie die neue Ablage hinzufügen möchten:</p>";
 	dialog += "<div id=divSetParent class=field></div>";
 	dialog += "<input id=hiddenfieldParentId type=hidden></input>"
 	dialog += "</div>";

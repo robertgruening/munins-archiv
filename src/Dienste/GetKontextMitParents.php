@@ -35,9 +35,18 @@ for ($i = 0; $i < count($parents); $i++)
 	}
 }
 
-for ($i = 0; $i < count($parents); $i++)
+if (isset($_POST["ReturnDataStructure"]) &&
+	$_POST["ReturnDataStructure"] == "list" && 
+	count($parents) == 1)
 {
-	array_push($assocArrayKontexte, $parents[$i]->ConvertRootChainToSimpleAssocArray());
+	$assocArrayKontexte = $parents[0]->ConvertRootChainToSimpleAssocArrayList();
+}
+else
+{
+	for ($i = 0; $i < count($parents); $i++)
+	{
+		array_push($assocArrayKontexte, $parents[$i]->ConvertRootChainToSimpleAssocArray());
+	}
 }
 
 echo json_encode($assocArrayKontexte);
