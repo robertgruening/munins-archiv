@@ -7,6 +7,7 @@ var _selectorTextboxAblageId = "#textboxId";
 $(document).ready(function() {
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
+	$("#buttonAddChild").attr("disabled",true);
 	
 	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddKontext").click(function() { AddKontext(); });
@@ -15,9 +16,23 @@ $(document).ready(function() {
 	LoadListRootAblagen();
 	
 	if (GetURLParameter("Id"))
+	{
 		LoadAblageById(GetURLParameter("Id"));
-	else
-		ClearFields();
+		
+		$("#buttonAddChild").click(function() { AddChild(GetURLParameter("Id")); });
+		$("#buttonAddChild").attr("disabled",false);
+		
+		return;
+	}
+	
+	ClearFields();
+	
+	if (GetURLParameter("Parent_Id"))
+	{
+		$(_selectorTextboxParentId).val(GetURLParameter("Parent_Id"));
+		LoadListParents();
+		return;
+	}
 });
 
 function selectTypen_onChange()
@@ -33,12 +48,13 @@ function SelectTypId(typId)
 		typId = $("#selectTypen option").filter(function () { return $(this).html() == "Raum"; }).val();
 	}
 	
-	$("#selectTypen").val(typId);				
+	$("#selectTypen").val(typId);
 	ShowFormFieldBlocksByTyp();
 }
 
 function ShowFormFieldBlocksByTyp()
 {	
+	/*
 	$("#divParent").hide();
 	
 	if ($("#selectTypen option:selected").text() == "Raum")
@@ -48,6 +64,7 @@ function ShowFormFieldBlocksByTyp()
 	{
 		$("#divParent").show();
 	}
+	*/
 }
 
 function buttonNeu_onClick()
@@ -70,7 +87,7 @@ function ClearFields()
 }
 
 function GetAblageJSON()
-{
+{	
 	var ablage = {
 		"Id" : $("#textboxId").val(),
 		"Bezeichnung" : $("#textboxBezeichnung").val(),
@@ -170,6 +187,11 @@ function LoadListChildren(ablageId)
 		},
 		ListItemLink : "Ablage.html"
 	});
+}
+
+function AddChild(ablageId)
+{
+	window.open("Ablage.html?Parent_Id=" + ablageId);
 }
 
 function LoadListKontexte(ablageId)
