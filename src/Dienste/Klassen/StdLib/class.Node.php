@@ -53,7 +53,7 @@ class Node
 	// Ebene
 	public function GetEbene()
 	{
-		return $this->_ebene;
+		return $this->_ebene ? $this->_ebene : 0;
 	}
 	
 	public function SetEbene($ebene)
