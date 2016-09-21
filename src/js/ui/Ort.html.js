@@ -7,6 +7,7 @@ var _selectorTextboxOrtId = "#textboxId";
 $(document).ready(function() {
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
+	$("#buttonAddChild").attr("disabled",true);
 	
 	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddTeil").click(function() { AddTeil(); });
@@ -16,9 +17,23 @@ $(document).ready(function() {
 	LoadListRootOrte();
 	
 	if (GetURLParameter("Id"))
+	{
 		LoadOrtById(GetURLParameter("Id"));
-	else
-		ClearFields();
+		
+		$("#buttonAddChild").click(function() { AddChild(GetURLParameter("Id")); });
+		$("#buttonAddChild").attr("disabled",false);
+		
+		return;
+	}
+	
+	ClearFields();
+	
+	if (GetURLParameter("Parent_Id"))
+	{
+		$(_selectorTextboxParentId).val(GetURLParameter("Parent_Id"));
+		LoadListParents();
+		return;
+	}
 });
 
 function selectTypen_onChange()
@@ -40,6 +55,7 @@ function SelectTypId(typId)
 
 function ShowFormFieldBlocksByTyp()
 {	
+	/*
 	$("#divParent").hide();
 	
 	if ($("#selectTypen option:selected").text() == "Landkreis")
@@ -49,6 +65,7 @@ function ShowFormFieldBlocksByTyp()
 	{
 		$("#divParent").show();
 	}
+	*/
 }
 
 function buttonNeu_onClick()
@@ -170,6 +187,11 @@ function LoadListChildren(ortId)
 		},
 		ListItemLink : "Ort.html"
 	});
+}
+
+function AddChild(ablageId)
+{
+	window.open("Ort.html?Parent_Id=" + ablageId);
 }
 
 function LoadListKontexte(ortId)

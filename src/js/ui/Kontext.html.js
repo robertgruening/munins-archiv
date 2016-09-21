@@ -7,6 +7,7 @@ var _selectorTextboxKontextId = "#textboxId";
 $(document).ready(function() {
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
+	$("#buttonAddChild").attr("disabled",true);
 	
 	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddAblage").click(function() { AddAblage(); });
@@ -17,9 +18,23 @@ $(document).ready(function() {
 	LoadListRootKontexte();
 	
 	if (GetURLParameter("Id"))
+	{
 		LoadKontextById(GetURLParameter("Id"));
-	else
-		ClearFields();
+		
+		$("#buttonAddChild").click(function() { AddChild(GetURLParameter("Id")); });
+		$("#buttonAddChild").attr("disabled",false);
+		
+		return;
+	}
+	
+	ClearFields();
+	
+	if (GetURLParameter("Parent_Id"))
+	{
+		$(_selectorTextboxParentId).val(GetURLParameter("Parent_Id"));
+		LoadListParents();
+		return;
+	}
 });
 
 function selectTypen_onChange()
@@ -41,7 +56,7 @@ function SelectTypId(typId)
 
 function ShowFormFieldBlocksByTyp()
 {	
-	$("#divParent").hide();
+	//$("#divParent").hide();
 	$("#divBegehungLfDErfassungsJahr").hide();
 	$("#divBegehungLfDErfassungsNr").hide();
 	$("#divBegehungDatum").hide();
@@ -53,12 +68,12 @@ function ShowFormFieldBlocksByTyp()
 	}
 	else if ($("#selectTypen option:selected").text() == "Begehungsfläche")
 	{
-		$("#divParent").show();
+		//$("#divParent").show();
 		$("#divLfDs").show();
 	}
 	else if ($("#selectTypen option:selected").text() == "Begehung")
 	{
-		$("#divParent").show();
+		//$("#divParent").show();
 		$("#divBegehungLfDErfassungsJahr").show();
 		$("#divBegehungLfDErfassungsNr").show();
 		$("#divBegehungDatum").show();
@@ -66,7 +81,7 @@ function ShowFormFieldBlocksByTyp()
 	}
 	else
 	{
-		$("#divParent").show();
+		//$("#divParent").show();
 	}
 }
 

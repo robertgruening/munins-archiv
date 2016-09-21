@@ -4,13 +4,75 @@ var _selectorTextboxParentId = "#textboxParentId";
 $(document).ready(function() {
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
+	$("#buttonAddChild").attr("disabled",true);
 	
 	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddKontext").click(function() { AddKontext(); });
 	
 	LoadSelectionTyp();
-	LoadListRootFundAttribute();	
+	LoadListRootFundAttribute();
+	
+	if (GetURLParameter("Id"))
+	{
+		LoadFundAttributById(GetURLParameter("Id"));
+		
+		$("#buttonAddChild").click(function() { AddChild(GetURLParameter("Id")); });
+		$("#buttonAddChild").attr("disabled",false);
+		
+		return;
+	}
+	
+	ClearFields();
+	
+	if (GetURLParameter("Parent_Id"))
+	{
+		$(_selectorTextboxParentId).val(GetURLParameter("Parent_Id"));
+		LoadListParents();
+		return;
+	}
 });
+
+function LoadFundAttributById(id)
+{
+	if (id == undefined ||
+		id == null ||
+		id == GetValueForNoSelection())
+	{
+		ClearFields();
+		return;
+	}
+	
+	$.ajax(
+	{
+		type:"POST",
+		url:"Dienste/GetFundAttributMitParents.php",
+		data: {
+			Id : id
+		},
+		success:function(data, textStatus, jqXHR)
+		{
+			if (data)
+			{				
+				var parents = $.parseJSON(data);
+				var fundAttribut = parents[0];
+				var parent = null;
+				
+				while (fundAttribut.Children != undefined &&
+					fundAttribut.Children.length > 0)
+				{
+					parent = fundAttribut;
+					fundAttribut = fundAttribut.Children[0];				
+				}
+				fundAttribut.Parent = parent;
+				SetFundAttributJSON(fundAttribut);
+			}
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			alert("error");
+		}
+	});	
+}
 
 function selectTypen_onChange()
 {
@@ -170,6 +232,11 @@ function LoadListChildren(fundAttributId)
 	});
 }
 
+function AddChild(ablageId)
+{
+	window.open("FundAttribut.html?Parent_Id=" + ablageId);
+}
+
 function LoadListFunde(fundAttributId)
 {
 	var data = null;
@@ -240,7 +307,7 @@ function SetParent()
 
 function LoadMultiDropdownParent()
 {
-	$("#divSetParent").MultiDropdown(
+	$("#divSetParent").FilteredMultiDropdown(
 	{
 		UrlGetParents : "Dienste/GetFundAttributMitParents.php",
 		UrlGetChildren : "Dienste/GetFundAttributChildren.php",
@@ -333,11 +400,6 @@ function LoadSelectionTyp()
 				}
 				$("#selectTypen").html(options);
 				SelectTypId();
-				
-				if (GetURLParameter("Id"))
-					LoadFundAttributeById(GetURLParameter("Id"));
-				else
-					ClearFields();
 			}
 		},
 		error:function(jqXHR, textStatus, errorThrown)
