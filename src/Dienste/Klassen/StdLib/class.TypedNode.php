@@ -111,8 +111,8 @@ class TypedNode extends Node
 	{
 		return "UPDATE ".$this->GetTableName()."
 				SET Bezeichnung='".$this->GetBezeichnung()."',
-				Ebene=".$this->GetEbene().",
-				Typ_Id=".$this->GetTyp()->GetId()."
+					Ebene=".$this->GetEbene().",
+					Typ_Id=".$this->GetTyp()->GetId()."
 				WHERE Id = ".$this->GetId().";";
 	}
 	

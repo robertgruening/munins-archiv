@@ -144,9 +144,9 @@ function LoadKontextMitParents(ablage, kontextId)
 					kontext.Children.length > 0)
 				{
 					parent = kontext;
-					kontext = kontext.Children[0];				
+					kontext = kontext.Children[0];	
+					kontext.Parent = parent;			
 				}
-				kontext.Parent = parent;
 				// Annahme:
 				// Die Ablage ist mit einem Kontext der Zeit verbunden,
 				// aber mit dem darüberliegenden Kontext des Ortes ist
@@ -154,7 +154,10 @@ function LoadKontextMitParents(ablage, kontextId)
 				// Beispiel:
 				// Karton ist verknüpft mit Begehung und
 				// Ort ist verknüpft mit Begehungsfläche
-				LoadOrte(ablage, kontext.Parent);
+				if (kontext.Typ.Bezeichnung == "Begehung")
+					LoadOrte(ablage, kontext.Parent);
+				else if (kontext.Typ.Bezeichnung == "Laufende Nummer")
+					LoadOrte(ablage, kontext.Parent.Parent);
 			}
 		},
 		error:function(jqXHR, textStatus, errorThrown)

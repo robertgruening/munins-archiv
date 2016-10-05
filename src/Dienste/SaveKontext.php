@@ -40,7 +40,8 @@ if (isset($_POST["Kontext"]))
 		$kontext->SetKommentar($kontextJSON["Kommentar"]);
 	}
 	
-	$kontext->Save();
+	echo $kontext->Save();
+	return;
 	
 	if ($kontextJSON["Parent_Id"] != NULL)
 	{

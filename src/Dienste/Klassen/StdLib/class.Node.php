@@ -331,7 +331,7 @@ class Node
 	{
 		return "UPDATE ".$this->GetTableName()."
 				SET Bezeichnung='".$this->GetBezeichnung()."',
-				Ebene=".$this->GetEbene()."
+					Ebene=".$this->GetEbene()."
 				WHERE Id = ".$this->GetId().";";
 	}
 

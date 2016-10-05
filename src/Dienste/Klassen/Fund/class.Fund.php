@@ -106,9 +106,9 @@ class Fund extends ListElement
 	
 	protected function GetSQLStatementToUpdate()
 	{
-		return "UPDATE ".$this->GetTableName()."
+		return "UPDATE ".$this->GetTableName()." 
 				SET Bezeichnung='".$this->GetBezeichnung()."',				
-				SET Anzahl=".$this->GetAnzahl()."
+					Anzahl=".$this->GetAnzahl()." 
 				WHERE Id = ".$this->GetId().";";
 	}	
 	

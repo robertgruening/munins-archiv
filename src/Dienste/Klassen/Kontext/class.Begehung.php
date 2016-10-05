@@ -111,8 +111,8 @@ class Begehung extends Kontext
 		$id = $this->GetId();
 		$lfDErfassungsJahr = $this->GetLfDErfassungsJahr() == NULL ? "NULL" : $this->GetLfDErfassungsJahr();
 		$lfDErfassungsNr = $this->GetLfDErfassungsNr() == NULL ? "NULL" : $this->GetLfDErfassungsNr();
-		$datum = $this->GetDatum() == NULL ? "NULL" : $this->GetDatum();
-		$kommentar = $this->GetKommentar() == NULL ? "NULL" : $this->GetKommentar();		
+		$datum = $this->GetDatum() == NULL ? "NULL" : "'".$this->GetDatum()."'";
+		$kommentar = $this->GetKommentar() == NULL ? "NULL" : "'".$this->GetKommentar()."'";		
 		
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
@@ -120,12 +120,12 @@ class Begehung extends Kontext
 		{
 			$mysqli->set_charset("utf8");
 			if ($this->IsInTableBegehung())
-			{			
+			{	
 				$ergebnis = $mysqli->query("UPDATE Begehung
 											SET LfDErfassungsJahr=".$lfDErfassungsJahr.",
 												LfDErfassungsNr=".$lfDErfassungsNr.",
-												Datum='".$datum."',
-												Kommentar='".$kommentar."'
+												Datum=".$datum.",
+												Kommentar=".$kommentar."
 											WHERE Id = ".$id.";");
 			}
 			else
@@ -157,6 +157,17 @@ class Begehung extends Kontext
 		$mysqli->close();
 		
 		return $isInTable;
+	}
+	
+	public function ConvertToSimpleAssocArray()
+	{
+		$assocArray = parent::ConvertToSimpleAssocArray();
+		$assocArray["LfDErfassungsJahr"] = $this->GetLfDErfassungsJahr();
+		$assocArray["LfDErfassungsNr"] = $this->GetLfDErfassungsNr();
+		$assocArray["Datum"] = $this->GetDatum();
+		$assocArray["Kommentar"] = $this->GetKommentar();
+		
+		return $assocArray;
 	}
 }
 ?>
