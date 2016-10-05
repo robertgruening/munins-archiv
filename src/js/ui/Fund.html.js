@@ -113,7 +113,7 @@ function SaveFund()
 		},
 		success:function(data, textStatus, jqXHR)
 		{
-			alert("Der Fund (" + $.parseJSON(data) + ") wurde gespeichert.");
+			alert(data);
 			LoadFundById(data);
 		}
 	});

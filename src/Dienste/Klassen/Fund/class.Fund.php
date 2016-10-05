@@ -101,7 +101,7 @@ class Fund extends ListElement
 	protected function GetSQLStatementToInsert()
 	{
 		return "INSERT INTO ".$this->GetTableName()."(Bezeichnung, Anzahl)
-				VALUES('".$this->GetBezeichnung()."', ".$this->GetAnzahl().";";
+				VALUES('".$this->GetBezeichnung()."', ".$this->GetAnzahl().");";
 	}
 	
 	protected function GetSQLStatementToUpdate()

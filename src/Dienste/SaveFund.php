@@ -16,7 +16,6 @@ if (isset($_POST["Fund"]))
 	{
 		$fund->LoadById($fundJSON["Id"]);
 	}
-	
 	$fund->SetBezeichnung($fundJSON["Bezeichnung"]);
 	$fund->SetAnzahl(intval($fundJSON["Anzahl"]));
 	
