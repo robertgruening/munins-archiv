@@ -77,6 +77,36 @@ select option {
 	border: 1px solid;
 }
 
+.subNavigation {
+	margin: 0;
+	padding: 0 0 0 10px;
+	position: fixed;
+	top: 70px;
+	left: 0;
+}
+
+.subNavigation ul {
+	display: inline;
+	margin: 0px;
+	padding: 0px;
+}
+
+.subNavigation ul li{
+	display: block;
+	margin-right: 6px;
+	margin-bottom: 5px;
+	height:100%;
+	clear: left;
+	width: 100%;
+}
+
+.subNavigation ul li a{
+	padding: 3px 15px 3px 15px;
+	text-decoration: none;
+	border: 1px solid;
+	display:block;
+}
+
 -- colors
 
 body {
@@ -126,21 +156,21 @@ input[type="button"]:hover {
 	border-color: DarkGray;
 }
 
-.mainNavigation {
+.mainNavigation, .subNavigation {
 	background-color: white;
 	border-color: DarkGray;
 }
 
-.mainNavigation ul li a {
+.mainNavigation ul li a, .subNavigation ul li a {
 	border-color: RoyalBlue;
 	background-color: white;
 }
 
-.mainNavigation ul li a:hover {
+.mainNavigation ul li a:hover, .subNavigation ul li a:hover {
 	background-color: LightCyan;
 }
 
-.mainNavigation ul li a.activeFormular {
+.mainNavigation ul li a.activeFormular, .subNavigation ul li a.activeFormular {
 	background-color: LightCyan;
 }
 
@@ -153,7 +183,7 @@ body {
 
 .form {
 	margin: 0px;
-	padding: 40px 0px 0px 10px;
+	padding: 30px 0px 0px 220px;
 	height: 100%;
 }
 

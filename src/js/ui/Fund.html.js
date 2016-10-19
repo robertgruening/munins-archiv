@@ -1,23 +1,37 @@
 var _selectorMultiDropdownAblage = "#divAblageSelections";
 var _selectorTextboxAblageId = "#textboxSelectedAblageId";
-
 var _selectorMultiDropdownKontext = "#divKontextSelections";
 var _selectorTextboxKontextId = "#textboxSelectedKontextId";
+var _tabCount = 2;
 
 $(document).ready(function() {
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxAblageId).attr("disabled",true);
 	$(_selectorTextboxKontextId).attr("disabled",true);
 	
+	OpenTab(0);
+	
 	$("#buttonAddFundAttribut").click(function() { AddAttribut(); });
 	
 	if (GetURLParameter("Id"))
 	{
 		LoadFundById(GetURLParameter("Id"));
+		
+		return;
 	}
-	else
+	
+	ClearFields();
+	
+	if (GetURLParameter("Ablage_Id"))
 	{
-		ClearFields();
+		$(_selectorTextboxAblageId).val(GetURLParameter("Ablage_Id"));
+		LoadMultiDropdownAblage($(_selectorTextboxAblageId).val());
+	}	
+	
+	if (GetURLParameter("Kontext_Id"))
+	{
+		$(_selectorTextboxKontextId).val(GetURLParameter("Kontext_Id"));
+		LoadMultiDropdownKontext($(_selectorTextboxKontextId).val());
 	}
 });
 
@@ -113,8 +127,11 @@ function SaveFund()
 		},
 		success:function(data, textStatus, jqXHR)
 		{
-			alert(data);
-			LoadFundById(data);
+			var message = $.parseJSON(data);
+			alert(message.Message);
+			
+			if (message.ElementId)
+				LoadFundById(message.ElementId);
 		}
 	});
 }
@@ -361,4 +378,16 @@ function GetURLParameter(name)
 function GetValueForNoSelection()
 {
 	return -1;
+}
+
+function OpenTab(index)
+{
+	for (var i = 0; i <= _tabCount; i++)
+	{
+		$("#tab_" + i).hide();
+		$(".subNavigation ul li #" + i).removeClass("activeFormular");
+	}
+	
+	$("#tab_" + index).show();
+	$(".subNavigation ul li #" + index).addClass("activeFormular");
 }

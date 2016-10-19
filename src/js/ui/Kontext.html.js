@@ -1,13 +1,16 @@
 var _selectorMultiDropdownParent = "#divParentSelections";
 var _selectorTextboxParentId = "#textboxParentId";
-
 var _selectorMultiDropdownKontext = "#divKontextSelections";
 var _selectorTextboxKontextId = "#textboxId";
+var _tabCount = 2;
 
 $(document).ready(function() {
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
 	$("#buttonAddChild").attr("disabled",true);
+	$("#buttonAddFund").attr("disabled",true);
+	
+	OpenTab(0);
 	
 	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddAblage").click(function() { AddAblage(); });
@@ -24,6 +27,9 @@ $(document).ready(function() {
 		$("#buttonAddChild").click(function() { AddChild(GetURLParameter("Id")); });
 		$("#buttonAddChild").attr("disabled",false);
 		
+		$("#buttonAddFund").click(function() { AddFund(GetURLParameter("Id")); });
+		$("#buttonAddFund").attr("disabled",false);
+		
 		return;
 	}
 	
@@ -33,6 +39,7 @@ $(document).ready(function() {
 	{
 		$(_selectorTextboxParentId).val(GetURLParameter("Parent_Id"));
 		LoadListParents();
+		
 		return;
 	}
 });
@@ -181,8 +188,12 @@ function SaveKontext()
 		},
 		success:function(data, textStatus, jqXHR)
 		{
-			alert(data);
+			var message = $.parseJSON(data);
+			alert(message.Message);
 			LoadListRootKontexte();
+			
+			if (message.ElementId)
+				LoadKontextById(message.ElementId);
 		}
 	});
 }
@@ -232,6 +243,16 @@ function LoadListChildren(kontextId)
 		},
 		ListItemLink : "Kontext.html"
 	});
+}
+
+function AddChild(kontextId)
+{
+	window.open("Kontext.html?Parent_Id=" + kontextId);
+}
+
+function AddFund(kontextId)
+{
+	window.open("Fund.html?Kontext_Id=" + kontextId);
 }
 
 function LoadListAblagen(kontextId)
@@ -844,4 +865,16 @@ function LoadListOrte(kontextId)
 		ListItemLink : "Ort.html",
 		IsDeletable : true
 	});
+}
+
+function OpenTab(index)
+{
+	for (var i = 0; i <= _tabCount; i++)
+	{
+		$("#tab_" + i).hide();
+		$(".subNavigation ul li #" + i).removeClass("activeFormular");
+	}
+	
+	$("#tab_" + index).show();
+	$(".subNavigation ul li #" + index).addClass("activeFormular");
 }

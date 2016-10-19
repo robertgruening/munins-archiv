@@ -6,6 +6,8 @@ require_once("Klassen/Kontext/class.Kontext.php");
 require_once("Klassen/Ablage/class.Ablage.php");
 require_once("Klassen/Fund/class.Fund.php");
 
+$message = array();
+
 if (isset($_POST["Fund"]))
 {
 	$fundJSON = json_decode($_POST["Fund"], true);	
@@ -21,7 +23,11 @@ if (isset($_POST["Fund"]))
 	
 	$fund->Save();
 	
-	if ($fund->GetId() != NULL)
+	if ($fund->GetId() == NULL)
+	{
+		$message["Message"] = "Ein Element konnte leider nicht gespeichert werden.";
+	}
+	else
 	{
 		if (isset($fundJSON["Kontext_Id"]))
 		{
@@ -37,6 +43,13 @@ if (isset($_POST["Fund"]))
 			$fund->SetAblage($ablage);
 		}
 		
-		echo "Das Element (".$fund->GetId().") wurde gespeichert.";
+		$message["Message"] = "Das Element (".$fund->GetId().") wurde gespeichert.";
+		$message["ElementId"] = $fund->GetId();
 	}
 }
+else
+{
+	$message["Message"] = "Es wurde kein Element erkannt.";
+}
+
+echo json_encode($message);

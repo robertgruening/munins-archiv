@@ -1,16 +1,21 @@
 var _selectorMultiDropdownParent = "#divParentSelections";
 var _selectorTextboxParentId = "#textboxParentId";
-
 var _selectorMultiDropdownAblage = "#divAblageSelections";
 var _selectorTextboxAblageId = "#textboxId";
+var _tabCount = 3;
+var _kartonschildIndex = 0;
 
 $(document).ready(function() {
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
 	$("#buttonAddChild").attr("disabled",true);
+	$("#buttonAddFund").attr("disabled",true);
+	
+	OpenTab(0);
 	
 	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddKontext").click(function() { AddKontext(); });
+	$("#buttonAddKarton").click(function() { AddAblageToKartonschildSeite(); });
 	
 	LoadSelectionTyp();
 	LoadListRootAblagen();
@@ -22,6 +27,9 @@ $(document).ready(function() {
 		$("#buttonAddChild").click(function() { AddChild(GetURLParameter("Id")); });
 		$("#buttonAddChild").attr("disabled",false);
 		
+		$("#buttonAddFund").click(function() { AddFund(GetURLParameter("Id")); });
+		$("#buttonAddFund").attr("disabled",false);
+		
 		return;
 	}
 	
@@ -31,6 +39,7 @@ $(document).ready(function() {
 	{
 		$(_selectorTextboxParentId).val(GetURLParameter("Parent_Id"));
 		LoadListParents();
+		
 		return;
 	}
 });
@@ -136,8 +145,12 @@ function SaveAblage()
 		},
 		success:function(data, textStatus, jqXHR)
 		{
-			alert(data);
+			var message = $.parseJSON(data);
+			alert(message.Message);
 			LoadListRootAblagen();
+			
+			if (message.ElementId)
+				LoadAblageById(message.ElementId);
 		}
 	});
 }
@@ -192,6 +205,11 @@ function LoadListChildren(ablageId)
 function AddChild(ablageId)
 {
 	window.open("Ablage.html?Parent_Id=" + ablageId);
+}
+
+function AddFund(ablageId)
+{
+	window.open("Fund.html?Ablage_Id=" + ablageId);
 }
 
 function LoadListKontexte(ablageId)
@@ -581,4 +599,236 @@ function SaveAssociationWithKontext(kontextId)
 function GetValueForNoSelection()
 {
 	return -1;
+}
+
+function OpenTab(index)
+{
+	for (var i = 0; i <= _tabCount; i++)
+	{
+		$("#tab_" + i).hide();
+		$(".subNavigation ul li #" + i).removeClass("activeFormular");
+	}
+	
+	$("#tab_" + index).show();
+	$(".subNavigation ul li #" + index).addClass("activeFormular");
+}
+
+function AddAblageToKartonschildSeite()
+{
+	var dialog = "<div id=dialogAddAblage title='Ablage hinzufügen'>";
+	dialog += "<p>";
+	dialog += "<span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 20px 0;'></span>";
+	dialog += "Bitte wählen Sie ein Ablagelement aus, das Sie hinzufügen möchten:</p>";
+	dialog += "<div id=divAddAblage class=field></div>";
+	dialog += "<input id=hiddenfieldAblageId type=hidden></input>"
+	dialog += "</div>";
+	$("body").append(dialog);
+	LoadMultiDropdownAblageForKartonschild();
+	$("#dialogAddAblage").dialog({
+		resizable: true,
+		modal: true,
+		buttons: {
+			"Hinzufügen": function() {
+				$(this).dialog("close");
+				LoadAblageByIdForKartonschild($("#hiddenfieldAblageId").val());
+				$("#dialogAddAblage").remove();
+			},
+			"Abbrechen": function() {
+				$(this).dialog("close");
+				$("#dialogAddAblage").remove();
+			}
+		}
+	});
+}
+
+function LoadMultiDropdownAblageForKartonschild()
+{
+	$("#divAddAblage").MultiDropdown(
+	{
+		UrlGetParents : "Dienste/GetAblageMitParents.php",
+		UrlGetChildren : "Dienste/GetAblageChildren.php",
+		//SelectedElementId : null,
+		SetOptionBackgroundImage : function(element)
+		{		
+			return "images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
+		},
+		SetOptionText : function(element)
+		{
+			if (element.FullBezeichnung == "")
+				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+				
+			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+		},
+		SetSelectedElementId : function(elementId)
+		{
+			$("#hiddenfieldAblageId").val(elementId);
+		}
+	});
+}
+
+function LoadAblageByIdForKartonschild(id)
+{
+	if (id == undefined ||
+		id == null ||
+		id == GetValueForNoSelection())
+	{
+		//ClearFields();
+		return;
+	}
+	
+	$.ajax(
+	{
+		type:"POST",
+		url:"Dienste/GetAblageMitParents.php",
+		data: {
+			Id : id
+		},
+		success:function(data, textStatus, jqXHR)
+		{
+			if (data)
+			{				
+				var parents = $.parseJSON(data);
+				var ablage = parents[0];
+				var parent = null;
+				
+				while (ablage.Children != undefined &&
+					ablage.Children.length > 0)
+				{
+					parent = ablage;
+					ablage = ablage.Children[0];				
+				}
+				ablage.Parent = parent;
+				LoadKontexteForKartonschild(ablage);
+			}
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			alert("error");
+		}
+	});	
+}
+
+function LoadKontexteForKartonschild(ablage)
+{	
+	$.ajax(
+	{
+		type:"POST",
+		url:"Dienste/GetKontext.php",
+		data: {
+			AblageId : ablage.Id
+		},
+		success:function(data, textStatus, jqXHR)
+		{
+			if (data)
+			{	
+				var kontext = $.parseJSON(data)[0];
+				LoadKontextMitParentsForKartonschild(ablage, kontext.Id);
+			}
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			alert("error");
+		}
+	});	
+}
+
+function LoadKontextMitParentsForKartonschild(ablage, kontextId)
+{	
+	$.ajax(
+	{
+		type:"POST",
+		url:"Dienste/GetKontextMitParents.php",
+		data: {
+			Id : kontextId
+		},
+		success:function(data, textStatus, jqXHR)
+		{
+			if (data)
+			{					
+				var parents = $.parseJSON(data);
+				var kontext = parents[0];
+				var parent = null;
+				
+				while (kontext.Children != undefined &&
+					kontext.Children.length > 0)
+				{
+					parent = kontext;
+					kontext = kontext.Children[0];	
+					kontext.Parent = parent;			
+				}
+				// Annahme:
+				// Die Ablage ist mit einem Kontext der Zeit verbunden,
+				// aber mit dem darüberliegenden Kontext des Ortes ist
+				// der Ort verbunden.
+				// Beispiel:
+				// Karton ist verknüpft mit Begehung und
+				// Ort ist verknüpft mit Begehungsfläche
+				if (kontext.Typ.Bezeichnung == "Begehung")
+					LoadOrteForKartonschild(ablage, kontext.Parent);
+				else if (kontext.Typ.Bezeichnung == "Laufende Nummer")
+					LoadOrteForKartonschild(ablage, kontext.Parent.Parent);
+			}
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			alert("error");
+		}
+	});	
+}
+
+function LoadOrteForKartonschild(ablage, kontext)
+{	
+	$.ajax(
+	{
+		type:"POST",
+		url:"Dienste/GetOrtMitParents.php",
+		data: {
+			KontextId : kontext.Id
+		},
+		success:function(data, textStatus, jqXHR)
+		{
+			if (data)
+			{	
+				var ort = $.parseJSON(data)[0];
+				LoadNewKartonForKartonschild(ablage, ort);
+			}
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			alert("error");
+		}
+	});	
+}
+
+function LoadNewKartonForKartonschild(ablage, ort)
+{
+	$("#page").append(CreateNewKartonschild(_kartonschildIndex, ablage, ort));
+	_kartonschildIndex++;
+}
+
+function CreateNewKartonschild(index, ablage, ort)
+{
+	var kartonschild = "<div class=kartonschild>";
+	kartonschild += "<p class=labelKennung>Kennung</p>";
+	kartonschild += "<p class=kennung>"+ablage.FullBezeichnung+"</p>";
+	kartonschild += "<table>";
+	kartonschild += GetOrtsTabelleForKartonschild(ort);
+	kartonschild += "<table>";
+	kartonschild += "<div>";
+	
+	return kartonschild;
+}
+
+function GetOrtsTabelleForKartonschild(ort)
+{
+	var zeile = "";
+	zeile += "<tr>";
+	zeile += "<td class=ortsTypBezeichnung>" + ort.Typ.Bezeichnung + "<td>";
+	zeile += "<td class=ortsBezeichnung>" + ort.Bezeichnung + "<td>";
+	zeile += "</tr>";
+	
+	if (ort.Children != undefined)
+		zeile += GetOrtsTabelleForKartonschild(ort.Children[0]);
+		
+	return zeile;
 }

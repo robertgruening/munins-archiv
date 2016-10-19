@@ -7,6 +7,8 @@ require_once("Klassen/Kontext/class.Begehung.php");
 require_once("Klassen/Kontext/class.Begehungsflaeche.php");
 require_once("Klassen/Kontext/class.KontextTyp.php");
 
+$message = array();
+
 if (isset($_POST["Kontext"]))
 {
 	$kontextJSON = json_decode($_POST["Kontext"], true);	
@@ -40,8 +42,7 @@ if (isset($_POST["Kontext"]))
 		$kontext->SetKommentar($kontextJSON["Kommentar"]);
 	}
 	
-	echo $kontext->Save();
-	return;
+	$kontext->Save();
 	
 	if ($kontextJSON["Parent_Id"] != NULL)
 	{
@@ -50,8 +51,19 @@ if (isset($_POST["Kontext"]))
 		$kontext->SetParent($parent);
 	}
 	
-	if ($kontext->GetId() != NULL)
+	if ($kontext->GetId() == NULL)
 	{
-		echo "Das Element (".$kontext->GetId().") wurde gespeichert.";
+		$message["Message"] = "Ein Element konnte leider nicht gespeichert werden.";
+	}
+	else
+	{
+		$message["Message"] = "Das Element (".$kontext->GetId().") wurde gespeichert.";
+		$message["ElementId"] = $kontext->GetId();
 	}
 }
+else
+{
+	$message["Message"] = "Es wurde kein Element erkannt.";
+}
+
+echo json_encode($message);

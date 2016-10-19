@@ -131,7 +131,7 @@ class Begehung extends Kontext
 			else
 			{
 				$ergebnis = $mysqli->query("INSERT INTO Begehung(Id, LfDErfassungsJahr, LfDErfassungsNr, Datum, Kommentar)
-											VALUES(".$id.", ".$lfDErfassungsJahr.", ".$lfDErfassungsNr.", '".$datum."', '".$kommentar."');");
+											VALUES(".$id.", ".$lfDErfassungsJahr.", ".$lfDErfassungsNr.", ".$datum.", ".$kommentar.");");
 			}
 		}
 		$mysqli->close();

@@ -5,6 +5,8 @@ ini_set("display_errors", 1);
 require_once("Klassen/Ort/class.Ort.php");
 require_once("Klassen/Ort/class.OrtTyp.php");
 
+$message = array();
+
 if (isset($_POST["Ort"]))
 {
 	$ortJSON = json_decode($_POST["Ort"], true);
@@ -31,8 +33,19 @@ if (isset($_POST["Ort"]))
 		$ort->SetParent($parent);
 	}
 	
-	if ($ort->GetId() != NULL)
+	if ($ort->GetId() == NULL)
 	{
-		echo "Das Element (".$ort->GetId().") wurde gespeichert.";
+		$message["Message"] = "Ein Element konnte leider nicht gespeichert werden.";
+	}
+	else
+	{
+		$message["Message"] = "Das Element (".$ort->GetId().") wurde gespeichert.";
+		$message["ElementId"] = $ort->GetId();
 	}
 }
+else
+{
+	$message["Message"] = "Es wurde kein Element erkannt.";
+}
+
+echo json_encode($message);

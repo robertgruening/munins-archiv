@@ -21,21 +21,18 @@
 			<li><a href=Fund.html>Fund</a></li>
 			<li><a href=FundAttribut.html>Fundattribut</a></li>
 			<li><a href=Kontext.html>Kontext</a></li>
-			<li><a href=Kartonschild.html>Kartonschild</a></li>
 			<li><a href=Ort.html class=activeFormular>Ort</a></li>
 		</ul>
 	</div>
+	<div class="subNavigation notToPrint">
+		<ul>
+			<li><a id=0 onclick="javascript:OpenTab(0);">Formular</a></li>
+			<li><a id=1 onclick="javascript:OpenTab(1);">Übersicht</a></li>
+		</ul>
+	</div>
 	<div class=form>
-		<div class="formBlock notToPrint">
-			<h2>Elemente 1. Ordnung</h2>
-			<div id=divRootOrte class=fieldBlock>
-				<img src="images/system/IconHelp.png" class="help notToPrint" title="Diese Elemente dienen als Einstieg, um durch die Gesamtstruktur zu navigieren."/>
-				<label>Orte: </label></br>
-				<div id=divList class=field></div>
-			</div>
-		</div>
-		<div class=formBlock>
-			<h2>Formularfelder</h2>
+		<div id=tab_0 class=formBlock>
+			<h2>Formular</h2>
 			<div class=fieldBlock>
 				<div class=fieldDescription>
 					<img src="images/system/IconHelp.png" class="help notToPrint" title="Vom System vergebene Identifikationsnummer."/>
@@ -112,6 +109,14 @@
 				<input type=button id=buttonDelete value=Löschen onclick=buttonDelete_onClick() />
 				<input type=button id=buttonSpeichern value=Speichern onclick=buttonSpeichern_onClick() />
 				<input type=button id=buttonNeu value=Neu onclick=buttonNeu_onClick() />
+			</div>
+		</div>
+		<div id=tab_1 class="formBlock notToPrint">
+			<h2>Übersicht</h2>
+			<div id=divRootOrte class=fieldBlock>
+				<img src="images/system/IconHelp.png" class="help notToPrint" title="Diese Elemente dienen als Einstieg, um durch die Gesamtstruktur zu navigieren."/>
+				<label>Orte: </label></br>
+				<div id=divList class=field></div>
 			</div>
 		</div>
 	</div>
