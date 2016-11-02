@@ -3,6 +3,7 @@ var _selectorTextboxAblageId = "#textboxSelectedAblageId";
 var _selectorMultiDropdownKontext = "#divKontextSelections";
 var _selectorTextboxKontextId = "#textboxSelectedKontextId";
 var _tabCount = 2;
+var _offset = 0;
 
 $(document).ready(function() {
 	$("#textboxId").attr("disabled",true);
@@ -12,6 +13,7 @@ $(document).ready(function() {
 	OpenTab(0);
 	
 	$("#buttonAddFundAttribut").click(function() { AddAttribut(); });
+	$("#buttonSearch").click(function() { Search(); } );
 	
 	if (GetURLParameter("Id"))
 	{
@@ -390,4 +392,99 @@ function OpenTab(index)
 	
 	$("#tab_" + index).show();
 	$(".subNavigation ul li #" + index).addClass("activeFormular");
+}
+
+function Search()
+{	
+	$.ajax(
+	{
+		type:"POST",
+		url:"Dienste/SearchFund.php",
+		data: {
+			"Offset" : _offset,
+			"Limit" : 10
+		},
+		success:function(data, textStatus, jqXHR)
+		{
+			if (data)
+			{
+				ShowSearchResult($.parseJSON(data));
+			}
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			alert("error");
+		}
+	});	
+}
+
+function SearchPrevious()
+{
+	if (_offset > 0)
+	{
+		_offset -= 10;
+		Search();
+	}
+}
+
+function SearchNext()
+{
+	_offset += 10;
+	Search();
+}
+
+function ShowSearchResult(message)
+{
+	$("#divErgebnisse").empty();
+	$("#divErgebnisse").append("<p>" + message.From + " bis " + message.To + " von " + message.Gesamtanzahl +"</p>");
+	$("#divErgebnisse").append("<input type=button id=searchPrevious class=notToPrint value=Zurück></input>");
+	$("#divErgebnisse").append("<input type=button id=searchNext class=notToPrint value=Weiter></input>");
+	$("#searchPrevious").attr("disabled",true);
+	$("#searchNext").attr("disabled",true);
+		
+	if ((message.From - 10) > 0)
+	{
+		$("#searchPrevious").click(function() { SearchPrevious(); });
+		$("#searchPrevious").attr("disabled",false);
+	}
+		
+	if (message.To < message.Gesamtanzahl)
+	{
+		$("#searchNext").click(function() { SearchNext(); });
+		$("#searchNext").attr("disabled",false);
+	}
+	
+	var tabelle = "";
+	tabelle += "<table>";
+	tabelle += "<tr>";
+	tabelle += "<th>Nr.</th>";
+	tabelle += "<th>Id</th>";
+	tabelle += "<th>Anzahl</th>";	
+	tabelle += "<th>Ablage</th>";
+	tabelle += "<th>Kontext</th>";
+	tabelle += "<th>Attribute</th>";
+	tabelle += "</tr>";
+	
+	for (var i = 0; i < message.Elemente.length; i++)
+	{		
+		tabelle += "<tr>";
+		tabelle += "<td>" + (message.From + i) + "</td>";
+		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Id + "\">" + message.Elemente[i].Id + "</a></td>";
+		tabelle += "<td>" + message.Elemente[i].Anzahl + "</td>";	
+		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Ablage.Id + "\">" + message.Elemente[i].Ablage.FullBezeichnung + "</a></td>";	
+		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Kontext.Id + "\">" + message.Elemente[i].Kontext.FullBezeichnung + "</a></td>";	
+		tabelle += "<td><ul>"
+		
+		for (var j = 0; j < message.Elemente[i].Attribute.length; j++)
+		{
+			tabelle += "<li><a href=\"FundAttribut.html?Id=" + message.Elemente[i].Attribute[j].Id + "\">" + message.Elemente[i].Attribute[j].Bezeichnung + "</a></li>"
+		}
+		
+		tabelle += "</ul></td>";	
+		tabelle += "</tr>";
+	}
+	
+	tabelle += "</table>";
+	
+	$("#divErgebnisse").append(tabelle);
 }

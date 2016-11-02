@@ -81,7 +81,7 @@ class ListElement
 		return $instance;
 	}
 	
-	public function LoadAll()
+	public function LoadAll($offset, $limit)
 	{		
 		$rootElements = array();
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
@@ -89,7 +89,7 @@ class ListElement
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->GetSQLStatementLoadAll());	
+			$ergebnis = $mysqli->query($this->GetSQLStatementLoadAll($offset, $limit));	
 			if (!$mysqli->errno)
 			{				
 				while ($datensatz = $ergebnis->fetch_assoc())
@@ -104,11 +104,12 @@ class ListElement
 		return $rootElements;
 	}
 	
-	protected function GetSQLStatementLoadAll()
+	protected function GetSQLStatementLoadAll($offset, $limit)
 	{
 		return "SELECT Id, Bezeichnung
 				FROM ".$this->GetTableName()."
-				ORDER BY Bezeichnung ASC;";
+				ORDER BY Bezeichnung ASC
+				".($offset >= 0 && $limit > 0 ? "LIMIT ".$offset.",".$limit : "").";";
 	}
 	
 	public function LoadByIds($ids)

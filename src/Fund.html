@@ -27,10 +27,11 @@
 	<div class="subNavigation notToPrint">
 		<ul>
 			<li><a id=0 onclick="javascript:OpenTab(0);">Formular</a></li>
+			<li><a id=1 onclick="javascript:OpenTab(1);">Suche</a></li>
 		</ul>
 	</div>
 	<div class=form>
-		<div id=0 class=formBlock>
+		<div id=tab_0 class=formBlock>
 			<h2>Formular</h2>
 			<div class=fieldBlock>
 				<div class=fieldDescription>
@@ -93,6 +94,11 @@
 				<input type=button id=buttonNeu value=Neu onclick=buttonNeu_onClick() />
 				<input type=button id=buttonSpeichern value=Speichern onclick=buttonSpeichern_onClick() />	
 			</div>
+		</div>
+		<div id=tab_1 class=>
+			<h2>Suche</h2>
+			<input type=button id=buttonSearch value=Suche class="field notToPrint formButton"></input>
+			<div id=divErgebnisse class=fieldBlock></div>			
 		</div>
 	</div>
 </body>

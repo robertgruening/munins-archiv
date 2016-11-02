@@ -107,6 +107,10 @@ select option {
 	display:block;
 }
 
+#divErgebnisse table tr td {
+	border-bottom: 1px dashed;
+}
+
 -- colors
 
 body {
@@ -172,6 +176,12 @@ input[type="button"]:hover {
 
 .mainNavigation ul li a.activeFormular, .subNavigation ul li a.activeFormular {
 	background-color: LightCyan;
+}
+
+#divErgebnisse table, 
+#divErgebnisse table tr,
+#divErgebnisse table tr td{
+	border-color: DarkGray;
 }
 
 -- boxing and sizing
@@ -312,5 +322,13 @@ input[type="button"] {
 
 .kartonschild table .ortsBezeichnung{
 	font-size: 14pt;
+	vertical-align: top;
+}
+
+#divErgebnisse table, 
+#divErgebnisse table tr,
+#divErgebnisse table tr td {
+	margin: 0px;
+	padding: 0px;
 	vertical-align: top;
 }
