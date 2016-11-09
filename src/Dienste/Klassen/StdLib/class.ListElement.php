@@ -81,7 +81,7 @@ class ListElement
 		return $instance;
 	}
 	
-	public function LoadAll($offset, $limit)
+	public function LoadAll($offset, $limit, $bezeichnung)
 	{		
 		$rootElements = array();
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
@@ -89,7 +89,7 @@ class ListElement
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->GetSQLStatementLoadAll($offset, $limit));	
+			$ergebnis = $mysqli->query($this->GetSQLStatementLoadAll($offset, $limit, $bezeichnung));	
 			if (!$mysqli->errno)
 			{				
 				while ($datensatz = $ergebnis->fetch_assoc())
@@ -104,12 +104,18 @@ class ListElement
 		return $rootElements;
 	}
 	
-	protected function GetSQLStatementLoadAll($offset, $limit)
+	protected function GetSQLStatementLoadAll($offset, $limit, $bezeichnung)
 	{
-		return "SELECT Id, Bezeichnung
-				FROM ".$this->GetTableName()."
-				ORDER BY Bezeichnung ASC
+		$query = "SELECT Id, Bezeichnung
+				FROM ".$this->GetTableName();
+				
+		if ($bezeichnung != "")
+			$query .= "WHERE Bezeichnung LIKE '%".$bezeichnung."%'";
+		
+		$query .= "ORDER BY Bezeichnung ASC
 				".($offset >= 0 && $limit > 0 ? "LIMIT ".$offset.",".$limit : "").";";
+				
+		return $query;
 	}
 	
 	public function LoadByIds($ids)
@@ -219,7 +225,7 @@ class ListElement
 		return $assocArray;
 	}
 
-	public function Count()
+	public function Count($bezeichnung)
 	{
 		$count = 0;
 			
@@ -228,8 +234,7 @@ class ListElement
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query("SELECT COUNT(Id) AS Anzahl
-										FROM ".$this->GetTableName().";");
+			$ergebnis = $mysqli->query($this->GetSQLStatementCount($bezeichnung));
 			if (!$mysqli->errno)
 			{
 				$datensatz = $ergebnis->fetch_assoc();
@@ -239,6 +244,19 @@ class ListElement
 		$mysqli->close();
 		
 		return $count;
+	}
+	
+	protected function GetSQLStatementCount($bezeichnung)
+	{
+		$query = "SELECT COUNT(Id) AS Anzahl
+				FROM ".$this->GetTableName()." ";
+				
+		if ($bezeichnung != "")
+			$query .= "WHERE Bezeichnung LIKE '%".$bezeichnung."%'";
+		
+		$query .= ";";
+				
+		return $query;
 	}
 }
 ?>

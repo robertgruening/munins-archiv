@@ -84,12 +84,18 @@ class Fund extends ListElement
 				WHERE Id = ".$id.";";
 	}
 	
-	protected function GetSQLStatementLoadAll($offset, $limit)
+	protected function GetSQLStatementLoadAll($offset, $limit, $bezeichnung)
 	{
-		return "SELECT Id, Bezeichnung, Anzahl
-				FROM ".$this->GetTableName()."
-				ORDER BY Bezeichnung ASC 
+		$query = "SELECT Id, Bezeichnung, Anzahl
+				FROM ".$this->GetTableName()." ";
+				
+		if ($bezeichnung != "")
+			$query .= "WHERE Bezeichnung LIKE '%".$bezeichnung."%' ";
+		
+		$query .= "ORDER BY Bezeichnung ASC
 				".($offset >= 0 && $limit > 0 ? "LIMIT ".$offset.",".$limit : "").";";
+				
+		return $query;
 	}
 	
 	protected function FillThisInstance($datensatz)

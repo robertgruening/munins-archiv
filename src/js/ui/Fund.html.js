@@ -75,7 +75,7 @@ function SetFundJSON(fund)
 {
 	$("#textboxId").val(fund.Id);
 	$("#textboxBeschriftung").val(fund.Bezeichnung);
-	$("#textboxAnzahl").val(fund.Anzahl.indexOf("-") >= 0 ? ">"+(fund.Anzahl * (-1)) : fund.Anzahl);
+	$("#textboxAnzahl").val(ConvertFundAnzahl(fund.Anzahl));
 	LoadListAttribute(fund.Id);	
 	$("#buttonAddFundAttribut").attr("disabled", false);
 	
@@ -395,6 +395,12 @@ function OpenTab(index)
 }
 
 function Search()
+{
+	_offset = 0;
+	LoadSearchResult();
+}
+
+function LoadSearchResult()
 {	
 	$.ajax(
 	{
@@ -402,7 +408,8 @@ function Search()
 		url:"Dienste/SearchFund.php",
 		data: {
 			"Offset" : _offset,
-			"Limit" : 10
+			"Limit" : 10,
+			"Beschriftung" : $("#textboxFilterBeschriftung").val()
 		},
 		success:function(data, textStatus, jqXHR)
 		{
@@ -423,14 +430,14 @@ function SearchPrevious()
 	if (_offset > 0)
 	{
 		_offset -= 10;
-		Search();
+		LoadSearchResult();
 	}
 }
 
 function SearchNext()
 {
 	_offset += 10;
-	Search();
+	LoadSearchResult();
 }
 
 function ShowSearchResult(message)
@@ -459,7 +466,8 @@ function ShowSearchResult(message)
 	tabelle += "<tr>";
 	tabelle += "<th>Nr.</th>";
 	tabelle += "<th>Id</th>";
-	tabelle += "<th>Anzahl</th>";	
+	tabelle += "<th>Anzahl</th>";
+	tabelle += "<th>Beschriftung</th>";	
 	tabelle += "<th>Ablage</th>";
 	tabelle += "<th>Kontext</th>";
 	tabelle += "<th>Attribute</th>";
@@ -470,7 +478,8 @@ function ShowSearchResult(message)
 		tabelle += "<tr>";
 		tabelle += "<td>" + (message.From + i) + "</td>";
 		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Id + "\">" + message.Elemente[i].Id + "</a></td>";
-		tabelle += "<td>" + message.Elemente[i].Anzahl + "</td>";	
+		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Id + "\">" + ConvertFundAnzahl(message.Elemente[i].Anzahl) + "</a></td>";
+		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Id + "\">" + message.Elemente[i].Bezeichnung + "</a></td>";
 		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Ablage.Id + "\">" + message.Elemente[i].Ablage.FullBezeichnung + "</a></td>";	
 		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Kontext.Id + "\">" + message.Elemente[i].Kontext.FullBezeichnung + "</a></td>";	
 		tabelle += "<td><ul>"
@@ -487,4 +496,12 @@ function ShowSearchResult(message)
 	tabelle += "</table>";
 	
 	$("#divErgebnisse").append(tabelle);
+}
+
+function ConvertFundAnzahl(fundAnzahl)
+{	
+	if (fundAnzahl < 0)
+		return ">" + (fundAnzahl * (-1));
+		
+	return fundAnzahl;
 }

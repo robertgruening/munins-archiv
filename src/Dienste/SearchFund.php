@@ -32,13 +32,17 @@ else if (isset($_POST["KontextId"]))
 
 if (count($funde) == 0)
 {
+	$beschriftung = isset($_POST["Beschriftung"]) ? $_POST["Beschriftung"] : "";
+		
 	$fund = new Fund();
-	$message["Gesamtanzahl"] = $fund->Count();
+	$message["Gesamtanzahl"] = $fund->Count($beschriftung);
 	
 	if (isset($_POST["Offset"]) &&
 		isset($_POST["Limit"]))
 	{
-		$funde = $fund->LoadAll(intval($_POST["Offset"]), intval($_POST["Limit"]));
+		
+		$funde = $fund->LoadAll(intval($_POST["Offset"]), intval($_POST["Limit"]), 
+			$beschriftung);
 		
 		$message["From"] = 0;
 		$message["To"] = 0;
@@ -51,7 +55,7 @@ if (count($funde) == 0)
 	}
 	else
 	{	
-		$funde = $fund->LoadAll(null, null);
+		$funde = $fund->LoadAll(null, null, $beschriftung);
 	}
 	
 }
