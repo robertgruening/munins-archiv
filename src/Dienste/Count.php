@@ -47,5 +47,5 @@ if (isset($_POST["Typ"]))
 		}
 	}
 	
-	echo $element->Count();
+	echo $element->Count("");
 }
