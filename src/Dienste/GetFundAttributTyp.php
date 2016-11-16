@@ -14,7 +14,7 @@ else
 {
 	$assocArrayFundAttributTypen = array();
 	$fundAttributTyp = new FundAttributTyp();
-	$fundAttributTypen = $fundAttributTyp->LoadAll();
+	$fundAttributTypen = $fundAttributTyp->LoadAll(null, null, "");
 	for ($i = 0; $i < count($fundAttributTypen); $i++)
 	{
 		array_push($assocArrayFundAttributTypen, $fundAttributTypen[$i]->ConvertToAssocArray());

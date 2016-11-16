@@ -14,7 +14,7 @@ else
 {
 	$assocArrayKontextTypen = array();
 	$kontextTyp = new KontextTyp();
-	$kontextTypen = $kontextTyp->LoadAll();
+	$kontextTypen = $kontextTyp->LoadAll(null, null, "");
 	for ($i = 0; $i < count($kontextTypen); $i++)
 	{
 		array_push($assocArrayKontextTypen, $kontextTypen[$i]->ConvertToAssocArray());

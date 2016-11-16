@@ -92,9 +92,16 @@ class Fund extends ListElement
 		if ($bezeichnung != "")
 			$query .= "WHERE Bezeichnung LIKE '%".$bezeichnung."%' ";
 		
-		$query .= "ORDER BY Bezeichnung ASC
-				".($offset >= 0 && $limit > 0 ? "LIMIT ".$offset.",".$limit : "").";";
-				
+		$query .= "ORDER BY Bezeichnung ASC ";		
+		
+		if ($offset != null &&
+			$limit != null)
+		{
+			$query .= ($offset >= 0 && $limit > 0 ? "LIMIT ".$offset.",".$limit." " : " ");
+		}
+		
+		$query .= ";";
+			
 		return $query;
 	}
 	

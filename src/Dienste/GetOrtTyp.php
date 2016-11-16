@@ -14,7 +14,7 @@ else
 {
 	$assocArrayOrtTypen = array();
 	$ortTyp = new OrtTyp();
-	$ortTypen = $ortTyp->LoadAll();
+	$ortTypen = $ortTyp->LoadAll(null, null, "");
 	for ($i = 0; $i < count($ortTypen); $i++)
 	{
 		array_push($assocArrayOrtTypen, $ortTypen[$i]->ConvertToAssocArray());
