@@ -77,11 +77,54 @@ class Fund extends ListElement
 		return new Fund();
 	}
 	
-	protected function GetSQLStatementLoadById($id)
+	protected function GetSQLStatementLoadByIds($offset, $limit, $filter)
 	{
-		return "SELECT Id, Bezeichnung, Anzahl
-				FROM ".$this->GetTableName()."
-				WHERE Id = ".$id.";";
+		$query = "SELECT Id, Bezeichnung, Anzahl
+				FROM ".$this->GetTableName()." ";
+								
+		if (count(array_keys($filter)) > 0)
+		{
+			$query .= "WHERE ";
+			
+			for ($i = 0; $i < count(array_keys($filter)); $i++)
+			{
+				if ($i > 0)
+				{
+					$query .= "AND ";
+				}
+				
+				$query .= "(";
+					
+				if (array_keys($filter)[$i] == "Beschriftung")
+				{
+					$query .= "Bezeichnung LIKE '%".$filter[array_keys($filter)[$i]]."%' ";
+				}
+				else if (array_keys($filter)[$i] == "Ids")
+				{
+					for ($j = 0; $j < count($filter[array_keys($filter)[$i]]); $j++)
+					{
+						$query .= "Id = ".$filter[array_keys($filter)[$i]][$j]." ";
+						
+						if ($j < (count($filter[array_keys($filter)[$i]]) - 1))
+							$query .= "OR ";
+					}
+				}
+				
+				$query .= ") ";
+			}
+		}						
+		
+		$query .= "ORDER BY Bezeichnung ASC ";
+		
+		if (!is_null($offset) &&
+			!is_null($limit))
+		{
+			$query .= ($offset >= 0 && $limit > 0 ? "LIMIT ".$offset.",".$limit." " : " ");
+		}
+		
+		$query .= ";";
+				
+		return $query;
 	}
 	
 	protected function GetSQLStatementLoadAll($offset, $limit, $bezeichnung)
@@ -94,8 +137,8 @@ class Fund extends ListElement
 		
 		$query .= "ORDER BY Bezeichnung ASC ";		
 		
-		if ($offset != null &&
-			$limit != null)
+		if (!is_null($offset) &&
+			!is_null($limit))
 		{
 			$query .= ($offset >= 0 && $limit > 0 ? "LIMIT ".$offset.",".$limit." " : " ");
 		}
@@ -136,7 +179,7 @@ class Fund extends ListElement
 	protected function LoadAblage()
 	{
 		$id = $this->GetId();
-		$ablage = null;
+		$ablage = NULL;
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
 		if (!$mysqli->connect_errno)
@@ -177,7 +220,7 @@ class Fund extends ListElement
 	protected function LoadKontext()
 	{
 		$id = $this->GetId();
-		$kontext = null;
+		$kontext = NULL;
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
 		if (!$mysqli->connect_errno)

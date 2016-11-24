@@ -14,7 +14,7 @@ else
 {
 	$assocArrayAblageTypen = array();
 	$ablageTyp = new AblageTyp();
-	$ablageTypen = $ablageTyp->LoadAll(null, null, "");
+	$ablageTypen = $ablageTyp->LoadAll(NULL, NULL, "");
 	for ($i = 0; $i < count($ablageTypen); $i++)
 	{
 		array_push($assocArrayAblageTypen, $ablageTypen[$i]->ConvertToAssocArray());

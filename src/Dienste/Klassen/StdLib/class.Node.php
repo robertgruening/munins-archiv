@@ -240,6 +240,20 @@ class Node
 		return $children;
 	}
 	
+	public function LoadSubtreeAsList()
+	{
+		$subtreeList = array();
+		$children = $this->LoadChildren();
+		
+		for ($i = 0; $i < count($children); $i++)
+		{
+			array_push($subtreeList, $children[$i]);
+			$subtreeList += $children[$i]->LoadSubtreeAsList();
+		}
+		
+		return $subtreeList;
+	}
+	
 	protected function GetSQLStatementToLoadChildren()
 	{
 		return "SELECT Id, Bezeichnung, Ebene

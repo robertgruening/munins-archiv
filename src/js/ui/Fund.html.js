@@ -402,15 +402,21 @@ function Search()
 
 function LoadSearchResult()
 {	
+	var myData = {
+		"Offset" : _offset,
+		"Limit" : 10,
+	};
+	
+	if ($("#textboxFilterBeschriftung").val() != "")
+		myData.Beschriftung = $("#textboxFilterBeschriftung").val();
+	if ($("#textboxFilterAblageId").val() != "")
+		myData.AblageId = $("#textboxFilterAblageId").val();
+	
 	$.ajax(
 	{
 		type:"POST",
 		url:"Dienste/SearchFund.php",
-		data: {
-			"Offset" : _offset,
-			"Limit" : 10,
-			"Beschriftung" : $("#textboxFilterBeschriftung").val()
-		},
+		data: myData,
 		success:function(data, textStatus, jqXHR)
 		{
 			if (data)

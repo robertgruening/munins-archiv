@@ -63,7 +63,7 @@ class ListElement
 	
 	protected function GetSQLStatementLoadById($id)
 	{
-		return $this->GetSQLStatementLoadByIds([$id]);
+		return $this->GetSQLStatementLoadByIds(NULL, NULL, array( "Ids" => array($id) ));
 	}
 	
 	protected function FillThisInstance($datensatz)
@@ -114,8 +114,8 @@ class ListElement
 		
 		$query .= "ORDER BY Bezeichnung ASC ";
 		
-		if ($offset != null &&
-			$limit != null)
+		if (!is_null($offset) &&
+			!is_null($limit))
 		{
 			$query .= ($offset >= 0 && $limit > 0 ? "LIMIT ".$offset.",".$limit." " : " ");
 		}
@@ -125,7 +125,7 @@ class ListElement
 		return $query;
 	}
 	
-	public function LoadByIds($ids)
+	public function LoadByIds($offset, $limit, $filter)
 	{
 		$treeElements = array();
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
@@ -133,7 +133,7 @@ class ListElement
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->GetSQLStatementLoadByIds($ids));	
+			$ergebnis = $mysqli->query($this->GetSQLStatementLoadByIds($offset, $limit, $filter));	
 			if (!$mysqli->errno)
 			{				
 				while ($datensatz = $ergebnis->fetch_assoc())
@@ -148,23 +148,54 @@ class ListElement
 		return $treeElements;
 	}
 	
-	protected function GetSQLStatementLoadByIds($ids)
+	protected function GetSQLStatementLoadByIds($offset, $limit, $filter)
 	{
-		$sqlStatement = "SELECT Id, Bezeichnung
-						FROM ".$this->GetTableName()."
-						WHERE ";
-		
-		for ($i = 0; $i < count($ids); $i++)
+		$query = "SELECT Id, Bezeichnung
+				FROM ".$this->GetTableName()." ";
+								
+		if (count(array_keys($filter)) > 0)
 		{
-			$sqlStatement .= "Id = ".$ids[$i]." ";
+			$query .= "WHERE ";
 			
-			if ($i < (count($ids) - 1))
-				$sqlStatement .= "OR ";
+			for ($i = 0; $i < count(array_keys($filter)); $i++)
+			{
+				if ($i > 0)
+				{
+					$query .= "AND ";
+				}
+				
+				$query .= "(";
+					
+				if (array_keys($filter)[$i] == "Beschriftung")
+				{
+					$query .= "Bezeichnung LIKE '%".$filter[array_keys($filter)[$i]]."%' ";
+				}
+				else if (array_keys($filter)[$i] == "Ids")
+				{
+					for ($j = 0; $j < count($filter[array_keys($filter)[$i]]); $j++)
+					{
+						$query .= "Id = ".$filter[array_keys($filter)[$i]][$j]." ";
+						
+						if ($j < (count($filter[array_keys($filter)[$i]]) - 1))
+							$query .= "OR ";
+					}
+				}
+				
+				$query .= ") ";
+			}
+		}						
+		
+		$query .= "ORDER BY Bezeichnung ASC ";
+		
+		if (!is_null($offset) &&
+			!is_null($limit))
+		{
+			$query .= ($offset >= 0 && $limit > 0 ? "LIMIT ".$offset.",".$limit." " : " ");
 		}
 		
-		$sqlStatement .= "ORDER BY Bezeichnung;";
-		
-		return $sqlStatement;
+		$query .= ";";
+				
+		return $query;
 	}
 
 	public function Save()
@@ -174,7 +205,8 @@ class ListElement
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			if ($this->GetId() == NULL)
+			
+			if (is_null($this->GetId()))
 			{			
 				$ergebnis = $mysqli->query($this->GetSQLStatementToInsert());
 				if (!$mysqli->errno)
@@ -232,7 +264,7 @@ class ListElement
 		return $assocArray;
 	}
 
-	public function Count($bezeichnung)
+	public function Count($filter)
 	{
 		$count = 0;
 			
@@ -241,7 +273,7 @@ class ListElement
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->GetSQLStatementCount($bezeichnung));
+			$ergebnis = $mysqli->query($this->GetSQLStatementCount($filter));
 			if (!$mysqli->errno)
 			{
 				$datensatz = $ergebnis->fetch_assoc();
@@ -253,13 +285,42 @@ class ListElement
 		return $count;
 	}
 	
-	protected function GetSQLStatementCount($bezeichnung)
+	protected function GetSQLStatementCount($filter)
 	{
 		$query = "SELECT COUNT(Id) AS Anzahl
 				FROM ".$this->GetTableName()." ";
+								
+		if (count(array_keys($filter)) > 0)
+		{
+			$query .= "WHERE ";
+			
+			for ($i = 0; $i < count(array_keys($filter)); $i++)
+			{
+				if ($i > 0)
+				{
+					$query .= "AND ";
+				}
 				
-		if ($bezeichnung != "")
-			$query .= "WHERE Bezeichnung LIKE '%".$bezeichnung."%'";
+				$query .= "(";
+					
+				if (array_keys($filter)[$i] == "Beschriftung")
+				{
+					$query .= "Bezeichnung LIKE '%".$filter[array_keys($filter)[$i]]."%' ";
+				}
+				else if (array_keys($filter)[$i] == "Ids")
+				{
+					for ($j = 0; $j < count($filter[array_keys($filter)[$i]]); $j++)
+					{
+						$query .= "Id = ".$filter[array_keys($filter)[$i]][$j]." ";
+						
+						if ($j < (count($filter[array_keys($filter)[$i]]) - 1))
+							$query .= "OR ";
+					}
+				}
+				
+				$query .= ") ";
+			}
+		}
 		
 		$query .= ";";
 				

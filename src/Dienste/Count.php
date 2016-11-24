@@ -23,7 +23,8 @@ if (isset($_POST["Typ"]))
 		case "Fund" : 
 		{
 			$element = new Fund();
-			break;
+			echo $element->Count(array());
+			return;
 		}
 		case "FundAttribut" : 
 		{
