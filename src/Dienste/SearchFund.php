@@ -21,10 +21,7 @@ if (isset($_POST["Id"]))
 }
 
 if (isset($_POST["AblageId"]))
-{
-	if (is_null($fundIds))
-		$fundIds = array();
-		
+{		
 	$ablage = new Ablage();
 	$ablage->LoadById(intval($_POST["AblageId"]));
 	$ablagen = array();
@@ -37,19 +34,39 @@ if (isset($_POST["AblageId"]))
 		$funde += $ablagen[$i]->GetFunde();
 	}
 	
-	for ($i = 0; $i < count($funde); $i++)
+	if (is_null($fundIds))
 	{
-		array_push($fundIds, $funde[$i]->GetId());
+		$fundIds = array();
+		
+		for ($i = 0; $i < count($funde); $i++)
+		{
+			array_push($fundIds, $funde[$i]->GetId());
+		}
 	}
+	else
+	{
+		$tmp = array();
+		
+		for ($i = 0; $i < count($funde); $i++)
+		{
+			for ($j = 0; $j < count($fundIds); $j++)
+			{
+				if ($funde[$i]->GetId() == $fundIds[$j])
+				{
+					array_push($tmp, $funde[$i]->GetId());
+					break;
+				}
+			}
+		}
+		
+		$fundIds = $tmp;
+	}	
 }
 
 if (isset($_POST["KontextId"]))
-{
-	if (is_null($fundIds))
-		$fundIds = array();
-		
+{		
 	$kontext = new Kontext();
-	$kontext->LoadById(intval($_POST["KontextId"]));	
+	$kontext->LoadById(intval($_POST["KontextId"]));
 	$kontexte = array();
 	array_push($kontexte, $kontext);
 	$kontexte += $kontext->LoadSubtreeAsList();
@@ -60,15 +77,32 @@ if (isset($_POST["KontextId"]))
 		$funde += $kontexte[$i]->GetFunde();
 	}
 	
-	$tmp = $fundIds;
-	$fundIds = array();
-	
-	for ($i = 0; $i < count($funde); $i++)
+	if (is_null($fundIds))
 	{
-		if (in_array($funde[$i]->GetId(), $tmp))
+		$fundIds = array();
+		
+		for ($i = 0; $i < count($funde); $i++)
 		{
 			array_push($fundIds, $funde[$i]->GetId());
 		}
+	}
+	else
+	{
+		$tmp = array();
+		
+		for ($i = 0; $i < count($funde); $i++)
+		{
+			for ($j = 0; $j < count($fundIds); $j++)
+			{
+				if ($funde[$i]->GetId() == $fundIds[$j])
+				{
+					array_push($tmp, $funde[$i]->GetId());
+					break;
+				}
+			}
+		}
+		
+		$fundIds = $tmp;
 	}
 }
 

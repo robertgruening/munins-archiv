@@ -411,6 +411,8 @@ function LoadSearchResult()
 		myData.Beschriftung = $("#textboxFilterBeschriftung").val();
 	if ($("#textboxFilterAblageId").val() != "")
 		myData.AblageId = $("#textboxFilterAblageId").val();
+	if ($("#textboxFilterKontextId").val() != "")
+		myData.KontextId = $("#textboxFilterKontextId").val();
 	
 	$.ajax(
 	{
@@ -486,13 +488,13 @@ function ShowSearchResult(message)
 		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Id + "\">" + message.Elemente[i].Id + "</a></td>";
 		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Id + "\">" + ConvertFundAnzahl(message.Elemente[i].Anzahl) + "</a></td>";
 		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Id + "\">" + message.Elemente[i].Bezeichnung + "</a></td>";
-		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Ablage.Id + "\">" + message.Elemente[i].Ablage.FullBezeichnung + "</a></td>";	
-		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Kontext.Id + "\">" + message.Elemente[i].Kontext.FullBezeichnung + "</a></td>";	
+		tabelle += "<td><a href=\"Ablage.html?Id="+message.Elemente[i].Ablage.Id + "\">" + message.Elemente[i].Ablage.FullBezeichnung + "</a></td>";	
+		tabelle += "<td><a href=\"Kontext.html?Id="+message.Elemente[i].Kontext.Id + "\">" + message.Elemente[i].Kontext.FullBezeichnung + "</a></td>";	
 		tabelle += "<td><ul>"
 		
 		for (var j = 0; j < message.Elemente[i].Attribute.length; j++)
 		{
-			tabelle += "<li><a href=\"FundAttribut.html?Id=" + message.Elemente[i].Attribute[j].Id + "\">" + message.Elemente[i].Attribute[j].Bezeichnung + "</a></li>"
+			tabelle += "<li><a href=\"FundAttribut.html?Id=" + message.Elemente[i].Attribute[j].Id + "\">" + message.Elemente[i].Attribute[j].FullBezeichnung + "</a></li>"
 		}
 		
 		tabelle += "</ul></td>";	
