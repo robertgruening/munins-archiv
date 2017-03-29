@@ -67,7 +67,7 @@ nav div {
 
 #divRightContent {
 	height: inherit;
-	margin: 15px 0px 0px 20px;
+	margin: 15px 20px 0px 20px;
 }
 
 #divForm {
@@ -79,7 +79,6 @@ nav div {
 	padding-top: 15px;
 	padding-bottom: 15px;
 	bottom: 0px;
-	width: 100%;
 }
 
 #divFormButtons input[value=Neu], #divFormButtons input[value=Speichern] {

@@ -16,6 +16,8 @@ $(function() {
 	$(".topNavigationSubMenu").css("top", 
 		$(".topNavigation").css("top") + 
 		$(".topNavigation").height());
+		
+		$("#divFormButtons").width($("#divRightContent").width());
 			
 	$("#divLeft").tabs();
 	
