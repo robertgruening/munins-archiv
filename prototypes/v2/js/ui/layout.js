@@ -10,16 +10,27 @@ $(function() {
 	
 	$("#divContent").height(
 		$("body").height() - 
-		$(".topNavigation").height() -
-		$("#divBreadcrumb").height());
+		$(".topNavigation").outerHeight() -
+		$("#divBreadcrumb").outerHeight()
+	);
+		
+	$("#divForm").height(
+		$("#divRight").height() -
+		$("#divFormButtons").outerHeight() 
+	);
 	
 	$(".topNavigationSubMenu").css("top", 
 		$(".topNavigation").css("top") + 
-		$(".topNavigation").height());
+		$(".topNavigation").height()
+	);
 		
-		$("#divFormButtons").width($("#divRightContent").width());
+	$("#divFormButtons").width(
+		$("#divRight").width() -
+		15 -
+		15
+	);
 			
-	$("#divLeft").tabs();
+	$("#divLeftContent").tabs();
 	
 	$(document).tooltip();
 	
@@ -61,6 +72,15 @@ $(function() {
 	"Ton/Graphitton"
 	];
 	
+	var listeGegenstand = [
+	"Gefäß",
+	"Waffe",
+	"Waffe/Pfeil",
+	"Werkzeug",
+	"Werkzeug/Bohrer",
+	"Werkzeug/Schaber"
+	];
+	
 	var listeErhaltung = [
 	"Fragment",
 	"Fragment/Boden",
@@ -80,10 +100,86 @@ $(function() {
     $(".feld[name=Material] input[type=text]").autocomplete({
       source: listeMaterial
     });
+    $(".feld[name=Gegenstand] input[type=text]").autocomplete({
+      source: listeGegenstand
+    });
     $(".feld[name=Erhaltung] input[type=text]").autocomplete({
       source: listeErhaltung
     });
-    			
+    	
+	$("#divTree div").jstree(
+	{
+		"core" : {
+			"data" : [
+				{
+					"text" : "Raum: Archiv",
+					"state" : {
+						"opened" : true,
+						"disabled" : true
+					},
+					"children" : [
+						{ 
+							"text" : "Regal: 1",
+							"state" : {
+								"opened" : true,
+								"disabled" : true
+							},
+							"children" : [
+								{
+									"text" : "Regalbrett: 1",
+									"state" : {
+										"opened" : true,
+										"disabled" : true
+									},
+									"children" : [
+										{
+											"text" : "Karton: 1-I-1-1",
+											"state" : {
+												"opened" : true,
+												"disabled" : true
+											},
+											"children" : [
+												{
+													"text" : ">5x Ton, Gefäß, Rand",
+													"state" : {												
+														"selected" : true
+													}
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						{ 
+							"text" : "Regal: 2",
+							"state" : {
+								"disabled" : true
+							}
+						},
+						{ 
+							"text" : "Regal: 3",
+							"state" : {
+								"disabled" : true
+							}
+						},
+						{ 
+							"text" : "Regal: 4",
+							"state" : {
+								"disabled" : true
+							}
+						},
+						{ 
+							"text" : "Regal: 5",
+							"state" : {
+								"disabled" : true
+							}
+						}
+					]
+				}
+			]
+		}
+	});		
 });
 
 function ShowSubMenu(id) 

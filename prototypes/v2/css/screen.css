@@ -37,8 +37,16 @@ html, body {
 	background-color:#f1f1f1;
 }
 
-.topNavigationSubMenu ul {
-	list-style-type: none;
+.topNavigationSubMenu a {
+	display: block;
+}
+
+.topNavigationSubMenu a:hover {
+	background-color: #4CAF50;
+}
+
+.topNavigationSubMenu div {
+	padding: 0px 0px 15px 25px;
 }
 
 .topNavigationSubMenu .close {
@@ -50,7 +58,7 @@ nav div {
 }
 
 #divBreadcrumb {
-	padding: 5px 0px 15px 15px;	
+	padding: 10px 0px 10px 15px;	
 	border-bottom: 1px solid #CDCDCD;
 }
 
@@ -62,22 +70,26 @@ nav div {
 	
 }
 
-#divRight {	
+#divLeftContent {
+height: 100%;
+	
 }
 
-#divRightContent {
-	height: inherit;
-	margin: 15px 20px 0px 20px;
+#divRight {	
 }
 
 #divForm {
 	overflow: auto;
 }
 
+#divFormContent {
+	padding: 15px;
+	height: 100%;
+}
+
 #divFormButtons {
 	position: fixed;
-	padding-top: 15px;
-	padding-bottom: 15px;
+	padding:  15px 15px 15px 15px;
 	bottom: 0px;
 }
 
