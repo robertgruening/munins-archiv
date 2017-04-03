@@ -119,18 +119,18 @@ body {
 }
 
 a {
-	color: RoyalBlue;
+	color: #1010AD;
 }
 
 select, input[type="text"],
 textarea {
-	color: RoyalBlue;
+	color: #1010AD;
 }
 
 select:enabled:hover, select:enabled:focus,
 input[type="text"]:enabled:hover, input[type="text"]:enabled:focus,
 textarea {
-	background-color: LightCyan;
+	background-color: #EFEF94;
 }
 
 input, select, textarea {
@@ -144,12 +144,12 @@ input:disabled, textarea:disabled {
 }
 
 input[type="button"] {
-	border-color: RoyalBlue;
-	color: RoyalBlue;
+	border-color: #1010AD;
+	color: #1010AD;
 }
 
 input[type="button"]:hover {
-	background-color: LightCyan;
+	background-color: #EFEF94;
 }
 
 .formBlock .fieldBlock {
@@ -166,16 +166,16 @@ input[type="button"]:hover {
 }
 
 .mainNavigation ul li a, .subNavigation ul li a {
-	border-color: RoyalBlue;
+	border-color: #1010AD;
 	background-color: white;
 }
 
 .mainNavigation ul li a:hover, .subNavigation ul li a:hover {
-	background-color: LightCyan;
+	background-color: #EFEF94;
 }
 
 .mainNavigation ul li a.activeFormular, .subNavigation ul li a.activeFormular {
-	background-color: LightCyan;
+	background-color: #EFEF94;
 }
 
 #divErgebnisse table, 

@@ -1,0 +1,106 @@
+html, body {
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	font-family: Verdana, Arial;
+}
+
+.topNavigation {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #111111;
+}
+
+.topNavigation li {
+	float: left;
+}
+
+.topNavigation li a {
+	display: block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+.topNavigation li a:hover:not(.active) {
+	background-color: #4CAF50;
+}
+
+.topNavigationSubMenu {
+	position: absolute;
+	z-index: 999 !important;
+	width: 100%;
+	display: none;
+	background-color:#f1f1f1;
+}
+
+.topNavigationSubMenu a {
+	display: block;
+}
+
+.topNavigationSubMenu a:hover {
+	background-color: #4CAF50;
+}
+
+.topNavigationSubMenu div {
+	padding: 0px 0px 15px 25px;
+}
+
+.topNavigationSubMenu .close {
+	float: right;
+}
+
+nav div {
+	float: left;		
+}
+
+#divBreadcrumb {
+	padding: 10px 0px 10px 15px;	
+	border-bottom: 1px solid #CDCDCD;
+}
+
+#divContent {
+	height: 100%;
+}
+
+#divLeft {
+	
+}
+
+#divLeftContent {
+height: 100%;
+	
+}
+
+#divRight {	
+}
+
+#divForm {
+	overflow: auto;
+}
+
+#divFormContent {
+	padding: 15px;
+	height: 100%;
+}
+
+#divFormButtons {
+	position: fixed;
+	padding:  15px 15px 15px 15px;
+	bottom: 0px;
+}
+
+#divFormButtons input[value=Neu], #divFormButtons input[value=Speichern] {
+	float: right;
+}
+
+.feld {
+	padding-bottom: 30px;		
+}
+
+.feld input[type=text] {
+	margin-left: 40px;
+}

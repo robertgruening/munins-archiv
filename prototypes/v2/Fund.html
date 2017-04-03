@@ -6,226 +6,180 @@
 	<script src="js/ui/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 	<!--<script src="js/ui/jcubic-jquery.splitter/js/jquery-1.4.4.min.js"></script>-->
 	<script src="js/ui/jcubic-jquery.splitter/js/jquery.splitter-0.14.0.js"></script>
+	<script src="js/ui/jstree/jstree.js"></script>
+	<script src="js/ui/layout.js"></script>
 	<link rel="stylesheet" type="text/css" href="js/ui/jquery-ui-1.12.1.custom/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="js/ui/jcubic-jquery.splitter/css/jquery.splitter.css">
+	<link rel="stylesheet" type="text/css" href="js/ui/jstree/themes/default/style.css" />
+	<link rel="stylesheet" type="text/css" href="css/screen.css">
+	<!--<link rel="stylesheet" type="text/css" href="css/print.css" media="print" />-->
 	<link rel=icon type="image/png" href="images/system/IconMunin_001.png">
-	<script>
-		$(function() {
-			var splitter = $("#divContent").split({
-				orientation: "vertical",
-				limit: 10,
-				position: "30%",
-				onDrag: function(event) {
-					console.log(splitter.position());
-				}
-			});
-			
-			$("#divContent").height(
-				$("body").height() - 
-				$(".topNavigation").height() -
-				$("#divBreadcrumb").height());
-			
-			$(".topNavigationSubMenu").css("top", 
-				$(".topNavigation").css("top") + 
-				$(".topNavigation").height());
-				
-			$("#divLeft").tabs();				
-		});
-		
-		function ShowSubMenu(id) 
-		{
-			var isHidden = $("#"+id).css("display") == "none";
-			$("nav").hide();
-			
-			if (isHidden)	
-			{
-				$("#"+id).show();
-			}
-		}
-		
-		function HideSubMenu(id) 
-		{
-			$("#"+id).hide();
-		}
-	</script>
-	<style>
-	html, body {
-		height: 100%;
-		margin: 0px;
-		padding: 0px;
-		font-family: Verdana, Arial;
-	}
-	
-	.topNavigation {
-		list-style-type: none;
-		margin: 0;
-		padding: 0;
-		overflow: hidden;
-		background-color: #111111;
-	}
-	
-	.topNavigation li {
-		float: left;
-	}
-	
-	.topNavigation li a {
-		display: block;
-		color: white;
-		text-align: center;
-		padding: 14px 16px;
-		text-decoration: none;
-	}
-
-	.topNavigation li a:hover:not(.active) {
-		background-color: #4CAF50;
-	}
-	
-	.topNavigationSubMenu {
-		position: absolute;
-		z-index: 999 !important;
-		width: 100%;
-		display: none;
-		background-color:#f1f1f1;
-	}
-	
-	.topNavigationSubMenu ul {
-		list-style-type: none;
-	}
-	
-	.topNavigationSubMenu .close {
-		float: right;
-	}
-	
-	nav div {
-		float: left;		
-	}
-	
-	#divBreadcrumb {
-	}
-	
-	#divContent {
-		height: 100%;
-	}
-	
-	.feld {
-		padding-bottom: 30px;		
-	}
-	
-	.feld input[type=text] {
-		margin-left: 40px;
-	}
-	</style>
 </head>
 <body>	
 	<ul class=topNavigation>
-		<li><a href="javascript:ShowSubMenu('Archivverwaltung');">Archivverwaltung</a>
+		<li>
+			<a href="javascript:ShowSubMenu('Tagebuch');">Tagebuch</a>
 		</li>
-		<li><a href="#">Administration</a>
+		<li>
+			<a href="javascript:ShowSubMenu('Archiv');">Archiv</a>
 		</li>
-		<li><a href="#">Hilfe</a>
+		<li>
+			<a href="javascript:ShowSubMenu('Administration');">Administration</a>
+		</li>
+		<li>
+			<a href="#">Hilfe</a>
 		</li>
 	</ul>
-	<nav id=Archivverwaltung class=topNavigationSubMenu>
-		<a href="javascript:HideSubMenu('Archivverwaltung');" class=close>X</a>
+	<nav id=Tagebuch class=topNavigationSubMenu>
+		<a href="javascript:HideSubMenu('Tagebuch');" class=close>X</a>
 		<div>
-			<h3>Fund</h3>
-			<ul>
-				<li><div><a href="#">Übersicht</a></div></li>
-				<li><div><a href="#">Formular</a></div></li>
-			</ul>
+			<h3>Aktivitäten</h3>
+			<a href="#">Begehungen</a>
+			<a href="#">Bodenntersuchungen</a>
+			<a href="#">Grabungen</a>
+			<a href="#">Literaturrecherchen</a>
+			<a href="#">Luftbildsichtungen</a>
 		</div>
 		<div>
-			<h3>Fundattribut</h3>
-			<ul>
-				<li><div><a href="#">Übersicht</a></div></li>
-				<li><div><a href="#">Formular</a></div></li>
-				<li><div><a href="#">Typ</a></div></li>
-			</ul>
+			<h3>Orte</h3>
+			<a href="#">Anlegen</a>
+			<a href="#">Suchen und bearbeiten</a>
+		</div>
+	</nav>
+	<nav id=Archiv class=topNavigationSubMenu>
+		<a href="javascript:HideSubMenu('Archiv');" class=close>X</a>
+		<div>
+			<h3>Ablagen</h3>
+			<a href="#">Anlegen</a>
+			<a href="#">Suchen und bearbeiten</a>
 		</div>
 		<div>
-			<h3>Fundumstand</h3>
-			<ul>
-				<li><div><a href="#">Übersicht</a></div></li>
-				<li><div><a href="#">Formular</a></div></li>
-				<li><div><a href="#">Typ</a></div></li>
-				<li><div><a href="#">Ort</a></div>
-					<ul>
-						<li><div><a href="#">Übersicht</a></div></li>
-						<li><div><a href="#">Formular</a></div></li>
-						<li><div><a href="#">Typ</a></div></li>
-					</ul>
-				</li>
-			</ul>
+			<h3>Funde</h3>
+			<a href="#">Anlegen</a>
+			<a href="#">Suchen und bearbeiten</a>
 		</div>
 		<div>
-			<h3>Fundablage</h3>
-			<ul>
-				<li><div><a href="#">Übersicht</a></div></li>
-				<li><div><a href="#">Formular</a></div></li>
-				<li><div><a href="#">Typ</a></div></li>
-			</ul>
+			<h3>Fundattribute</h3>
+			<a href="#">Anlegen</a>
+			<a href="#">Suchen und bearbeiten</a>
+		</div>
+	</nav>
+	<nav id=Administration class=topNavigationSubMenu>
+		<a href="javascript:HideSubMenu('Administration');" class=close>X</a>
+		<div>
+			<h3>Organisation</h3>
+			<a href="#">Organisation</a>
+			<a href="#">Mitglieder</a>
+		</div>
+		<div>
+			<h3>Typen</h3>
+			<a href="#">Ablagetypen anlegen</a>
+			<a href="#">Ablagetypen suchen und bearbeiten</a>
+			<a href="#">Fundattributtypen anlegen</a>
+			<a href="#">Fundattributtypen suchen und bearbeiten</a>
+			<a href="#">Ortstypen anlegen</a>
+			<a href="#">Ortstypen suchen und bearbeiten</a>
+		</div>
+		<div>
+			<h3>Anwendung</h3>
+			<a href="#">Sicherung erstellen</a>
+			<a href="#">Server herunterfahren</a>
 		</div>
 	</nav>
 	<div id=divBreadcrumb>
-		<a href="#">Archivverwaltung</a> > <a href="#">Fund</a> > <a href="#">Formular</a>
+		Archiv > Funde > Formular
 	</div>
 	<div id=divContent>
 		<div id=divLeft>
-			  <ul>
-				<li><a href="#divDetails">Details</a></li>
-				<li><a href="#divTree">Baumstruktur</a></li>
-			  </ul>
-			<div id=divDetails>
-				<div>
-					<h3>Details</h3>
-					<div title="Fundstelle: 25 / Begehungsfläche: I / Begehung: 1">
-						<b>Kontext:</b> Begehung: 25/I/1
-					</div>
-					<div title="Raum: Archiv / Regal: 1 / Regalbrett: 3 / Karton: 25-I-1-1">
-						<b>Ablage:</b> Karton: Archiv/1/3/25-I-1-1
-					</div>
+			<div id=divLeftContent>
+				<ul>
+					<li><a href="#divDetails">Details</a></li>
+					<li><a href="#divTree">Baumstruktur</a></li>
+				</ul>
+				<div id=divDetails>
 					<div>
-						<b>Beschriftung:</b> 25-1
+						<h3>Details</h3>
+						<table>
+							<tr title="Fundstelle: 25 / Begehungsfläche: I / Begehung: 1">
+								<td><b>Kontext:</b></td>
+								<td>Begehung: 25/I/1</td>
+							</tr>					
+							<tr title="Raum: Archiv / Regal: 1 / Regalbrett: 3 / Karton: 25-I-1-1">
+								<td><b>Ablage:</b></td>
+								<td>Karton: Archiv/1/3/25-I-1-1</td>
+							</tr>
+							<tr title="25-1">
+								<td><b>Beschriftung:</b></td>
+								<td>25-1</td>
+							</tr>
+							<tr title="Ton">
+								<td><b>Material:</b></td>
+								<td>Ton</td>
+							</tr>
+							<tr title="Fragment/Rand">
+								<td><b>Erhaltung:</b></td>
+								<td>Rand</td>
+							</tr>
+						</table>
 					</div>
-					<div title="Ton">
-						<b>Material:</b> Ton
-					</div>
-					<div title="Fragment/Rand">
-						<b>Erhaltung:</b> Rand
+				</div>
+				<div id=divTree>
+					<div>
 					</div>
 				</div>
 			</div>
-			<div id=divTree>
-			</div>
 		</div>
 		<div id=divRight>
-			<div class=feld>
-				<b>Kontext:</b><br/>
-				<input type=text value="25/I/1" title="Fundstelle: 25 / Begehungsfläche: I / Begehung: 1"></input><input type=button value=Löschen></input><br/>
-				<input type=text value=""></input>
+			<div id=divForm>
+				<div id=divFormContent>
+					<div class=feld name=Kontext>
+						<b>Kontext:</b><br/>
+						<input type=text value="25/I/1"></input>
+						<input type=button value=Auswählen></input>
+					</div>
+					<div class=feld name=Ablage>
+						<b>Ablage:</b><br/>
+						<input type=text value="Archiv/1/3/25-I-1-1"></input>
+						<input type=button value=Auswählen></input>
+					</div>
+					<div class=feld name=Beschriftung>
+						<b>Beschriftung:</b><br/>
+						<input type=text value="25-1"></input>
+					</div>
+					<div class=feld name=Anzahl>
+						<b>Anzahl:</b><br/>
+						<input type=text value=">5"></input>
+					</div>
+					<div class=feld name=Material>
+						<b>Material:</b><br/>
+						<input type=text value="Ton"></input>
+						<input type=button value=Auswählen></input>
+						<input type=button value=Löschen></input><br/>
+						<input type=text value=""></input>
+						<input type=button value=Auswählen></input>
+					</div>
+					<div class=feld name=Gegenstand>
+						<b>Gegenstand:</b><br/>
+						<input type=text value="Gefäß"></input>
+						<input type=button value=Auswählen></input>
+						<input type=button value=Löschen></input><br/>
+						<input type=text value=""></input>
+						<input type=button value=Auswählen></input>
+					</div>
+					<div class=feld name=Erhaltung>
+						<b>Erhaltung:</b><br/>
+						<input type=text value="Fragment/Rand"></input>
+						<input type=button value=Auswählen></input>
+						<input type=button value=Löschen></input><br/>
+						<input type=text value=""></input>
+						<input type=button value=Auswählen></input>
+					</div>
+				</div>
 			</div>
-			<div class=feld>
-				<b>Ablage:</b><br/>
-				<input type=text value="Archiv/1/3/25-I-1-1" title="Raum: Archiv / Regal: 1 / Regalbrett: 3 / Karton: 25-I-1-1"></input><input type=button value=Löschen></input><br/>
-				<input type=text value=""></input>
-			</div>
-			<div class=feld>
-				<b>Beschriftung:</b><br/>
-				<input type=text value="25-1"></input>
-			</div>
-			<div class=feld>
-				<b>Anzahl:</b><br/>
-				<input type=text value=">5" title="mehr als 5"></input>
-			</div>
-			<div class=feld>
-				<b>Material:</b><br/>
-				<input type=text value="Ton" title="Ton"></input><input type=button value=Löschen></input><br/>
-				<input type=text value=""></input>
-			</div>
-			<div class=feld>
-				<b>Erhaltung:</b><br/>
-				<input type=text value="Fragment/Rand" title="Fragment/Rand"></input><input type=button value=Löschen></input><br/>
-				<input type=text value=""></input>
+			<div id=divFormButtons>
+				<input type=button value=Löschen onclick=javascript:alert('Sind Sie sicher?');></input>
+				<input type=button value=Speichern onclick=javascript:alert('Daten wurden gespeichert.');></input>
+				<input type=button value=Neu onclick=javascript:window.open('#', '_self');></input>
 			</div>
 		</div>
 	</div>
