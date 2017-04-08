@@ -1,0 +1,88 @@
+html, body {
+	font-family: Verdana, Arial;
+	background-color: #eeeeee;
+	color: #333333;
+}
+
+.topNavigation {
+	background-color: #f6a828;
+	border: 1px solid #e78f08;
+}
+
+.topNavigation li {
+}
+
+.topNavigation li a {
+	color: #ffffff;
+}
+
+.topNavigation li a:hover:not(.active) {
+}
+
+.topNavigationSubMenu {
+	background-color: #f6f6f6;
+	border: 1px solid #cccccc;
+}
+
+.topNavigationSubMenu h3 {
+	color: #1c94c4;	
+}
+
+.topNavigationSubMenu a {
+	color: #1c94c4;
+	border: 1px solid #f6f6f6;
+	padding: 4px 12px 4px 12px;
+	text-decoration: none;
+}
+
+.topNavigationSubMenu a:hover {
+	background-color: #fdf5ce;
+	color: #c77405;
+	border: 1px solid #fbcb09;
+}
+
+.topNavigationSubMenu div {
+}
+
+.topNavigationSubMenu .close {
+}
+
+nav div {		
+}
+
+#divBreadcrumb {
+	border-bottom: 1px solid #CDCDCD;
+}
+
+#divContent {
+	height: 100%;
+}
+
+#divLeft {
+	
+}
+
+#divLeftContent {
+	height: 100%;	
+}
+
+#divRight {	
+}
+
+#divForm {
+}
+
+#divFormContent {
+}
+
+#divButtons {
+}
+
+#divButtons input[value=Neu], #divButtons input[value=Speichern] {
+}
+
+.feld {	
+}
+
+.feld input[type=text] {
+}
