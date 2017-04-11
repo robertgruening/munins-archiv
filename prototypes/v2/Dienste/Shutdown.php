@@ -1,2 +1,2 @@
 <?php
-echo exec("ll")
+exec("touch ../cronjobs/shutdown.txt");
