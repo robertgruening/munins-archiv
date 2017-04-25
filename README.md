@@ -1,10 +1,16 @@
 # Munins-Archiv  
   
 **/db**  
-Das Verzeichnis "db" steht für Datenbank und beinhaltet alle SQL-Skripte, um eine Datenbank zu erzeugen und mit einigen vorgegebenen Typen zu füllen.  
+Die Skripte zum Erstellen und Befüllen der Datenbank befinden sich im Verzeichnis "db" (database -> Datenbank).  
   
 **/doc**  
-"doc" steht für Documents (Dokumente) und enthält gegenwärtig ein Entwicklungshandbuch.  
+Die Dokumentation zum Projekt, inklusive der Handbücher, befindet sich im Verzeichnis "doc" (documents -> Dokumente).
+
+**/prototypes**
+Prozess-, Architektur- und Designstudien befinden sich in "prototypes" (prototypes -> Prototypen).
+
+**/pkg**
+Programmbibliotheken und -erweiterungen von Drittanbietern sind in "pkg" (packages -> Pakete) gespeichert.
   
 **/src**  
-Der Quellcode befindet sich unter "src" (Sources). Als Sprachen kommen hier HTML, JavaScript und PHP zum Einsatz.
+Der Quellcode befindet sich unter "src" (sources -> Quellcode). Als Sprachen kommen hier HTML, JavaScript und PHP zum Einsatz.
