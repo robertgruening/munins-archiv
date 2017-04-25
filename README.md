@@ -6,7 +6,7 @@ Die Skripte zum Erstellen und Befüllen der Datenbank befinden sich im Verzeichn
 **/doc**  
 Die Dokumentation zum Projekt, inklusive der Handbücher, befindet sich im Verzeichnis "doc" (documents -> Dokumente).
 
-**/prototypes**
+**/prototypes**  
 Prozess-, Architektur- und Designstudien befinden sich in "prototypes" (prototypes -> Prototypen).
 
 **/pkg**
