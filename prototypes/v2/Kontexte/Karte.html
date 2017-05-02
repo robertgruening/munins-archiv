@@ -6,11 +6,13 @@
 	<script src="../js/ui/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 	<script src="../js/ui/jcubic-jquery.splitter/js/jquery.splitter-0.14.0.js"></script>
 	<script src="../js/ui/jstree/jstree.js"></script>
+	<script src="../js/ui/leaflet/leaflet.js"></script>
 	<script src="../js/ui/layout.js"></script>
-	<script src="../js/bl/Funde/Formular.js"></script>
+	<script src="../js/bl/Kontexte/Karte.js"></script>
 	<link rel="stylesheet" type="text/css" href="../js/ui/jquery-ui-1.12.1.custom/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="../js/ui/jcubic-jquery.splitter/css/jquery.splitter.css">
 	<link rel="stylesheet" type="text/css" href="../js/ui/jstree/themes/default/style.css" />
+	<link rel="stylesheet" type="text/css" href="../js/ui/leaflet/leaflet.css" />
 	<link rel="stylesheet" type="text/css" href="../css/screen_size.css">
 	<link rel="stylesheet" type="text/css" href="../css/screen_color.css">
 	<!--<link rel="stylesheet" type="text/css" href="../css/print.css" media="print" />-->
@@ -87,7 +89,7 @@
 		</div>
 	</nav>
 	<div id=divBreadcrumb>
-		Archiv > Funde > Formular
+		Archiv > Kontexte > Karte
 	</div>
 	<div id=divContent>
 		<div id=divLeft>
@@ -96,33 +98,9 @@
 					<div>
 						<h3>Details</h3>
 						<table>
-							<tr title="Fundstelle: 25 / Begehungsfläche: I / Begehung: 1">
-								<td><b>Kontext:</b></td>
-								<td>Begehung: 25/I/1</td>
-							</tr>					
-							<tr title="Raum: Archiv / Regal: 1 / Regalbrett: 3 / Karton: 25-I-1-1">
-								<td><b>Ablage:</b></td>
-								<td>Karton: Archiv/1/3/25-I-1-1</td>
-							</tr>
-							<tr title="25-1">
-								<td><b>Beschriftung:</b></td>
-								<td>25-1</td>
-							</tr>
-							<tr title="Ton">
-								<td><b>Material:</b></td>
-								<td>Ton</td>
-							</tr>
-							<tr title="Gefäß">
-								<td><b>Gegenstand:</b></td>
-								<td>Gefäß</td>
-							</tr>
-							<tr title="Fragment/Rand">
-								<td><b>Erhaltung:</b></td>
-								<td>Rand</td>
-							</tr>
-							<tr title="Eisenzeit/Latènezeit">
-								<td><b>Zeitstellung:</b></td>
-								<td>Latènezeit</td>
+							<tr title="Bezeichnung: 25">
+								<td><b>Fundstelle:</b></td>
+								<td>25</td>
 							</tr>
 						</table>
 					</div>
@@ -131,64 +109,10 @@
 		</div>
 		<div id=divRight>
 			<div id=divRightContent>
-				<div id=divForm>
-					<div id=divFormContent>
-						<div class=feld name=Kontext>
-							<b>Kontext:</b><br/>
-							<input type=text value="25/I/1"></input>
-							<input type=button value=Auswählen></input>
-						</div>
-						<div class=feld name=Ablage>
-							<b>Ablage:</b><br/>
-							<input type=text value="Archiv/1/3/25-I-1-1"></input>
-							<input type=button value=Auswählen></input>
-						</div>
-						<div class=feld name=Beschriftung>
-							<b>Beschriftung:</b><br/>
-							<input type=text value="25-1"></input>
-						</div>
-						<div class=feld name=Anzahl>
-							<b>Anzahl:</b><br/>
-							<input type=text value=">5"></input>
-						</div>
-						<div class=feld name=Material>
-							<b>Material:</b><br/>
-							<input type=text value="Ton"></input>
-							<input type=button value=Auswählen></input>
-							<input type=button value=Löschen></input><br/>
-							<input type=text value=""></input>
-							<input type=button value=Auswählen></input>
-						</div>
-						<div class=feld name=Gegenstand>
-							<b>Gegenstand:</b><br/>
-							<input type=text value="Gefäß"></input>
-							<input type=button value=Auswählen></input>
-							<input type=button value=Löschen></input><br/>
-							<input type=text value=""></input>
-							<input type=button value=Auswählen></input>
-						</div>
-						<div class=feld name=Erhaltung>
-							<b>Erhaltung:</b><br/>
-							<input type=text value="Fragment/Rand"></input>
-							<input type=button value=Auswählen></input>
-							<input type=button value=Löschen></input><br/>
-							<input type=text value=""></input>
-							<input type=button value=Auswählen></input>
-						</div>
-						<div class=feld name=Zeitstellung>
-							<b>Zeitstellung:</b><br/>
-							<input type=text value="Eisenzeit/Latènezeit"></input>
-							<input type=button value=Auswählen></input>
-							<input type=button value=Löschen></input><br/>
-							<input type=text value=""></input>
-							<input type=button value=Auswählen></input>
-						</div>
-					</div>
+				<div id=divMap>
 				</div>
 				<div id=divButtons>
-					<input type=button value=Löschen onclick=javascript:alert('Sind Sie sicher?');></input>
-					<input type=button value=Speichern onclick=javascript:alert('Daten wurden gespeichert.');></input>
-					<input type=button value=Neu onclick=javascript:window.open('#', '_self');></input>
+					<input type=button value=Bearbeiten onclick=javascript:window.open('#', '_self');></input>
 				</div>
 			</div>
 		</div>
