@@ -123,7 +123,7 @@ function SaveFund()
 	$.ajax(
 	{
 		type:"POST",
-		url:"Dienste/SaveFund.php",
+		url:"../Dienste/Fund/Save",
 		data: {
 			"Fund" : JSON.stringify(GetFundJSON())
 		},
@@ -140,29 +140,26 @@ function SaveFund()
 
 function LoadListAttribute(fundId)
 {
-	var data = null;
+	$("#divFundAttribute #divList").empty();
 	
-	if (fundId != undefined &&
-		fundId != null)
+	if (fundId == undefined ||
+		fundId == null)
 	{
 		data = { FundId : fundId };
 	}
 	
 	$("#divFundAttribute #divList").List(
 	{
-		UrlGetElements : "Dienste/GetFundAttribut.php",
-		UrlDeleteAssociation : "Dienste/DeleteAssociation.php",
-		SetData : function(FundAttribut_Id)
+		UrlGetElements : "../Dienste/FundAttribut/Get/Fund/" + fundId,
+		SetUrlUnlink : function(fundAttributId)
 		{
-			return data = { FundId : fundId,
-							FundAttributId : FundAttribut_Id};
+			return "../Dienste/Fund/Unlink/" + fundId + "/FundAttribut/" + fundAttributId;
 		},
-		Data : data,
 		SetListItemText : function(element)
 		{
 			return element.Typ.Bezeichnung+": "+element.FullBezeichnung+" ("+element.Id+")";
 		},
-		ListItemLink : "FundAttribut.html",
+		ListItemLink : "../FundAttribut/Formular.html",
 		IsDeletable : true
 	});
 }
@@ -199,8 +196,8 @@ function LoadMultiDropdownAttribut()
 {
 	$("#divAddAttribut").MultiDropdown(
 	{
-		UrlGetParents : "Dienste/GetFundAttributMitParents.php",
-		UrlGetChildren : "Dienste/GetFundAttributChildren.php",
+		UrlGetParents : "../Dienste/FundAttribut/GetWithParents/",
+		UrlGetChildren : "../Dienste/FundAttribut/GetWithChildren/",
 		SetOptionText : function(element)
 		{
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
@@ -216,12 +213,8 @@ function SaveAssociationWithAttribut(attributId)
 {
 	$.ajax(
 	{
-		type:"POST",
-		url:"Dienste/SaveAssociation.php",
-		data: {
-			FundId : GetCurrentElementId(),
-			FundAttributId : attributId
-		},
+		type:"GET",
+		url:"../Dienste/Fund/Link/" + GetCurrentElementId() + "/FundAttribut/" + attributId,
 		success:function(data, textStatus, jqXHR)
 		{
 			LoadListAttribute(GetCurrentElementId());
@@ -242,12 +235,12 @@ function LoadMultiDropdownAblage(ablageId)
 {
 	$(_selectorMultiDropdownAblage).MultiDropdown(
 	{
-		UrlGetParents : "Dienste/GetAblageMitParents.php",
-		UrlGetChildren : "Dienste/GetAblageChildren.php",
+		UrlGetParents : "../Dienste/Ablage/GetWithParents/",
+		UrlGetChildren : "../Dienste/Ablage/GetWithChildren/",
 		SelectedElementId : ablageId,
 		SetOptionBackgroundImage : function(element)
 		{		
-			return "images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
+			return "../images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
 		},
 		SetOptionText : function(element)
 		{			
@@ -267,12 +260,12 @@ function LoadMultiDropdownKontext(kontextId)
 {
 	$(_selectorMultiDropdownKontext).MultiDropdown(
 	{
-		UrlGetParents : "Dienste/GetKontextMitParents.php",
-		UrlGetChildren : "Dienste/GetKontextChildren.php",
+		UrlGetParents : "../Dienste/Kontext/GetWithParents/",
+		UrlGetChildren : "../Dienste/Kontext/GetWithChildren/",
 		SelectedElementId : kontextId,
 		SetOptionBackgroundImage : function(element)
 		{		
-			return "images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
+			return "../images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
 		},
 		SetOptionText : function(element)
 		{
@@ -319,11 +312,8 @@ function DeleteAblage()
 {
 	$.ajax(
 	{
-		type:"POST",
-		url:"Dienste/DeleteAblage.php",
-		data: {
-			"Ablage" : JSON.stringify(GetFundJSON())
-		},
+		type:"GET",
+		url:"../Dienste/Ablage/Unlink/" + GetFundJSON().Id,
 		success:function(data, textStatus, jqXHR)
 		{
 			alert(data);
@@ -344,11 +334,8 @@ function LoadFundById(id)
 	
 	$.ajax(
 	{
-		type:"POST",
-		url:"Dienste/GetFund.php",
-		data: {
-			Id : id
-		},
+		type:"GET",
+		url:"../Dienste/Fund/Get/" + id,
 		success:function(data, textStatus, jqXHR)
 		{
 			if (data)
@@ -417,7 +404,7 @@ function LoadSearchResult()
 	$.ajax(
 	{
 		type:"POST",
-		url:"Dienste/SearchFund.php",
+		url:"../Dienste/Fund/Search/",
 		data: myData,
 		success:function(data, textStatus, jqXHR)
 		{
@@ -485,16 +472,16 @@ function ShowSearchResult(message)
 	{		
 		tabelle += "<tr>";
 		tabelle += "<td>" + (message.From + i) + "</td>";
-		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Id + "\">" + message.Elemente[i].Id + "</a></td>";
-		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Id + "\">" + ConvertFundAnzahl(message.Elemente[i].Anzahl) + "</a></td>";
-		tabelle += "<td><a href=\"Fund.html?Id="+message.Elemente[i].Id + "\">" + message.Elemente[i].Bezeichnung + "</a></td>";
-		tabelle += "<td><a href=\"Ablage.html?Id="+message.Elemente[i].Ablage.Id + "\">" + message.Elemente[i].Ablage.FullBezeichnung + "</a></td>";	
-		tabelle += "<td><a href=\"Kontext.html?Id="+message.Elemente[i].Kontext.Id + "\">" + message.Elemente[i].Kontext.FullBezeichnung + "</a></td>";	
+		tabelle += "<td><a href=\"../Fund/Formular.html?Id="+message.Elemente[i].Id + "\">" + message.Elemente[i].Id + "</a></td>";
+		tabelle += "<td><a href=\"../Fund/Formular.html?Id="+message.Elemente[i].Id + "\">" + ConvertFundAnzahl(message.Elemente[i].Anzahl) + "</a></td>";
+		tabelle += "<td><a href=\"../Fund/Formular.html?Id="+message.Elemente[i].Id + "\">" + message.Elemente[i].Bezeichnung + "</a></td>";
+		tabelle += "<td><a href=\"../Ablage/Formular.html?Id="+message.Elemente[i].Ablage.Id + "\">" + message.Elemente[i].Ablage.FullBezeichnung + "</a></td>";	
+		tabelle += "<td><a href=\"../Kontext/Formular.html?Id="+message.Elemente[i].Kontext.Id + "\">" + message.Elemente[i].Kontext.FullBezeichnung + "</a></td>";	
 		tabelle += "<td><ul>"
 		
 		for (var j = 0; j < message.Elemente[i].Attribute.length; j++)
 		{
-			tabelle += "<li><a href=\"FundAttribut.html?Id=" + message.Elemente[i].Attribute[j].Id + "\">" + message.Elemente[i].Attribute[j].FullBezeichnung + "</a></li>"
+			tabelle += "<li><a href=\"../FundAttribut/Formular.html?Id=" + message.Elemente[i].Attribute[j].Id + "\">" + message.Elemente[i].Attribute[j].FullBezeichnung + "</a></li>"
 		}
 		
 		tabelle += "</ul></td>";	

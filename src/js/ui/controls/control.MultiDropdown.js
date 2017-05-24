@@ -24,11 +24,8 @@
 		
 		$.ajax(
 		{
-			type:"POST",
-			url:options.UrlGetParents,
-			data:{
-				Id : elementId
-			},
+			type:"GET",
+			url:options.UrlGetParents + elementId,
 			success:function(data, textStatus, jqXHR)
 			{
 				var level = 0;
@@ -73,11 +70,8 @@
 	{
 		$.ajax(
 		{
-			type:"POST",
-			url:options.UrlGetChildren,
-			data:{
-				Id : parentId
-			},
+			type:"GET",
+			url:options.UrlGetChildren + (parentId == null ? "" : parentId),
 			success:function(data, textStatus, jqXHR)
 			{
 				if (data)

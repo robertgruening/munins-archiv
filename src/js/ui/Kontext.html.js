@@ -182,7 +182,7 @@ function SaveKontext()
 	$.ajax(
 	{
 		type:"POST",
-		url:"Dienste/SaveKontext.php",
+		url:"../Dienste/Kontext/Save/",
 		data: {
 			"Kontext" : JSON.stringify(GetKontextJSON())
 		},
@@ -200,74 +200,69 @@ function SaveKontext()
 
 function LoadListParents()
 {	
-	var data = null;
-	
-	if ($("#textboxParentId").val() != undefined &&
-		$("#textboxParentId").val() != "")
-	{	
-		data = { 
-			Id : $("#textboxParentId").val(), 
-			ReturnDataStructure : "list"
-		};
+	$("#divParent #divList").empty();
+
+	if ($("#textboxParentId").val() == undefined ||
+		$("#textboxParentId").val() == "")
+	{
+		return;
 	}
 		
 	$("#divParent #divList").List(
 	{
-		UrlGetElements : "Dienste/GetKontextMitParents.php",
-		Data : data,
+		UrlGetElements : "../Dienste/Kontext/GetWithParents/" + $("#textboxParentId").val() + "/AsList",
 		SetListItemText : function(element)
 		{
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
-		ListItemLink : "Kontext.html"
+		ListItemLink : "../Kontext/Formular.html"
 	});
 }
 
 function LoadListChildren(kontextId)
 {
-	var data = null;
+	$("#divKontexte #divList").empty();
 	
-	if (kontextId != undefined &&
-		kontextId != null)
+	if (kontextId == undefined ||
+		kontextId == null)
 	{
-		data = { Id : kontextId };
+		return;
 	}
 	
 	$("#divKontexte #divList").List(
 	{
-		UrlGetElements : "Dienste/GetKontextChildren.php",
-		Data : data,
+		UrlGetElements : "../Dienste/Kontext/GetWithChildren/" + kontextId,
 		SetListItemText : function(element)
 		{
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
-		ListItemLink : "Kontext.html"
+		ListItemLink : "../Kontext/Formular.html"
 	});
 }
 
 function AddChild(kontextId)
 {
-	window.open("Kontext.html?Parent_Id=" + kontextId);
+	window.open("../Kontext/Formular.html?Parent_Id=" + kontextId);
 }
 
 function AddFund(kontextId)
 {
-	window.open("Fund.html?Kontext_Id=" + kontextId);
+	window.open("../Fund/Formular.html?Kontext_Id=" + kontextId);
 }
 
 function LoadListAblagen(kontextId)
 {
-	var data = null;
+	$("#divAblagen #divList").empty();
 	
-	if (kontextId != undefined &&
-		kontextId != null)
+	if (kontextId == undefined ||
+		kontextId == null)
 	{
-		data = { KontextId : kontextId };
+		return;
 	}
 	
 	$("#divAblagen #divList").List(
 	{
-		UrlGetElements : "Dienste/GetAblage.php",
+		UrlGetElements : "../Dienste/Ablage/Get/Kontext/" + kontextId,
 		Data : data,
 		SetListItemText : function(element)
 		{
@@ -276,24 +271,23 @@ function LoadListAblagen(kontextId)
 				
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
-		ListItemLink : "Ablage.html"
+		ListItemLink : "../Ablage/Formular.html"
 	});
 }
 
 function LoadListFunde(kontextId)
 {
-	var data = null;
+	$("#divFunde #divList").empty();
 	
-	if (kontextId != undefined &&
-		kontextId != null)
+	if (kontextId == undefined ||
+		kontextId == null)
 	{
-		data = { KontextId : kontextId };
+		return;
 	}
 	
 	$("#divFunde #divList").List(
 	{
-		UrlGetElements : "Dienste/GetFund.php",
-		Data : data,
+		UrlGetElements : "../Dienste/Fund/Get/Kontext/" + kontextId,
 		SetListItemText : function(element)
 		{
 			var listItemText = "";
@@ -340,43 +334,43 @@ function LoadListFunde(kontextId)
 			
 			return listItemText;
 		},
-		ListItemLink : "Fund.html"
+		ListItemLink : "../Fund/Formular.html"
 	});
 }
 
 function LoadListLfDs(kontextId)
 {
-	var data = null;
+	$("#divLfDs #divList").empty();
 	
-	if (kontextId != undefined &&
-		kontextId != null)
+	if (kontextId == undefined ||
+		kontextId == null)
 	{
-		data = { KontextId : kontextId };
+		return;
 	}
 	
 	$("#divLfDs #divList").List(
 	{
-		UrlGetElements : "Dienste/GetLfD.php",
-		Data : data,
+		UrlGetElements : "../Dienste/LfD/Get/Kontext/" + kontextId,
 		SetListItemText : function(element)
 		{
 			return element.TK25Nr+" / "+element.Nr+" ("+element.Id+")";
 		},
-		ListItemLink : "LfD.html"
+		ListItemLink : "../LfD/Formular.html"
 	});
 }
 
 function LoadListRootKontexte()
 {	
+	$("#divRootKontexte #divList").empty();
+
 	$("#divRootKontexte #divList").List(
 	{
-		UrlGetElements : "Dienste/GetKontextChildren.php",
-		Data : { Id : null },
+		UrlGetElements : "../Dienste/Kontext/GetWithChildren/",
 		SetListItemText : function(element)
 		{
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
-		ListItemLink : "Kontext.html"
+		ListItemLink : "../Kontext/Formular.html"
 	});
 }
 
@@ -413,13 +407,13 @@ function LoadMultiDropdownParent()
 {
 	$("#divSetParent").MultiDropdown(
 	{
-		UrlGetParents : "Dienste/GetKontextMitParents.php",
-		UrlGetChildren : "Dienste/GetKontextChildren.php",
+		UrlGetParents : "../Dienste/Kontext/GetWithParents/",
+		UrlGetChildren : "../Dienste/Kontext/GetWithChildren/",
 		//SelectedElementId : null,
 		//Blacklist : [],
 		SetOptionBackgroundImage : function(element)
 		{		
-			return "images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
+			return "../images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
 		},
 		SetOptionText : function(element)
 		{
@@ -469,11 +463,8 @@ function DeleteKontext()
 {
 	$.ajax(
 	{
-		type:"POST",
-		url:"Dienste/DeleteKontext.php",
-		data: {
-			"Kontext" : JSON.stringify(GetKontextJSON())
-		},
+		type:"GET",
+		url:"../Dienste/Kontext/Delete/" + GetKontextJSON().Id,
 		success:function(data, textStatus, jqXHR)
 		{
 			alert(data);
@@ -487,8 +478,8 @@ function LoadSelectionTyp()
 {
 	$.ajax(
 	{
-		type:"POST",
-		url:"Dienste/GetKontextTyp.php",
+		type:"GET",
+		url:"../Dienste/Kontext/Typ/Get/",
 		success:function(data, textStatus, jqXHR)
 		{
 			if (data)
@@ -518,7 +509,7 @@ function CreateOptionTyp(typ, select)
 	var option = "<option value=" + typ.Id + " ";
 	if (select == true)
 		option += "selected=selected ";
-	option += "style=\"background-image:url(images/system/Icon"+typ.Bezeichnung.replace(" ","_")+"_16px.png);background-repeat: no-repeat; padding-left: 20px;\" ";
+	option += "style=\"background-image:url(../images/system/Icon"+typ.Bezeichnung.replace(" ","_")+"_16px.png);background-repeat: no-repeat; padding-left: 20px;\" ";
 	option += ">";
 	option += typ.Bezeichnung;
 	option += "</option>";
@@ -538,11 +529,8 @@ function LoadKontextById(id)
 	
 	$.ajax(
 	{
-		type:"POST",
-		url:"Dienste/GetKontextMitParents.php",
-		data: {
-			Id : id
-		},
+		type:"GET",
+		url:"../Dienste/Kontext/GetWithParents/" + id,
 		success:function(data, textStatus, jqXHR)
 		{
 			if (data)
@@ -619,12 +607,12 @@ function LoadMultiDropdownAblage()
 {
 	$("#divAddAblage").MultiDropdown(
 	{
-		UrlGetParents : "Dienste/GetAblageMitParents.php",
-		UrlGetChildren : "Dienste/GetAblageChildren.php",
+		UrlGetParents : "../Dienste/Ablage/GetWithParents/",
+		UrlGetChildren : "../Dienste/Ablage/GetWithChildren/",
 		//SelectedElementId : null,
 		SetOptionBackgroundImage : function(element)
 		{		
-			return "images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
+			return "../images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
 		},
 		SetOptionText : function(element)
 		{
@@ -644,12 +632,8 @@ function SaveAssociationWithAblage(ablageId)
 {
 	$.ajax(
 	{
-		type:"POST",
-		url:"Dienste/SaveAssociation.php",
-		data: {
-			KontextId : GetCurrentElementId(),
-			AblageId : ablageId
-		},
+		type:"GET",
+		url:"../Dienste/Kontext/Link/" + GetCurrentElementId() + "/Ablage/" ablageId,
 		success:function(data, textStatus, jqXHR)
 		{
 			LoadListAblagen(GetCurrentElementId());
@@ -692,8 +676,8 @@ function LoadMultiDropdownOrt()
 {
 	$("#divAddOrt").MultiDropdown(
 	{
-		UrlGetParents : "Dienste/GetOrtMitParents.php",
-		UrlGetChildren : "Dienste/GetOrtChildren.php",
+		UrlGetParents : "../Dienste/Ort/GetWithParents/",
+		UrlGetChildren : "../Dienste/Ort/GetWithChildren/",
 		SetOptionText : function(element)
 		{
 			if (element.FullBezeichnung == "")
@@ -712,12 +696,8 @@ function SaveAssociationWithOrt(ortId)
 {
 	$.ajax(
 	{
-		type:"POST",
-		url:"Dienste/SaveAssociation.php",
-		data: {
-			KontextId : GetCurrentElementId(),
-			OrtId : ortId
-		},
+		type:"GET",
+		url:"../Dienste/Kontext/Link/" + GetCurrentElementId() + "/Ort/" + ortId,
 		success:function(data, textStatus, jqXHR)
 		{
 			LoadListOrte(GetCurrentElementId());
@@ -774,7 +754,7 @@ function SaveLfD()
 	$.ajax(
 	{
 		type:"POST",
-		url:"Dienste/SaveLfD.php",
+		url:"../Dienste/LfD/Save/",
 		data: {
 			LfD : JSON.stringify({
 				TK25Nr : tk25Nr,
@@ -796,12 +776,8 @@ function GetLfDAndSaveAssociationWithLfD(tk25Nr, nr)
 {
 	$.ajax(
 	{
-		type:"POST",
-		url:"Dienste/GetLfD.php",
-		data: {
-			TK25Nr : tk25Nr,
-			Nr : nr
-		},
+		type:"GET",
+		url:"../Dienste/LfD/Get/" + tk25Nr + "/" + nr,
 		success:function(data, textStatus, jqXHR)
 		{
 			var lfd = $.parseJSON(data);
@@ -818,12 +794,8 @@ function SaveAssociationWithLfD(lfdId)
 {
 	$.ajax(
 	{
-		type:"POST",
-		url:"Dienste/SaveAssociation.php",
-		data: {
-			KontextId : GetCurrentElementId(),
-			LfDId : lfdId
-		},
+		type:"GET",
+		url:"../Dienste/Kontext/Link/" + GetCurrentElementId() + "/LfD/" + lfdId,
 		success:function(data, textStatus, jqXHR)
 		{
 			LoadListLfDs(GetCurrentElementId());
@@ -837,24 +809,21 @@ function SaveAssociationWithLfD(lfdId)
 
 function LoadListOrte(kontextId)
 {
-	var data = null;
+	$("#divOrte #divList").empty();
 	
-	if (kontextId != undefined &&
-		kontextId != null)
+	if (kontextId == undefined ||
+		kontextId == null)
 	{
-		data = { KontextId : kontextId };
+		return;
 	}
 	
 	$("#divOrte #divList").List(
 	{
-		UrlGetElements : "Dienste/GetOrt.php",
-		UrlDeleteAssociation : "Dienste/DeleteAssociation.php",
-		SetData : function(ortId)
+		UrlGetElements : "../Dienste/Ort/Get/Kontext/" + kontextId,
+		SetUrlUnlink : function(ortId)
 		{
-			return data = { OrtId : ortId,
-							KontextId : kontextId };
+			return "../Dienste/Kontext/Unlink/" + kontextId + "/Ort/" + ortId;
 		},
-		Data : data,
 		SetListItemText : function(element)
 		{
 			if (element.FullBezeichnung == "")
@@ -862,7 +831,7 @@ function LoadListOrte(kontextId)
 				
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
-		ListItemLink : "Ort.html",
+		ListItemLink : "../Ort/Formular.html",
 		IsDeletable : true
 	});
 }

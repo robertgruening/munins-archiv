@@ -47,11 +47,8 @@ function LoadFundAttributById(id)
 	
 	$.ajax(
 	{
-		type:"POST",
-		url:"Dienste/GetFundAttributMitParents.php",
-		data: {
-			Id : id
-		},
+		type:"GET",
+		url:"../Dienste/FundAttribut/GetWithParents/" + id,
 		success:function(data, textStatus, jqXHR)
 		{
 			if (data)
@@ -176,7 +173,7 @@ function SaveFundAttribut()
 	$.ajax(
 	{
 		type:"POST",
-		url:"Dienste/SaveFundAttribut.php",
+		url:"../Dienste/FundAttribut/Save/",
 		data: {
 			"FundAttribut" : JSON.stringify(GetFundAttributJSON())
 		},
@@ -194,21 +191,17 @@ function SaveFundAttribut()
 
 function LoadListParents()
 {	
-	var data = null;
+	$("#divParent #divList").empty();
 	
-	if ($("#textboxParentId").val() != undefined &&
-		$("#textboxParentId").val() != "")
+	if ($("#textboxParentId").val() == undefined ||
+		$("#textboxParentId").val() == "")
 	{	
-		data = { 
-			Id : $("#textboxParentId").val(), 
-			ReturnDataStructure : "list"
-		};
+		return;
 	}
 		
 	$("#divParent #divList").List(
 	{
-		UrlGetElements : "Dienste/GetFundAttributMitParents.php",
-		Data : data,
+		UrlGetElements : "../Dienste/FundAttribut/GetWithParents/" + $("#textboxParentId").val() + "/AsList",
 		SetListItemText : function(element)
 		{
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
@@ -219,45 +212,43 @@ function LoadListParents()
 
 function LoadListChildren(fundAttributId)
 {
-	var data = null;
+	$("#divFundAttribute #divList").empty();
 	
-	if (fundAttributId != undefined &&
-		fundAttributId != null)
+	if (fundAttributId == undefined ||
+		fundAttributId == null)
 	{
-		data = { Id : fundAttributId };
+		return;
 	}
 	
 	$("#divFundAttribute #divList").List(
 	{
-		UrlGetElements : "Dienste/GetFundAttributChildren.php",
-		Data : data,
+		UrlGetElements : "../Dienste/FundAttribut/GetWithChildren/" + fundAttributId,
 		SetListItemText : function(element)
 		{
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
-		ListItemLink : "FundAttribut.html"
+		ListItemLink : "../FundAttribut/Formular.html"
 	});
 }
 
 function AddChild(ablageId)
 {
-	window.open("FundAttribut.html?Parent_Id=" + ablageId);
+	window.open("../FundAttribut/Formular.html?Parent_Id=" + ablageId);
 }
 
 function LoadListFunde(fundAttributId)
 {
-	var data = null;
+	$("#divFunde #divList").empty();
 	
-	if (fundAttributId != undefined &&
-		fundAttributId != null)
+	if (fundAttributId == undefined ||
+		fundAttributId == null)
 	{
-		data = { FundAttributId : fundAttributId };
+		return;
 	}
 	
 	$("#divFunde #divList").List(
 	{
-		UrlGetElements : "Dienste/GetFund.php",
-		Data : data,
+		UrlGetElements : "../Dienste/Fund/Get/FundAttribut/" + fundAttributId,
 		SetListItemText : function(element)
 		{
 			if (element.Bezeichnung == null)
@@ -265,21 +256,22 @@ function LoadListFunde(fundAttributId)
 			else
 				return element.Anzahl.toString().replace("-", ">")+"x "+element.Typ.Bezeichnung+": \""+element.Bezeichnung+"\" ("+element.Id+")";
 		},
-		ListItemLink : "Fund.html"
+		ListItemLink : "../Fund/Formular.html"
 	});
 }
 
 function LoadListRootFundAttribute()
-{	
+{
+	$("#divRootFundAttribute #divList").empty();
+
 	$("#divRootFundAttribute #divList").List(
 	{
-		UrlGetElements : "Dienste/GetFundAttributChildren.php",
-		Data : { Id : null },
+		UrlGetElements : "../Dienste/FundAttribut/GetWithChildren",
 		SetListItemText : function(element)
 		{
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
-		ListItemLink : "FundAttribut.html"
+		ListItemLink : "../FundAttribut/Formular.html"
 	});
 }
 
@@ -316,13 +308,13 @@ function LoadMultiDropdownParent()
 {
 	$("#divSetParent").FilteredMultiDropdown(
 	{
-		UrlGetParents : "Dienste/GetFundAttributMitParents.php",
-		UrlGetChildren : "Dienste/GetFundAttributChildren.php",
+		UrlGetParents : "../Dienste/FundAttribut/GetWithParents/",
+		UrlGetChildren : "../Dienste/FundAttribut/GetWithChildren/",
 		//SelectedElementId : null,
 		//Blacklist : [],
 		SetOptionBackgroundImage : function(element)
 		{		
-			return "images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
+			return "../images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
 		},
 		SetOptionText : function(element)
 		{
@@ -372,11 +364,8 @@ function DeleteFundAttribut()
 {
 	$.ajax(
 	{
-		type:"POST",
-		url:"Dienste/DeleteFundAttribut.php",
-		data: {
-			"FundAttribut" : JSON.stringify(GetFundAttributJSON())
-		},
+		type:"GET",
+		url:"../Dienste/FundAttribut/Delete/" + GetFundAttributJSON().Id,
 		success:function(data, textStatus, jqXHR)
 		{
 			alert(data);
@@ -390,8 +379,8 @@ function LoadSelectionTyp()
 {
 	$.ajax(
 	{
-		type:"POST",
-		url:"Dienste/GetFundAttributTyp.php",
+		type:"GET",
+		url:"../Dienste/FundAttribut/Typ/Get/",
 		success:function(data, textStatus, jqXHR)
 		{
 			if (data)
@@ -440,11 +429,8 @@ function LoadFundAttributeById(id)
 	
 	$.ajax(
 	{
-		type:"POST",
-		url:"Dienste/GetFundAttributMitParents.php",
-		data: {
-			Id : id
-		},
+		type:"GET",
+		url:"../Dienste/FundAttribut/GetWithParents/" + id,
 		success:function(data, textStatus, jqXHR)
 		{
 			if (data)
