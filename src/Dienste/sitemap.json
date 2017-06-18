@@ -1,0 +1,233 @@
+[
+	{
+		"Title" : "Tagebuch",
+		"Children" : 
+		[
+			{
+				"Title" : "Fundstellen",
+				"Children" : 
+				[
+					{
+						"Title" : "neu anlegen",
+						"URL" : "/Munins Archiv/src/Fundstelle/Formular.html",
+						"PageName" : "FundstelleFormular",
+						"Enabled" : false
+					},
+					{
+						"Title" : "suchen und bearbeiten",
+						"URL" : "/Munins Archiv/src/Fundstelle/Search.html",
+						"PageName" : "FundstelleSearch",
+						"Enabled" : false
+					},
+					{
+						"Title" : "in Karte anzeigen",
+						"URL" : "/Munins Archiv/src/Fundstelle/Map.html",
+						"PageName" : "FundstelleMap",
+						"Enabled" : false
+					}
+				]
+			},
+			{
+				"Title" : "Orte",
+				"Typ" : "Thema",
+				"Children" : 
+				[
+					{
+						"Title" : "neu anlegen",
+						"URL" : "/Munins Archiv/src/Ort/Formular.html",
+						"PageName" : "OrtFormular"
+					},
+					{
+						"Title" : "anzeigen",
+						"URL" : "/Munins Archiv/src/Ort/Overview.html",
+						"PageName" : "OrtOverview"
+					},
+					{
+						"Title" : "Gebietskörperschaften verwalten",
+						"URL" : "/Munins Archiv/src/Ort/Gebietskoerperschaft/Formular.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Kartasterdaten verwalten",
+						"URL" : "/Munins Archiv/src/Ort/Fundstelle/Formular.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Flurnamen verwalten",
+						"URL" : "/Munins Archiv/src/Ort/Flurname/Formular.html",
+						"Enabled" : false
+					}
+				]
+			},
+			{
+				"Title" : "Kontexte",
+				"Children" :
+				[
+					{
+						"Title" : "neu anlegen",
+						"URL" : "/Munins Archiv/src/Kontext/Formular.html",
+						"PageName" : "KontextFormular"
+					},
+					{
+						"Title" : "anzeigen",
+						"URL" : "/Munins Archiv/src/Kontext/Overview.html",
+						"PageName" : "KontextOverview"
+					}
+				]
+			}
+		]
+	},
+	{
+		"Title" : "Archiv",
+		"Children" :
+		[
+			{
+				"Title" : "Ablagen",
+				"Children" :
+				[
+					{
+						"Title" : "neu anlegen",
+						"URL" : "/Munins Archiv/src/Ablage/Formular.html",
+						"PageName" : "AblageFormular"
+					},
+					{
+						"Title" : "anzeigen",
+						"URL" : "/Munins Archiv/src/Ablage/Overview.html",
+						"PageName" : "AblageOverview"
+					},
+					{
+						"Title" : "in Kontexten suchen",
+						"URL" : "/Munins Archiv/src/Ablage/SearchInKontexten.html",
+						"PageName" : "AblageSearchInKontext",
+						"Enabled" : false
+					},
+					{
+						"Title" : "suchen",
+						"URL" : "/Munins Archiv/src/Ablage/Search.html",
+						"PageName" : "AblageSearch",
+						"Enabled" : false
+					}
+				]
+			},
+			{
+				"Title" : "Funde",
+				"Children" :
+				[
+					{
+						"Title" : "neu anlegen",
+						"URL" : "/Munins Archiv/src/Fund/Formular.html",
+						"PageName" : "FundFormular"
+					},
+					{
+						"Title" : "in Ablagen suchen",
+						"URL" : "/Munins Archiv/src/Fund/SearchInAblagen.html",
+						"PageName" : "FundSearchInAblage",
+						"Enabled" : false
+					},
+					{
+						"Title" : "in Kontexten suchen",
+						"URL" : "/Munins Archiv/src/Fund/SearchInKontexten.html",
+						"PageName" : "FundSearchInKontext",
+						"Enabled" : false
+					},
+					{
+						"Title" : "suchen",
+						"URL" : "/Munins Archiv/src/Fund/Search.html",
+						"PageName" : "FundSearch"
+					}
+				]
+			},
+			{
+				"Title" : "Fundattribute",
+				"Children" :
+				[
+					{
+						"Title" : "neu anlegen",
+						"URL" : "/Munins Archiv/src/FundAttribut/Formular.html",
+						"PageName" : "FundAttributFormular"
+					},
+					{
+						"Title" : "anzeigen",
+						"URL" : "/Munins Archiv/src/FundAttribut/Overview.html",
+						"PageName" : "FundAttributOverview"
+					},
+					{
+						"Title" : "suchen",
+						"URL" : "/Munins Archiv/src/FundAttribut/Search.html",
+						"PageName" : "FundAttributSearch",
+						"Enabled" : false
+					}
+				]
+			}
+		]
+	},
+	{
+		"Title" : "Administration",
+		"Children" :
+		[
+			{
+				"Title" : "Organisation",
+				"Children" :
+				[
+					{
+						"Title" : "Organisationsprofil bearbeiten",
+						"URL" : "/Munins Archiv/src/Organisation/Profile.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Mitglieder verwalten",
+						"URL" : "/Munins Archiv/src/Member/Formular.html",
+						"Enabled" : false
+					}
+				]
+			},
+			{
+				"Title" : "Typen",
+				"Children" :
+				[
+					{
+						"Title" : "Ablagetypen verwalten",
+						"URL" : "/Munins Archiv/src/Ablage/Typ/Formular.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Fundattributstypen verwalten",
+						"URL" : "/Munins Archiv/src/FundAttribut/Typ/Formular.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Gebietskörperschaftstypen verwalten",
+						"URL" : "/Munins Archiv/src/Gebietskoerperschaft/Typ/Formular.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Kartasterdatentypen verwalten",
+						"URL" : "/Munins Archiv/src/Kartasterdaten/Typ/Formular.html",
+						"Enabled" : false
+					}
+				]
+			},
+			{
+				"Title" : "Anwendung",
+				"Children" :
+				[
+					{
+						"Title" : "Sicherung erstellen",
+						"Action" : "Backup();",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Server herunterfahren",
+						"Action" : "Shutdown();",
+						"Enabled" : false
+					}
+				]
+			}
+		]
+	},
+	{
+		"Title" : "Hilfe",
+		"Action" : "Help();",
+		"Enabled" : false
+	}
+]

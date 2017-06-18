@@ -2,15 +2,15 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
-require_once("Klassen/Ablage/class.Ablage.php");
-require_once("Klassen/Fund/class.Fund.php");
-require_once("Klassen/Fund/class.FundAttribut.php");
-require_once("Klassen/Kontext/class.Kontext.php");
-require_once("Klassen/Ort/class.Ort.php");
+require_once("../Klassen/Ablage/class.Ablage.php");
+require_once("../Klassen/Fund/class.Fund.php");
+require_once("../Klassen/Fund/class.FundAttribut.php");
+require_once("../Klassen/Kontext/class.Kontext.php");
+require_once("../Klassen/Ort/class.Ort.php");
 
-if (isset($_POST["Typ"]))
+if (isset($_GET["Typ"]))
 {
-	$typ = $_POST["Typ"];
+	$typ = $_GET["Typ"];
 	$element = NULL;
 	
 	switch($typ)

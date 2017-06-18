@@ -1,0 +1,31 @@
+RewriteEngine	On
+RewriteRule	"^Dienste/(\w+)/Get/([\d;]+)/?$"						"Dienste/$1/Get.php?Id=$2"					[NC,L]
+RewriteRule	"^Dienste/(\w+)/Get/([\w]+)/([\d;]+)/?$"				"Dienste/$1/Get.php?$2Id=$3"				[NC,L]
+RewriteRule	"^Dienste/(\w+)/GetWithChildren/?$"						"Dienste/$1/GetWithChildren.php"			[NC,L]
+RewriteRule	"^Dienste/(\w+)/GetWithChildren/([\d;]+)/?$"			"Dienste/$1/GetWithChildren.php?Id=$2"		[NC,L]
+RewriteRule	"^Dienste/(\w+)/GetWithChildren/([\w]+)/([\d;]+)/?$"	"Dienste/$1/GetWithChildren.php?$2Id=$3"	[NC,L]
+RewriteRule	"^Dienste/(\w+)/GetWithParents/?$"						"Dienste/$1/GetWithParents.php"				[NC,L]
+RewriteRule	"^Dienste/(\w+)/GetWithParents/([\d;]+)/?$"				"Dienste/$1/GetWithParents.php?Id=$2"		[NC,L]
+
+RewriteRule	"^Dienste/(\w+)/GetWithParents/([\d;]+)/As([\w]+)/?$"			"Dienste/$1/GetWithParents.php?Id=$2&ReturnDataStructure=$3"	[NC,L]
+RewriteRule	"^Dienste/(\w+)/GetWithParents/([\w]+)/([\d;]+)/As([\w]+)/?$"	"Dienste/$1/GetWithParents.php?$2Id=$3&ReturnDataStructure=$4"	[NC,L]
+
+RewriteRule "^Dienste/(\w+)/Save/?$"								"Dienste/$1/Save.php"						[NC,L]	#POST
+RewriteRule "^Dienste/(\w+)/Search/?$"								"Dienste/$1/Search.php"						[NC,L]	#POST
+RewriteRule "^Dienste/(\w+)/Delete/([\d;]+)/?$"						"Dienste/$1/Delete.php?Id=$2"				[NC,L]
+RewriteRule "^Dienste/(\w+)/Typ/Get/?$"								"Dienste/$1/Typ/Get.php"					[NC,L]
+RewriteRule "^Dienste/(\w+)/Typ/Get/([\d;]+)/?$"					"Dienste/$1/Typ/Get.php?Id=$2"				[NC,L]
+RewriteRule "^Dienste/(\w+)/Count/?$"								"Dienste/Count.php?Typ=$1"					[NC,L]
+RewriteRule "^Dienste/(\w+)/Report/?$"								"Dienste/Report.php"						[NC,L]
+
+RewriteRule	"^Dienste/LfD/Get/([\d;]+)/([\d;]+)/?$"					"Dienste/LfD/Get.php?TK25Nr=$1&Nr=$2"		[NC,L]
+RewriteRule	"^Dienste/([\w]+)/Link/([\d]+)/([\w]+)/([\d]+)/?$"		"Dienste/Link.php?$1Id=$2&$3Id=$4"			[NC,L]
+RewriteRule	"^Dienste/([\w]+)/Unlink/([\d]+)/([\w]+)/([\d]+)/?$"	"Dienste/Unlink.php?$1Id=$2&$3Id=$4"		[NC,L]
+
+RewriteRule "^Dienste/Ort/Teil/Get/([\d;]+)/?$"						"Dienste/Ort/Teil/Get.php?Id=$1"			[NC,L]
+RewriteRule	"^Dienste/Ort/Link/([\d]+)/Ort/([\d]+)/?$"				"Dienste/Link.php?OrtAId=$1&OrtBId=$2"		[NC,L]
+RewriteRule	"^Dienste/Ort/Unlink/([\d]+)/Ort/([\d]+)/?$"			"Dienste/Unlink.php?OrtAId=$1&OrtBId=$2"	[NC,L]
+
+RewriteRule	"^Dienste/Sitemap/?$"									"Dienste/Sitemap.php"						[NC,L]
+RewriteRule	"^Dienste/Sitemap/([\w]+)/?$"							"Dienste/Sitemap.php?PageName=$1"			[NC,L]
+RewriteRule	"^Dienste/Sitemap/([\w]+)/WithPath/?$"					"Dienste/Sitemap.php?PageName=$1&WithPath=true"							[NC,L]
