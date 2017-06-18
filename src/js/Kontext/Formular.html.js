@@ -2,15 +2,17 @@ var _selectorMultiDropdownParent = "#divParentSelections";
 var _selectorTextboxParentId = "#textboxParentId";
 var _selectorMultiDropdownKontext = "#divKontextSelections";
 var _selectorTextboxKontextId = "#textboxId";
-var _tabCount = 2;
 
 $(document).ready(function() {
+	$("#navigation").Navigation();
+	$("#breadcrumb").Breadcrumb({
+		PageName : "KontextFormular"
+	});
+
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
 	$("#buttonAddChild").attr("disabled",true);
 	$("#buttonAddFund").attr("disabled",true);
-	
-	OpenTab(0);
 	
 	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddAblage").click(function() { AddAblage(); });
@@ -633,7 +635,7 @@ function SaveAssociationWithAblage(ablageId)
 	$.ajax(
 	{
 		type:"GET",
-		url:"../Dienste/Kontext/Link/" + GetCurrentElementId() + "/Ablage/" ablageId,
+		url:"../Dienste/Kontext/Link/" + GetCurrentElementId() + "/Ablage/" + ablageId,
 		success:function(data, textStatus, jqXHR)
 		{
 			LoadListAblagen(GetCurrentElementId());
@@ -644,6 +646,7 @@ function SaveAssociationWithAblage(ablageId)
 		}
 	});	
 }
+
 function AddOrt()
 {
 	var dialog = "<div id=dialogAddOrt title='Ort hinzufügen'>";
@@ -834,16 +837,4 @@ function LoadListOrte(kontextId)
 		ListItemLink : "../Ort/Formular.html",
 		IsDeletable : true
 	});
-}
-
-function OpenTab(index)
-{
-	for (var i = 0; i <= _tabCount; i++)
-	{
-		$("#tab_" + i).hide();
-		$(".subNavigation ul li #" + i).removeClass("activeFormular");
-	}
-	
-	$("#tab_" + index).show();
-	$(".subNavigation ul li #" + index).addClass("activeFormular");
 }

@@ -2,14 +2,16 @@ var _selectorMultiDropdownParent = "#divParentSelections";
 var _selectorTextboxParentId = "#textboxParentId";
 var _selectorMultiDropdownOrt = "#divOrtSelections";
 var _selectorTextboxOrtId = "#textboxId";
-var _tabCount = 2;
 
 $(document).ready(function() {
+	$("#navigation").Navigation();
+	$("#breadcrumb").Breadcrumb({
+		PageName : "OrtOverview"
+	});
+
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
 	$("#buttonAddChild").attr("disabled",true);
-	
-	OpenTab(0);
 	
 	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddTeil").click(function() { AddTeil(); });
@@ -627,16 +629,4 @@ function SaveAssociationWithTeil(ortId)
 function GetValueForNoSelection()
 {
 	return -1;
-}
-
-function OpenTab(index)
-{
-	for (var i = 0; i <= _tabCount; i++)
-	{
-		$("#tab_" + i).hide();
-		$(".subNavigation ul li #" + i).removeClass("activeFormular");
-	}
-	
-	$("#tab_" + index).show();
-	$(".subNavigation ul li #" + index).addClass("activeFormular");
 }

@@ -3,35 +3,26 @@
 <head>
 	<meta charset="utf-8">
 	<script src="../js/jquery-1.11.3.min.js"></script>
+	<script src="../js/controls/control.Navigation.js"></script>
+	<script src="../js/controls/control.Breadcrumb.js"></script>
 	<script src="../js/ui/jquery-ui-1.11.4/jquery-ui.js"></script>
 	<script src="../js/ui/controls/control.List.js"></script>
 	<script src="../js/ui/controls/control.FilteredMultiDropdown.js"></script>
-	<script src="../js/ui/FundAttribut.html.js"></script>
+	<script src="../js/FundAttribut/Formular.html.js"></script>
 	<link rel="stylesheet" type="text/css" href="../js/ui/jquery-ui-1.11.4/jquery-ui.css">
-	<link rel="stylesheet" type="text/css" href="../css/style.css">
+	<link rel="stylesheet" type="text/css" href="../css/color.css">
+	<link rel="stylesheet" type="text/css" href="../css/size.css">
+	<link rel="stylesheet" type="text/css" href="../css/Navigation/color.css">
+	<link rel="stylesheet" type="text/css" href="../css/Navigation/size.css">
 	<link rel="stylesheet" type="text/css" href="../css/print.css" media="print" />
 	<link rel=icon type="image/png" href="../images/system/IconMunin_001.png">
 	<title>Fundattribut</title>
 </head>
-<body>		
-	<div class="mainNavigation notToPrint">
-		<ul>
-			<li><a href="../index.html"><img src="../images/system/IconMunin_001_royalblue.png"/></a></li>
-			<li><a href="../Ablage/Formular.html">Ablage</a></li>
-			<li><a href="../Fund/Formular.html">Fund</a></li>
-			<li><a href="../FundAttribut/Formular.html" class=activeFormular>Fundattribut</a></li>
-			<li><a href="../Kontext/Formular.html">Kontext</a></li>
-			<li><a href="../Ort/Formular.html">Ort</a></li>
-		</ul>
-	</div>
-	<div class="subNavigation notToPrint">
-		<ul>
-			<li><a id=0 onclick="javascript:OpenTab(0);">Formular</a></li>
-			<li><a id=1 onclick="javascript:OpenTab(1);">Übersicht</a></li>
-		</ul>
-	</div>
+<body>	
+	<div id=navigation class="notToPrint"></div>
+	<div id=breadcrumb class="notToPrint"></div>
 	<div class=form>
-		<div id=tab_0 class=formBlock>
+		<div class=formBlock>
 			<h2>Formular</h2>
 			<div class=fieldBlock>
 				<div class=fieldDescription>
@@ -89,14 +80,6 @@
 				<input type=button id=buttonDelete value=Löschen onclick=buttonDelete_onClick() />
 				<input type=button id=buttonSpeichern value=Speichern onclick=buttonSpeichern_onClick() />
 				<input type=button id=buttonNeu value=Neu onclick=buttonNeu_onClick() />
-			</div>
-		</div>
-		<div id=tab_1 class="formBlock notToPrint">
-			<h2>Übersicht</h2>
-			<div id=divRootFundAttribute class=fieldBlock>
-				<img src="../images/system/IconHelp.png" class="help notToPrint" title="Diese Elemente dienen als Einstieg, um durch die Gesamtstruktur zu navigieren."/>
-				<label>Fundattribute: </label></br>
-				<div id=divList class=field></div>
 			</div>
 		</div>
 	</div>

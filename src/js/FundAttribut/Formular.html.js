@@ -1,13 +1,15 @@
 var _selectorMultiDropdownParent = "#divParentSelections";
 var _selectorTextboxParentId = "#textboxParentId";
-var _tabCount = 2;
 
 $(document).ready(function() {
+	$("#navigation").Navigation();
+	$("#breadcrumb").Breadcrumb({
+		PageName : "FundAttributFormluar"
+	});
+
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
 	$("#buttonAddChild").attr("disabled",true);
-	
-	OpenTab(0);
 	
 	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddKontext").click(function() { AddKontext(); });
@@ -478,16 +480,4 @@ function GetCurrentElementId()
 function GetValueForNoSelection()
 {
 	return -1;
-}
-
-function OpenTab(index)
-{
-	for (var i = 0; i <= _tabCount; i++)
-	{
-		$("#tab_" + i).hide();
-		$(".subNavigation ul li #" + i).removeClass("activeFormular");
-	}
-	
-	$("#tab_" + index).show();
-	$(".subNavigation ul li #" + index).addClass("activeFormular");
 }

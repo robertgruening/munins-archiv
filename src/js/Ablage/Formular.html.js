@@ -5,12 +5,15 @@ var _selectorTextboxAblageId = "#textboxId";
 //var _kartonschildIndex = 0;
 
 $(document).ready(function() {
+	$("#navigation").Navigation();
+	$("#breadcrumb").Breadcrumb({
+		PageName : "AblageFormular"
+	});
+
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
 	$("#buttonAddChild").attr("disabled",true);
 	$("#buttonAddFund").attr("disabled",true);
-	
-	OpenTab(0);
 	
 	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddKontext").click(function() { AddKontext(); });

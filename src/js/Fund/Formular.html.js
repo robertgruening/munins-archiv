@@ -2,15 +2,17 @@ var _selectorMultiDropdownAblage = "#divAblageSelections";
 var _selectorTextboxAblageId = "#textboxSelectedAblageId";
 var _selectorMultiDropdownKontext = "#divKontextSelections";
 var _selectorTextboxKontextId = "#textboxSelectedKontextId";
-var _tabCount = 2;
 var _offset = 0;
 
 $(document).ready(function() {
+	$("#navigation").Navigation();
+	$("#breadcrumb").Breadcrumb({
+		PageName : "FundFormular"
+	});
+
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxAblageId).attr("disabled",true);
 	$(_selectorTextboxKontextId).attr("disabled",true);
-	
-	OpenTab(0);
 	
 	$("#buttonAddFundAttribut").click(function() { AddAttribut(); });
 	$("#buttonSearch").click(function() { Search(); } );
