@@ -176,7 +176,9 @@ function SetKontextJSON(kontext)
 	LoadListOrte(kontext.Id);
 	
 	if (kontext.Parent)
+	{
 		$(_selectorTextboxParentId).val(kontext.Parent.Id);
+	}
 
 	LoadListParents();
 	
@@ -291,7 +293,6 @@ function LoadListAblagen(kontextId)
 	$("#divAblagen #divList").List(
 	{
 		UrlGetElements : "../Dienste/Ablage/Get/Kontext/" + kontextId,
-		Data : data,
 		SetListItemText : function(element)
 		{
 			if (element.FullBezeichnung == "")

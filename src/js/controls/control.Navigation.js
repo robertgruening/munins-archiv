@@ -16,12 +16,13 @@
 		{
 			type:"GET",
 			url: "../Dienste/Sitemap/",
+			dataType: "JSON",
 			success:function(data, textStatus, jqXHR)
 			{
 				if (data)
 				{
-					$(htmlElement).append(LoadNavigationItems(options, htmlElement, $.parseJSON(data)));
-					$(htmlElement).append(LoadPanels(options, htmlElement, $.parseJSON(data)));
+					$(htmlElement).append(LoadNavigationItems(options, htmlElement, data));
+					$(htmlElement).append(LoadPanels(options, htmlElement, data));
 				}
 			},
 			error:function(jqXHR, textStatus, errorThrown)

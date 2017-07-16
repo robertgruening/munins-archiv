@@ -16,11 +16,12 @@
 		{
 			type:"GET",
 			url: "../Dienste/Sitemap/" + options.PageName + "/WithPath",
+			dataType: "JSON",
 			success:function(data, textStatus, jqXHR)
 			{
 				if (data)
 				{
-					LoadBreadcrumbItem(options, htmlElement, $.parseJSON(data));
+					LoadBreadcrumbItem(options, htmlElement, data);
 				}
 			},
 			error:function(jqXHR, textStatus, errorThrown)

@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
 require_once("../../Klassen/Fund/class.Fund.php");
+require_once("../../Klassen/Fund/class.FundAttribut.php");
 require_once("../../Klassen/Ablage/class.Ablage.php");
 
 if (isset($_GET["Id"]))
@@ -28,6 +29,12 @@ else if (isset($_GET["KontextId"]))
 	$kontext = new Kontext();
 	$kontext->LoadById(intval($_GET["KontextId"]));
 	$funde = $kontext->GetFunde();
+}
+else if (isset($_GET["FundAttributId"]))
+{
+	$fundAttribut = new FundAttribut();
+	$fundAttribut->LoadById(intval($_GET["FundAttributId"]));
+	$funde = $fundAttribut->GetFunde();
 }
 
 for ($i = 0; $i < count($funde); $i++)
