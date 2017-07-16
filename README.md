@@ -9,7 +9,7 @@ Die Dokumentation zum Projekt, inklusive der Handbücher, befindet sich im Verze
 **/prototypes**  
 Prozess-, Architektur- und Designstudien befinden sich in "prototypes" (prototypes -> Prototypen).
 
-**/pkg**
+**/pkg**  
 Programmbibliotheken und -erweiterungen von Drittanbietern sind in "pkg" (packages -> Pakete) gespeichert.
   
 **/src**  

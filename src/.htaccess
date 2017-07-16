@@ -1,4 +1,5 @@
 RewriteEngine	On
+RewriteRule	"^Dienste/(\w+)/Get/?$"									"Dienste/$1/Get.php"						[NC,L]
 RewriteRule	"^Dienste/(\w+)/Get/([\d;]+)/?$"						"Dienste/$1/Get.php?Id=$2"					[NC,L]
 RewriteRule	"^Dienste/(\w+)/Get/([\w]+)/([\d;]+)/?$"				"Dienste/$1/Get.php?$2Id=$3"				[NC,L]
 RewriteRule	"^Dienste/(\w+)/GetWithChildren/?$"						"Dienste/$1/GetWithChildren.php"			[NC,L]

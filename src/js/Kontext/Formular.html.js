@@ -65,32 +65,58 @@ function SelectTypId(typId)
 
 function ShowFormFieldBlocksByTyp()
 {	
-	//$("#divParent").hide();
+	$("#divParent").hide();
 	$("#divBegehungLfDErfassungsJahr").hide();
 	$("#divBegehungLfDErfassungsNr").hide();
 	$("#divBegehungDatum").hide();
 	$("#divBegehungKommentar").hide();
 	$("#divLfDs").hide();
+	$("#divOrte").hide();
+	$("#divAblagen").hide();
+	$("#divFunde").hide();
 	
 	if ($("#selectTypen option:selected").text() == "Fundstelle")
 	{
 	}
 	else if ($("#selectTypen option:selected").text() == "Begehungsfläche")
 	{
-		//$("#divParent").show();
+		$("#divParent").show();
 		$("#divLfDs").show();
+		$("#divOrte").show();
 	}
 	else if ($("#selectTypen option:selected").text() == "Begehung")
 	{
-		//$("#divParent").show();
+		$("#divParent").show();
 		$("#divBegehungLfDErfassungsJahr").show();
 		$("#divBegehungLfDErfassungsNr").show();
 		$("#divBegehungDatum").show();
 		$("#divBegehungKommentar").show();
+		$("#divLfDs").show();
+		$("#divAblagen").show();
+		$("#divFunde").show();
 	}
-	else
+	else if ($("#selectTypen option:selected").text() == "Grabung")
 	{
-		//$("#divParent").show();
+		$("#divParent").show();
+	}
+	else if ($("#selectTypen option:selected").text() == "Fläche")
+	{
+		$("#divParent").show();
+		$("#divOrte").show();
+		$("#divAblagen").show();
+		$("#divFunde").show();
+	}
+	else if ($("#selectTypen option:selected").text() == "Befund")
+	{
+		$("#divParent").show();
+		$("#divAblagen").show();
+		$("#divFunde").show();
+	}
+	else if ($("#selectTypen option:selected").text() == "Laufende Nummer")
+	{
+		$("#divParent").show();
+		$("#divAblagen").show();
+		$("#divFunde").show();
 	}
 }
 
@@ -150,7 +176,9 @@ function SetKontextJSON(kontext)
 	LoadListOrte(kontext.Id);
 	
 	if (kontext.Parent)
+	{
 		$(_selectorTextboxParentId).val(kontext.Parent.Id);
+	}
 
 	LoadListParents();
 	
@@ -265,7 +293,6 @@ function LoadListAblagen(kontextId)
 	$("#divAblagen #divList").List(
 	{
 		UrlGetElements : "../Dienste/Ablage/Get/Kontext/" + kontextId,
-		Data : data,
 		SetListItemText : function(element)
 		{
 			if (element.FullBezeichnung == "")

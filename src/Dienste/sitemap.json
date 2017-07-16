@@ -38,11 +38,6 @@
 						"PageName" : "OrtFormular"
 					},
 					{
-						"Title" : "anzeigen",
-						"URL" : "/Munins Archiv/src/Ort/Overview.html",
-						"PageName" : "OrtOverview"
-					},
-					{
 						"Title" : "Gebietskörperschaften verwalten",
 						"URL" : "/Munins Archiv/src/Ort/Gebietskoerperschaft/Formular.html",
 						"Enabled" : false
@@ -56,6 +51,11 @@
 						"Title" : "Flurnamen verwalten",
 						"URL" : "/Munins Archiv/src/Ort/Flurname/Formular.html",
 						"Enabled" : false
+					},
+					{
+						"Title" : "suchen",
+						"URL" : "/Munins Archiv/src/Ort/Search.html",
+						"PageName" : "OrtSearch"
 					}
 				]
 			},
@@ -69,9 +69,14 @@
 						"PageName" : "KontextFormular"
 					},
 					{
-						"Title" : "anzeigen",
-						"URL" : "/Munins Archiv/src/Kontext/Overview.html",
-						"PageName" : "KontextOverview"
+						"Title" : "in Orten suchen",
+						"URL" : "/Munins Archiv/src/Kontext/SearchInOrten.html",
+						"PageName" : "KontextSearchInOrt"
+					},
+					{
+						"Title" : "suchen",
+						"URL" : "/Munins Archiv/src/Kontext/Search.html",
+						"PageName" : "KontextSearch"
 					}
 				]
 			}
@@ -91,21 +96,14 @@
 						"PageName" : "AblageFormular"
 					},
 					{
-						"Title" : "anzeigen",
-						"URL" : "/Munins Archiv/src/Ablage/Overview.html",
-						"PageName" : "AblageOverview"
-					},
-					{
 						"Title" : "in Kontexten suchen",
 						"URL" : "/Munins Archiv/src/Ablage/SearchInKontexten.html",
-						"PageName" : "AblageSearchInKontext",
-						"Enabled" : false
+						"PageName" : "AblageSearchInKontext"
 					},
 					{
 						"Title" : "suchen",
 						"URL" : "/Munins Archiv/src/Ablage/Search.html",
-						"PageName" : "AblageSearch",
-						"Enabled" : false
+						"PageName" : "AblageSearch"
 					}
 				]
 			},
@@ -121,14 +119,17 @@
 					{
 						"Title" : "in Ablagen suchen",
 						"URL" : "/Munins Archiv/src/Fund/SearchInAblagen.html",
-						"PageName" : "FundSearchInAblage",
-						"Enabled" : false
+						"PageName" : "FundSearchInAblage"
 					},
 					{
 						"Title" : "in Kontexten suchen",
 						"URL" : "/Munins Archiv/src/Fund/SearchInKontexten.html",
-						"PageName" : "FundSearchInKontext",
-						"Enabled" : false
+						"PageName" : "FundSearchInKontext"
+					},
+					{
+						"Title" : "in Fundattributen suchen",
+						"URL" : "/Munins Archiv/src/Fund/SearchInFundAttributen.html",
+						"PageName" : "FundSearchInFundAttribut"
 					},
 					{
 						"Title" : "suchen",
@@ -147,15 +148,9 @@
 						"PageName" : "FundAttributFormular"
 					},
 					{
-						"Title" : "anzeigen",
-						"URL" : "/Munins Archiv/src/FundAttribut/Overview.html",
-						"PageName" : "FundAttributOverview"
-					},
-					{
 						"Title" : "suchen",
 						"URL" : "/Munins Archiv/src/FundAttribut/Search.html",
-						"PageName" : "FundAttributSearch",
-						"Enabled" : false
+						"PageName" : "FundAttributSearch"
 					}
 				]
 			}

@@ -3,11 +3,11 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
 $sitemapContent = file_get_contents("sitemap.json");
+$sitemapJson = json_decode($sitemapContent, true);
 
 if (isset($_GET["PageName"]))
 {
 	$pageName = $_GET["PageName"];
-	$sitemapJson = json_decode($sitemapContent, true);
 	$node = null;
 
 	if (isset($_GET["WithPath"]) &&
@@ -26,11 +26,11 @@ if (isset($_GET["PageName"]))
 	}
 
 	echo json_encode($node);
-
+	
 	return;
 }
 
-echo $sitemapContent;
+echo json_encode($sitemapJson);
 
 function GetNode($pageName, $nodes)
 {
