@@ -10,6 +10,10 @@ class Fund extends ListElement
 	// variables
 	protected $_tableName = "Fund";
 	protected $_anzahl = NULL;
+	protected $_dimension1 = NULL;
+	protected $_dimension2 = NULL;
+	protected $_dimension3 = NULL;
+	protected $_masse = NULL;
 	
 	// properties	
 	// Anzahl
@@ -43,6 +47,50 @@ class Fund extends ListElement
 	public function SetKontexte($kontext)
 	{
 		$this->SaveAssociationWithKontext($kontext);
+	}
+	
+	// Dimension1
+	public function GetDimension1()
+	{
+		return $this->_dimension1;
+	}
+	
+	public function SetDimension1($dimension1)
+	{
+		$this->_dimension1 = $dimension1;
+	}
+	
+	// Dimension2
+	public function GetDimension2()
+	{
+		return $this->_dimension2;
+	}
+	
+	public function SetDimension2($dimension2)
+	{
+		$this->_dimension2 = $dimension2;
+	}
+	
+	// Dimension3
+	public function GetDimension3()
+	{
+		return $this->_dimension3;
+	}
+	
+	public function SetDimension3($dimension3)
+	{
+		$this->_dimension3 = $dimension3;
+	}
+	
+	// Masse
+	public function GetMasse()
+	{
+		return $this->_masse;
+	}
+	
+	public function SetMasse($masse)
+	{
+		$this->_masse = $masse;
 	}
 	
 	// Attribute
@@ -79,7 +127,7 @@ class Fund extends ListElement
 	
 	protected function GetSQLStatementLoadByIds($offset, $limit, $filter)
 	{
-		$query = "SELECT Id, Bezeichnung, Anzahl
+		$query = "SELECT Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3, Masse
 				FROM ".$this->GetTableName()." ";
 								
 		if (count(array_keys($filter)) > 0)
@@ -106,7 +154,9 @@ class Fund extends ListElement
 						$query .= "Id = ".$filter[array_keys($filter)[$i]][$j]." ";
 						
 						if ($j < (count($filter[array_keys($filter)[$i]]) - 1))
+						{
 							$query .= "OR ";
+						}
 					}
 				}
 				
@@ -129,7 +179,7 @@ class Fund extends ListElement
 	
 	protected function GetSQLStatementLoadAll($offset, $limit, $bezeichnung)
 	{
-		$query = "SELECT Id, Bezeichnung, Anzahl
+		$query = "SELECT Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3, Masse
 				FROM ".$this->GetTableName()." ";
 				
 		if ($bezeichnung != "")
@@ -152,27 +202,45 @@ class Fund extends ListElement
 	{
 		parent::FillThisInstance($datensatz);
 		$this->SetAnzahl($datensatz["Anzahl"]);
+		$this->SetDimension1($datensatz["Dimension1"]);
+		$this->SetDimension2($datensatz["Dimension2"]);
+		$this->SetDimension3($datensatz["Dimension3"]);
+		$this->SetMasse($datensatz["Masse"]);
 	}
 	
 	protected function CreateAndFillNewInstance($datensatz)
 	{
 		$instance = parent::CreateAndFillNewInstance($datensatz);
 		$instance->SetAnzahl(intval($datensatz["Anzahl"]));
+		$instance->SetDimension1($datensatz["Dimension1"]);
+		$instance->SetDimension2($datensatz["Dimension2"]);
+		$instance->SetDimension3($datensatz["Dimension3"]);
+		$instance->SetMasse($datensatz["Masse"]);
 		
 		return $instance;
 	}
 	
 	protected function GetSQLStatementToInsert()
 	{
-		return "INSERT INTO ".$this->GetTableName()."(Bezeichnung, Anzahl)
-				VALUES('".$this->GetBezeichnung()."', ".$this->GetAnzahl().");";
+		return "INSERT INTO ".$this->GetTableName()."(Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3, Masse)
+				VALUES('".
+					$this->GetBezeichnung()."', ".
+					$this->GetAnzahl().",".
+					($this->GetDimension1() == NULL ? "NULL" : $this->GetDimension1()).",".
+					($this->GetDimension2() == NULL ? "NULL" : $this->GetDimension2()).",".
+					($this->GetDimension3() == NULL ? "NULL" : $this->GetDimension3()).",".
+					($this->GetMasse() == NULL ? "NULL" : $this->GetMasse()).");";
 	}
 	
 	protected function GetSQLStatementToUpdate()
 	{
 		return "UPDATE ".$this->GetTableName()." 
-				SET Bezeichnung='".$this->GetBezeichnung()."',				
-					Anzahl=".$this->GetAnzahl()." 
+				SET Bezeichnung='".$this->GetBezeichnung()."', 
+					Anzahl=".$this->GetAnzahl().", 
+					Dimension1=".($this->GetDimension1() == NULL ? "NULL" : $this->GetDimension1()).", 
+					Dimension2=".($this->GetDimension2() == NULL ? "NULL" : $this->GetDimension2()).", 
+					Dimension3=".($this->GetDimension3() == NULL ? "NULL" : $this->GetDimension3()).", 
+					Masse=".($this->GetMasse() == NULL ? "NULL" : $this->GetMasse())." 
 				WHERE Id = ".$this->GetId().";";
 	}	
 	
@@ -351,6 +419,10 @@ class Fund extends ListElement
 	{
 		$assocArray = parent::ConvertToAssocArray();
 		$assocArray["Anzahl"] = $this->GetAnzahl();
+		$assocArray["Dimension1"] = $this->GetDimension1();	
+		$assocArray["Dimension2"] = $this->GetDimension2();	
+		$assocArray["Dimension3"] = $this->GetDimension3();	
+		$assocArray["Masse"] = $this->GetMasse();	
 		
 		// Ablage
 		$ablage = $this->GetAblage();

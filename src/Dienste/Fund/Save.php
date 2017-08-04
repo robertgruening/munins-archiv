@@ -21,6 +21,42 @@ if (isset($_POST["Fund"]))
 	$fund->SetBezeichnung($fundJSON["Bezeichnung"]);
 	$fund->SetAnzahl(intval($fundJSON["Anzahl"]));
 	
+	if ($fundJSON["Dimension1"] == NULL)
+	{
+		$fund->SetDimension1(NULL);
+	}
+	else
+	{
+		$fund->SetDimension1(intval($fundJSON["Dimension1"]));	
+	}
+	
+	if ($fundJSON["Dimension2"] == NULL)
+	{
+		$fund->SetDimension2(NULL);
+	}
+	else
+	{
+		$fund->SetDimension2(intval($fundJSON["Dimension2"]));	
+	}
+	
+	if ($fundJSON["Dimension3"] == NULL)
+	{
+		$fund->SetDimension3(NULL);
+	}
+	else
+	{
+		$fund->SetDimension3(intval($fundJSON["Dimension3"]));	
+	}
+	
+	if ($fundJSON["Masse"] == NULL)
+	{
+		$fund->SetMasse(NULL);
+	}
+	else
+	{
+		$fund->SetMasse(intval($fundJSON["Masse"]));	
+	}
+	
 	$fund->Save();
 	
 	if ($fund->GetId() == NULL)
