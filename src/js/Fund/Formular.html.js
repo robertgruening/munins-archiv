@@ -66,6 +66,10 @@ function GetFundJSON()
 		"Id" : $("#textboxId").val(),
 		"Bezeichnung" : $("#textboxBeschriftung").val(),
 		"Anzahl" : $("#textboxAnzahl").val().replace(">", "-"),
+		"Dimension1" : $("#textboxDimension1").val() == "" ? null : $("#textboxDimension1").val(),
+		"Dimension2" : $("#textboxDimension2").val() == "" ? null : $("#textboxDimension2").val(),
+		"Dimension3" : $("#textboxDimension3").val() == "" ? null : $("#textboxDimension3").val(),
+		"Masse" : $("#textboxMasse").val() == "" ? null : $("#textboxMasse").val(),
 		"Ablage_Id" : $(_selectorTextboxAblageId).val() == "" ? null : $(_selectorTextboxAblageId).val(),
 		"Kontext_Id" : $(_selectorTextboxKontextId).val() == "" ? null : $(_selectorTextboxKontextId).val()
 	};
@@ -78,6 +82,10 @@ function SetFundJSON(fund)
 	$("#textboxId").val(fund.Id);
 	$("#textboxBeschriftung").val(fund.Bezeichnung);
 	$("#textboxAnzahl").val(ConvertFundAnzahl(fund.Anzahl));
+	$("#textboxDimension1").val(fund.Dimension1);
+	$("#textboxDimension2").val(fund.Dimension2);
+	$("#textboxDimension3").val(fund.Dimension3);
+	$("#textboxMasse").val(fund.Masse);
 	LoadListAttribute(fund.Id);	
 	$("#buttonAddFundAttribut").attr("disabled", false);
 	
