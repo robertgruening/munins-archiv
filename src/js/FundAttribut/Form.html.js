@@ -4,7 +4,7 @@ var _selectorTextboxParentId = "#textboxParentId";
 $(document).ready(function() {
 	$("#navigation").Navigation();
 	$("#breadcrumb").Breadcrumb({
-		PageName : "FundAttributFormluar"
+		PageName : "FundAttributForm"
 	});
 
 	$("#textboxId").attr("disabled",true);
@@ -229,13 +229,13 @@ function LoadListChildren(fundAttributId)
 		{
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
-		ListItemLink : "../FundAttribut/Formular.html"
+		ListItemLink : "../FundAttribut/Form.html"
 	});
 }
 
 function AddChild(ablageId)
 {
-	window.open("../FundAttribut/Formular.html?Parent_Id=" + ablageId);
+	window.open("../FundAttribut/Form.html?Parent_Id=" + ablageId);
 }
 
 function LoadListFunde(fundAttributId)
@@ -258,7 +258,7 @@ function LoadListFunde(fundAttributId)
 			else
 				return element.Anzahl.toString().replace("-", ">")+"x "+element.Typ.Bezeichnung+": \""+element.Bezeichnung+"\" ("+element.Id+")";
 		},
-		ListItemLink : "../Fund/Formular.html"
+		ListItemLink : "../Fund/Form.html"
 	});
 }
 
@@ -273,7 +273,7 @@ function LoadListRootFundAttribute()
 		{
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
-		ListItemLink : "../FundAttribut/Formular.html"
+		ListItemLink : "../FundAttribut/Form.html"
 	});
 }
 

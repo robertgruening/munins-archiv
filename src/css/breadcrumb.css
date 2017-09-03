@@ -1,0 +1,23 @@
+/*********/
+/* sizes */
+/*********/
+
+#breadcrumb {
+    height: 17px;
+    padding: 5px 0 5px 16px;
+    width: inherit;
+    position: fixed;
+    z-index: 1;    
+    top: 47px; /* = height of #navigation */
+}
+
+
+
+/**********/
+/* colors */
+/**********/
+
+#breadcrumb {
+    border-bottom: 2px solid #cccccc;
+    background-color: inherit;
+}
