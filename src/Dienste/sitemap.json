@@ -9,8 +9,8 @@
 				[
 					{
 						"Title" : "neu anlegen",
-						"URL" : "/Munins Archiv/src/Fundstelle/Formular.html",
-						"PageName" : "FundstelleFormular",
+						"URL" : "/Munins Archiv/src/Fundstelle/Form.html",
+						"PageName" : "FundstelleForm",
 						"Enabled" : false
 					},
 					{
@@ -34,22 +34,22 @@
 				[
 					{
 						"Title" : "neu anlegen",
-						"URL" : "/Munins Archiv/src/Ort/Formular.html",
-						"PageName" : "OrtFormular"
+						"URL" : "/Munins Archiv/src/Ort/Form.html",
+						"PageName" : "OrtForm"
 					},
 					{
 						"Title" : "Gebietskörperschaften verwalten",
-						"URL" : "/Munins Archiv/src/Ort/Gebietskoerperschaft/Formular.html",
+						"URL" : "/Munins Archiv/src/Ort/Gebietskoerperschaft/Form.html",
 						"Enabled" : false
 					},
 					{
 						"Title" : "Kartasterdaten verwalten",
-						"URL" : "/Munins Archiv/src/Ort/Fundstelle/Formular.html",
+						"URL" : "/Munins Archiv/src/Ort/Fundstelle/Form.html",
 						"Enabled" : false
 					},
 					{
 						"Title" : "Flurnamen verwalten",
-						"URL" : "/Munins Archiv/src/Ort/Flurname/Formular.html",
+						"URL" : "/Munins Archiv/src/Ort/Flurname/Form.html",
 						"Enabled" : false
 					},
 					{
@@ -65,8 +65,8 @@
 				[
 					{
 						"Title" : "neu anlegen",
-						"URL" : "/Munins Archiv/src/Kontext/Formular.html",
-						"PageName" : "KontextFormular"
+						"URL" : "/Munins Archiv/src/Kontext/Form.html",
+						"PageName" : "KontextForm"
 					},
 					{
 						"Title" : "in Orten suchen",
@@ -92,8 +92,8 @@
 				[
 					{
 						"Title" : "neu anlegen",
-						"URL" : "/Munins Archiv/src/Ablage/Formular.html",
-						"PageName" : "AblageFormular"
+						"URL" : "/Munins Archiv/src/Ablage/Form.html",
+						"PageName" : "AblageForm"
 					},
 					{
 						"Title" : "in Kontexten suchen",
@@ -113,8 +113,8 @@
 				[
 					{
 						"Title" : "neu anlegen",
-						"URL" : "/Munins Archiv/src/Fund/Formular.html",
-						"PageName" : "FundFormular"
+						"URL" : "/Munins Archiv/src/Fund/Form.html",
+						"PageName" : "FundForm"
 					},
 					{
 						"Title" : "in Ablagen suchen",
@@ -144,8 +144,8 @@
 				[
 					{
 						"Title" : "neu anlegen",
-						"URL" : "/Munins Archiv/src/FundAttribut/Formular.html",
-						"PageName" : "FundAttributFormular"
+						"URL" : "/Munins Archiv/src/FundAttribut/Form.html",
+						"PageName" : "FundAttributForm"
 					},
 					{
 						"Title" : "suchen",
@@ -171,7 +171,7 @@
 					},
 					{
 						"Title" : "Mitglieder verwalten",
-						"URL" : "/Munins Archiv/src/Member/Formular.html",
+						"URL" : "/Munins Archiv/src/Member/Form.html",
 						"Enabled" : false
 					}
 				]
@@ -182,22 +182,22 @@
 				[
 					{
 						"Title" : "Ablagetypen verwalten",
-						"URL" : "/Munins Archiv/src/Ablage/Typ/Formular.html",
+						"URL" : "/Munins Archiv/src/Ablage/Typ/Form.html",
 						"Enabled" : false
 					},
 					{
 						"Title" : "Fundattributstypen verwalten",
-						"URL" : "/Munins Archiv/src/FundAttribut/Typ/Formular.html",
+						"URL" : "/Munins Archiv/src/FundAttribut/Typ/Form.html",
 						"Enabled" : false
 					},
 					{
 						"Title" : "Gebietskörperschaftstypen verwalten",
-						"URL" : "/Munins Archiv/src/Gebietskoerperschaft/Typ/Formular.html",
+						"URL" : "/Munins Archiv/src/Gebietskoerperschaft/Typ/Form.html",
 						"Enabled" : false
 					},
 					{
 						"Title" : "Kartasterdatentypen verwalten",
-						"URL" : "/Munins Archiv/src/Kartasterdaten/Typ/Formular.html",
+						"URL" : "/Munins Archiv/src/Kartasterdaten/Typ/Form.html",
 						"Enabled" : false
 					}
 				]

@@ -50,63 +50,6 @@ select option {
 	padding-left: 20px;
 }
 
-.mainNavigation {
-	margin: 0;
-	padding: 10px 0 15px 10px;
-	position: fixed;
-	top: 0;
-	left: 0;
-	border-bottom: 1px solid;
-}
-
-.mainNavigation ul {
-	display: inline;
-	margin: 0px;
-	padding: 0px;
-}
-
-.mainNavigation ul li{
-	display: inline;
-	margin-right: 6px;
-	height:100%;
-}
-
-.mainNavigation ul li a{
-	padding: 3px 15px 3px 15px;
-	text-decoration: none;
-	border: 1px solid;
-}
-
-.subNavigation {
-	margin: 0;
-	padding: 0 0 0 10px;
-	position: fixed;
-	top: 70px;
-	left: 0;
-}
-
-.subNavigation ul {
-	display: inline;
-	margin: 0px;
-	padding: 0px;
-}
-
-.subNavigation ul li{
-	display: block;
-	margin-right: 6px;
-	margin-bottom: 5px;
-	height:100%;
-	clear: left;
-	width: 100%;
-}
-
-.subNavigation ul li a{
-	padding: 3px 15px 3px 15px;
-	text-decoration: none;
-	border: 1px solid;
-	display:block;
-}
-
 #divErgebnisse table tr td {
 	border-bottom: 1px dashed;
 }
@@ -158,24 +101,6 @@ input[type="button"]:hover {
 
 .formBlock .buttonBlock {
 	border-color: DarkGray;
-}
-
-.mainNavigation, .subNavigation {
-	background-color: white;
-	border-color: DarkGray;
-}
-
-.mainNavigation ul li a, .subNavigation ul li a {
-	border-color: #1010AD;
-	background-color: white;
-}
-
-.mainNavigation ul li a:hover, .subNavigation ul li a:hover {
-	background-color: #EFEF94;
-}
-
-.mainNavigation ul li a.activeFormular, .subNavigation ul li a.activeFormular {
-	background-color: #EFEF94;
 }
 
 #divErgebnisse table, 
@@ -269,14 +194,6 @@ input[type="button"] {
 	display: block;
 	--padding-left: 10px;
 	--background-color: yellow;
-}
-
-.mainNavigation ul li a{
-	min-width: 150px;
-}
-
-.mainNavigation {
-	width: 100%;
 }
 
 .page{

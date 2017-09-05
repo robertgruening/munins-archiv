@@ -6,7 +6,7 @@ var _selectorTextboxKontextId = "#textboxId";
 $(document).ready(function() {
 	$("#navigation").Navigation();
 	$("#breadcrumb").Breadcrumb({
-		PageName : "KontextFormular"
+		PageName : "KontextForm"
 	});
 
 	$("#textboxId").attr("disabled",true);
@@ -245,7 +245,7 @@ function LoadListParents()
 		{
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
-		ListItemLink : "../Kontext/Formular.html"
+		ListItemLink : "../Kontext/Form.html"
 	});
 }
 
@@ -266,18 +266,18 @@ function LoadListChildren(kontextId)
 		{
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
-		ListItemLink : "../Kontext/Formular.html"
+		ListItemLink : "../Kontext/Form.html"
 	});
 }
 
 function AddChild(kontextId)
 {
-	window.open("../Kontext/Formular.html?Parent_Id=" + kontextId);
+	window.open("../Kontext/Form.html?Parent_Id=" + kontextId);
 }
 
 function AddFund(kontextId)
 {
-	window.open("../Fund/Formular.html?Kontext_Id=" + kontextId);
+	window.open("../Fund/Form.html?Kontext_Id=" + kontextId);
 }
 
 function LoadListAblagen(kontextId)
@@ -300,7 +300,7 @@ function LoadListAblagen(kontextId)
 				
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
-		ListItemLink : "../Ablage/Formular.html"
+		ListItemLink : "../Ablage/Form.html"
 	});
 }
 
@@ -363,7 +363,7 @@ function LoadListFunde(kontextId)
 			
 			return listItemText;
 		},
-		ListItemLink : "../Fund/Formular.html"
+		ListItemLink : "../Fund/Form.html"
 	});
 }
 
@@ -384,7 +384,7 @@ function LoadListLfDs(kontextId)
 		{
 			return element.TK25Nr+" / "+element.Nr+" ("+element.Id+")";
 		},
-		ListItemLink : "../LfD/Formular.html"
+		ListItemLink : "../LfD/Form.html"
 	});
 }
 
@@ -399,7 +399,7 @@ function LoadListRootKontexte()
 		{
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
-		ListItemLink : "../Kontext/Formular.html"
+		ListItemLink : "../Kontext/Form.html"
 	});
 }
 
@@ -861,7 +861,7 @@ function LoadListOrte(kontextId)
 				
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
-		ListItemLink : "../Ort/Formular.html",
+		ListItemLink : "../Ort/Form.html",
 		IsDeletable : true
 	});
 }

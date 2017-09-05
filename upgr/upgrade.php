@@ -50,16 +50,22 @@ function Main()
     echo "Im Folgenden wird die Struktur der Datenbank \"Munins_Archiv\" verändert.\r\n";
     readline("Weiter mit [EINGABE] ...");
     echo "\r\n";
-    UpdateDatabaseStructure($config);
+    UpgradeDatabaseStructure($config);
     readline("Weiter mit [EINGABE] ...");
     echo "\r\n";
     echo "Im Folgenden werden die Bezeichnungen der Ablagen vom Typ \"Karton\" geändert. Das hat zur Folge, dass diese nicht mehr zur Laufzeit berechnet, sondern vollständig vom Anwender bestimmt werden. Folglich ist die Kartonbezeichnung nicht mehr mehr von den zugeordneten Kontexten abhängig.\r\n";
     readline("Weiter mit [EINGABE] ...");
     echo "\r\n";
-    UpdateKartonBezeichnungen($config);
+    UpgradeKartonBezeichnungen($config);
     readline("Weiter mit [EINGABE] ...");
-    echo "\r\n";    
-    echo "Beende Upgrade von Version 1.0 auf Version 1.1.";
+    echo "\r\n";
+    echo "Im Folgenden werden die Bezeichnungen daraufhin geprüft, dass sie gesetzt sind und, dass sie unter den Kindelementen eindeutig ist. Muss ein Element geändert werden, so fordert das Skript dazu auf. Diese Aktualisierung erfolgt für Fundattribute, Kontexte, Ablagen und Orte.\r\n";
+    readline("Weiter mit [EINGABE] ...");
+    echo "\r\n";
+    UpgradeAllBezeichnungen($config);
+    readline("Weiter mit [EINGABE] ...");
+    echo "\r\n";
+    echo "Beende Upgrade von Version 1.0 auf Version 1.1.\r\n";
 }
 
 function FillConfig($config)
@@ -81,10 +87,10 @@ function FillConfig($config)
 
 function ListConfig($config)
 {
-    echo "MYSQL_HOST: ".$config["MYSQL_HOST"]."\r\n";
-    echo "MYSQL_BENUTZER: ".$config["MYSQL_BENUTZER"]."\r\n";
-    echo "MYSQL_KENNWORT: ".($config["MYSQL_KENNWORT"] == "" ? "" : "*****")."\r\n";
-    echo "MYSQL_DATENBANK: ".$config["MYSQL_DATENBANK"]."\r\n";
+    echo "MYSQL_HOST: .............. ".$config["MYSQL_HOST"]."\r\n";
+    echo "MYSQL_BENUTZER: .......... ".$config["MYSQL_BENUTZER"]."\r\n";
+    echo "MYSQL_KENNWORT: .......... ".($config["MYSQL_KENNWORT"] == "" ? "" : "*****")."\r\n";
+    echo "MYSQL_DATENBANK: ......... ".$config["MYSQL_DATENBANK"]."\r\n";
     echo "DATABASE_BACKUP_FILE_PATH: ".$config["DATABASE_BACKUP_FILE_PATH"]."\r\n";
     echo "DATABASE_BACKUP_FILE_NAME: ".$config["DATABASE_BACKUP_FILE_NAME"]."\r\n";
 }
@@ -179,7 +185,7 @@ function AddColumnToTable($config, $tableName, $columnName)
     }
 }
 
-function UpdateDatabaseStructure($config)
+function UpgradeDatabaseStructure($config)
 {
     AddColumnToTable($config, "Fund", "Dimension1");
     AddColumnToTable($config, "Fund", "Dimension2");
@@ -187,7 +193,7 @@ function UpdateDatabaseStructure($config)
     AddColumnToTable($config, "Fund", "Masse");
 }
 
-function UpdateKartonBezeichnungen($config)
+function UpgradeKartonBezeichnungen($config)
 {
     $kartons = GetKartons($config);
     
@@ -211,7 +217,7 @@ function UpdateKartonBezeichnungen($config)
             {    
                 $kartons[$i]["Bezeichnung"] = $kontextFullBezeichnung."-".$kartons[$i]["Bezeichnung"];
                 echo "Neue Kartonbezeichnung: ".$kartons[$i]["Bezeichnung"]."\r\n";            
-                SaveNewBezeichnung($config, $kartons[$i]["Id"], $kartons[$i]["Bezeichnung"]);
+                SaveNewKartonBezeichnung($config, $kartons[$i]["Id"], $kartons[$i]["Bezeichnung"]);
             }
             
             echo "\r\n";
@@ -333,7 +339,7 @@ function GetKontextByAblage($config, $ablageId)
     return $kontext;
 }
 
-function SaveNewBezeichnung($config, $id, $newBezeichnung)
+function SaveNewKartonBezeichnung($config, $id, $newBezeichnung)
 {
     $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
 
@@ -341,9 +347,139 @@ function SaveNewBezeichnung($config, $id, $newBezeichnung)
     {
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
-	        Update Ablage
+	        Upgrade Ablage
 	        SET Bezeichnung = '".$newBezeichnung."'
 	        WHERE Id = ".$id.";");
+    }
+    $mysqli->close();
+}
+
+function UpgradeAllBezeichnungen($config)
+{
+    echo "Aktualisiere Fundattribute.\r\n";
+    UpgradeBezeichnungen($config, "FundAttribut", null, array());
+    
+    echo "Aktualisiere Kontexte.\r\n";
+    UpgradeBezeichnungen($config, "Kontext", null, array());
+    
+    echo "Aktualisiere Ablagen.\r\n";
+    UpgradeBezeichnungen($config, "Ablage", null, array());
+    
+    echo "Aktualisiere Orte.\r\n";
+    UpgradeBezeichnungen($config, "Ort", null, array());    
+}
+
+function UpgradeBezeichnungen($config, $tableName, $parentId, $pathElements)
+{
+    $elements = GetElements($config, $tableName, $parentId);    
+    $siblingsBezeichnungen = array();       
+    
+    for ($i = 0; $i < count($elements); $i++)
+    {
+        WriteElementInformation($elements[$i], $pathElements);
+        echo "\r\n";
+        
+        if ($elements[$i]["Bezeichnung"] == null ||
+            $elements[$i]["Bezeichnung"] == "" ||
+            in_array($elements[$i]["Bezeichnung"], $siblingsBezeichnungen))
+        {
+            $elements[$i]["Bezeichnung"] = GetNewBezeichnung($elements[$i], $pathElements, $siblingsBezeichnungen);
+            SetNewBezeichnung($config, $tableName, $elements[$i]);
+        }
+        
+        array_push($siblingsBezeichnungen, $elements[$i]["Bezeichnung"]);
+        array_push($pathElements, $elements[$i]);
+        UpgradeBezeichnungen($config, $tableName, $elements[$i]["Id"], $pathElements);
+        array_pop($pathElements);
+    }   
+}
+
+function GetElements($config, $tableName, $parentId)
+{
+    $elements = array();
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+	    $ergebnis = $mysqli->query("
+	        SELECT ".$tableName.".Id AS Id, ".$tableName.".Bezeichnung AS Bezeichnung, ".$tableName."Typ.Bezeichnung AS Typ
+	        FROM ".$tableName." LEFT JOIN ".$tableName."Typ ON ".$tableName.".Typ_Id = ".$tableName."Typ.Id
+	        WHERE ".$tableName.".Parent_Id ".($parentId == null ? "IS NULL" : "= ".$parentId).";");
+	        
+	    if (!$mysqli->errno)
+		{
+			while ($datensatz = $ergebnis->fetch_assoc())
+			{
+				$element["Id"] = intval($datensatz["Id"]);
+				$element["Bezeichnung"] = $datensatz["Bezeichnung"];
+				$element["Typ"] = $datensatz["Typ"];
+				array_push($elements, $element);
+			}
+		}
+    }
+    $mysqli->close();
+    
+    return $elements;
+}
+
+function GetNewBezeichnung($element, $pathElements, $siblingsBezeichnungen)
+{
+    $newBezeichnung = $element["Bezeichnung"];
+        
+    while (in_array($newBezeichnung, $siblingsBezeichnungen) || 
+            $newBezeichnung == null ||
+            $newBezeichnung == "")
+    {
+        if ($element["Bezeichnung"] == null ||
+            $element["Bezeichnung"] == "")
+        {
+            echo "Das folgende Element hat keine Bezeichnung.\r\n";
+        }
+        else if (in_array($newBezeichnung, $siblingsBezeichnungen))        
+        {
+            echo "Das folgende Element hat die gleiche Bezeichnung wie ein benachbartes Element.\r\n";
+        }  
+    
+        WriteElementInformation($element, $pathElements);
+        $newBezeichnung = readline("neue Bezeichnung: ");
+        echo "\r\n";
+    }
+    
+    return $newBezeichnung;
+}
+
+function WriteElementInformation($element, $pathElements)
+{        
+    echo "Id: ........ ".$element["Id"]."\r\n";
+    echo "Bezeichnung: ".$element["Bezeichnung"]."\r\n";
+    echo "Typ: ....... ".$element["Typ"]."\r\n";
+    echo "Pfad: ...... ";
+    
+    for ($i = 0; $i < count($pathElements); $i++)
+    {
+        echo $pathElements[$i]["Bezeichnung"];
+        
+        if ($i < (count($pathElements) - 1))
+        {
+            echo "/";
+        }
+    }
+    
+    echo "\r\n";
+}
+
+function SetNewBezeichnung($config, $tableName, $element)
+{
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+	    $ergebnis = $mysqli->query("
+	        Upgrade ".$tableName."
+	        SET Bezeichnung = '".$element["Bezeichnung"]."'
+	        WHERE Id = ".$element["Id"].";");
     }
     $mysqli->close();
 }

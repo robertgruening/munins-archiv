@@ -1,24 +1,24 @@
 $(function() {	
 	var listeKontext = [
-	"25",
-	"25/I",
-	"25/I/1",
-	"25/I/2",
-	"25/I/3",
-	"25/II",
-	"25/II/1",
-	"25/III",
-	"25/III/1"
+	"Fundstelle: 25",
+	"Fundstelle: 25/Begehungsfläche: I",
+	"Fundstelle: 25/Begehungsfläche: I/Begehung: 1",
+	"Fundstelle: 25/Begehungsfläche: I/Begehung: 2",
+	"Fundstelle: 25/Begehungsfläche: I/Begehung: 3",
+	"Fundstelle: 25/Begehungsfläche: II",
+	"Fundstelle: 25/Begehungsfläche: II/Begehung: 1",
+	"Fundstelle: 25/Begehungsfläche: III",
+	"Fundstelle: 25/Begehungsfläche: III/Begehung: 1"
 	];
 	
 	var listeAblage = [
-	"Archiv",
-	"Archiv/1",
-	"Archiv/1/1",
-	"Archiv/1/2",
-	"Archiv/1/3",
-	"Archiv/1/3/25-I-1-1",
-	"Archiv/1/3/25-III-1-1"
+	"Raum: Archiv",
+	"Raum: Archiv/Regal: 1",
+	"Raum: Archiv/Regal: 1/Regalbrett: 1",
+	"Raum: Archiv/Regal: 1/Regalbrett: 2",
+	"Raum: Archiv/Regal: 1/Regalbrett: 3",
+	"Raum: Archiv/Regal: 1/Regalbrett: 3/Karton: 25-I-1-1",
+	"Raum: Archiv/Regal: 1/Regalbrett: 3/Karton: 25-III-1-1"
 	];
 	
 	var listeMaterial = [

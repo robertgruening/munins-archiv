@@ -7,7 +7,7 @@ var _offset = 0;
 $(document).ready(function() {
 	$("#navigation").Navigation();
 	$("#breadcrumb").Breadcrumb({
-		PageName : "FundFormular"
+		PageName : "FundForm"
 	});
 
 	$("#textboxId").attr("disabled",true);
@@ -169,7 +169,7 @@ function LoadListAttribute(fundId)
 		{
 			return element.Typ.Bezeichnung+": "+element.FullBezeichnung+" ("+element.Id+")";
 		},
-		ListItemLink : "../FundAttribut/Formular.html",
+		ListItemLink : "../FundAttribut/Form.html",
 		IsDeletable : true
 	});
 }
@@ -379,18 +379,6 @@ function GetValueForNoSelection()
 	return -1;
 }
 
-function OpenTab(index)
-{
-	for (var i = 0; i <= _tabCount; i++)
-	{
-		$("#tab_" + i).hide();
-		$(".subNavigation ul li #" + i).removeClass("activeFormular");
-	}
-	
-	$("#tab_" + index).show();
-	$(".subNavigation ul li #" + index).addClass("activeFormular");
-}
-
 function Search()
 {
 	_offset = 0;
@@ -482,16 +470,16 @@ function ShowSearchResult(message)
 	{		
 		tabelle += "<tr>";
 		tabelle += "<td>" + (message.From + i) + "</td>";
-		tabelle += "<td><a href=\"../Fund/Formular.html?Id="+message.Elemente[i].Id + "\">" + message.Elemente[i].Id + "</a></td>";
-		tabelle += "<td><a href=\"../Fund/Formular.html?Id="+message.Elemente[i].Id + "\">" + ConvertFundAnzahl(message.Elemente[i].Anzahl) + "</a></td>";
-		tabelle += "<td><a href=\"../Fund/Formular.html?Id="+message.Elemente[i].Id + "\">" + message.Elemente[i].Bezeichnung + "</a></td>";
-		tabelle += "<td><a href=\"../Ablage/Formular.html?Id="+message.Elemente[i].Ablage.Id + "\">" + message.Elemente[i].Ablage.FullBezeichnung + "</a></td>";	
-		tabelle += "<td><a href=\"../Kontext/Formular.html?Id="+message.Elemente[i].Kontext.Id + "\">" + message.Elemente[i].Kontext.FullBezeichnung + "</a></td>";	
+		tabelle += "<td><a href=\"../Fund/Form.html?Id="+message.Elemente[i].Id + "\">" + message.Elemente[i].Id + "</a></td>";
+		tabelle += "<td><a href=\"../Fund/Form.html?Id="+message.Elemente[i].Id + "\">" + ConvertFundAnzahl(message.Elemente[i].Anzahl) + "</a></td>";
+		tabelle += "<td><a href=\"../Fund/Form.html?Id="+message.Elemente[i].Id + "\">" + message.Elemente[i].Bezeichnung + "</a></td>";
+		tabelle += "<td><a href=\"../Ablage/Form.html?Id="+message.Elemente[i].Ablage.Id + "\">" + message.Elemente[i].Ablage.FullBezeichnung + "</a></td>";	
+		tabelle += "<td><a href=\"../Kontext/Form.html?Id="+message.Elemente[i].Kontext.Id + "\">" + message.Elemente[i].Kontext.FullBezeichnung + "</a></td>";	
 		tabelle += "<td><ul>"
 		
 		for (var j = 0; j < message.Elemente[i].Attribute.length; j++)
 		{
-			tabelle += "<li><a href=\"../FundAttribut/Formular.html?Id=" + message.Elemente[i].Attribute[j].Id + "\">" + message.Elemente[i].Attribute[j].FullBezeichnung + "</a></li>"
+			tabelle += "<li><a href=\"../FundAttribut/Form.html?Id=" + message.Elemente[i].Attribute[j].Id + "\">" + message.Elemente[i].Attribute[j].FullBezeichnung + "</a></li>"
 		}
 		
 		tabelle += "</ul></td>";	

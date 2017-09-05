@@ -100,3 +100,7 @@ nav div {
 .feld input[type=text] {
 	margin-left: 40px;
 }
+
+input[type=text] {
+    width: 300px;
+}

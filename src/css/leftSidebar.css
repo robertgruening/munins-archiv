@@ -1,0 +1,32 @@
+/*********/
+/* sizes */
+/*********/
+
+#content {
+    padding-left: 25%; /* = width of #leftSidebar */
+}
+
+#leftSidebar {
+    padding-top: 76px; /* = outer height of #navigation + outer height of #breadcrumb */
+    padding-bottom: 52px; /* = outer height of #clipboard */
+    position: fixed;
+    height: inherit;
+    width: 25%;
+}
+
+#leftSidebar div {
+    height: 100%;
+    overflow-y: scroll;
+    padding-top: 16px;
+    padding-left: 16px;
+}
+
+
+
+/**********/
+/* colors */
+/**********/
+
+#leftSidebar {
+    border-right:2px solid #cccccc;
+}
