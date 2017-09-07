@@ -206,8 +206,8 @@ function UpgradeKartonBezeichnungen($config)
             $kartons[$i]["Bezeichnung"] != null &&
             $kartons[$i]["Bezeichnung"] != "")
         {
-            echo "Kartonbezeichnung: ".$kartons[$i]["Bezeichnung"]."\r\n";
-            echo "Zugehörige vollständige Kontextbezeichnung: ".$kontextFullBezeichnung."\r\n";
+            echo "Kartonbezeichnung: ............. ".$kartons[$i]["Bezeichnung"]."\r\n";
+            echo "Vollständige Kontextbezeichnung: ".$kontextFullBezeichnung."\r\n";
             
             if (startsWith($kartons[$i]["Bezeichnung"], $kontextFullBezeichnung))
             {      
@@ -216,7 +216,7 @@ function UpgradeKartonBezeichnungen($config)
             else
             {    
                 $kartons[$i]["Bezeichnung"] = $kontextFullBezeichnung."-".$kartons[$i]["Bezeichnung"];
-                echo "Neue Kartonbezeichnung: ".$kartons[$i]["Bezeichnung"]."\r\n";            
+                echo "Neue Kartonbezeichnung: ........ ".$kartons[$i]["Bezeichnung"]."\r\n";            
                 SaveNewKartonBezeichnung($config, $kartons[$i]["Id"], $kartons[$i]["Bezeichnung"]);
             }
             
@@ -347,7 +347,7 @@ function SaveNewKartonBezeichnung($config, $id, $newBezeichnung)
     {
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
-	        Upgrade Ablage
+	        Update Ablage
 	        SET Bezeichnung = '".$newBezeichnung."'
 	        WHERE Id = ".$id.";");
     }
@@ -477,7 +477,7 @@ function SetNewBezeichnung($config, $tableName, $element)
     {
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
-	        Upgrade ".$tableName."
+	        Update ".$tableName."
 	        SET Bezeichnung = '".$element["Bezeichnung"]."'
 	        WHERE Id = ".$element["Id"].";");
     }
