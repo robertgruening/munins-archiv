@@ -67,6 +67,7 @@ function LoadFundAttributById(id)
 				}
 				fundAttribut.Parent = parent;
 				SetFundAttributJSON(fundAttribut);
+				SetShortView(fundAttribut);
 			}
 		},
 		error:function(jqXHR, textStatus, errorThrown)
@@ -158,6 +159,13 @@ function SetFundAttributJSON(fundAttribut)
 	LoadListParents();
 		
 	document.title = "("+fundAttribut.Id+") "+fundAttribut.Typ.Bezeichnung+": "+fundAttribut.Bezeichnung;
+}
+
+function SetShortView(fundAttribut)
+{
+	$("#shortView").FundAttributShortView({
+		Element : fundAttribut
+	});
 }
 
 function buttonSpeichern_onClick()
@@ -417,45 +425,6 @@ function CreateOptionTyp(typ, select)
 	option += "</option>";
 	
 	return option;
-}
-
-function LoadFundAttributeById(id)
-{
-	if (id == undefined ||
-		id == null ||
-		id == GetValueForNoSelection())
-	{
-		ClearFields();
-		return;
-	}
-	
-	$.ajax(
-	{
-		type:"GET",
-		url:"../Dienste/FundAttribut/GetWithParents/" + id,
-		success:function(data, textStatus, jqXHR)
-		{
-			if (data)
-			{				
-				var parents = $.parseJSON(data);
-				var fundAttribut = parents[0];
-				var parent = null;
-				
-				while (fundAttribut.Children != undefined &&
-					fundAttribut.Children.length > 0)
-				{
-					parent = fundAttribut;
-					fundAttribut = fundAttribut.Children[0];				
-				}
-				fundAttribut.Parent = parent;
-				SetFundAttributJSON(fundAttribut);
-			}
-		},
-		error:function(jqXHR, textStatus, errorThrown)
-		{
-			alert("error");
-		}
-	});	
 }
 
 function GetURLParameter(name)

@@ -118,6 +118,13 @@ function SetFundJSON(fund)
 	document.title = "("+fund.Id+") Fund: "+fund.Bezeichnung;
 }
 
+function SetShortView(fund)
+{
+	$("#shortView").FundShortView({
+		Element : fund
+	});
+}
+
 function buttonSpeichern_onClick()
 {	
 	SaveFund();	
@@ -351,6 +358,7 @@ function LoadFundById(id)
 			if (data)
 			{
 				SetFundJSON($.parseJSON(data));
+                SetShortView($.parseJSON(data));
 			}
 		},
 		error:function(jqXHR, textStatus, errorThrown)

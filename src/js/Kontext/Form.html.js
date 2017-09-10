@@ -197,6 +197,13 @@ function SetKontextJSON(kontext)
 	document.title = "("+kontext.Id+") "+kontext.Typ.Bezeichnung+": "+kontext.Bezeichnung;
 }
 
+function SetShortView(kontext)
+{
+	$("#shortView").KontextShortView({
+		Element : kontext
+	});
+}
+
 function buttonSpeichern_onClick()
 {	
 	SaveKontext();	
@@ -576,6 +583,7 @@ function LoadKontextById(id)
 				}
 				kontext.Parent = parent;
 				SetKontextJSON(kontext);
+				SetShortView(kontext);
 			}
 		},
 		error:function(jqXHR, textStatus, errorThrown)

@@ -228,16 +228,5 @@ class Ablage extends TypedNode
 			$mysqli->close();
 		}
 	}
-	
-	public function GetFullBezeichnung()
-	{
-		$fullBezeichnung = "";
-		$kontexte = $this->GetKontexte();			
-		
-		if (count($kontexte) > 0)
-			$fullBezeichnung .= $kontexte[0]->GetFullBezeichnung()."-".$this->GetBezeichnung();
-		
-		return $fullBezeichnung;
-	}
 }
 ?>

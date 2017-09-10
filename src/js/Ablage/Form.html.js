@@ -126,6 +126,13 @@ function SetAblageJSON(ablage)
 	document.title = "("+ablage.Id+") "+ablage.Typ.Bezeichnung+": "+ablage.Bezeichnung;
 }
 
+function SetShortView(ablage)
+{
+	$("#shortView").AblageShortView({
+		Element : ablage
+	});
+}
+
 function buttonSpeichern_onClick()
 {	
 	SaveAblage();	
@@ -492,6 +499,7 @@ function LoadAblageById(id)
 
 				ablage.Parent = parent;				
 				SetAblageJSON(ablage);
+				SetShortView(ablage);
 			}
 		},
 		error:function(jqXHR, textStatus, errorThrown)

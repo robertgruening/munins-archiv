@@ -121,6 +121,13 @@ function SetOrtJSON(ort)
 	document.title = "("+ort.Id+") "+ort.Typ.Bezeichnung+": "+ort.Bezeichnung;
 }
 
+function SetShortView(ort)
+{
+	$("#shortView").OrtShortView({
+		Element : ort
+	});
+}
+
 function buttonSpeichern_onClick()
 {	
 	SaveOrt();	
@@ -455,6 +462,7 @@ function LoadOrtById(id)
 
 				ort.Parent = parent;
 				SetOrtJSON(ort);
+				SetShortView(ort);
 			}
 		},
 		error:function(jqXHR, textStatus, errorThrown)

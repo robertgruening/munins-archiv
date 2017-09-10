@@ -9,7 +9,11 @@ $(document).ready(function() {
 
 function LoadTree()
 {
-	$("#tree").jstree({
+	$("#tree").on("changed.jstree", function (e, data) {
+        $("#shortView").OrtShortView({
+            Element : $("#tree").jstree().get_node(data.selected[0]).original
+        });
+    }).jstree({
 		"plugins" : ["contextmenu"],
 		"core" : 
 		{
@@ -53,7 +57,7 @@ function LoadTree()
 						"action" : function(node)
 						{
 							var node = $("#tree").jstree().get_node(node.reference);
-							window.location.href = "Formular.html?Id=" + node.original.Id;
+							window.location.href = "Form.html?Id=" + node.original.Id;
 						}
 					}
 				};

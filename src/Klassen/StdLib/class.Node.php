@@ -459,7 +459,7 @@ class Node
 			
 		if ($parent &&
 			$this->GetBezeichnung() != "")
-			$fullBezeichnung .= "-";
+			$fullBezeichnung .= "/";
 			
 		if ($this->GetBezeichnung() != "")
 			$fullBezeichnung .= $this->GetBezeichnung();

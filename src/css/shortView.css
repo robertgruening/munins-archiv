@@ -1,0 +1,19 @@
+#shortView .fieldName {    
+}
+
+#shortView .fieldValue {
+    padding-left: 5px;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#shortView .segment {
+}
+
+#shortView .segmentSeparator {
+    padding-left: 2px;
+    padding-right: 2px;
+    color: #1c94c4;;
+    font-weight: normal;
+}
