@@ -16,6 +16,8 @@ $(document).ready(function() {
 	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddTeil").click(function() { AddTeil(); });
 	$("#buttonAddKontext").click(function() { AddKontext(); });
+	$("#textboxBezeichnung").keyup(function() { checkBezeichnung($(this)); })
+	                        .change(function() { checkBezeichnung($(this)); });
 	
 	LoadSelectionTyp();
 	LoadListRootOrte();

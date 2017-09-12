@@ -15,3 +15,8 @@ function setSizes() {
         16 /* #leftSidebar.padding-top */
     );
 }
+
+function checkBezeichnung(control) {
+    var tmp = $(control).val().replace(/\/+/g, "");
+    $(control).val(tmp);
+}

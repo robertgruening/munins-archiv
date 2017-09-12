@@ -13,6 +13,8 @@ $(document).ready(function() {
 	
 	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddKontext").click(function() { AddKontext(); });
+	$("#textboxBezeichnung").keyup(function() { checkBezeichnung($(this)); })
+	                        .change(function() { checkBezeichnung($(this)); });
 	
 	LoadSelectionTyp();
 	LoadListRootFundAttribute();

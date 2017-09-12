@@ -35,7 +35,7 @@ class Node
 	
 	public function SetBezeichnung($bezeichnung)
 	{
-		$this->_bezeichnung = $bezeichnung;
+		$this->_bezeichnung = str_replace("/", "", $bezeichnung);
 	}
 	
 	// parent

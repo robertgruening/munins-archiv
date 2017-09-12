@@ -18,6 +18,8 @@ $(document).ready(function() {
 	$("#buttonSetParent").click(function() { SetParent(); });
 	$("#buttonAddKontext").click(function() { AddKontext(); });
 	//$("#buttonAddKarton").click(function() { AddAblageToKartonschildSeite(); });
+	$("#textboxBezeichnung").keyup(function() { checkBezeichnung($(this)); })
+	                        .change(function() { checkBezeichnung($(this)); });
 	
 	LoadSelectionTyp();
 	LoadListRootAblagen();

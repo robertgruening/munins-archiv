@@ -439,7 +439,11 @@ function GetNewBezeichnung($element, $pathElements, $siblingsBezeichnungen)
         else if (in_array($newBezeichnung, $siblingsBezeichnungen))        
         {
             echo "Das folgende Element hat die gleiche Bezeichnung wie ein benachbartes Element.\r\n";
-        }  
+        } 
+        else if (strpos($newBezeichnung, "/") === true)
+        {
+            echo "Das folgende Element enthält ein nicht erlaubtes Zeichen (\"/\").\r\n";
+        } 
     
         WriteElementInformation($element, $pathElements);
         $newBezeichnung = readline("neue Bezeichnung: ");

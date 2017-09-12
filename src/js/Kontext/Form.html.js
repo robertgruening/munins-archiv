@@ -18,6 +18,8 @@ $(document).ready(function() {
 	$("#buttonAddAblage").click(function() { AddAblage(); });
 	$("#buttonAddLfD").click(function() { AddLfD(); });
 	$("#buttonAddOrt").click(function() { AddOrt(); });
+	$("#textboxBezeichnung").keyup(function() { checkBezeichnung($(this)); })
+	                        .change(function() { checkBezeichnung($(this)); });
 	
 	LoadSelectionTyp();
 	LoadListRootKontexte();
