@@ -218,7 +218,7 @@ function LoadListKontexte(ortId)
 
 	$("#divKontexte #divList").List(
 	{
-		UrlGetElements : "../Dienste/Kontext/Get/" + ortId,
+		UrlGetElements : "../Dienste/Kontext/Get/Ort/" + ortId,
 		SetUrlUnlink : function(kontextId)
 		{
 			return "../Dienste/Ort/Unlink/" + ortId + "/Kontext/" + kontextId;

@@ -17,3 +17,7 @@
     color: #1c94c4;;
     font-weight: normal;
 }
+
+#shortView ul {
+    margin: 0;
+}
