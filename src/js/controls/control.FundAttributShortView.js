@@ -4,20 +4,20 @@
 	{
 		return this.each(function()
 		{
-			LoadFundAttributShortView(options, this);
+			loadFundAttributShortView(options, this);
 		});
 	}
 	
-	function LoadFundAttributShortView(options, htmlElement)
+	function loadFundAttributShortView(options, htmlElement)
 	{
 		$(htmlElement).empty();		
-		WriteName(options, htmlElement);
-		WritePfad(options, htmlElement);
-        WriteChildInformation(options, htmlElement);
-        WriteFunde(options, htmlElement);
+		writeName(options, htmlElement);
+		writePfad(options, htmlElement);
+        writeChildInformation(options, htmlElement);
+        writeFunde(options, htmlElement);
 	}
 	
-    function WriteName(options, htmlElement)
+    function writeName(options, htmlElement)
     {
         $(htmlElement).append(
             $("<span/>").html(options.Element.Typ.Bezeichnung + ":").addClass("fieldName"),
@@ -26,7 +26,67 @@
         );
     }
     
-    function GetPfadHtml(pfad)
+    function writePfad(options, htmlElement)    
+    {
+        $(htmlElement).append(
+            $("<span/>").html("Pfad:").addClass("fieldName"),
+            $("<span/>").html(getPfadHtml(options.Element.FullBezeichnung)).addClass("fieldValue"),
+            $("<br/>")
+        );
+    }
+
+	function writeChildInformation(options, htmlElement)
+	{
+	    $(htmlElement).append(
+            $("<span/>").html("Kinder:").addClass("fieldName"),
+            $("<span/>").html("0 Stk.").addClass("fieldValue").attr("name", "kinder"),
+            $("<div/>").attr("name", "kinder")
+        );
+        
+		$.ajax(
+		{
+			type:"GET",
+			url: "../Dienste/FundAttribut/GetWithChildren/" + options.Element.Id,
+			dataType: "JSON",
+			success:function(data, textStatus, jqXHR)
+			{
+				if (data &&
+				    data.length > 0)
+				{
+				    $("span[name=kinder]").html(data.length + " Stk.");
+				    writeList($("div[name=kinder]"), data);
+				    appendListToggleIcon($("span[name=kinder]"), $("div[name=kinder] ul"));	
+				}
+			}
+		});	
+	}
+
+	function writeFunde(options, htmlElement)
+	{
+	    $(htmlElement).append(
+            $("<span/>").html("Funde:").addClass("fieldName"),
+            $("<span/>").html("0 Stk.").addClass("fieldValue").attr("name", "fundeAnzahl"),
+            $("<br/>")
+        );
+        
+		$.ajax(
+		{
+			type:"GET",
+			url: "../Dienste/Fund/Get/FundAttribut/" + options.Element.Id,
+			dataType: "JSON",
+			success:function(data, textStatus, jqXHR)
+			{	
+				if (data)
+				{
+				    $("span[name=fundeAnzahl]").html(data.length + " Stk.");
+				}
+			}
+		});	
+	}
+	
+	/* support functions */
+    
+    function getPfadHtml(pfad)
     {
         var segments = pfad.split("/");
         var pfadSpan = $("<span/>");
@@ -47,67 +107,38 @@
         
         return pfadSpan;
     }
-    
-    function WritePfad(options, htmlElement)    
-    {
-        $(htmlElement).append(
-            $("<span/>").html("Pfad:").addClass("fieldName"),
-            $("<span/>").html(GetPfadHtml(options.Element.FullBezeichnung)).addClass("fieldValue"),
-            $("<br/>")
-        );
-    }
-
-	function WriteChildInformation(options, htmlElement)
-	{
-	    $(htmlElement).append(
-            $("<span/>").html("Kinder:").addClass("fieldName"),
-            $("<span/>").attr("name", "kinderAnzahl").addClass("fieldValue"),
-            $("<br/>")
-        );
+	
+	function writeList(listContainer, listData)
+	{	
+	    var ul = $("<ul/>").addClass("list");
+	    	        
+        for (var i = 0; i < listData.length; i++)
+        {
+            $(ul).append(
+		        $("<li/>").html(getPfadHtml(listData[i].FullBezeichnung))
+            );			        
+        }
         
-		$.ajax(
-		{
-			type:"GET",
-			url: "../Dienste/FundAttribut/GetWithChildren/" + options.Element.Id,
-			dataType: "JSON",
-			success:function(data, textStatus, jqXHR)
-			{
-				if (data)
-				{
-				    $("span[name=kinderAnzahl]").html(data.length + " Stk.");
-				}
-				else
-				{
-				    $("span[name=kinderAnzahl]").html("0 Stk.");
-				}
-			}
-		});	
+	    $(listContainer).append(ul);
 	}
-
-	function WriteFunde(options, htmlElement)
+	
+	function appendListToggleIcon(onControl, listControl)
 	{
-	    $(htmlElement).append(
-            $("<span/>").html("Funde:").addClass("fieldName"),
-            $("<span/>").attr("name", "fundeAnzahl").addClass("fieldValue"),
-            $("<br/>")
+        $(onControl).after(
+	        $("<span/>").addClass("ui-icon").addClass("ui-icon-circle-triangle-s").click(function() {
+                $(listControl).toggle("blind");
+                
+                if ($(this).hasClass("ui-icon-circle-triangle-s"))
+                {
+                    $(this).removeClass("ui-icon-circle-triangle-s");
+                    $(this).addClass("ui-icon-circle-triangle-n");
+                }
+                else
+                {
+                    $(this).removeClass("ui-icon-circle-triangle-n");
+                    $(this).addClass("ui-icon-circle-triangle-s");
+                }
+            })
         );
-        
-		$.ajax(
-		{
-			type:"GET",
-			url: "../Dienste/Fund/Get/FundAttribut/" + options.Element.Id,
-			dataType: "JSON",
-			success:function(data, textStatus, jqXHR)
-			{	
-				if (data)
-				{
-				    $("span[name=fundeAnzahl]").html(data.length + " Stk.");
-				}
-				else
-				{
-				    $("span[name=fundeAnzahl]").html("0 Stk.");
-				}
-			}
-		});	
 	}
 })(jQuery);

@@ -18,6 +18,12 @@
     font-weight: normal;
 }
 
-#shortView ul {
+#shortView .list {
     margin: 0;
+    display: none;
+}
+
+#shortView .ui-icon {
+    display: inline-block;
+    margin-left: 10px
 }

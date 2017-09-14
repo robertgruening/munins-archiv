@@ -4,25 +4,25 @@
 	{
 		return this.each(function()
 		{
-			LoadFundShortView(options, this);
+			loadFundShortView(options, this);
 		});
 	}
 	
-	function LoadFundShortView(options, htmlElement)
+	function loadFundShortView(options, htmlElement)
 	{
 		$(htmlElement).empty();		
-		WriteBeschriftung(options, htmlElement);
-		WriteAnzahl(options, htmlElement);
-		WriteDimension1(options, htmlElement);
-		WriteDimension2(options, htmlElement);
-		WriteDimension3(options, htmlElement);
-		WriteMasse(options, htmlElement);	
-		WriteKontext(options, htmlElement);
-		WriteAblage(options, htmlElement);
-		WriteFundAttribute(options, htmlElement);
+		writeBeschriftung(options, htmlElement);
+		writeAnzahl(options, htmlElement);
+		writeDimension1(options, htmlElement);
+		writeDimension2(options, htmlElement);
+		writeDimension3(options, htmlElement);
+		writeMasse(options, htmlElement);	
+		writeKontext(options, htmlElement);
+		writeAblage(options, htmlElement);
+		writeFundAttribute(options, htmlElement);
 	}
 	
-    function WriteBeschriftung(options, htmlElement)
+    function writeBeschriftung(options, htmlElement)
     {
         $(htmlElement).append(
             $("<span/>").html("Beschriftung:").addClass("fieldName"),
@@ -31,7 +31,7 @@
         );
     }
 	
-    function WriteAnzahl(options, htmlElement)
+    function writeAnzahl(options, htmlElement)
     {
         $(htmlElement).append(
             $("<span/>").html("Anzahl:").addClass("fieldName"),
@@ -40,7 +40,7 @@
         );
     }
 	
-    function WriteDimension1(options, htmlElement)
+    function writeDimension1(options, htmlElement)
     {
         $(htmlElement).append(
             $("<span/>").html("Dimension1:").addClass("fieldName"),
@@ -49,7 +49,7 @@
         );
     }
 	
-    function WriteDimension2(options, htmlElement)
+    function writeDimension2(options, htmlElement)
     {
         $(htmlElement).append(
             $("<span/>").html("Dimension2:").addClass("fieldName"),
@@ -58,7 +58,7 @@
         );
     }
 	
-    function WriteDimension3(options, htmlElement)
+    function writeDimension3(options, htmlElement)
     {
         $(htmlElement).append(
             $("<span/>").html("Dimension3:").addClass("fieldName"),
@@ -67,7 +67,7 @@
         );
     }
 	
-    function WriteMasse(options, htmlElement)
+    function writeMasse(options, htmlElement)
     {
         $(htmlElement).append(
             $("<span/>").html("Masse:").addClass("fieldName"),
@@ -75,8 +75,67 @@
             $("<br/>")
         );
     }
+
+	function writeKontext(options, htmlElement)
+	{
+	    if (options.Element.Kontex)
+	    {
+	        $(htmlElement).append(
+                $("<span/>").html("Kontext:").addClass("fieldName"),
+                $("<span/>").html(getPfadHtml(options.Element.Kontext.FullBezeichnung)).addClass("fieldValue"),
+                $("<br/>")
+            );
+        }
+        else
+        {
+	        $(htmlElement).append(
+                $("<span/>").html("Kontext:").addClass("fieldName"),
+                $("<span/>").html("-").addClass("fieldValue"),
+                $("<br/>")
+            );
+        }
+	}
+
+	function writeAblage(options, htmlElement)
+	{   
+	    if (options.Element.Ablage)
+	    {
+	        $(htmlElement).append(
+                $("<span/>").html("Ablage:").addClass("fieldName"),
+                $("<span/>").html(getPfadHtml(options.Element.Ablage.FullBezeichnung)).addClass("fieldValue"),
+                $("<br/>")
+            );
+        }
+        else
+        {
+	        $(htmlElement).append(
+                $("<span/>").html("Ablage:").addClass("fieldName"),
+                $("<span/>").html("-").addClass("fieldValue"),
+                $("<br/>")
+            );
+        }
+	}
+
+	function writeFundAttribute(options, htmlElement)
+	{
+	    $(htmlElement).append(
+            $("<span/>").html("Attribute:").addClass("fieldName"),
+            $("<span/>").html("0 Stk.").addClass("fieldValue").attr("name", "attribute"),
+            $("<div/>").attr("name", "attribute")
+        );	
+        
+		if (options.Element.Attribute &&
+		    options.Element.Attribute.length > 0)
+		{
+		    $("span[name=attribute]").html(options.Element.Attribute.length + " Stk.");
+		    writeList($("div[name=attribute]"), options.Element.Attribute);
+		    appendListToggleIcon($("span[name=attribute]"), $("div[name=attribute] ul"));	
+		}
+	}
+	
+	/* support functions */
     
-    function GetPfadHtml(pfad)
+    function getPfadHtml(pfad)
     {
         var segments = pfad.split("/");
         var pfadSpan = $("<span/>");
@@ -97,74 +156,38 @@
         
         return pfadSpan;
     }
-
-	function WriteKontext(options, htmlElement)
-	{
-	    if (options.Element.Kontex)
-	    {
-	        $(htmlElement).append(
-                $("<span/>").html("Kontext:").addClass("fieldName"),
-                $("<span/>").html(GetPfadHtml(options.Element.Kontext.FullBezeichnung)).addClass("fieldValue"),
-                $("<br/>")
-            );
-        }
-        else
+	
+	function writeList(listContainer, listData)
+	{	
+	    var ul = $("<ul/>").addClass("list");
+	    	        
+        for (var i = 0; i < listData.length; i++)
         {
-	        $(htmlElement).append(
-                $("<span/>").html("Kontext:").addClass("fieldName"),
-                $("<span/>").html("-").addClass("fieldValue"),
-                $("<br/>")
-            );
+            $(ul).append(
+		        $("<li/>").html(getPfadHtml(listData[i].FullBezeichnung))
+            );			        
         }
+        
+	    $(listContainer).append(ul);
 	}
-
-	function WriteAblage(options, htmlElement)
-	{   
-	    if (options.Element.Ablage)
-	    {
-	        $(htmlElement).append(
-                $("<span/>").html("Ablage:").addClass("fieldName"),
-                $("<span/>").html(GetPfadHtml(options.Element.Ablage.FullBezeichnung)).addClass("fieldValue"),
-                $("<br/>")
-            );
-        }
-        else
-        {
-	        $(htmlElement).append(
-                $("<span/>").html("Ablage:").addClass("fieldName"),
-                $("<span/>").html("-").addClass("fieldValue"),
-                $("<br/>")
-            );
-        }
-	}
-
-	function WriteFundAttribute(options, htmlElement)
+	
+	function appendListToggleIcon(onControl, listControl)
 	{
-	    console.log(options.Element); 
-	    
-	    $(htmlElement).append(
-            $("<span/>").html("Attribute:").addClass("fieldName"),
-            $("<span/>").attr("name", "attribute").addClass("fieldValue"),
-            $("<br/>")
+        $(onControl).after(
+	        $("<span/>").addClass("ui-icon").addClass("ui-icon-circle-triangle-s").click(function() {
+                $(listControl).toggle("blind");
+                
+                if ($(this).hasClass("ui-icon-circle-triangle-s"))
+                {
+                    $(this).removeClass("ui-icon-circle-triangle-s");
+                    $(this).addClass("ui-icon-circle-triangle-n");
+                }
+                else
+                {
+                    $(this).removeClass("ui-icon-circle-triangle-n");
+                    $(this).addClass("ui-icon-circle-triangle-s");
+                }
+            })
         );
-        		
-		if (options.Element.Attribute &&
-			options.Element.Attribute.length > 0)
-		{
-	        var ul = $("<ul/>");
-	        
-	        for (var i = 0; i < options.Element.Attribute.length; i++)
-	        {
-	            $(ul).append(
-			        $("<li/>").html(GetPfadHtml(options.Element.Attribute[i].FullBezeichnung))
-	            );			        
-	        }
-	        
-            $("span[name=attribute").html(ul);
-		}
-		else
-		{
-            $("span[name=attribute").html("0 Stk.");
-		}
 	}
 })(jQuery);
