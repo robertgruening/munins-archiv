@@ -38,6 +38,12 @@
 
 		for (var i = 0; i < items.length; i++)
 		{
+    		if (items[i].Visible != undefined &&
+    		    !items[i].Visible)
+		    {
+		        continue;
+		    }
+    		    
 			html += "<li>";
 
 			if (items[i].Action != undefined)
@@ -97,6 +103,12 @@
 
 		for (var i = 0; i < topics.length; i++)
 		{
+    		if (topics[i].Visible != undefined &&
+    		    !topics[i].Visible)
+		    {
+		        continue;
+		    }
+		    
 			html += LoadTopic(options, htmlElement, topics[i]);
 		}
 
@@ -116,6 +128,12 @@
 
 		for (var i = 0; i < topic.Children.length; i++)
 		{
+    		if (topic.Children[i].Visible != undefined &&
+    		    !topic.Children[i].Visible)
+		    {
+		        continue;
+		    }
+		    
 			html += "<a ";
 	
 			if (topic.Children[i].Enabled == undefined ||

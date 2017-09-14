@@ -5,9 +5,19 @@ var _selectorTextboxOrtId = "#textboxId";
 
 $(document).ready(function() {
 	$("#navigation").Navigation();
-	$("#breadcrumb").Breadcrumb({
-		PageName : "OrtForm"
-	});
+	
+	if (GetURLParameter("Id"))
+	{
+	    $("#breadcrumb").Breadcrumb({
+		    PageName : "OrtFormEdit"
+	    });
+	}
+	else
+	{
+	    $("#breadcrumb").Breadcrumb({
+		    PageName : "OrtFormNew"
+	    });
+    }
 
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
@@ -23,7 +33,7 @@ $(document).ready(function() {
 	LoadListRootOrte();
 	
 	if (GetURLParameter("Id"))
-	{
+	{	
 		LoadOrtById(GetURLParameter("Id"));
 		
 		$("#buttonAddChild").click(function() { AddChild(GetURLParameter("Id")); });

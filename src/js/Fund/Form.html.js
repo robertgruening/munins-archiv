@@ -6,9 +6,19 @@ var _offset = 0;
 
 $(document).ready(function() {
 	$("#navigation").Navigation();
-	$("#breadcrumb").Breadcrumb({
-		PageName : "FundForm"
-	});
+	
+	if (GetURLParameter("Id"))
+	{
+	    $("#breadcrumb").Breadcrumb({
+		    PageName : "FundFormEdit"
+	    });
+	}
+	else
+	{
+	    $("#breadcrumb").Breadcrumb({
+		    PageName : "FundFormNew"
+	    });
+	}
 
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxAblageId).attr("disabled",true);
@@ -18,7 +28,7 @@ $(document).ready(function() {
 	$("#buttonSearch").click(function() { Search(); } );
 	
 	if (GetURLParameter("Id"))
-	{
+	{	    
 		LoadFundById(GetURLParameter("Id"));
 		
 		return;

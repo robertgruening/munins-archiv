@@ -6,9 +6,19 @@ var _selectorTextboxAblageId = "#textboxId";
 
 $(document).ready(function() {
 	$("#navigation").Navigation();
-	$("#breadcrumb").Breadcrumb({
-		PageName : "AblageForm"
-	});
+	
+	if (GetURLParameter("Id"))
+	{
+	    $("#breadcrumb").Breadcrumb({
+		    PageName : "AblageFormEdit"
+	    });
+	}
+	else
+	{
+	    $("#breadcrumb").Breadcrumb({
+		    PageName : "AblageFormNew"
+	    });
+	}
 
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);

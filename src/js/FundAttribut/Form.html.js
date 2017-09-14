@@ -3,9 +3,19 @@ var _selectorTextboxParentId = "#textboxParentId";
 
 $(document).ready(function() {
 	$("#navigation").Navigation();
-	$("#breadcrumb").Breadcrumb({
-		PageName : "FundAttributForm"
-	});
+	
+	if (GetURLParameter("Id"))
+	{
+	    $("#breadcrumb").Breadcrumb({
+		    PageName : "FundAttributFormEdit"
+	    });
+	}
+	else
+	{
+	    $("#breadcrumb").Breadcrumb({
+		    PageName : "FundAttributFormNew"
+	    });
+	}
 
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);

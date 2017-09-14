@@ -10,7 +10,7 @@
 					{
 						"Title" : "neu anlegen",
 						"URL" : "/Munins Archiv/src/Fundstelle/Form.html",
-						"PageName" : "FundstelleForm",
+						"PageName" : "FundstelleFormNew",
 						"Enabled" : false
 					},
 					{
@@ -35,7 +35,13 @@
 					{
 						"Title" : "neu anlegen",
 						"URL" : "/Munins Archiv/src/Ort/Form.html",
-						"PageName" : "OrtForm"
+						"PageName" : "OrtFormNew"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/Ort/Form.html",
+						"PageName" : "OrtFormEdit",
+						"Visible" : false
 					},
 					{
 						"Title" : "Gebietskörperschaften verwalten",
@@ -66,7 +72,13 @@
 					{
 						"Title" : "neu anlegen",
 						"URL" : "/Munins Archiv/src/Kontext/Form.html",
-						"PageName" : "KontextForm"
+						"PageName" : "KontextFormNew"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/Kontext/Form.html",
+						"PageName" : "KontextFormEdit",
+						"Visible" : false
 					},
 					{
 						"Title" : "in Orten suchen",
@@ -93,7 +105,13 @@
 					{
 						"Title" : "neu anlegen",
 						"URL" : "/Munins Archiv/src/Ablage/Form.html",
-						"PageName" : "AblageForm"
+						"PageName" : "AblageFormNew"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/Ablage/Form.html",
+						"PageName" : "AblageFormEdit",
+						"Visible" : false
 					},
 					{
 						"Title" : "in Kontexten suchen",
@@ -114,7 +132,13 @@
 					{
 						"Title" : "neu anlegen",
 						"URL" : "/Munins Archiv/src/Fund/Form.html",
-						"PageName" : "FundForm"
+						"PageName" : "FundFormNew"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/Fund/Form.html",
+						"PageName" : "FundFormEdit",
+						"Visible" : false
 					},
 					{
 						"Title" : "in Ablagen suchen",
@@ -145,7 +169,13 @@
 					{
 						"Title" : "neu anlegen",
 						"URL" : "/Munins Archiv/src/FundAttribut/Form.html",
-						"PageName" : "FundAttributForm"
+						"PageName" : "FundAttributFormNew"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/FundAttribut/Form.html",
+						"PageName" : "FundAttributFormEdit",
+						"Visible" : false
 					},
 					{
 						"Title" : "suchen",

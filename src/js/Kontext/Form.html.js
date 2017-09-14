@@ -5,9 +5,19 @@ var _selectorTextboxKontextId = "#textboxId";
 
 $(document).ready(function() {
 	$("#navigation").Navigation();
-	$("#breadcrumb").Breadcrumb({
-		PageName : "KontextForm"
-	});
+	
+	if (GetURLParameter("Id"))
+	{
+	    $("#breadcrumb").Breadcrumb({
+		    PageName : "KontextFormEdit"
+	    });
+	}
+	else
+	{
+	    $("#breadcrumb").Breadcrumb({
+		    PageName : "KontextFormNew"
+	    });
+	}
 
 	$("#textboxId").attr("disabled",true);
 	$(_selectorTextboxParentId).attr("disabled",true);
