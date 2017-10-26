@@ -1,130 +1,143 @@
 <?php
+include_once(__DIR__."/INode.php");
+include_once(__DIR__."/ITypedNode.php");
+include_once(__DIR__."/ITreeNode.php");
 
-class FundAttribut implements iNode, iTypeNode, iTreeNode
+class FundAttribut implements iNode, iTypedNode, iTreeNode
 {    
-    private $_id;
-    private $_bezeichnung;
-    private $_orderNumber;
-    private $_type;
-    private $_parent;
-    private $_children;
-    private $_funde;
+    public $Id;
+    public $Bezeichnung;
+    public $OrderNumber;
+    public $Type;
+    public $Parent;
+    public $Children;
+    public $Path;
+    public $Funde;
     
     
     public function getId()
     {
-        return $this->_id;
+        return $this->Id;
     }
     
     public function setId($id)
     {
-        $this->_id = $id;
+        $this->Id = $id;
     }
     
     public function getBezeichnung()
     {
-        return $this->_bezeichnung;
+        return $this->Bezeichnung;
     }
     
     public function setBezeichnung($bezeichnung)
     {
-        $this->_bezeichnung = $bezeichnung;
+        $this->Bezeichnung = $bezeichnung;
     }
     
     public function getOrderNumber()
     {
-        $this->_orderNumber;
+        $this->OrderNumber;
     }
     
     public function setOrderNumber($orderNumber)
     {
-        $this->_orderNumber = $orderNumber;
+        $this->OrderNumber = $orderNumber;
     }
     
     public function getType()
     {
-        return $this->_type;
+        return $this->Type;
     }
     
     public function setType($type)
     {
-        $this->_type = $type;
+        $this->Type = $type;
     }
     
     public function getParent()
     {
-        return $this->_parent;
+        return $this->Parent;
     }
     
     public function setParent($parent)
     {
-        $this->_parent = $parent;
+        $this->Parent = $parent;
     }
     
     public function getChildren()
     {
-        return $this->_children;
+        return $this->Children;
     }
     
     public function setChildren($children)
     {
-        $this->_children = new array();
-        array_push($this->_children, $children);
+        $this->Children = $children;
     }
     
     public function addChild($child)
     {
-        array_push($this->_children, $child);
+        array_push($this->Children, $child);
     }
     
     public function removeChild($child)
     {
-        for ($i = 0; $i < count($this->_children), $i++)
+        for ($i = 0; $i < count($this->Children); $i++)
         {
-            if ($this->_children[$i]->getId() == $child->getId())
+            if ($this->Children[$i]->getId() == $child->getId())
             {
-                array_splice($this->_children, $i, 1);
+                array_splice($this->Children, $i, 1);
                 break;
             }
         }
+    }
+
+    public function setPath($path)
+    {
+        $this->Path = $path;
+    }
+
+    public function getPath()
+    {
+        return $this->Path;
     }
     
     public function getFunde()
     {
-        return $this->_funde;
+        return $this->Funde;
     }
     
     public function setFunde($funde)
     {
-        $this->_funde = new array();
-        array_push($this->_funde, $funde);
+        $this->Funde = $funde;
     }
     
     public function addFund($fund)
     {
-        array_push($this->_funde, $fund);
+        array_push($this->Funde, $fund);
     }
     
     public function removeFund($fund)
     {
-        for ($i = 0; $i < count($this->_funde), $i++)
+        for ($i = 0; $i < count($this->Funde); $i++)
         {
-            if ($this->_funde[$i]->getId() == $fund->getId())
+            if ($this->Funde[$i]->getId() == $fund->getId())
             {
-                array_splice($this->_funde, $i, 1);
+                array_splice($this->Funde, $i, 1);
                 break;
             }
         }
     }
     
-    public __construct()
+    function __construct()
     {
-        $this->_id = -1;
-        $this->_bezeichnung = null;
-        $this->_orderNumber = null;
-        $this->_type = null;
-        $this->_parent = null;
-        $this->_children = new array();
-        $this->_funde = new array();
+        $this->Id = -1;
+        $this->Bezeichnung = null;
+        $this->OrderNumber = null;
+        $this->Type = null;
+        $this->Parent = null;
+        $this->Children = array();
+        $this->Path = null;
+        $this->Funde = array();
     }
 }

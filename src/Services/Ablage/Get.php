@@ -1,4 +1,3 @@
-<pre>
 <?php
 error_reporting(E_ALL);
 ini_set("display_errors", 1); 
@@ -13,7 +12,11 @@ if (isset($_GET["Id"]))
 	$ablage = $ablageFactory->loadChildren($ablage);
 	$ablage = $ablageFactory->loadFunde($ablage);	
 	
-	print_r($ablage);
+	echo json_encode($ablage);
+	return;
 }
-?>
-</pre>
+
+$ablageFactory = new AblageFactory();
+$roots = $ablageFactory->loadRoots();
+
+echo json_encode($roots);

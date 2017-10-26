@@ -1,7 +1,7 @@
 <?php
 
 interface iTreeNode
-{
+{    
     public function getParent();
     public function setParent($parent);
     
@@ -9,7 +9,7 @@ interface iTreeNode
     public function setChildren($children);
     public function addChild($child);
     public function removeChild($child);
-    
-    public function getPath();
+
     public function setPath($path);
+    public function getPath();
 }

@@ -1,6 +1,7 @@
 <?php
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/../Model/Fund.php");
+include_once(__DIR__."/FundAttributFactory.php");
 
 class FundFactory extends Factory
 {
@@ -21,6 +22,7 @@ class FundFactory extends Factory
         $fund->setDimension2($dataSet["Dimension2"]);
         $fund->setDimension3($dataSet["Dimension3"]);
         $fund->setMasse($dataSet["Masse"]);
+        $fund = $this->loadFundAttribute($fund);
         
         return $fund;
     }
@@ -54,5 +56,14 @@ class FundFactory extends Factory
         return "SELECT Id
                 FROM Fund
                 WHERE Ablage_Id = ".$ablage->getId();
+    }
+
+    public function loadFundAttribute($element)
+    {
+        $fundAttributFactory = new FundAttributFactory();
+        $funde = $fundAttributFactory->loadByFund($element);
+        $element->setFundAttribute($funde);
+        
+        return $element;
     }
 }

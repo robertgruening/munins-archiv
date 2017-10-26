@@ -64,6 +64,13 @@ class AblageFactory extends Factory implements iTreeFactory
         return $element;
     }
     
+    public function loadRoots()
+    {
+        $treeFactory = new TreeFactory($this);
+        
+        return $treeFactory->loadRoots();
+    }
+    
     public function getTableName()
     {
         return "Ablage";

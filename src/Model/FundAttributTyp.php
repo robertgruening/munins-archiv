@@ -1,7 +1,7 @@
 <?php
 include_once(__DIR__."/INode.php");
 
-class KontextTyp implements iNode
+class FundAttributTyp implements iNode
 {
     public $Id;
     public $Bezeichnung;

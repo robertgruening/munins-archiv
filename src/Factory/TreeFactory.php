@@ -95,4 +95,40 @@ class TreeFactory implements iTreeFactory
         
         return $path;
     }
+    
+    public function loadRoots()
+    {
+        $roots = array();
+        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->getSQLStatementToLoadRootIds());
+			
+			if (!$mysqli->errno)
+			{
+				while ($datensatz = $ergebnis->fetch_assoc())
+				{
+					$root = $this->_modelFactory->loadById(intval($datensatz["Id"]));
+					
+					if ($root != null)
+					{
+    					array_push($roots, $root);
+					}
+				}				
+			}
+		}
+		
+		$mysqli->close();
+		
+		return $roots;
+    }
+    
+    private function getSQLStatementToLoadRootIds()
+    {
+        return "SELECT Id
+                FROM ".$this->_modelFactory->getTableName()."
+                WHERE Parent_Id IS NULL;";
+    }
 }

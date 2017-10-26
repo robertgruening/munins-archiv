@@ -3,38 +3,38 @@ include_once(__DIR__."/INode.php");
 
 class AblageTyp implements iNode
 {
-    private $_id;
-    private $_bezeichnung;
-    private $_orderNumber;
+    public $Id;
+    public $Bezeichnung;
+    public $OrderNumber;
     
     
     public function getId()
     {
-        return $this->_id;
+        return $this->Id;
     }
     
     public function setId($id)
     {
-        $this->_id = $id;
+        $this->Id = $id;
     }
     
     public function getBezeichnung()
     {
-        return $this->_bezeichnung;
+        return $this->Bezeichnung;
     }
     
     public function setBezeichnung($bezeichnung)
     {
-        $this->_bezeichnung = $bezeichnung;
+        $this->Bezeichnung = $bezeichnung;
     }
     
     public function getOrderNumber()
     {
-        $this->_orderNumber;
+        $this->OrderNumber;
     }
     
     public function setOrderNumber($orderNumber)
     {
-        $this->_orderNumber = $orderNumber;
+        $this->OrderNumber = $orderNumber;
     }
 }

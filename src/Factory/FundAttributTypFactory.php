@@ -2,9 +2,9 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
-include_once(__DIR__."/../Model/AblageTyp.php");
+include_once(__DIR__."/../Model/FundAttributTyp.php");
 
-class AblageTypFactory extends Factory implements iListFactory
+class FundAttributTypFactory extends Factory implements iListFactory
 {
     protected function getSQLStatementToLoadById($id)
     {
@@ -15,11 +15,11 @@ class AblageTypFactory extends Factory implements iListFactory
     
     protected function fill($dataSet)
     {
-        $ablageTyp = new AblageTyp();
-        $ablageTyp->setId(intval($dataSet["Id"]));
-        $ablageTyp->setBezeichnung($dataSet["Bezeichnung"]);
+        $fundAttributTyp = new FundAttributTyp();
+        $fundAttributTyp->setId(intval($dataSet["Id"]));
+        $fundAttributTyp->setBezeichnung($dataSet["Bezeichnung"]);
         
-        return $ablageTyp;
+        return $fundAttributTyp;
     }
 
     public function loadAll()
@@ -31,6 +31,6 @@ class AblageTypFactory extends Factory implements iListFactory
     
     public function getTableName()
     {
-        return "AblageTyp";
+        return "FundAttributTyp";
     }
 }
