@@ -127,6 +127,62 @@ function endsWith($haystack, $needle)
     return (substr($haystack, -$length) === $needle);
 }
 
+function DeleteTable($config, $tableName)
+{
+    $ergebnis = false;
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+	    $ergebnis = $mysqli->query("
+	        DROP TABLE ".$tableName.";");
+    }
+    $mysqli->close();
+    
+    return $ergebnis;
+}
+
+function DoesTableExist($config, $tableName)
+{
+    $doesTableExist = false;
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+	    $ergebnis = $mysqli->query("
+	        SELECT COUNT(*) AS Anzahl 
+	        FROM information_schema.TABLES
+	        WHERE TABLE_SCHEMA = '".$config["MYSQL_DATENBANK"]."' AND 
+	        TABLE_NAME = '".$tableName."';");
+	    $datensatz = $ergebnis->fetch_assoc();
+	    $doesTableExist = intval($datensatz["Anzahl"]) == 0 ? false : true;
+    }
+    $mysqli->close();
+    
+    return $doesTableExist;
+}
+
+function RemoveTable($config, $tableName)
+{
+    if (!DoesTableExist($config, $tableName))
+    {
+        echo "Die Tabelle \"".$tableName."\" ist bereits entfernt.\r\n";
+    }
+    else
+    {
+        if (DeleteTable($config, $tableName))
+        {        
+            echo "Die Tabelle \"".$tableName."\" wurde erfolgreich entfernt.\r\n";
+        }
+        else
+        {
+            echo "Es ist ein Fehler aufgetreten beim Löschen der Tabelle \"".$tableName."\".\r\n";
+        }
+    }
+}
+
 function DoesColumnExist($config, $tableName, $columnName)
 {
     $doesColumnExist = false;
@@ -187,6 +243,7 @@ function AddColumnToTable($config, $tableName, $columnName)
 
 function UpgradeDatabaseStructure($config)
 {
+    RemoveTable($config, "Fundstelle_Flurstuecke");
     AddColumnToTable($config, "Fund", "Dimension1");
     AddColumnToTable($config, "Fund", "Dimension2");
     AddColumnToTable($config, "Fund", "Dimension3");

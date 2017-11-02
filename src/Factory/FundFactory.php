@@ -57,6 +57,37 @@ class FundFactory extends Factory
                 FROM Fund
                 WHERE Ablage_Id = ".$ablage->getId();
     }
+    
+    public function loadByKontext($kontext)
+    {
+        $funde = array();
+        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByKontext($kontext));	
+			
+			if (!$mysqli->errno)
+			{
+				while ($datensatz = $ergebnis->fetch_assoc())
+				{
+					array_push($funde, $this->loadById(intval($datensatz["Id"])));
+				}
+			}
+		}
+		
+		$mysqli->close();
+		
+		return $funde;
+    }
+    
+    protected function getSQLStatementToLoadIdsByKontext($kontext)
+    {
+        return "SELECT Id
+                FROM Fund
+                WHERE Kontext_Id = ".$kontext->getId();
+    }
 
     public function loadFundAttribute($element)
     {

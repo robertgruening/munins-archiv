@@ -11,7 +11,7 @@ class AblageFactory extends Factory implements iTreeFactory
     protected function getSQLStatementToLoadById($id)
     {
         return "SELECT Id, Bezeichnung, Typ_Id
-                FROM Ablage
+                FROM ".$this->getTableName()."
                 WHERE Id = ".$id;
     }
     
@@ -28,6 +28,37 @@ class AblageFactory extends Factory implements iTreeFactory
         $ablage->setType($ablageTyp);
         
         return $ablage;
+    }
+    
+    public function loadByKontext($kontext)
+    {
+        $elemente = array();
+        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByKontext($kontext));	
+			
+			if (!$mysqli->errno)
+			{
+				while ($datensatz = $ergebnis->fetch_assoc())
+				{
+					array_push($elemente, $this->loadById(intval($datensatz["Id"])));
+				}
+			}
+		}
+		
+		$mysqli->close();
+		
+		return $elemente;
+    }
+    
+    protected function getSQLStatementToLoadIdsByKontext($kontext)
+    {
+        return "SELECT Ablage_Id AS Id
+                FROM ".$this->getTableName()."_Kontext
+                WHERE Kontext_Id = ".$kontext->getId();
     }
     
     public function loadParent($element)

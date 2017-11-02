@@ -2,8 +2,9 @@
 include_once(__DIR__."/INode.php");
 include_once(__DIR__."/ITypedNode.php");
 include_once(__DIR__."/ITreeNode.php");
+include_once(__DIR__."/IFundContainer.php");
 
-class Ablage implements iNode, iTypedNode, iTreeNode
+class Ablage implements iNode, iTypedNode, iTreeNode, iFundContainer
 {    
     public $Id;
     public $Bezeichnung;

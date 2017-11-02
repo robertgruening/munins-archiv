@@ -153,18 +153,6 @@ CREATE TABLE IF NOT EXISTS `Fundstelle` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Fundstelle_Flurstuecke`
---
-
-CREATE TABLE IF NOT EXISTS `Fundstelle_Flurstuecke` (
-  `Fundstelle_Id` int(11) NOT NULL,
-  `Flurstueck` int(11) NOT NULL,
-  PRIMARY KEY (`Fundstelle_Id`,`Flurstueck`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `Fund_FundAttribut`
 --
 
