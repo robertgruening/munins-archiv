@@ -12,6 +12,7 @@ abstract class Kontext implements iNode, iTypedNode, iTreeNode
     public $Parent;
     public $Children;
     public $Path;
+    public $LfdNummern;
     
     
     public function getId()
@@ -90,6 +91,33 @@ abstract class Kontext implements iNode, iTypedNode, iTreeNode
             }
         }
     }
+    
+    public function getLfdNummern()
+    {
+        return $this->LfdNummern;
+    }
+    
+    public function setLfdNummern($lfdNummern)
+    {
+        $this->LfdNummern = $lfdNummern;
+    }
+    
+    public function addLfdNummer($lfdNummer)
+    {
+        array_push($this->LfdNummern, $lfdNummer);
+    }
+    
+    public function removeLfdNummer($lfdNummer)
+    {
+        for ($i = 0; $i < count($this->LfdNummern); $i++)
+        {
+            if ($this->LfdNummern[$i]->getId() == $lfdNummer->getId())
+            {
+                array_splice($this->LfdNummern, $i, 1);
+                break;
+            }
+        }
+    }
 
     public function setPath($path)
     {
@@ -110,5 +138,6 @@ abstract class Kontext implements iNode, iTypedNode, iTreeNode
         $this->Parent = null;
         $this->Children = array();
         $this->Path = null;
+        $this->LfdNummern = array();
     }
 }

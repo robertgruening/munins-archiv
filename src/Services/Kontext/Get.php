@@ -13,6 +13,7 @@ if (isset($_GET["Id"]))
 	$kontext = $kontextFactory->loadFunde($kontext);
     $kontext = $kontextFactory->loadOrte($kontext);
     $kontext = $kontextFactory->loadAblagen($kontext);
+	$kontext = $kontextFactory->loadLfdNummern($kontext);
 	
 	echo json_encode($kontext);
 	return;

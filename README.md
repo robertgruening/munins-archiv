@@ -14,3 +14,6 @@ Programmbibliotheken und -erweiterungen von Drittanbietern sind in "pkg" (packag
   
 **/src**  
 Der Quellcode befindet sich unter "src" (sources -> Quellcode). Als Sprachen kommen hier HTML, JavaScript und PHP zum Einsatz.
+
+**/upgr**
+Die Skripte zum Aktualisieren der Anwendung auf die neueste Version befinden sich unter "upgr" (upgrade -> Auktualisierung).

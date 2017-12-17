@@ -175,13 +175,13 @@ CREATE TABLE IF NOT EXISTS `KontextTyp` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Kontext_LfD`
+-- Table structure for table `Kontext_LfdNummer`
 --
 
-CREATE TABLE IF NOT EXISTS `Kontext_LfD` (
-  `LfD_Id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `Kontext_LfdNummer` (
+  `LfdNummer_Id` int(11) NOT NULL,
   `Kontext_Id` int(11) NOT NULL,
-  PRIMARY KEY (`LfD_Id`,`Kontext_Id`),
+  PRIMARY KEY (`LfdNummer_Id`,`Kontext_Id`),
   KEY `Kontext_Id` (`Kontext_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -202,14 +202,14 @@ CREATE TABLE IF NOT EXISTS `Kontext_Ort` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `LfD`
+-- Table structure for table `LfdNummer`
 --
 
-CREATE TABLE IF NOT EXISTS `LfD` (
+CREATE TABLE IF NOT EXISTS `LfdNummer` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `Nummer` int(11) NOT NULL,
+  `Bezeichnung` varchar(30) NOT NULL,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `LfDNummer` (`Nummer`) USING BTREE
+  UNIQUE KEY `LfdNummernBezeichnung` (`Bezeichnung`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -296,11 +296,11 @@ ALTER TABLE `Kontext`
   ADD CONSTRAINT `Kontext_ibfk_2` FOREIGN KEY (`Parent_Id`) REFERENCES `Kontext` (`Id`);
 
 --
--- Constraints for table `Kontext_LfD`
+-- Constraints for table `Kontext_LfdNummer`
 --
-ALTER TABLE `Kontext_LfD`
-  ADD CONSTRAINT `Kontext_LfD_ibfk_2` FOREIGN KEY (`Kontext_Id`) REFERENCES `Kontext` (`Id`),
-  ADD CONSTRAINT `Kontext_LfD_ibfk_3` FOREIGN KEY (`LfD_Id`) REFERENCES `LfD` (`Id`);
+ALTER TABLE `Kontext_LfdNummer`
+  ADD CONSTRAINT `Kontext_LfdNummer_ibfk_2` FOREIGN KEY (`Kontext_Id`) REFERENCES `Kontext` (`Id`),
+  ADD CONSTRAINT `Kontext_LfdNummer_ibfk_3` FOREIGN KEY (`LfdNummer_Id`) REFERENCES `LfdNummer` (`Id`);
 
 --
 -- Constraints for table `Kontext_Ort`

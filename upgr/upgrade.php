@@ -156,6 +156,22 @@ function CreateDatabaseBackup($config)
 
 #region SQL operations
 #region table operations
+function RenameTable($config, $oldTableName, $newTableName)
+{
+    $ergebnis = false;
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+	    $ergebnis = $mysqli->query("
+	        RENAME TABLE ".$oldTableName." TO ".$newTableName.";");
+    }
+    $mysqli->close();
+    
+    return $ergebnis;
+}
+
 function DeleteTable($config, $tableName)
 {
     $ergebnis = false;
@@ -214,6 +230,23 @@ function RemoveTable($config, $tableName)
 #endregion
 
 #region column operations
+function RenameColumnInTable($config, $tableName, $oldColumnName, $newColumnName)
+{
+    $ergebnis = false;
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+	    $ergebnis = $mysqli->query("
+            ALTER TABLE ".$tableName."
+            CHANGE COLUMN ".$oldColumnName." ".$newColumnName." VARCHAR(30) NOT NULL;");
+    }
+    $mysqli->close();
+    
+    return $ergebnis;
+}
+
 function DoesColumnExist($config, $tableName, $columnName)
 {
     $doesColumnExist = false;
@@ -1005,19 +1038,22 @@ function SetNewBezeichnung($config, $tableName, $element)
 }
 #endregion
 
-#region upgrade "LfD"
+#region upgrade "LfdNummer"
 function UpgradeLfDNummern($config)
 {
-    AddColumnToTable($config, "LfD", "Nummer", "NVARCHAR(30)");
-    AddUniqueIndexToTable($config, "LfD", "LfDNummer", "Nummer");
+    RenameTable($config, "LfD", "LfdNummer");
+    RenameTable($config, "Kontext_LfD", "Kontext_LfdNummer");
+    RenameColumnInTable($config, "Kontext_LfdNummer", "LfD_Id", "LfdNummer_Id");
+    AddColumnToTable($config, "LfdNummer", "Bezeichnung", "NVARCHAR(30)");
+    AddUniqueIndexToTable($config, "LfdNummer", "LfDNummer", "Bezeichnung");
 
-    if (DoesColumnExist($config, "LfD", "TK25Nr") &&
-        DoesColumnExist($config, "LfD", "Nr"))
+    if (DoesColumnExist($config, "LfdNummer", "TK25Nr") &&
+        DoesColumnExist($config, "LfdNummer", "Nr"))
     {
         TransformLfDNummern($config);
-        RemoveIndexFromTable($config, "LfD", "TK25Nummer");
-        RemoveColumnFromTable($config, "LfD", "TK25Nr");
-        RemoveColumnFromTable($config, "LfD", "Nr");
+        RemoveIndexFromTable($config, "LfdNummer", "TK25Nummer");
+        RemoveColumnFromTable($config, "LfdNummer", "TK25Nr");
+        RemoveColumnFromTable($config, "LfdNummer", "Nr");
     }
     else
     {
@@ -1043,9 +1079,9 @@ function TransformLfDNummern($config)
     
     for ($i = 0; $i < count($lfdNummern); $i++)
     {
-        $lfdNummern[$i]["Nummer"] = sprintf("%s\\%04s", $lfdNummern[$i]["TK25Nr"], $lfdNummern[$i]["Nr"]);
+        $lfdNummern[$i]["Bezeichnung"] = sprintf("%s\\%04s", $lfdNummern[$i]["TK25Nr"], $lfdNummern[$i]["Nr"]);
         
-        echo $lfdNummern[$i]["Nummer"]."\r\n";
+        echo $lfdNummern[$i]["Bezeichnung"]."\r\n";
         
         SetNewLfDNummer($config, $lfdNummern[$i]);
     }
@@ -1061,7 +1097,7 @@ function GetLfDNummern($config)
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
 	        SELECT Id, TK25Nr, Nr
-	        FROM LfD;");
+	        FROM LfdNummer;");
 	        
 	    if (!$mysqli->errno)
 		{
@@ -1087,8 +1123,8 @@ function SetNewLfDNummer($config, $lfdNummer)
     {
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
-	        Update LfD
-	        SET Nummer = '".$mysqli->real_escape_string($lfdNummer["Nummer"])."'
+	        Update LfdNummer
+	        SET Bezeichnung = '".$mysqli->real_escape_string($lfdNummer["Bezeichnung"])."'
 	        WHERE Id = ".$lfdNummer["Id"].";");
     }
     $mysqli->close();
@@ -1100,9 +1136,9 @@ function TransformLfDErfassungsNummern($config)
     
     for ($i = 0; $i < count($lfdErfassungsNummern); $i++)
     {
-        $lfdErfassungsNummern[$i]["Nummer"] = sprintf("%s\\%04s", $lfdErfassungsNummern[$i]["LfDErfassungsJahr"], $lfdErfassungsNummern[$i]["LfDErfassungsNr"]);
+        $lfdErfassungsNummern[$i]["Bezeichnung"] = sprintf("%s\\%04s", $lfdErfassungsNummern[$i]["LfDErfassungsJahr"], $lfdErfassungsNummern[$i]["LfDErfassungsNr"]);
         
-        echo $lfdErfassungsNummern[$i]["Nummer"]." verknüpft mit Kontext (".$lfdErfassungsNummern[$i]["Kontext_Id"].").\r\n";
+        echo $lfdErfassungsNummern[$i]["Bezeichnung"]." verknüpft mit Kontext (".$lfdErfassungsNummern[$i]["Kontext_Id"].").\r\n";
 
         $lfdErfassungsNummern[$i] = GetNewLfDErfassungsNummer($config, $lfdErfassungsNummern[$i]);
 
@@ -1170,8 +1206,8 @@ function SetNewLfDErfassungsNummer($config, $lfdNummer)
     {
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
-	        INSERT INTO LfD(Nummer)
-            VALUES ('".$mysqli->real_escape_string($lfdNummer["Nummer"])."');");
+	        INSERT INTO LfdNummer(Bezeichnung)
+            VALUES ('".$mysqli->real_escape_string($lfdNummer["Bezeichnung"])."');");
 
         if (!$mysqli->errno)
         {
@@ -1192,8 +1228,8 @@ function GetNewLfDErfassungsNummer($config, $lfdNummer)
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
             SELECT Id            
-            FROM LfD
-            WHERE Nummer = '".$mysqli->real_escape_string($lfdNummer["Nummer"])."';");
+            FROM LfdNummer
+            WHERE Bezeichnung = '".$mysqli->real_escape_string($lfdNummer["Bezeichnung"])."';");
 	        
 	    if (!$mysqli->errno)
 		{

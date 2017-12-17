@@ -6,6 +6,7 @@ include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/FundFactory.php");
 include_once(__DIR__."/AblageFactory.php");
 include_once(__DIR__."/OrtFactory.php");
+include_once(__DIR__."/LfdNummerFactory.php");
 include_once(__DIR__."/../Model/Kontext.php");
 include_once(__DIR__."/../Model/Fundstelle.php");
 include_once(__DIR__."/../Model/Begehungsflaeche.php");
@@ -34,7 +35,7 @@ class KontextFactory extends Factory implements iTreeFactory
             }
             case "Begehung":
             {
-                return "SELECT Kontext.Id AS Id, Bezeichnung, Typ_Id, Datum, Kommentar, LfDErfassungsJahr, LfDErfassungsNr
+                return "SELECT Kontext.Id AS Id, Bezeichnung, Typ_Id, Datum, Kommentar
                         FROM ".$this->getTableName()." LEFT JOIN Begehung ON Kontext.Id = Begehung.Id
                         WHERE Kontext.Id = ".$id;
             }
@@ -80,8 +81,6 @@ class KontextFactory extends Factory implements iTreeFactory
         {
             $kontext->setDatum($dataSet["Datum"]);
             $kontext->setKommentar($dataSet["Kommentar"]);
-            $kontext->setLfDErfassungsJahr(intval($dataSet["LfDErfassungsJahr"]));
-            $kontext->setLfDErfassungsNr(intval($dataSet["LfDErfassungsNr"]));
         }
         
         return $kontext;
@@ -150,6 +149,15 @@ class KontextFactory extends Factory implements iTreeFactory
         $ortFactory = new OrtFactory();
         $orte = $ortFactory->loadByKontext($element);
         $element->setOrte($orte);
+        
+        return $element;
+    }
+    
+    public function loadLfdNummern($element)
+    {        
+        $lfdNummerFactory = new LfdNummerFactory();
+        $lfdNummern = $lfdNummerFactory->loadByKontext($element);
+        $element->setLfdNummern($lfdNummern);
         
         return $element;
     }

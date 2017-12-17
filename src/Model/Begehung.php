@@ -84,26 +84,6 @@ class Begehung extends Kontext implements iFundContainer, iAblageContainer
         $this->Kommentar = $kommentar;
     }
     
-    public function getLfDErfassungsJahr()
-    {
-        return $this->LfDErfassungsJahr;
-    }
-    
-    public function setLfDErfassungsJahr($lfDErfassungsJahr)
-    {
-        $this->LfDErfassungsJahr = $lfDErfassungsJahr;
-    }
-    
-    public function getLfDErfassungsNr()
-    {
-        return $this->LfDErfassungsNr;
-    }
-    
-    public function setLfDErfassungsNr($lfDErfassungsNr)
-    {
-        $this->LfDErfassungsNr = $lfDErfassungsNr;
-    }
-    
     public function getFunde()
     {
         return $this->Funde;
@@ -137,8 +117,6 @@ class Begehung extends Kontext implements iFundContainer, iAblageContainer
         $this->Ablagen = array();
         $this->Datum = null;
         $this->Kommentar = null;
-        $this->LfDErfassungsJahr = null;
-        $this->LfDErfassungsNr = null;
         $this->Funde = array();
    }
 }
