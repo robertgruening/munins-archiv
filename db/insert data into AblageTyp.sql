@@ -24,12 +24,12 @@ SET time_zone = "+00:00";
 -- Dumping data for table `AblageTyp`
 --
 
-INSERT INTO `AblageTyp` (`Id`, `Bezeichnung`) VALUES
-(5, 'Karton'),
-(1, 'Raum'),
-(3, 'Regal'),
-(4, 'Regalbrett'),
-(2, 'Stellplatz');
+INSERT INTO `AblageTyp` (`Bezeichnung`) VALUES
+('Karton'),
+('Raum'),
+('Regal'),
+('Regalbrett'),
+('Stellplatz');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

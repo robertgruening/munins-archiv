@@ -72,8 +72,6 @@ CREATE TABLE IF NOT EXISTS `Ablage_Kontext` (
 
 CREATE TABLE IF NOT EXISTS `Begehung` (
   `Id` int(11) NOT NULL,
-  `LfDErfassungsJahr` int(11) DEFAULT NULL,
-  `LfDErfassungsNr` int(11) DEFAULT NULL,
   `Datum` varchar(10) DEFAULT NULL,
   `Kommentar` text,
   PRIMARY KEY (`Id`)
@@ -91,6 +89,10 @@ CREATE TABLE IF NOT EXISTS `Fund` (
   `Kontext_Id` int(11) DEFAULT NULL,
   `Ablage_Id` int(11) DEFAULT NULL,
   `Bezeichnung` varchar(15) DEFAULT NULL,
+  `Dimension1` int(11) DEFAULT NULL,
+  `Dimension2` int(11) DEFAULT NULL,
+  `Dimension3` int(11) DEFAULT NULL,
+  `Masse` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   KEY `Kontext_Id` (`Kontext_Id`),
   KEY `Ablage_Id` (`Ablage_Id`)
@@ -125,30 +127,6 @@ CREATE TABLE IF NOT EXISTS `FundAttributTyp` (
   PRIMARY KEY (`Id`),
   UNIQUE KEY `FundAttributTyp_Bezeichnung` (`Bezeichnung`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Fundstelle`
---
-
-CREATE TABLE IF NOT EXISTS `Fundstelle` (
-  `Id` int(11) NOT NULL,
-  `Bezeichnung` varchar(30) DEFAULT NULL,
-  `AAF_Nr` varchar(30) DEFAULT NULL,
-  `AlteAAF_Nr` varchar(10) DEFAULT NULL,
-  `Zusatz` varchar(15) DEFAULT NULL,
-  `BLfD_Nr` varchar(10) DEFAULT NULL,
-  `TK25` int(11) DEFAULT NULL,
-  `TK25Rechts` varchar(10) DEFAULT NULL,
-  `TK25Hoch` varchar(10) DEFAULT NULL,
-  `TK5_1` int(11) DEFAULT NULL,
-  `TK5_2` int(11) DEFAULT NULL,
-  `Kommentar` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`Id`),
-  KEY `IndexFundstelle` (`Bezeichnung`),
-  KEY `IndexFundstelleKommentar` (`Kommentar`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -229,10 +207,9 @@ CREATE TABLE IF NOT EXISTS `Kontext_Ort` (
 
 CREATE TABLE IF NOT EXISTS `LfD` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `TK25Nr` int(11) NOT NULL,
-  `Nr` int(11) NOT NULL,
+  `Nummer` int(11) NOT NULL,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `TK25Nummer` (`TK25Nr`,`Nr`) USING BTREE
+  UNIQUE KEY `LfDNummer` (`Nummer`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -265,17 +242,6 @@ CREATE TABLE IF NOT EXISTS `OrtTyp` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
-
---
--- Table structure for table `Ort_Ort`
---
-
-CREATE TABLE IF NOT EXISTS `Ort_Ort` (
-  `Ort_A_Id` int(11) NOT NULL,
-  `Ort_B_Id` int(11) NOT NULL,
-  PRIMARY KEY (`Ort_A_Id`,`Ort_B_Id`),
-  KEY `Ort_B_Id` (`Ort_B_Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Constraints for dumped tables
@@ -316,18 +282,6 @@ ALTER TABLE `FundAttribut`
   ADD CONSTRAINT `FundAttribut_ibfk_2` FOREIGN KEY (`Typ_Id`) REFERENCES `FundAttributTyp` (`Id`);
 
 --
--- Constraints for table `Fundstelle`
---
-ALTER TABLE `Fundstelle`
-  ADD CONSTRAINT `Fundstelle_ibfk_1` FOREIGN KEY (`Id`) REFERENCES `Kontext` (`Id`);
-
---
--- Constraints for table `Fundstelle_Flurstuecke`
---
-ALTER TABLE `Fundstelle_Flurstuecke`
-  ADD CONSTRAINT `Fundstelle_Flurstuecke_ibfk_1` FOREIGN KEY (`Fundstelle_Id`) REFERENCES `Fundstelle` (`Id`);
-
---
 -- Constraints for table `Fund_FundAttribut`
 --
 ALTER TABLE `Fund_FundAttribut`
@@ -361,13 +315,6 @@ ALTER TABLE `Kontext_Ort`
 ALTER TABLE `Ort`
   ADD CONSTRAINT `Ort_ibfk_1` FOREIGN KEY (`Typ_Id`) REFERENCES `OrtTyp` (`Id`),
   ADD CONSTRAINT `Ort_ibfk_2` FOREIGN KEY (`Parent_Id`) REFERENCES `Ort` (`Id`);
-
---
--- Constraints for table `Ort_Ort`
---
-ALTER TABLE `Ort_Ort`
-  ADD CONSTRAINT `Ort_Ort_ibfk_1` FOREIGN KEY (`Ort_A_Id`) REFERENCES `Ort` (`Id`),
-  ADD CONSTRAINT `Ort_Ort_ibfk_2` FOREIGN KEY (`Ort_B_Id`) REFERENCES `Ort` (`Id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

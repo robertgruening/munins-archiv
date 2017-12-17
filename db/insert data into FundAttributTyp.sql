@@ -24,13 +24,13 @@ SET time_zone = "+00:00";
 -- Dumping data for table `FundAttributTyp`
 --
 
-INSERT INTO `FundAttributTyp` (`Id`, `Bezeichnung`) VALUES
-(4, 'Erhaltung'),
-(5, 'Farbe'),
-(3, 'Gegenstand'),
-(6, 'Gegenstandseigenschaft'),
-(1, 'Material'),
-(2, 'Zeitstellung');
+INSERT INTO `FundAttributTyp` (`Bezeichnung`) VALUES
+('Erhaltung'),
+('Farbe'),
+('Gegenstand'),
+('Gegenstandseigenschaft'),
+('Material'),
+('Zeitstellung');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
