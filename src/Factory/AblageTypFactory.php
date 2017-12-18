@@ -33,4 +33,10 @@ class AblageTypFactory extends Factory implements iListFactory
     {
         return "AblageTyp";
     }
+    
+    protected function getSQLStatementToCreate($element)
+    {
+        return "INSERT INTO ".$this->getTableName()." (Bezeichnung)
+                VALUES ('".$element->getBezeichnung()."');";
+    }
 }

@@ -57,6 +57,12 @@ class KontextTypFactory extends Factory implements iListFactory
         return $listFactory->loadAll();
     }
     
+    protected function getSQLStatementToCreate($element)
+    {
+        return "INSERT INTO ".$this->getTableName()." (Bezeichnung)
+                VALUES ('".$element->getBezeichnung()."');";
+    }
+    
     public function getTableName()
     {
         return "KontextTyp";

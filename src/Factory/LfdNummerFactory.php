@@ -64,4 +64,10 @@ class LfdNummerFactory extends Factory implements iListFactory
     {
         return "LfdNummer";
     }
+    
+    protected function getSQLStatementToCreate($element)
+    {
+        return "INSERT INTO ".$this->getTableName()." (Bezeichnung)
+                VALUES ('".$element->getBezeichnung()."');";
+    }
 }
