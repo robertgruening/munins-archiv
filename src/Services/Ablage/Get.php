@@ -2,21 +2,33 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
-require_once("../../Factory/AblageFactory.php");
+require_once("../../UserStories/Ablage/LoadAblage.php");
+require_once("../../UserStories/Ablage/LoadRootAblagen.php");
 
 if (isset($_GET["Id"]))
 {
-	$ablageFactory = new AblageFactory();
-	$ablage = $ablageFactory->loadById(intval($_GET["Id"]));
-	$ablage = $ablageFactory->loadParent($ablage);
-	$ablage = $ablageFactory->loadChildren($ablage);
-	$ablage = $ablageFactory->loadFunde($ablage);	
-	
-	echo json_encode($ablage);
+	$loadAblage = new LoadAblage();
+	$loadAblage->setId(intval($_GET["Id"]));
+
+	if ($loadAblage->run())
+	{
+		echo json_encode($loadAblage->getAblage());
+	}
+	else
+	{
+        echo json_encode($loadAblage->getMessages());
+	}
+
 	return;
 }
 
-$ablageFactory = new AblageFactory();
-$roots = $ablageFactory->loadRoots();
+$loadRootAblagen = new LoadRootAblagen();
 
-echo json_encode($roots);
+if ($loadRootAblagen->run())
+{
+	echo json_encode($loadRootAblagen->getRootAblagen());
+}
+else
+{
+	echo json_encode($loadRootAblagen->getMessages());
+}

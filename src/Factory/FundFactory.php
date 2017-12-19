@@ -97,4 +97,14 @@ class FundFactory extends Factory
         
         return $element;
     }
+
+    protected function getSQLStatementToCreate($element)
+    {
+        throw new Exception();
+    }
+    
+    public function getTableName()
+    {
+        return "Fund";
+    }
 }

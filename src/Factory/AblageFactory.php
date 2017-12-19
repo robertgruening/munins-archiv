@@ -30,6 +30,7 @@ class AblageFactory extends Factory implements iTreeFactory
         return $ablage;
     }
     
+    #region Kontext
     public function loadByKontext($kontext)
     {
         $elemente = array();
@@ -60,6 +61,35 @@ class AblageFactory extends Factory implements iTreeFactory
                 FROM ".$this->getTableName()."_Kontext
                 WHERE Kontext_Id = ".$kontext->getId();
     }
+    
+    public function unlinkKontexte($kontext)
+    {
+        $unlinkedKontexte = false;
+        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->getSQLStatementToUnlinkFromKontext($kontext));	
+			
+			if (!$mysqli->errno)
+			{
+				$unlinkedKontexte = true;
+			}
+		}
+		
+		$mysqli->close();
+		
+		return $unlinkedKontexte;
+    }
+    
+    protected function getSQLStatementToUnlinkFromKontext($kontext)
+    {
+        return "DELETE
+                FROM ".$this->getTableName()."_Kontext
+                WHERE Kontext_Id = ".$kontext->getId();
+    }
+    #endregion
     
     public function loadParent($element)
     {
@@ -100,6 +130,11 @@ class AblageFactory extends Factory implements iTreeFactory
         $treeFactory = new TreeFactory($this);
         
         return $treeFactory->loadRoots();
+    }
+    
+    protected function getSQLStatementToCreate($element)
+    {
+        throw new Exception();
     }
     
     public function getTableName()

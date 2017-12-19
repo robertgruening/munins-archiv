@@ -92,6 +92,11 @@ class FundAttributFactory extends Factory implements iTreeFactory
         return $treeFactory->loadRoots();
     }
     
+    protected function getSQLStatementToCreate($element)
+    {
+        throw new Exception();
+    }
+    
     public function getTableName()
     {
         return "FundAttribut";
