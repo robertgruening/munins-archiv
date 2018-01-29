@@ -1,6 +1,7 @@
 <?php
+include_once(__DIR__."/INode.php");
 
-interface iTreeNode
+interface iTreeNode extends iNode
 {    
     public function getParent();
     public function setParent($parent);

@@ -123,6 +123,19 @@ class Fund implements iNode
         }
     }
     
+    public function containsFundAttribut($fundAttribut)
+    {
+        for ($i = 0; $i < count($this->FundAttribute); $i++)
+        {
+            if ($this->FundAttribute[$i]->getId() == $fundAttribut->getId())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
     public function getAblage()
     {
         return $this->Ablage;
@@ -138,7 +151,7 @@ class Fund implements iNode
         return $this->Kontext;
     }
     
-    public function setOrte($kontext)
+    public function setKontext($kontext)
     {
         $this->Kontext = $kontext;
     }

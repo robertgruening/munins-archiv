@@ -3,11 +3,13 @@ include_once(__DIR__."/INode.php");
 
 class AblageTyp implements iNode
 {
+    #region variables
     public $Id;
     public $Bezeichnung;
     public $OrderNumber;
+    #endregion
     
-    
+    #region properties
     public function getId()
     {
         return $this->Id;
@@ -37,4 +39,14 @@ class AblageTyp implements iNode
     {
         $this->OrderNumber = $orderNumber;
     }
+    #endregion
+
+    #region constructors
+    function __construct()
+    {
+        $this->Id = -1;
+        $this->Bezeichnung = null;
+        $this->OrderNumber = null;
+    }
+    #endegion
 }

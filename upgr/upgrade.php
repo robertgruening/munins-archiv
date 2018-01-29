@@ -240,7 +240,7 @@ function RenameColumnInTable($config, $tableName, $oldColumnName, $newColumnName
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
             ALTER TABLE ".$tableName."
-            CHANGE COLUMN ".$oldColumnName." ".$newColumnName." VARCHAR(30) NOT NULL;");
+            CHANGE COLUMN ".$oldColumnName." ".$newColumnName." INT(11) NOT NULL;");
     }
     $mysqli->close();
     
@@ -776,6 +776,7 @@ function CleanUpDatabaseStructure($config)
     RemoveTable($config, "Fundstelle_Flurstuecke");
     RemoveTable($config, "Fundstelle");
     RemoveTable($config, "Ort_Ort");
+    RemoveTable($config, "Ablage_Kontext");
 }
 #endregion
 

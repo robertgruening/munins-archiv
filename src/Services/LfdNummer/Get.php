@@ -2,18 +2,21 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
-require_once("../../Factory/LfdNummerFactory.php");
+require_once("../../UserStories/LfdNummer/LoadLfdNummer.php");
 
 if (isset($_GET["Id"]))
 {
-	$lfdNummerFactory = new LfdNummerFactory();
-	$lfdNummer = $lfdNummerFactory->loadById(intval($_GET["Id"]));
-	
-	echo json_encode($lfdNummer);
+	$loadLfdNummer = new LoadLfdNummer();
+	$loadLfdNummer->setId(intval($_GET["Id"]));
+
+	if ($loadLfdNummer->run())
+	{
+		echo json_encode($loadLfdNummer->getLfdNummer());
+	}
+	else
+	{
+        echo json_encode($loadLfdNummer->getMessages());
+	}
+
 	return;
 }
-
-$lfdNummerFactory = new LfdNummerFactory();
-$lfdNummern = $lfdNummerFactory->loadAll();
-
-echo json_encode($lfdNummern);

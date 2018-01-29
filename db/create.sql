@@ -54,19 +54,6 @@ CREATE TABLE IF NOT EXISTS `AblageTyp` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Ablage_Kontext`
---
-
-CREATE TABLE IF NOT EXISTS `Ablage_Kontext` (
-  `Ablage_Id` int(11) NOT NULL,
-  `Kontext_Id` int(11) NOT NULL,
-  PRIMARY KEY (`Ablage_Id`,`Kontext_Id`),
-  KEY `Kontext_Id` (`Kontext_Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `Begehung`
 --
 
@@ -253,13 +240,6 @@ CREATE TABLE IF NOT EXISTS `OrtTyp` (
 ALTER TABLE `Ablage`
   ADD CONSTRAINT `Ablage_ibfk_1` FOREIGN KEY (`Typ_Id`) REFERENCES `AblageTyp` (`Id`),
   ADD CONSTRAINT `Ablage_ibfk_2` FOREIGN KEY (`Parent_Id`) REFERENCES `Ablage` (`Id`);
-
---
--- Constraints for table `Ablage_Kontext`
---
-ALTER TABLE `Ablage_Kontext`
-  ADD CONSTRAINT `Ablage_Kontext_ibfk_1` FOREIGN KEY (`Ablage_Id`) REFERENCES `Ablage` (`Id`),
-  ADD CONSTRAINT `Ablage_Kontext_ibfk_2` FOREIGN KEY (`Kontext_Id`) REFERENCES `Kontext` (`Id`);
 
 --
 -- Constraints for table `Begehung`

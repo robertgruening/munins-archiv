@@ -1,4 +1,7 @@
 <?php
+include_once(__DIR__."/INode.php");
+include_once(__DIR__."/ITypedNode.php");
+include_once(__DIR__."/ITreeNode.php");
 
 class Ort implements iNode, iTypedNode, iTreeNode
 {    

@@ -30,3 +30,6 @@ RewriteRule	"^Dienste/Ort/Unlink/([\d]+)/Ort/([\d]+)/?$"			"Dienste/Unlink.php?O
 RewriteRule	"^Dienste/Sitemap/?$"									"Dienste/Sitemap.php"						[NC,L]
 RewriteRule	"^Dienste/Sitemap/([\w]+)/?$"							"Dienste/Sitemap.php?PageName=$1"			[NC,L]
 RewriteRule	"^Dienste/Sitemap/([\w]+)/WithPath/?$"					"Dienste/Sitemap.php?PageName=$1&WithPath=true"							[NC,L]
+
+
+RewriteRule	"^Services/(\w+)/Get/([\d;]+)/?$"						"Services/$1/Get.php?Id=$2"					[NC,L]

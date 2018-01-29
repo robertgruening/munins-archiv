@@ -1,6 +1,6 @@
 <?php
-require_once("../../UserStories/UserStory.php");
-require_once("../../Factory/AblageFactory.php");
+require_once(__DIR__."/../../UserStories/UserStory.php");
+require_once(__DIR__."/../../Factory/AblageFactory.php");
 
 class LoadAblage extends UserStory
 {
@@ -37,8 +37,8 @@ class LoadAblage extends UserStory
 
     protected function areParametersValid()
     {
-        if ($this->getId() == null ||
-            $this->getId() == "")
+        if ($this->getId() === null ||
+            $this->getId() === "")
         {
             $this->addMessage("Id ist nicht gesetzt!");
             return false;
@@ -51,6 +51,13 @@ class LoadAblage extends UserStory
     {
         $ablageFactory = new AblageFactory();
         $ablage = $ablageFactory->loadById($this->getId());
+        
+        if ($ablage == null)
+        {
+            $this->addMessage("Es gibt keine Ablage mit der Id ".$this->getId()."!");
+            return false;
+        }
+
         $ablage = $ablageFactory->loadParent($ablage);
         $ablage = $ablageFactory->loadChildren($ablage);
         $ablage = $ablageFactory->loadFunde($ablage);

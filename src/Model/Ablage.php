@@ -130,6 +130,19 @@ class Ablage implements iNode, iTypedNode, iTreeNode, iFundContainer
         }
     }
     
+    public function containsFund($fund)
+    {
+        for ($i = 0; $i < count($this->Funde); $i++)
+        {
+            if ($this->Funde[$i]->getId() == $fund->getId())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
     function __construct()
     {
         $this->Id = -1;

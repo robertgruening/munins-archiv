@@ -1,6 +1,6 @@
 <?php
-require_once("../../UserStories/UserStory.php");
-require_once("../../Factory/AblageFactory.php");
+require_once(__DIR__."/../../UserStories/UserStory.php");
+require_once(__DIR__."/../../Factory/AblageFactory.php");
 
 class LoadRootAblagen extends UserStory
 {

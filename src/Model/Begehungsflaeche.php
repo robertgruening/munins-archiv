@@ -7,9 +7,11 @@ include_once(__DIR__."/Ort.php");
 
 class Begehungsflaeche extends Kontext implements iOrtContainer
 {
-    public $Orte;    
+    #region variables
+    public $Orte;
+    #endregion
     
-    
+    #region properties
     public function setParent($parent)
     {
         if (!($parent instanceof Fundstelle))
@@ -69,10 +71,13 @@ class Begehungsflaeche extends Kontext implements iOrtContainer
             }
         }
     }
+    #endregion
     
+    #region constructors
     function __construct()
     {
        parent::__construct();
        $this->Orte = array();
-   }
+    }
+    #endregion
 }

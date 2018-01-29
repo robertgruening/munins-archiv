@@ -1,6 +1,6 @@
 <?php
-require_once("../../UserStories/UserStory.php");
-require_once("../../Factory/AblageFactory.php");
+require_once(__DIR__."/../../UserStories/UserStory.php");
+require_once(__DIR__."/../../Factory/AblageFactory.php");
 
 class DeleteAblage extends UserStory
 {
@@ -10,11 +10,18 @@ class DeleteAblage extends UserStory
 
     #endregion properties
     #region input properties
+    /**
+     * Returns the given Ablage, which is to delete.
+     */
     private function getAblage()
     {
         return $this->_ablage;
     }
 
+    /**
+     * Sets the Ablage, which is to delete.
+     * @param Ablage $ablage Ablage, which is to delete.
+     */
     public function setAblage($ablage)
     {
         $this->_ablage = $ablage;
@@ -22,6 +29,12 @@ class DeleteAblage extends UserStory
     #endregion
     #endregion
 
+    /**
+     * Checks if a Ablage is set,
+     * the Ablage has to be a leaf
+     * in the tree structure and
+     * must not have Funde.
+     */
     protected function areParametersValid()
     {
         $ablage = $this->getAblage();
@@ -52,9 +65,7 @@ class DeleteAblage extends UserStory
     protected function execute()
     {
         $ablageFactory = new AblageFactory();
-        $ablage = $this->getAblage();
-        $ablage = $ablageFactory->unlinkKontexte($ablage);    
-    
-        return $ablageFactory->delete($ablage);
+        
+        return $ablageFactory->delete($this->getAblage());
     }
 }

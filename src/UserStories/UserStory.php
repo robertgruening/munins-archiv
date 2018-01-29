@@ -18,6 +18,11 @@ abstract class UserStory
         $this->_messages = array();
     }
 
+    protected function addMessages($messages)
+    {
+        array_merge($this->_messages, $messages);
+    }
+
     protected function addMessage($message)
     {
         array_push($this->_messages, $message);
