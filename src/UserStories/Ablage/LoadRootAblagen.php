@@ -15,9 +15,9 @@ class LoadRootAblagen extends UserStory
         return $this->_rootAblagen;
     }
 
-    private function setRootAblagen($rootAblage)
+    private function setRootAblagen($rootAblagen)
     {
-        $this->_rootAblagen = $rootAblage;
+        $this->_rootAblagen = $rootAblagen;
     }
     #endregion
     #endregion
