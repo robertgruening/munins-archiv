@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
 require_once("../../UserStories/Ort/LoadOrt.php");
+require_once("../../UserStories/Ort/LoadRootOrte.php");
 
 if (isset($_GET["Id"]))
 {
@@ -19,4 +20,15 @@ if (isset($_GET["Id"]))
 	}
 
 	return;
+}
+
+$loadRootOrte = new LoadRootOrte();
+
+if ($loadRootOrte->run())
+{
+	echo json_encode($loadRootOrte->getRootOrte());
+}
+else
+{
+	echo json_encode($loadRootOrte->getMessages());
 }
