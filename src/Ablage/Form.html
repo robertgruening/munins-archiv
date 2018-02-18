@@ -11,13 +11,15 @@
 	<script src="../js/ui/controls/control.MultiDropdown.js"></script>
 	<script src="../js/page.js"></script>
 	<script src="../js/Ablage/Form.html.js"></script>
-	<link rel="stylesheet" type="text/css" href="../js/ui/jquery-ui-1.11.4/jquery-ui.css">
-	<link rel="stylesheet" type="text/css" href="../css/page.css">
-	<link rel="stylesheet" type="text/css" href="../css/navigation.css">
-	<link rel="stylesheet" type="text/css" href="../css/breadcrumb.css">
-	<link rel="stylesheet" type="text/css" href="../css/leftSidebar.css">
-	<link rel="stylesheet" type="text/css" href="../css/shortView.css">
-	<link rel="stylesheet" type="text/css" href="../css/clipboard.css">
+	<script src="../js/Ablage/Form.controler.js"></script>
+	<link rel="stylesheet" type="text/css" href="../js/ui/jquery-ui-1.11.4/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="../css/page.css" />
+	<link rel="stylesheet" type="text/css" href="../css/form.css" />
+	<link rel="stylesheet" type="text/css" href="../css/navigation.css" />
+	<link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
+	<link rel="stylesheet" type="text/css" href="../css/leftSidebar.css" />
+	<link rel="stylesheet" type="text/css" href="../css/shortView.css" />
+	<link rel="stylesheet" type="text/css" href="../css/clipboard.css" />
 	<link rel="stylesheet" type="text/css" href="../css/print.css" media="print" />
 	<link rel=icon type="image/png" href="../images/system/IconMunin_001.png">
 	<title>Ablage</title>
@@ -39,7 +41,8 @@
 				    </div>
 				    <div class=fieldValue>
 					    <input id=textboxId type=text class=field></input>
-				    </div>
+					</div>
+					<div class=clear></div>
 			    </div>
 			    <div class=fieldBlock>
 				    <div class=fieldDescription>
@@ -49,6 +52,7 @@
 				    <div class=fieldValue>
 					    <select id=selectTypen onchange=selectTypen_onChange() class=field></select>
 				    </div>
+					<div class=clear></div>
 			    </div>
 			    <div class=fieldBlock>
 				    <div class=fieldDescription>
@@ -57,7 +61,8 @@
 				    </div>
 				    <div class=fieldValue>
 					    <input id=textboxBezeichnung type=text class=field></input>	
-				    </div>	
+				    </div>
+					<div class=clear></div>	
 			    </div>
 			    <div id=divParent class=fieldBlock>
 				    <div class=fieldDescription>
@@ -69,6 +74,17 @@
 					    <div id=divList class=field></div>
 					    <input type=button id=buttonSetParent value=Auswählen class="field notToPrint formButton"></input>
 				    </div>
+					<div class=clear></div>
+			    </div>
+			    <div id=divPath class=fieldBlock>
+				    <div class=fieldDescription>
+					    <img src="../images/system/IconHelp.png" class="help notToPrint" title="Elemente können in eienr hierarchischen Beziehung mit anderen stehen. Hier befindet sich der Pfad, in dem das Element abgelegt ist."/>
+					    <label>Pfad: </label>
+				    </div>
+				    <div class=fieldValue>
+					    <input type=text id=textboxPath class="field"></input>
+				    </div>
+					<div class=clear></div>
 			    </div>
 			    <div id=divAblagen class=fieldBlock>
 				    <div class=fieldDescription>
@@ -77,18 +93,9 @@
 				    </div>
 				    <div class=fieldValue>
 					    <div id=divList class=field></div>
-					    <input type=button id=buttonAddChild value=Hinzufügen class="field notToPrint formButton"></input>
+					    <input type=button id=buttonCreateChild value="Unterablage anlegen" class="field notToPrint formButton"></input>
 				    </div>
-			    </div>
-			    <div id=divKontexte class=fieldBlock>
-				    <div class=fieldDescription>
-					    <img src="../images/system/IconHelp.png" class="help notToPrint" title="Ablagen, die Funde enthalten, müssen mit deren Kontext explizit verknüpft werden."/>
-					    <label>Kontexte: </label>			
-				    </div>
-				    <div class=fieldValue>
-					    <div id=divList class=field></div>
-					    <input type=button id=buttonAddKontext value=Hinzufügen class="field notToPrint formButton"></input>
-				    </div>
+					<div class=clear></div>
 			    </div>
 			    <div id=divFunde class=fieldBlock>
 				    <div class=fieldDescription>
@@ -97,8 +104,9 @@
 				    </div>
 				    <div class=fieldValue>
 					    <div id=divList class=field></div>
-					    <input type=button id=buttonAddFund value=Hinzufügen class="field notToPrint formButton"></input>
+					    <input type=button id=buttonCreateFund value="Fund anlegen" class="field notToPrint formButton"></input>
 				    </div>
+					<div class=clear></div>
 			    </div>
 			    <div class="buttonBlock notToPrint">
 				    <input type=button id=buttonDelete value=Löschen onclick=buttonDelete_onClick() />

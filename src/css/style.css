@@ -14,19 +14,6 @@ input[type="button"] {
 	border: 1px solid;
 }
 
-.formBlock .fieldBlock {
-	margin-bottom: 10px;
-	padding-top: 5px;
-	border-top: 1px dashed;
-	overflow: hidden;
-}
-
-.formBlock .buttonBlock {
-	margin-top: 10px;
-	padding-top: 20px;
-	border-top: 1px dashed;
-}
-
 #divKontextSelections select, 
 #divAblageSelections select, 
 #divFundAttributSelections select,
@@ -54,8 +41,7 @@ select option {
 	border-bottom: 1px dashed;
 }
 
--- colors
-
+/* colors */
 body {
 	background-color: Ivory;
 	color: black;
@@ -95,22 +81,13 @@ input[type="button"]:hover {
 	background-color: #EFEF94;
 }
 
-.formBlock .fieldBlock {
-	border-color: DarkGray;
-}
-
-.formBlock .buttonBlock {
-	border-color: DarkGray;
-}
-
 #divErgebnisse table, 
 #divErgebnisse table tr,
 #divErgebnisse table tr td{
 	border-color: DarkGray;
 }
 
--- boxing and sizing
-
+/* boxing and sizing */
 body {
 	margin: 0px;
 	padding: 0px;
@@ -137,38 +114,6 @@ body {
 
 input[type="button"] {
 	width: 100px;
-}
-
-.formBlock {
-	float: left;
-	padding-right: 20px;
-}
-
-.formBlock .fieldBlock {
-	min-height: 25px;
-}
-
-.formBlock .fieldBlock input[type="text"] {
-	min-width: 200px;
-	width: 99%;
-}
-
-.formBlock .fieldBlock textarea {
-	min-width: 200px;
-	width: 99%;
-	height: 100px;
-	resize: vertical;
-}
-
-.formBlock .fieldBlock select {
-	min-width: 204px;
-	width: 100%;
-}
-
-.formBlock .fieldBlock 
-
-input[type="button"] {
-	float: right;
 }
 
 #divParentSelections,

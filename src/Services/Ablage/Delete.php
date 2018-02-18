@@ -19,7 +19,7 @@ if (isset($_GET["Id"]))
 
         if ($deleteAblage->run())
         {
-            echo "Ablage (".$ablage->getId().") ist gelöscht.";
+            echo json_encode("Ablage (".$ablage->getId().") ist gelöscht.");
         }
         else
         {

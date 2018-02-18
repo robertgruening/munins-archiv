@@ -1,83 +1,112 @@
-var _selectorMultiDropdownParent = "#divParentSelections";
-var _selectorTextboxParentId = "#textboxParentId";
-var _selectorMultiDropdownAblage = "#divAblageSelections";
-var _selectorTextboxAblageId = "#textboxId";
 //var _kartonschildIndex = 0;
 
 $(document).ready(function() {
 	$("#navigation").Navigation();
+
+	$("#textboxId").attr("disabled",true);
+	$("#textboxParentId").attr("disabled",true);
+	$("#buttonCreateChild").attr("disabled",true);
+	$("#buttonCreateFund").attr("disabled",true);
+	$("#buttonDelete").attr("disabled",true);
+	
+	$("#buttonSetParent").click(function() { SetParent(); });
+	//$("#buttonAddKarton").click(function() { AddAblageToKartonschildSeite(); });
+	$("#textboxBezeichnung").keyup(function() { checkBezeichnung($(this)); })
+	                        .change(function() { checkBezeichnung($(this)); });
+	
+	LoadSelectionType();
 	
 	if (GetURLParameter("Id"))
 	{
 	    $("#breadcrumb").Breadcrumb({
 		    PageName : "AblageFormEdit"
-	    });
-	}
-	else
-	{
-	    $("#breadcrumb").Breadcrumb({
-		    PageName : "AblageFormNew"
-	    });
-	}
-
-	$("#textboxId").attr("disabled",true);
-	$(_selectorTextboxParentId).attr("disabled",true);
-	$("#buttonAddChild").attr("disabled",true);
-	$("#buttonAddFund").attr("disabled",true);
-	
-	$("#buttonSetParent").click(function() { SetParent(); });
-	$("#buttonAddKontext").click(function() { AddKontext(); });
-	//$("#buttonAddKarton").click(function() { AddAblageToKartonschildSeite(); });
-	$("#textboxBezeichnung").keyup(function() { checkBezeichnung($(this)); })
-	                        .change(function() { checkBezeichnung($(this)); });
-	
-	LoadSelectionTyp();
-	LoadListRootAblagen();
-	
-	if (GetURLParameter("Id"))
-	{
+		});
+		
 		LoadAblageById(GetURLParameter("Id"));
 		
-		$("#buttonAddChild").click(function() { AddChild(GetURLParameter("Id")); });
-		$("#buttonAddChild").attr("disabled",false);
+		$("#buttonCreateChild").click(function() { OpenPageNewAblageChild(); });
+		$("#buttonCreateChild").attr("disabled",false);
 		
-		$("#buttonAddFund").click(function() { AddFund(GetURLParameter("Id")); });
-		$("#buttonAddFund").attr("disabled",false);
+		$("#buttonCreateFund").click(function() { OpenPageNewFund(); });
+		$("#buttonCreateFund").attr("disabled",false);
+		
+		$("#buttonDelete").attr("disabled",false);
 		
 		return;
 	}
+
+	$("#breadcrumb").Breadcrumb({
+		PageName : "AblageFormNew"
+	});
 	
-	ClearFields();
+	SetAblageJSON();
 	
 	if (GetURLParameter("Parent_Id"))
 	{
-		$(_selectorTextboxParentId).val(GetURLParameter("Parent_Id"));
+		$("#textboxParentId").val(GetURLParameter("Parent_Id"));
 		LoadListParents();
 		
 		return;
 	}
 });
 
+function FillSelectionAblageType(types)
+{
+	var options = "";
+
+	for (var i = 0; i < types.length; i++)
+	{
+		if (i == 0)
+		{
+			options += CreateOptionType(types[i], true);
+		}
+		else
+		{
+			options += CreateOptionType(types[i], false);
+		}
+	}
+
+	$("#selectTypen").html(options);
+}
+
+function CreateOptionType(type, select)
+{
+	var option = "<option value=" + type.Id + " ";
+
+	if (select == true)
+	{
+		option += "selected=selected ";
+	}
+
+	option += "style=\"background-image:url(../images/system/Icon"+type.Bezeichnung.replace(" ","_")+"_16px.png);background-repeat: no-repeat; padding-left: 20px;\" ";
+	option += ">";
+	option += type.Bezeichnung;
+	option += "</option>";
+	
+	return option;
+}
+
 function selectTypen_onChange()
 {
-	SelectTypId($("#selectTypen option:selected").val());
+	ShowFormFieldBlocksByType();
 }
 
-function SelectTypId(typId)
+function SetAblageType(typeBezeichnung)
 {
-	if (typId == undefined ||
-		typId == null)
+	var typeId = $("#selectTypen option").filter(function () { return $(this).html() == "Raum"; }).val();
+
+	if (typeBezeichnung != undefined &&
+		typeBezeichnung != null)
 	{
-		typId = $("#selectTypen option").filter(function () { return $(this).html() == "Raum"; }).val();
+		typeId = $("#selectTypen option").filter(function () { return $(this).html() == typeBezeichnung; }).val();
 	}
 	
-	$("#selectTypen").val(typId);
-	ShowFormFieldBlocksByTyp();
+	$("#selectTypen").val(typeId);
+	ShowFormFieldBlocksByType();
 }
 
-function ShowFormFieldBlocksByTyp()
-{	
-	/*
+function ShowFormFieldBlocksByType()
+{
 	$("#divParent").hide();
 	
 	if ($("#selectTypen option:selected").text() == "Raum")
@@ -87,55 +116,56 @@ function ShowFormFieldBlocksByTyp()
 	{
 		$("#divParent").show();
 	}
-	*/
 }
 
-function buttonNeu_onClick()
+function SetFormTitle(title)
 {
-	ClearFields();
+	document.title = title;
 }
 
-function ClearFields()
+function GetAblageId()
 {
-	$("#textboxId").val("");
-	SelectTypId();
-	$("#textboxBezeichnung").val("");
-	$(_selectorTextboxParentId).val("");
-	setTimeout(LoadListParents(), 1000);
-	setTimeout(LoadListChildren(), 1000);
-	setTimeout(LoadListKontexte(), 1000);
-	setTimeout(LoadListFunde(), 1000);
-	
-	document.title = "Ablage";
+	return $("#textboxId").val();
 }
 
-function GetAblageJSON()
-{	
-	var ablage = {
-		"Id" : $("#textboxId").val(),
-		"Bezeichnung" : $("#textboxBezeichnung").val(),
-		"AblageTyp_Id" : $("#selectTypen option:selected").val(),
-		"Parent_Id" : $(_selectorTextboxParentId).val() == "" ? null : $(_selectorTextboxParentId).val()
-	};
-	
-	return ablage;
-}
-
-function SetAblageJSON(ablage)
+function SetAblageId(id)
 {
-	$("#textboxId").val(ablage.Id);
-	$("#textboxBezeichnung").val(ablage.Bezeichnung);
-	SelectTypId(ablage.Typ.Id);
-	LoadListChildren(ablage.Id);
-	LoadListKontexte(ablage.Id);
-	LoadListFunde(ablage.Id);
-	
-	if (ablage.Parent)
-		$(_selectorTextboxParentId).val(ablage.Parent.Id);
+	$("#textboxId").val(id);
+}
 
-	LoadListParents();
-		
-	document.title = "("+ablage.Id+") "+ablage.Typ.Bezeichnung+": "+ablage.Bezeichnung;
+function GetAblageBezeichnung()
+{
+	return $("#textboxBezeichnung").val();
+}
+
+function SetAblageBezeichnung(bezeichnung)
+{
+	$("#textboxBezeichnung").val(bezeichnung);
+}
+
+function GetAblageTypeId()
+{
+	return $("#selectTypen option:selected").val();
+}
+
+function GetAblagePath()
+{
+	return $("#textboxPath").val();
+}
+
+function SetAblagePath(path)
+{
+	$("#textboxPath").val(path);
+}
+
+function GetAblageParentId()
+{
+	return $("#textboxParentId").val() == "" ? null : $("#textboxParentId").val();
+}
+
+function SetAblageParentId(parentId)
+{
+	$("#textboxParentId").val(parentId);
 }
 
 function SetShortView(ablage)
@@ -145,50 +175,19 @@ function SetShortView(ablage)
 	});
 }
 
-function buttonSpeichern_onClick()
-{	
-	SaveAblage();	
-}
-
-function SaveAblage()
-{
-	if ($("#textboxId").val() == GetValueForNoSelection())
-	{
-		return;
-	}
-	
-	$.ajax(
-	{
-		type:"POST",
-		url:"../Dienste/Ablage/Save",
-		data: {
-			"Ablage" : JSON.stringify(GetAblageJSON())
-		},
-		success:function(data, textStatus, jqXHR)
-		{
-			var message = $.parseJSON(data);
-			alert(message.Message);
-			LoadListRootAblagen();
-			
-			if (message.ElementId)
-				LoadAblageById(message.ElementId);
-		}
-	});
-}
-
 function LoadListParents()
 {		
 	$("#divParent #divList").empty();
 
-	if($(_selectorTextboxParentId).val() == undefined ||
-		$(_selectorTextboxParentId).val() == "")
+	if ($("#textboxParentId").val() == undefined ||
+		$("#textboxParentId").val() == "")
 	{
 		return;
 	}
 
 	$("#divParent #divList").List(
 	{
-		UrlGetElements : "../Dienste/Ablage/GetWithParents/" + $(_selectorTextboxParentId).val() + "/AsList",
+		UrlGetElements : "../Dienste/Ablage/GetWithParents/" + $("#textboxParentId").val() + "/AsList",
 		SetListItemText : function(element)
 		{
 			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
@@ -197,134 +196,72 @@ function LoadListParents()
 	});
 }
 
-function LoadListChildren(ablageId)
-{		
+function LoadListChildren(children)
+{
 	$("#divAblagen #divList").empty();
+	$("#divAblagen #divList").append("<ul></ul>");
 
-	if(ablageId == undefined)
+	if (children == undefined ||
+		children == null)
 	{
 		return;
 	}
 
-	$("#divAblagen #divList").List(
+	for (var i = 0; i < children.length; i++)
 	{
-		UrlGetElements : "../Dienste/Ablage/GetWithChildren/" + ablageId,
-		SetListItemText : function(element)
-		{
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
-		},
-		ListItemLink : "../Ablage/Form.html"
-	});
-}
-
-function AddChild(ablageId)
-{
-	window.open("../Ablage/Form.html?Parent_Id=" + ablageId);
-}
-
-function AddFund(ablageId)
-{
-	window.open("../Fund/Form.html?Ablage_Id=" + ablageId);
-}
-
-function LoadListKontexte(ablageId)
-{		
-	$("#divKontexte #divList").empty();
-
-	if(ablageId == undefined)
-	{
-		return;
+		$("#divAblagen #divList ul").append("<li><a href='../Ablage/Form.html?Id=" + children[i].Id + "'>" + children[i].Type.Bezeichnung + ": " + children[i].Bezeichnung + "</a></li>");
 	}
-
-	$("#divKontexte #divList").List(
-	{
-		UrlGetElements : "../Dienste/Kontext/Get/Ablage/" + ablageId,
-		SetListItemText : function(element)
-		{
-			if (element.FullBezeichnung == "")
-				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
-				
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
-		},
-		ListItemLink : "../Kontext/Form.html"
-	});
 }
 
-function LoadListFunde(ablageId)
-{	
+function LoadListFunde(funde)
+{
 	$("#divFunde #divList").empty();
+	$("#divFunde #divList").append("<ul></ul>");
 
-	if (ablageId == undefined)
+	for (var i = 0; i < funde.length; i++)
 	{
-		return;
-	}
-
-	$("#divFunde #divList").List(
-	{
-		UrlGetElements : "../Dienste/Fund/Get/Ablage/" + ablageId,
-		SetListItemText : function(element)
+		var listItemText = "";
+		listItemText += funde[i].Anzahl.toString().replace("-", ">")+"x ";
+		
+		if (funde[i].FundAttribute != undefined &&
+			funde[i].FundAttribute != null &&
+			funde[i].FundAttribute.length > 0)
 		{
-			var listItemText = "";
-			listItemText += element.Anzahl.toString().replace("-", ">")+"x ";
+			var material = null;
+			var gegenstand = null;
+			var erhaltung = null;
 			
-			if (element.Attribute != undefined &&
-				element.Attribute != null &&
-				element.Attribute.length > 0)
+			for (var j = 0; j < funde[i].FundAttribute.length; j++)
 			{
-				var material = null;
-				var gegenstand = null;
-				var erhaltung = null;
-				
-				for (var i = 0; i < element.Attribute.length; i++)
-				{
-					if (element.Attribute[i].Typ.Bezeichnung == "Material")
-						material = element.Attribute[i];
-					else if (element.Attribute[i].Typ.Bezeichnung == "Gegenstand")
-						gegenstand = element.Attribute[i];
-					else if (element.Attribute[i].Typ.Bezeichnung == "Erhaltung")
-						erhaltung = element.Attribute[i];
-						
-					if (material != null &&
-						gegenstand != null &&
-						erhaltung != null)
-						break;
-				}
-				if (material != null)
-					listItemText += material.Bezeichnung + " ";
+				if (funde[i].FundAttribute[j].Type.Bezeichnung == "Material")
+					material = funde[i].FundAttribute[j];
+				else if (funde[i].FundAttribute[j].Type.Bezeichnung == "Gegenstand")
+					gegenstand = funde[i].FundAttribute[j];
+				else if (funde[i].FundAttribute[j].Type.Bezeichnung == "Erhaltung")
+					erhaltung = funde[i].FundAttribute[j];
 					
-				if (gegenstand != null)
-					listItemText += gegenstand.Bezeichnung + " ";
-					
-				if (erhaltung != null)
-					listItemText += erhaltung.Bezeichnung + " ";
+				if (material != null &&
+					gegenstand != null &&
+					erhaltung != null)
+					break;
 			}
-			
-			if (element.Bezeichnung == null)
-				listItemText += " ";
-			else
-				listItemText += ": \""+element.Bezeichnung+"\" ";
-			
-			listItemText += "("+element.Id+")";
-			
-			return listItemText;
-		},
-		ListItemLink : "../Fund/Form.html"
-	});
-}
-
-function LoadListRootAblagen()
-{		
-	$("#divRootAblagen #divList").empty();
-
-	$("#divRootAblagen #divList").List(
-	{
-		UrlGetElements : "../Dienste/Ablage/GetWithChildren",
-		SetListItemText : function(element)
-		{
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
-		},
-		ListItemLink : "../Ablage/Form.html"
-	});
+			if (material != null)
+				listItemText += material.Bezeichnung + " ";
+				
+			if (gegenstand != null)
+				listItemText += gegenstand.Bezeichnung + " ";
+				
+			if (erhaltung != null)
+				listItemText += erhaltung.Bezeichnung + " ";
+		}
+		
+		if (funde[i].Bezeichnung == null)
+			listItemText += " ";
+		else
+			listItemText += ": \""+funde[i].Bezeichnung+"\" ";
+		
+		$("#divFunde #divList ul").append("<li><a href='../Fund/Form.html?Id=" + funde[i].Id + "'>" + listItemText + "</a></li>");
+	}
 }
 
 function SetParent()
@@ -344,7 +281,7 @@ function SetParent()
 		buttons: {
 			"Auswählen": function() {
 				$(this).dialog("close");
-				$(_selectorTextboxParentId).val($("#hiddenfieldParentId").val());
+				$("#textboxParentId").val($("#hiddenfieldParentId").val());
 				$("#dialogSetParent").remove();
 				LoadListParents();
 			},
@@ -382,9 +319,19 @@ function LoadMultiDropdownParent()
 	});
 }
 
+function buttonNeu_onClick()
+{
+	OpenPageNewAblage();
+}
+
+function buttonSpeichern_onClick()
+{	
+	SaveAblage();	
+}
+
 function buttonDelete_onClick()
 {
-	if ($("#textboxId").val() == GetValueForNoSelection())
+	if (!IsAblageSet())
 	{
 		return;
 	}
@@ -392,7 +339,7 @@ function buttonDelete_onClick()
 	var dialog = "<div id=dialogDelete title='Ablage löschen'>";
 	dialog += "<p>";
 	dialog += "<span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 20px 0;'></span>";
-	dialog += "Möchten Sie die Ablage ("+$("#textboxId").val()+") wirklich löschen?</p>";
+	dialog += "Möchten Sie die Ablage (" + _ablage.Id + ") wirklich löschen?</p>";
 	dialog += "</div>";
 	$("body").append(dialog);
 	$("#dialogDelete").dialog({
@@ -412,115 +359,6 @@ function buttonDelete_onClick()
 	});
 }
 
-function DeleteAblage()
-{
-	$.ajax(
-	{
-		type:"GET",
-		url:"../Dienste/Ablage/Delete/" + GetAblageJSON().Id,
-		success:function(data, textStatus, jqXHR)
-		{
-			alert(data);
-			ClearFields();
-			LoadListRootAblagen();
-		}
-	});
-}
-
-function LoadSelectionTyp()
-{
-	$.ajax(
-	{
-		type:"GET",
-		url:"../Dienste/Ablage/Typ/Get/",
-		success:function(data, textStatus, jqXHR)
-		{
-			if (data)
-			{
-				var typen = $.parseJSON(data);
-				var options = "";
-
-				for (var i = 0; i < typen.length; i++)
-				{
-					if (i == 0)
-					{
-						options += CreateOptionTyp(typen[i], true);
-					}
-					else
-					{
-						options += CreateOptionTyp(typen[i], false);
-					}
-				}
-
-				$("#selectTypen").html(options);
-				SelectTypId();
-			}
-		},
-		error:function(jqXHR, textStatus, errorThrown)
-		{
-			alert("error");
-		}
-	});	
-}
-
-function CreateOptionTyp(typ, select)
-{
-	var option = "<option value=" + typ.Id + " ";
-
-	if (select == true)
-	{
-		option += "selected=selected ";
-	}
-
-	option += "style=\"background-image:url(../images/system/Icon"+typ.Bezeichnung.replace(" ","_")+"_16px.png);background-repeat: no-repeat; padding-left: 20px;\" ";
-	option += ">";
-	option += typ.Bezeichnung;
-	option += "</option>";
-	
-	return option;
-}
-
-function LoadAblageById(id)
-{
-	if (id == undefined ||
-		id == null ||
-		id == GetValueForNoSelection())
-	{
-		ClearFields();
-		return;
-	}
-	
-	$.ajax(
-	{
-		type:"GET",
-		url:"../Dienste/Ablage/GetWithParents/" + id,
-		success:function(data, textStatus, jqXHR)
-		{
-			if (data)
-			{				
-				var parents = $.parseJSON(data);
-				var ablage = parents[0];
-				var parent = null;
-				
-				while (ablage.Children != undefined &&
-					ablage.Children.length > 0)
-				{
-					parent = ablage;
-					ablage = ablage.Children[0];				
-				}
-
-				ablage.Parent = parent;				
-				SetAblageJSON(ablage);
-				SetShortView(ablage);
-			}
-		},
-		error:function(jqXHR, textStatus, errorThrown)
-		{
-			alert("error");
-		}
-	});	
-}
-
 function GetURLParameter(name)
 {
 	var url = window.location.search.substring(1);
@@ -535,87 +373,6 @@ function GetURLParameter(name)
 			return parameter[1];
 		}
 	}
-}
-
-function GetCurrentElementId()
-{
-	return $("#textboxId").val();
-}
-
-function AddKontext()
-{
-	var dialog = "<div id=dialogAddKontext title='Kontext hinzufügen'>";
-	dialog += "<p>";
-	dialog += "<span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 20px 0;'></span>";
-	dialog += "Bitte wählen Sie ein Kontextelement aus, das Sie hinzufügen möchten:</p>";
-	dialog += "<div id=divAddKontext class=field></div>";
-	dialog += "<input id=hiddenfieldKontextId type=hidden></input>"
-	dialog += "</div>";
-	$("body").append(dialog);
-	LoadMultiDropdownKontext();
-	$("#dialogAddKontext").dialog({
-		resizable: true,
-		modal: true,
-		buttons: {
-			"Hinzufügen": function() {
-				$(this).dialog("close");
-				SaveAssociationWithKontext($("#hiddenfieldKontextId").val());
-				$("#dialogAddKontext").remove();
-			},
-			"Abbrechen": function() {
-				$(this).dialog("close");
-				$("#dialogAddKontext").remove();
-			}
-		}
-	});
-}
-
-function LoadMultiDropdownKontext()
-{
-	$("#divAddKontext").MultiDropdown(
-	{
-		UrlGetParents : "../Dienste/Kontext/GetWithParents/",
-		UrlGetChildren : "../Dienste/Kontext/GetWithChildren/",
-		SetOptionBackgroundImage : function(element)
-		{		
-			return "../images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
-		},
-		SetOptionText : function(element)
-		{
-			if (element.FullBezeichnung == "")
-			{
-				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
-			}
-			
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
-		},
-		SetSelectedElementId : function(elementId)
-		{
-			$("#hiddenfieldKontextId").val(elementId);
-		}
-	});
-}
-
-function SaveAssociationWithKontext(kontextId)
-{
-	$.ajax(
-	{
-		type:"POST",
-		url:"../Dienste/Ablage/Link/" + GetCurrentElementId() + "/Kontext/" + kontextId,
-		success:function(data, textStatus, jqXHR)
-		{
-			LoadListKontexte(GetCurrentElementId());
-		},
-		error:function(jqXHR, textStatus, errorThrown)
-		{
-			alert("error");
-		}
-	});	
-}
-
-function GetValueForNoSelection()
-{
-	return -1;
 }
 
 /*
