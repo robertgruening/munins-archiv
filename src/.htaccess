@@ -27,12 +27,11 @@ RewriteRule "^Dienste/Ort/Teil/Get/([\d;]+)/?$"						"Dienste/Ort/Teil/Get.php?I
 RewriteRule	"^Dienste/Ort/Link/([\d]+)/Ort/([\d]+)/?$"				"Dienste/Link.php?OrtAId=$1&OrtBId=$2"		[NC,L]
 RewriteRule	"^Dienste/Ort/Unlink/([\d]+)/Ort/([\d]+)/?$"			"Dienste/Unlink.php?OrtAId=$1&OrtBId=$2"	[NC,L]
 
+RewriteRule "^Services/(\w+)/?$"                                    "Services/$1.php"                           [NC,L]
+RewriteRule "^Services/(\w+)/([\d;]+)/?$"                           "Services/$1.php?Id=$2"                     [NC,L]
 
-
-RewriteRule	"^Services/(\w+)/Get/([\d;]+)/?$"						"Services/$1/Get.php?Id=$2"					[NC,L]
-RewriteRule "^Services/(\w+)/Typ/Get/?$"							"Services/$1/Typ/Get.php"					[NC,L]
-
-RewriteRule "^Services/(\w+)/Delete/([\d;]+)/?$"					"Services/$1/Delete.php?Id=$2"				[NC,L]
+RewriteRule "^Services/(\w+)/Typ/?$"                                "Services/$1Typ.php"                        [NC,L]
+RewriteRule "^Services/(\w+)/Typ/([\d;]+)/?$"                       "Services/$1Typ.php?Id=$2"                  [NC,L]
 
 RewriteRule	"^Services/Sitemap/?$"									"Services/Sitemap.php"						[NC,L]
 RewriteRule	"^Services/Sitemap/([\w]+)/?$"							"Services/Sitemap.php?PageName=$1"			[NC,L]

@@ -114,6 +114,11 @@
 						"Visible" : false
 					},
 					{
+						"Title" : "durchsuchen",
+						"URL" : "/Munins Archiv/src/Ablage/Explorer.html",
+						"PageName" : "AblageExplorer"
+					},
+					{
 						"Title" : "in Kontexten suchen",
 						"URL" : "/Munins Archiv/src/Ablage/SearchInKontexten.html",
 						"PageName" : "AblageSearchInKontext"
@@ -212,23 +217,18 @@
 				[
 					{
 						"Title" : "Ablagetypen verwalten",
-						"URL" : "/Munins Archiv/src/Ablage/Typ/Form.html",
-						"Enabled" : false
+						"URL" : "/Munins Archiv/src/AblageType/Form.html",
+						"PageName" : "AblageTypeManagement"
+					},
+					{
+						"Title" : "Ortstypen verwalten",
+						"URL" : "/Munins Archiv/src/OrtType/Form.html",
+						"PageName" : "OrtTypeManagement"
 					},
 					{
 						"Title" : "Fundattributstypen verwalten",
-						"URL" : "/Munins Archiv/src/FundAttribut/Typ/Form.html",
-						"Enabled" : false
-					},
-					{
-						"Title" : "Gebietskörperschaftstypen verwalten",
-						"URL" : "/Munins Archiv/src/Gebietskoerperschaft/Typ/Form.html",
-						"Enabled" : false
-					},
-					{
-						"Title" : "Kartasterdatentypen verwalten",
-						"URL" : "/Munins Archiv/src/Kartasterdaten/Typ/Form.html",
-						"Enabled" : false
+						"URL" : "/Munins Archiv/src/FundAttributType/Form.html",
+						"PageName" : "FundAttributTypeManagement"
 					}
 				]
 			},

@@ -7,6 +7,7 @@ class OrtTyp implements iNode
     public $Id;
     public $Bezeichnung;
     public $OrderNumber;
+    public $CountOfOrten;
     #endregion
     
     #region properties
@@ -39,6 +40,16 @@ class OrtTyp implements iNode
     {
         $this->OrderNumber = $orderNumber;
     }
+    
+    public function getCountOfOrten()
+    {
+        return $this->CountOfOrten;
+    }
+    
+    public function setCountOfOrten($countOfOrten)
+    {
+        $this->CountOfOrten = $countOfOrten;
+    }
     #endregion
 
     #region constructors
@@ -47,6 +58,7 @@ class OrtTyp implements iNode
         $this->Id = -1;
         $this->Bezeichnung = null;
         $this->OrderNumber = null;
+        $this->CountOfOrten = 0;
     }
     #endegion
 }

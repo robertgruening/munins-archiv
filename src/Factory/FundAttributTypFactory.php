@@ -36,9 +36,19 @@ class FundAttributTypFactory extends Factory implements iListFactory
     #region load
     protected function getSQLStatementToLoadById($id)
     {
-        return "SELECT Id, Bezeichnung
-                FROM ".$this->getTableName()."
-                WHERE Id = ".$id.";";
+        return "SELECT
+                    Id, Bezeichnung, (
+                        SELECT
+                            COUNT(*)
+                        FROM
+                            FundAttribut
+                        WHERE
+                            Typ_Id = ".$id."
+                    ) AS CountOfFundAttributen
+                FROM
+                    ".$this->getTableName()."
+                WHERE
+                    Id = ".$id.";";
     }
 
     public function loadAll()
@@ -46,16 +56,17 @@ class FundAttributTypFactory extends Factory implements iListFactory
         return $this->getListFactory()->loadAll();
     }
 
-    protected function fill($dataSet)
+    protected function fill($dataset)
     {
-        if ($dataSet == null)
+        if ($dataset == null)
         {
             return null;
         }
 
         $fundAttributTyp = new FundAttributTyp();
-        $fundAttributTyp->setId(intval($dataSet["Id"]));
-        $fundAttributTyp->setBezeichnung($dataSet["Bezeichnung"]);
+        $fundAttributTyp->setId(intval($dataset["Id"]));
+        $fundAttributTyp->setBezeichnung($dataset["Bezeichnung"]);
+        $fundAttributTyp->setCountOfFundAttributen(intval($dataset["CountOfFundAttributen"]));
         
         return $fundAttributTyp;
     }

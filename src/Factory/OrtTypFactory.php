@@ -36,9 +36,19 @@ class OrtTypFactory extends Factory implements iListFactory
     #region load
     protected function getSQLStatementToLoadById($id)
     {
-        return "SELECT Id, Bezeichnung
-                FROM ".$this->getTableName()."
-                WHERE Id = ".$id.";";
+        return "SELECT
+                    Id, Bezeichnung, (
+                        SELECT
+                            COUNT(*)
+                        FROM
+                            Ort
+                        WHERE
+                            Typ_Id = ".$id."
+                    ) AS CountOfOrten
+                FROM
+                    ".$this->getTableName()."
+                WHERE
+                    Id = ".$id.";";
     }
 
     public function loadAll()
@@ -46,16 +56,17 @@ class OrtTypFactory extends Factory implements iListFactory
         return $this->getListFactory()->loadAll();
     }
     
-    protected function fill($dataSet)
+    protected function fill($dataset)
     {
-        if ($dataSet == null)
+        if ($dataset == null)
         {
             return null;
         }
 
         $ortTyp = new OrtTyp();
-        $ortTyp->setId(intval($dataSet["Id"]));
-        $ortTyp->setBezeichnung($dataSet["Bezeichnung"]);
+        $ortTyp->setId(intval($dataset["Id"]));
+        $ortTyp->setBezeichnung($dataset["Bezeichnung"]);
+        $ortTyp->setCountOfOrten(intval($dataset["CountOfOrten"]));
         
         return $ortTyp;
     }

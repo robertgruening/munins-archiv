@@ -45,7 +45,7 @@ abstract class Factory
 	{
 		if ($element->getId() == -1)
 		{
-			$element->setId($this->insert($element));
+			$element->setId($this->insert($element)->getId());
 		}
 		else
 		{
@@ -105,6 +105,12 @@ abstract class Factory
 	public function delete($element)
 	{
 		$isSuccessfullyDeleted = false;
+
+		if ($element == null)
+		{
+			return $isSuccessfullyDeleted;
+		}
+
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
 		if (!$mysqli->connect_errno)

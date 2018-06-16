@@ -7,6 +7,7 @@ class AblageTyp implements iNode
     public $Id;
     public $Bezeichnung;
     public $OrderNumber;
+    public $CountOfAblagen;
     #endregion
     
     #region properties
@@ -32,12 +33,22 @@ class AblageTyp implements iNode
     
     public function getOrderNumber()
     {
-        $this->OrderNumber;
+        return $this->OrderNumber;
     }
     
     public function setOrderNumber($orderNumber)
     {
         $this->OrderNumber = $orderNumber;
+    }
+    
+    public function getCountOfAblagen()
+    {
+        return $this->CountOfAblagen;
+    }
+    
+    public function setCountOfAblagen($countOfAblagen)
+    {
+        $this->CountOfAblagen = $countOfAblagen;
     }
     #endregion
 
@@ -47,6 +58,7 @@ class AblageTyp implements iNode
         $this->Id = -1;
         $this->Bezeichnung = null;
         $this->OrderNumber = null;
+        $this->CountOfAblagen = 0;
     }
     #endegion
 }

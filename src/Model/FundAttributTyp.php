@@ -7,6 +7,7 @@ class FundAttributTyp implements iNode
     public $Id;
     public $Bezeichnung;
     public $OrderNumber;
+    public $CountOfFundAttributen;
     #endregion
     
     #region properties
@@ -39,6 +40,16 @@ class FundAttributTyp implements iNode
     {
         $this->OrderNumber = $orderNumber;
     }
+    
+    public function getCountOfFundAttributen()
+    {
+        return $this->CountOfFundAttributen;
+    }
+    
+    public function setCountOfFundAttributen($countOfFundAttributen)
+    {
+        $this->CountOfFundAttributen = $countOfFundAttributen;
+    }
     #endregion
 
     #region constructors
@@ -47,6 +58,7 @@ class FundAttributTyp implements iNode
         $this->Id = -1;
         $this->Bezeichnung = null;
         $this->OrderNumber = null;
+        $this->CountOfFundAttributen = 0;
     }
     #endegion
 }

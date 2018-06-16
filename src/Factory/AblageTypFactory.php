@@ -42,9 +42,19 @@ class AblageTypFactory extends Factory implements iListFactory
      */
     protected function getSQLStatementToLoadById($id)
     {
-        return "SELECT Id, Bezeichnung
-                FROM ".$this->getTableName()."
-                WHERE Id = ".$id.";";
+        return "SELECT
+                    Id, Bezeichnung, (
+                        SELECT
+                            COUNT(*)
+                        FROM
+                            Ablage
+                        WHERE
+                            Typ_Id = ".$id."
+                    ) AS CountOfAblagen
+                FROM
+                    ".$this->getTableName()."
+                WHERE
+                    Id = ".$id.";";
     }
 
     public function loadAll()
@@ -62,6 +72,7 @@ class AblageTypFactory extends Factory implements iListFactory
         $ablageTyp = new AblageTyp();
         $ablageTyp->setId(intval($dataset["Id"]));
         $ablageTyp->setBezeichnung($dataset["Bezeichnung"]);
+        $ablageTyp->setCountOfAblagen(intval($dataset["CountOfAblagen"]));
         
         return $ablageTyp;
     }
