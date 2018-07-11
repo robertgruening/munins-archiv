@@ -58,7 +58,7 @@ function Get()
 
     if (isset($_GET["Id"]))
     {
-        $logger->info("Service Ablage Lade anhand Id (".$_GET["Id"].") gestartet");
+        $logger->info("Service Ablage Laden anhand Id (".$_GET["Id"].") gestartet");
         $loadAblage = new LoadAblage();
         $loadAblage->setId(intval($_GET["Id"]));
 
@@ -71,11 +71,12 @@ function Get()
             http_response_code(500);
             echo json_encode($loadAblage->getMessages());
         }
-        $logger->info("Service Ablage Lade anhand Id (".$_GET["Id"].") beendet");
+
+        $logger->info("Service Ablage Laden anhand Id (".$_GET["Id"].") beendet");
     }
     else
     {
-        $logger->info("Service Ablage Lade Root-Ablagen gestartet");
+        $logger->info("Service Ablage Laden Root-Ablagen gestartet");
         $loadRootAblagen = new LoadRootAblagen();
 
         if ($loadRootAblagen->run())
@@ -87,14 +88,15 @@ function Get()
             http_response_code(500);
             echo json_encode($loadRootAblagen->getMessages());
         }
-        $logger->info("Service Ablage Lade Root-Ablagen beendet");
+
+        $logger->info("Service Ablage Laden Root-Ablagen beendet");
     }
 }
 
 function Delete()
 {
     global $logger;
-    $logger->info("Service Ablage Lösche anhand Id (".$_GET["Id"].") gestartet");
+    $logger->info("Service Ablage Löschen anhand Id (".$_GET["Id"].") gestartet");
 
     if (isset($_GET["Id"]))
     {
@@ -130,5 +132,5 @@ function Delete()
         echo "Es wurde keine ID übergeben!";         
     }
 
-    $logger->info("Service Ablage Lösche anhand Id (".$_GET["Id"].") beendet");
+    $logger->info("Service Ablage Löschen anhand Id (".$_GET["Id"].") beendet");
 }

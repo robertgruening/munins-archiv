@@ -69,6 +69,9 @@ class AblageTypFactory extends Factory implements iListFactory
             return null;
         }
 
+        global $logger;
+        $logger->debug("Fülle Ablagetyp (".intval($dataset["Id"]).") mit Daten");
+
         $ablageTyp = new AblageTyp();
         $ablageTyp->setId(intval($dataset["Id"]));
         $ablageTyp->setBezeichnung($dataset["Bezeichnung"]);
@@ -112,6 +115,9 @@ class AblageTypFactory extends Factory implements iListFactory
         {
             return null;
         }
+
+        global $logger;
+        $logger->debug("Konvertiere Daten zu Ablagetyp");
 
         $ablageTyp = new AblageTyp();
 

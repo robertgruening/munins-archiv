@@ -166,6 +166,9 @@ class AblageFactory extends Factory implements iTreeFactory
             return null;
         }
 
+        global $logger;
+        $logger->debug("Konvertiere Daten zu Ablage");
+
         $ablage = new Ablage();
 
         if (isset($object["Id"]))
