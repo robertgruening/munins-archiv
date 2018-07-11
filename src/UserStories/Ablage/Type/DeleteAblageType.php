@@ -36,16 +36,19 @@ class DeleteAblageType extends UserStory
      */
     protected function areParametersValid()
     {
+        global $logger;
         $ablageType = $this->getAblageType();
         
         if ($ablageType == null)
         {
+            $logger->warn("Ablagetyp ist nicht gesetzt!");
             $this->addMessage("Ablagetyp ist nicht gesetzt!");
             return false;
         }
         
         if ($ablageType->getCountOfAblagen() > 0)
         {
+            $logger->warn("Ablagetyp wird ".$ablageType->getCountOfAblagen()." Mal verwendet!");
             $this->addMessage("Ablagetyp wird ".$ablageType->getCountOfAblagen()." Mal verwendet!");
             return false;
         }

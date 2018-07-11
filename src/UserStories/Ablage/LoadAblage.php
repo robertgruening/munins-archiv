@@ -40,6 +40,8 @@ class LoadAblage extends UserStory
         if ($this->getId() === null ||
             $this->getId() === "")
         {
+            global $logger;
+            $logger->warn("Id ist nicht gesetzt!");
             $this->addMessage("Id ist nicht gesetzt!");
             return false;
         }
@@ -54,6 +56,8 @@ class LoadAblage extends UserStory
         
         if ($ablage == null)
         {
+            global $logger;
+            $logger->warn("Es gibt keine Ablage mit der Id ".$this->getId()."!");
             $this->addMessage("Es gibt keine Ablage mit der Id ".$this->getId()."!");
             return false;
         }
