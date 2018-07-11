@@ -56,7 +56,8 @@ function ShowAblageTypes(ablageTypes)
             { 
                 title: "Anzahl von Ablagen",
                 name: "CountOfAblagen", 
-                type: "number", 
+                type: "number",
+                inserting: false,
                 editing: false
             },
             { 

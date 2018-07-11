@@ -245,6 +245,11 @@
 						"Title" : "Server herunterfahren",
 						"Action" : "Shutdown();",
 						"Enabled" : false
+					},
+					{
+						"Title" : "Log einsehen",
+						"URL" : "/Munins Archiv/src/Logs/Log.html",
+						"Enabled" : true
 					}
 				]
 			}

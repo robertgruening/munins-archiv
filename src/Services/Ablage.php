@@ -23,11 +23,14 @@ else
 
 function Save()
 {
+    global $logger;
+    $logger->info("Service Ablage Speichern gestartet");
+
     $ablageObject = null;
 
-    if ($_GET != null)
+    if ($_POST != null)
     {
-        $ablageObject = json_decode($_GET["ablage"], true);
+        $ablageObject = json_decode($_POST["Ablage"], true);
     }
     
     $ablageFactory = new AblageFactory();
@@ -38,19 +41,24 @@ function Save()
     
     if ($saveAblage->run())
     {
-        echo json_encode($ablage);
+        echo json_encode($saveAblage->getAblage());
     }
     else
     {
         http_response_code(500);
-        echo json_encode($loadAblage->getMessages());
+        echo json_encode($saveAblage->getMessages());
     }
+
+    $logger->info("Service Ablage Speichern beendet");
 }
 
 function Get()
 {
+    global $logger;
+
     if (isset($_GET["Id"]))
     {
+        $logger->info("Service Ablage Lade anhand Id (".$_GET["Id"].") gestartet");
         $loadAblage = new LoadAblage();
         $loadAblage->setId(intval($_GET["Id"]));
 
@@ -63,9 +71,11 @@ function Get()
             http_response_code(500);
             echo json_encode($loadAblage->getMessages());
         }
+        $logger->info("Service Ablage Lade anhand Id (".$_GET["Id"].") beendet");
     }
     else
     {
+        $logger->info("Service Ablage Lade Root-Ablagen gestartet");
         $loadRootAblagen = new LoadRootAblagen();
 
         if ($loadRootAblagen->run())
@@ -77,11 +87,15 @@ function Get()
             http_response_code(500);
             echo json_encode($loadRootAblagen->getMessages());
         }
+        $logger->info("Service Ablage Lade Root-Ablagen beendet");
     }
 }
 
 function Delete()
 {
+    global $logger;
+    $logger->info("Service Ablage Lösche anhand Id (".$_GET["Id"].") gestartet");
+
     if (isset($_GET["Id"]))
     {
         $loadAblage = new LoadAblage();
@@ -115,4 +129,6 @@ function Delete()
         http_response_code(500);
         echo "Es wurde keine ID übergeben!";         
     }
+
+    $logger->info("Service Ablage Lösche anhand Id (".$_GET["Id"].") beendet");
 }

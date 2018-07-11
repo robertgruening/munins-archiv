@@ -32,12 +32,19 @@ abstract class UserStory
 
     public function run()
     {
+        global $logger;
+        $logger->debug("Starte User Story");
+        
         $this->clearMessages();
 
         if ($this->areParametersValid())
         {
+            $logger->debug("Führe User Story aus");
+
             return $this->execute();
         }
+        
+        $logger->debug("Parameter sind nicht gültig");
     
         return false;
     }

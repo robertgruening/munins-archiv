@@ -37,10 +37,12 @@ class DeleteAblage extends UserStory
      */
     protected function areParametersValid()
     {
+        global $logger;
         $ablage = $this->getAblage();
         
         if ($ablage == null)
         {
+            $logger->warn("Ablage ist nicht gesetzt!");
             $this->addMessage("Ablage ist nicht gesetzt!");
             return false;
         }
@@ -49,12 +51,14 @@ class DeleteAblage extends UserStory
 
         if (count($ablage->getChildren()) > 0)
         {
+            $logger->warn("Ablage hat Unterelemente!");
             $this->addMessage("Ablage hat Unterelemente!");
             $areParametersValid = false;
         }
     
         if (count($ablage->getFunde()) > 0)
         {
+            $logger->warn("Ablage enthält Funde!");
             $this->addMessage("Ablage enthält Funde!");
             $areParametersValid = false;
         }

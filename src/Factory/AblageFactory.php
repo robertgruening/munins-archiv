@@ -81,6 +81,9 @@ class AblageFactory extends Factory implements iTreeFactory
             return null;
         }
 
+        global $logger;
+        $logger->debug("Fülle Ablage (".intval($dataset["Id"]).") mit Daten");
+
         $ablage = new Ablage();
         $ablage->setId(intval($dataset["Id"]));
         $ablage->setBezeichnung($dataset["Bezeichnung"]);
@@ -92,6 +95,9 @@ class AblageFactory extends Factory implements iTreeFactory
 
     public function loadByFund($fund)
     {
+        global $logger;
+        $logger->debug("Lade Ablage anhand Fund (".$fund->getId().")");
+
         $ablagen = array();
         $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
@@ -100,8 +106,12 @@ class AblageFactory extends Factory implements iTreeFactory
 			$mysqli->set_charset("utf8");
 			$ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByFund($fund));	
 			
-			if (!$mysqli->errno)
+			if ($mysqli->errno)
 			{
+				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+			}
+            else
+            {
 				while ($datensatz = $ergebnis->fetch_assoc())
 				{
 					array_push($ablagen, $this->loadById(intval($datensatz["Id"])));
@@ -129,7 +139,7 @@ class AblageFactory extends Factory implements iTreeFactory
      * @param iNode $ablage Ablage to be inserted.
      */
     protected function getSQLStatementToInsert(iNode $ablage)
-    {
+    {        
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
                 VALUES ('".$ablage->getBezeichnung()."', ".$ablage->getType()->getId().");";
     }
@@ -143,7 +153,7 @@ class AblageFactory extends Factory implements iTreeFactory
     {
         return "UPDATE ".$this->getTableName()."
                 SET Bezeichnung = '".$ablage->getBezeichnung()."',
-                SET Typ_Id = ".$ablage->getType()->getId()."
+                    Typ_Id = ".$ablage->getType()->getId()."
                 WHERE Id = ".$ablage->getId().";";
     }
     #endregion
@@ -265,6 +275,9 @@ class AblageFactory extends Factory implements iTreeFactory
     #region Kontext
     public function loadByKontext($kontext)
     {
+        global $logger;
+        $logger->debug("Lade Ablage anhand Kontext (".$kontext->getId().")");
+
         $elemente = array();
         $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
@@ -273,7 +286,11 @@ class AblageFactory extends Factory implements iTreeFactory
 			$mysqli->set_charset("utf8");
 			$ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByKontext($kontext));	
 			
-			if (!$mysqli->errno)
+			if ($mysqli->errno)
+			{
+				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+			}
+            else
 			{
 				while ($datensatz = $ergebnis->fetch_assoc())
 				{

@@ -120,7 +120,10 @@ class AblageTypFactory extends Factory implements iListFactory
             $ablageTyp->setId(intval($object["Id"]));
         }
 
-        $ablageTyp->setBezeichnung($object["Bezeichnung"]);
+        if (isset($object["Bezeichnung"]))
+        {
+            $ablageTyp->setBezeichnung($object["Bezeichnung"]);
+        }
         
         return $ablageTyp;
     }

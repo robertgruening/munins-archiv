@@ -1,5 +1,6 @@
 <?php
 include_once(__DIR__."/config.php");
+include_once(__DIR__."/../Logger.php");
 
 abstract class Factory
 {
@@ -11,6 +12,9 @@ abstract class Factory
 	#region load
     public function loadById($id)
     {
+        global $logger;
+		$logger->debug("Lade Element (".$id.")");
+		
         $element = null;
         $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
@@ -19,7 +23,11 @@ abstract class Factory
 			$mysqli->set_charset("utf8");
 			$ergebnis = $mysqli->query($this->getSQLStatementToLoadById($id));	
 			
-			if (!$mysqli->errno)
+			if ($mysqli->errno)
+			{
+				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+			}
+			else
 			{
 				$element = $this->fill($ergebnis->fetch_assoc());
 			}
@@ -57,6 +65,9 @@ abstract class Factory
 
 	private function insert(iNode $element)
 	{
+        global $logger;
+		$logger->debug("Erzeuge Element");
+
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
 		if (!$mysqli->connect_errno)
@@ -64,7 +75,11 @@ abstract class Factory
 			$mysqli->set_charset("utf8");
 			$ergebnis = $mysqli->query($this->getSQLStatementToInsert($element));	
 			
-			if (!$mysqli->errno)
+			if ($mysqli->errno)
+			{
+				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+			}
+			else
 			{
 				$element->setId($mysqli->insert_id);
 			}
@@ -79,6 +94,9 @@ abstract class Factory
 	
 	private function update($element)
 	{
+        global $logger;
+		$logger->debug("Aktualisiere Element (".$element->GetId().")");
+
 		$isSuccessfullyUpdated = false;
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
@@ -87,7 +105,11 @@ abstract class Factory
 			$mysqli->set_charset("utf8");
 			$ergebnis = $mysqli->query($this->getSQLStatementToUpdate($element));	
 			
-			if (!$mysqli->errno)
+			if ($mysqli->errno)
+			{
+				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+			}
+			else
 			{
 				$isSuccessfullyUpdated = true;
 			}
@@ -104,6 +126,9 @@ abstract class Factory
 	#region delte
 	public function delete($element)
 	{
+		global $logger;
+		$logger->debug("Lösche Element (".$element->getId().")");
+
 		$isSuccessfullyDeleted = false;
 
 		if ($element == null)
@@ -118,7 +143,11 @@ abstract class Factory
 			$mysqli->set_charset("utf8");
 			$ergebnis = $mysqli->query($this->getSQLStatementToDelete($element));	
 			
-			if (!$mysqli->errno)
+			if ($mysqli->errno)
+			{
+				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+			}
+			else
 			{
 				$isSuccessfullyDeleted = true;
 			}

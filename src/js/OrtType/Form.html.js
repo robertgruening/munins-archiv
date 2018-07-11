@@ -56,7 +56,8 @@ function ShowOrtTypes(ortTypes)
             { 
                 title: "Anzahl von Orten",
                 name: "CountOfOrten", 
-                type: "number", 
+                type: "number",
+                inserting: false,
                 editing: false
             },
             { 

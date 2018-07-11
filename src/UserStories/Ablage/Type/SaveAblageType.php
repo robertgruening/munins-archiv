@@ -24,6 +24,7 @@ class SaveAblageType extends UserStory
 
     protected function areParametersValid()
     {
+        global $logger;
         $ablageTyp = $this->getAblageType();
         $ablageTypFactory = new AblageTypFactory();
         $ablageTypen = $ablageTypFactory->loadAll();
@@ -34,6 +35,7 @@ class SaveAblageType extends UserStory
                 ($ablageTyp->getId() == -1 ||
                  $ablageTyp->getId() != $ablageTypen[$i]->getId()))
             {
+                $logger->warn("Es existiert bereits ein Ablagetyp mit der Bezeichnung \"".$ablageTyp->getBezeichnung()."\"!");
                 $this->addMessage("Es existiert bereits ein Ablagetyp mit der Bezeichnung \"".$ablageTyp->getBezeichnung()."\"!");
                 return false;
             }

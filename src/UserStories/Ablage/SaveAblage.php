@@ -32,6 +32,8 @@ class SaveAblage extends UserStory
         
         if ($ablage == null)
         {
+            global $logger;
+            $logger->warn("Ablage ist nicht gesetzt!");
             $this->addMessage("Ablage ist nicht gesetzt!");
             return false;
         }

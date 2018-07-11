@@ -31,7 +31,7 @@
     {
         $(htmlElement).append(
             $("<span/>").html("Pfad:").addClass("fieldName"),
-            $("<span/>").html(getPfadHtml(options.Element.FullBezeichnung)).addClass("fieldValue"),
+            $("<span/>").html(getPfadHtml(options.Element.Path)).addClass("fieldValue"),
             $("<br/>")
         );
     }
@@ -142,7 +142,7 @@
         for (var i = 0; i < listData.length; i++)
         {
             $(ul).append(
-		        $("<li/>").html(getPfadHtml(listData[i].FullBezeichnung))
+		        $("<li/>").html(getPfadHtml(listData[i].Path))
             );			        
         }
         

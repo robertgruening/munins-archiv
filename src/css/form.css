@@ -67,3 +67,7 @@ input[type="button"] {
 .formBlock .fieldBlock {
     vertical-align: middle;
 }
+
+.formBlock .fieldBlock ul {
+    margin-top: 0px;
+}

@@ -56,7 +56,8 @@ function ShowFundAttributTypes(fundAttributTypes)
             { 
                 title: "Anzahl von Fundattributen",
                 name: "CountOfFundAttributen", 
-                type: "number", 
+                type: "number",
+                inserting: false,
                 editing: false
             },
             { 

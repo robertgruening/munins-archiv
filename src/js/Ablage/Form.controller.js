@@ -12,12 +12,7 @@ function GetValueForNoSelection()
 
 function OpenPageNewAblage()
 {
-	window.open("Form.html", "_self");
-}
-
-function OpenPageNewAblageChild()
-{
-	window.open("Form.html?Parent_Id=" + _ablage.Id, "_blank");
+	window.open("Explorer.html", "_self");
 }
 
 function OpenPageNewFund()
@@ -37,20 +32,24 @@ function LoadAblageById(id)
 	$.ajax(
 	{
 		type:"GET",
-        url:"../Services/Ablage/Get/" + id,
-        dataType: "json",
+        url:"../Services/Ablage/" + id,
+        dataType: "JSON",
 		success:function(data, textStatus, jqXHR)
 		{
-			if (data)
-			{
-            	_ablage = data;
-				SetAblageJSON(_ablage);
-				SetShortView(_ablage);
-			}
+			_ablage = data;
+			SetAblageJSON(_ablage);
+			SetShortView(_ablage);
 		},
 		error:function(jqXHR, textStatus, errorThrown)
 		{
-			alert("error");
+			if (jqXHR.status == 500)
+			{
+				ShowMessages(jqXHR.responseJSON);
+			}
+			else
+			{
+				console.log("ERROR: " + jqXHR.responseJSON);
+			}
 		}
 	});	
 }
@@ -60,18 +59,25 @@ function SaveAblage()
 	$.ajax(
 	{
 		type:"POST",
-		url:"../Services/Ablage/Save",
-        dataType: "json",
+		url:"../Services/Ablage",
+        dataType: "JSON",
 		data: {
 			"Ablage" : JSON.stringify(GetAblageJSON())
 		},
 		success:function(data, textStatus, jqXHR)
 		{
-			var message = $.parseJSON(data);
-			alert(message.Message);
-			
-			if (message.ElementId)
-				LoadAblageById(message.ElementId);
+			LoadAblageById(data.Id);
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			if (jqXHR.status == 500)
+			{
+				ShowMessages(jqXHR.responseJSON);
+			}
+			else
+			{
+				console.log("ERROR: " + jqXHR.responseJSON);
+			}
 		}
 	});
 }
@@ -80,20 +86,22 @@ function DeleteAblage()
 {
 	$.ajax(
 	{
-		type:"GET",
-		url:"../Services/Ablage/Delete/" + _ablage.Id,
-        dataType: "json",
+		type:"DELETE",
+		url:"../Services/Ablage/" + _ablage.Id,
+        dataType: "JSON",
 		success:function(data, textStatus, jqXHR)
 		{
-			var pattern = /Ablage\s\(\d+\)\sist\sgelöscht\./g;
-
-			if (pattern.test(JSON.stringify(data)))
+			OpenPageNewAblage();
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			if (jqXHR.status == 500)
 			{
-				OpenPageNewAblage();
+				ShowMessages(jqXHR.responseJSON);
 			}
 			else
 			{
-				alert(data);
+				console.log("ERROR: " + jqXHR.responseJSON);
 			}
 		}
 	});
@@ -107,9 +115,7 @@ function GetAblageJSON()
 		"Type" : {
 			"Id" : GetAblageTypeId()
 		},
-		"Parent" : {
-			"Id" : GetAblageParentId()
-		}
+		"Parent" : _ablage.Parent
 	};
 	
 	return ablage;
@@ -120,13 +126,11 @@ function SetAblageJSON(ablage)
 	if (ablage == undefined ||
 		ablage == null)
 	{
-		SetAblageId();
 		SetAblageBezeichnung();
 		SetAblageType();
 		SetAblagePath();
-		SetAblageParentId();
+		SetAblageParent();
 
-		LoadListParents();
 		LoadListChildren();
 		LoadListFunde();
 
@@ -134,21 +138,11 @@ function SetAblageJSON(ablage)
 	}
 	else
 	{
-		SetAblageId(ablage.Id);
 		SetAblageBezeichnung(ablage.Bezeichnung);
 		SetAblageType(ablage.Type.Bezeichnung);
 		SetAblagePath(ablage.Path);
+		SetAblageParent(ablage.Parent);
 		
-		if (ablage.Parent)
-		{
-			SetAblageParentId(ablage.Parent.Id);
-		}
-		else
-		{
-			SetAblageParentId();
-		}
-
-		LoadListParents();
 		LoadListChildren(ablage.Children);
 		LoadListFunde(ablage.Funde);
 			
@@ -161,7 +155,7 @@ function LoadSelectionType()
 	$.ajax(
 	{
 		type:"GET",
-		url:"../Services/Ablage/Typ/Get/",
+		url:"../Services/Ablage/Typ/",
         dataType: "json",
 		success:function(data, textStatus, jqXHR)
 		{
@@ -173,7 +167,14 @@ function LoadSelectionType()
 		},
 		error:function(jqXHR, textStatus, errorThrown)
 		{
-			alert("error");
+			if (jqXHR.status == 500)
+			{
+				ShowMessages(jqXHR.responseJSON);
+			}
+			else
+			{
+				console.log("ERROR: " + jqXHR.responseJSON);
+			}
 		}
 	});	
 }

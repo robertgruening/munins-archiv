@@ -146,6 +146,9 @@ $(document).ready(function() {
 		});
 	})
     .jstree({
+		"plugins": [
+			"contextmenu"
+		],
         "core": {
 			"multiple": false,
 			"check_callback" : true,
@@ -220,7 +223,20 @@ $(document).ready(function() {
 					});
 				}
 			}
-        }
+		},
+		"contextmenu": {
+			"items": function($node) {
+				return {
+					"Beabeiten": {
+						"label": "Beabeiten",
+						"title": "Beabeiten",
+						"action": function(obj) {
+							window.open("Form.html?Id=" + $node.id, "_self");
+						}
+					}
+				};
+			}
+		}
     });
 });
 
