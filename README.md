@@ -16,5 +16,6 @@ Die deutschsprachige Anwendung, Munins Archiv, richtet sich in erster Linie an e
 
 * [Apache log4php](https://logging.apache.org/log4php/download.html) v2.3.0 von der **Apache Software Foundation** unter der *Apache-Lizenz 2.0*
 * [Font Awesome Icons](https://fontawesome.com/) v5.0.10 von **Fonticons, Inc.** unter der *CC BY 4.0 Lizenz*
+* [jQuery min](https://jquery.com/) v1.11.3 von der **jQuery Foundation** unter der *MIT-Lizenz*
 * [jsGrid](http://js-grid.com/) v1.5.3 von **Artem Tabalin** unter der *MIT-Lizenz*
-* To Do: vakata jsTree 3.3.5
+* [jsTree](https://www.jstree.com/) v3.3.5 unter der *MIT-Lizenz*
