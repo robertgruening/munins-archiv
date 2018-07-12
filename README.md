@@ -11,3 +11,10 @@ Die deutschsprachige Anwendung, Munins Archiv, richtet sich in erster Linie an e
 * **/src** - Der Quellcode befindet sich unter "src" (sources -> Quellcode). Als Sprachen kommen hier HTML, JavaScript und PHP zum Einsatz.
 * **/tst** - Die automatisierten Tests für die Schichten der Serverseite befinden sihc im Verzeichnis "tst" (test -> Test).
 * **/upgr** - Die Skripte zum Aktualisieren der Anwendung auf die neueste Version befinden sich unter "upgr" (upgrade -> Auktualisierung).
+
+## Verwendete Pakete
+
+* [Apache log4php](https://logging.apache.org/log4php/download.html) v2.3.0 von der **Apache Software Foundation** unter der *Apache-Lizenz 2.0*
+* [Font Awesome Icons](https://fontawesome.com/) v5.0.10 von **Fonticons, Inc.** unter der *CC BY 4.0 Lizenz*
+* [jsGrid](http://js-grid.com/) v1.5.3 von **Artem Tabalin** unter der *MIT-Lizenz*
+* To Do: vakata jsTree 3.3.5
