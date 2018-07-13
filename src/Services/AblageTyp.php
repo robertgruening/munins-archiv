@@ -23,7 +23,7 @@ else
 function Save()
 {
     global $logger;
-    $logger->info("Service Ablagetyp Speichern gestartet");
+    $logger->info("Service Ablagetyp-speichern gestartet");
     $ablageTyp = new AblageTyp();
 
     if (isset($_GET["Id"]))
@@ -46,13 +46,13 @@ function Save()
         echo json_encode($saveAblageType->getMessages());
     }
 
-    $logger->info("Service Ablagetyp Speichern beendet");
+    $logger->info("Service Ablagetyp-speichern beendet");
 }
 
 function Delete()
 {
     global $logger;
-    $logger->info("Service Ablagetyp Löschen anhand Id (".$_GET["Id"].") gestartet");
+    $logger->info("Service Ablagetyp-anhand-ID-löschen (".$_GET["Id"].") gestartet");
 
     if (isset($_GET["Id"]))
     {
@@ -80,10 +80,11 @@ function Delete()
         {
             http_response_code(500);
             echo json_encode($loadAblageType->getMessages());
+            $logger->warn("Es wurde keine ID übergeben!"); 
         }
     }
 
-    $logger->info("Service Ablagetyp Löschen anhand Id (".$_GET["Id"].") beendet");
+    $logger->info("Servicee Ablagetyp-anhand-ID-löschen (".$_GET["Id"].") beendet");
 }
 
 function Get()
@@ -92,7 +93,7 @@ function Get()
 
     if (isset($_GET["Id"]))
     {
-        $logger->info("Service Ablagetyp Laden anhand Id (".$_GET["Id"].") gestartet");
+        $logger->info("Service Ablagetyp-anhand-ID-laden (".$_GET["Id"].") gestartet");
         $loadAblageType = new LoadAblageType();
         $loadAblageType->setId(intval($_GET["Id"]));
         
@@ -106,15 +107,15 @@ function Get()
             echo json_encode($loadAblageType->getMessages());
         }
 
-        $logger->info("Service Ablagetyp Laden anhand Id (".$_GET["Id"].") beendet");
+        $logger->info("Service Ablagetyp-anhand-ID-laden (".$_GET["Id"].") beendet");
     }
     else
     {
-        $logger->info("Service Ablage Lade aller gestartet");
+        $logger->info("Service Ablagetypen-laden gestartet");
         $ablageTypFactory = new AblageTypFactory();
         $ablageTypen = $ablageTypFactory->loadAll();
         echo json_encode($ablageTypen);
 
-        $logger->info("Service Ablagetyp Laden aller beendet");
+        $logger->info("Service Ablagetypen-laden beendet");
     }
 }
