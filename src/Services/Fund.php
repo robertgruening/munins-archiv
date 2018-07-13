@@ -4,10 +4,13 @@ ini_set("display_errors", 1);
 
 require_once("../UserStories/Fund/LoadFund.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "PUT" ||
-    $_SERVER["REQUEST_METHOD"] == "POST")
+if ($_SERVER["REQUEST_METHOD"] == "PUT")
 {
-    //Save();
+    //Create();
+}
+else if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+    //Update();
 }
 else if ($_SERVER["REQUEST_METHOD"] == "DELETE")
 {
@@ -15,13 +18,16 @@ else if ($_SERVER["REQUEST_METHOD"] == "DELETE")
 }
 else
 {
-    Get();
+	Get();
 }
 
 function Get()
 {
+	global $logger;
+	$logger->info("Service Fund-laden gestartet");
+	
 	if (isset($_GET["Id"]))
-	{
+	{		
 		$loadFund = new LoadFund();
 		$loadFund->setId(intval($_GET["Id"]));
 
@@ -31,10 +37,16 @@ function Get()
 		}
 		else
 		{
-            http_response_code(500);
+			http_response_code(500);
 			echo json_encode($loadFund->getMessages());
-		}
-
-		return;
+		}		
 	}
+	else
+	{
+		http_response_code(500);
+		echo json_encode(array("Es wurde keine ID übergeben!"));
+		$logger->warn("Es wurde keine ID übergeben!");
+	}
+	
+	$logger->info("Service Fund-laden beendet");
 }
