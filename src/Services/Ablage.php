@@ -24,7 +24,7 @@ else
 function Save()
 {
     global $logger;
-    $logger->info("Service Ablage Speichern gestartet");
+    $logger->info("Service Ablage-speichern gestartet");
 
     $ablageObject = null;
 
@@ -49,7 +49,7 @@ function Save()
         echo json_encode($saveAblage->getMessages());
     }
 
-    $logger->info("Service Ablage Speichern beendet");
+    $logger->info("Service Ablage-speichern beendet");
 }
 
 function Get()
@@ -58,7 +58,7 @@ function Get()
 
     if (isset($_GET["Id"]))
     {
-        $logger->info("Service Ablage Laden anhand Id (".$_GET["Id"].") gestartet");
+        $logger->info("Service Ablage-anhand-ID-laden (".$_GET["Id"].") gestartet");
         $loadAblage = new LoadAblage();
         $loadAblage->setId(intval($_GET["Id"]));
 
@@ -72,11 +72,11 @@ function Get()
             echo json_encode($loadAblage->getMessages());
         }
 
-        $logger->info("Service Ablage Laden anhand Id (".$_GET["Id"].") beendet");
+        $logger->info("Service Ablage-anhand-ID-laden (".$_GET["Id"].") beendet");
     }
     else
     {
-        $logger->info("Service Ablage Laden Root-Ablagen gestartet");
+        $logger->info("Service Root-Ablage-laden gestartet");
         $loadRootAblagen = new LoadRootAblagen();
 
         if ($loadRootAblagen->run())
@@ -89,14 +89,14 @@ function Get()
             echo json_encode($loadRootAblagen->getMessages());
         }
 
-        $logger->info("Service Ablage Laden Root-Ablagen beendet");
+        $logger->info("Service Root-Ablage-laden beendet");
     }
 }
 
 function Delete()
 {
     global $logger;
-    $logger->info("Service Ablage Löschen anhand Id (".$_GET["Id"].") gestartet");
+    $logger->info("Service Ablage-anhand-ID-löschen (".$_GET["Id"].") gestartet");
 
     if (isset($_GET["Id"]))
     {
@@ -129,8 +129,9 @@ function Delete()
     else
     {
         http_response_code(500);
-        echo "Es wurde keine ID übergeben!";         
+        echo "Es wurde keine ID übergeben!";
+		$logger->warn("Es wurde keine ID übergeben!");      
     }
 
-    $logger->info("Service Ablage Löschen anhand Id (".$_GET["Id"].") beendet");
+    $logger->info("Service Ablage-anhand-ID-löschen (".$_GET["Id"].") beendet");
 }
