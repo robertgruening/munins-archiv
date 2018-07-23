@@ -5,24 +5,54 @@ ini_set("display_errors", 1);
 require_once("../UserStories/FundAttribut/LoadFundAttribut.php");
 require_once("../UserStories/FundAttribut/LoadRootFundAttribute.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "PUT" ||
-    $_SERVER["REQUEST_METHOD"] == "POST")
+if ($_SERVER["REQUEST_METHOD"] == "PUT")
 {
-    //Save();
+    Create();
+}
+else if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+    Update();
 }
 else if ($_SERVER["REQUEST_METHOD"] == "DELETE")
 {
-    //Delete();
+    Delete();
 }
 else
 {
     Get();
 }
 
+function Create()
+{
+    global $logger;
+    $logger->error("PUT wird nicht unterstützt!");
+    http_response_code(500);
+    echo json_encode(array("PUT wird nicht unterstützt!"));
+}
+
+function Update()
+{
+    global $logger;
+    $logger->error("POST wird nicht unterstützt!");
+    http_response_code(500);
+    echo json_encode(array("POST wird nicht unterstützt!"));
+}
+
+function Delete()
+{
+    global $logger;
+    $logger->error("DELETE wird nicht unterstützt!");
+    http_response_code(500);
+    echo json_encode(array("DELETE wird nicht unterstützt!"));
+}
+
 function Get()
 {
+	global $logger;
+	
 	if (isset($_GET["Id"]))
 	{
+        $logger->info("Fundattribut-anhand-ID-laden gestartet");
 		$loadFundAttribut = new LoadFundAttribut();
 		$loadFundAttribut->setId(intval($_GET["Id"]));
 
@@ -35,9 +65,12 @@ function Get()
             http_response_code(500);
 			echo json_encode($loadFundAttribut->getMessages());
 		}
+
+        $logger->info("Fundattribut-anhand-ID-laden beendet");
 	}
 	else
 	{
+        $logger->info("Root-Fundattribute-laden gestartet");
 		$loadRootFundAttribute = new LoadRootFundAttribute();
 
 		if ($loadRootFundAttribute->run())
@@ -49,5 +82,7 @@ function Get()
 			http_response_code(500);
 			echo json_encode($loadRootFundAttribute->getMessages());
 		}
+
+        $logger->info("Root-Fundattribute-laden beendet");
 	}
 }

@@ -11,7 +11,7 @@ Logger::configure(array(
             'layout' => array(
                 'class' => 'LoggerLayoutPattern',
                 'params' => array(
-                    'conversionPattern' => '%date{d.m.Y H:i:s} %-5level %msg<br/>%n')
+                    'conversionPattern' => '%date{d.m.Y H:i:s} %-5level %F %msg<br/>%n')
             ),
             'params' => array(
                 'file' => __DIR__ . '/Logs/Log.html',

@@ -7,10 +7,13 @@ require_once("../UserStories/Ablage/LoadRootAblagen.php");
 require_once("../UserStories/Ablage/SaveAblage.php");
 require_once("../UserStories/Ablage/DeleteAblage.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "PUT" ||
-    $_SERVER["REQUEST_METHOD"] == "POST")
+if ($_SERVER["REQUEST_METHOD"] == "PUT")
 {
-    Save();
+    Create();
+}
+else if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+    Update();
 }
 else if ($_SERVER["REQUEST_METHOD"] == "DELETE")
 {
@@ -21,10 +24,18 @@ else
     Get();
 }
 
-function Save()
+function Create()
 {
     global $logger;
-    $logger->info("Service Ablage-speichern gestartet");
+    $logger->error("PUT wird nicht unterstützt!");
+    http_response_code(500);
+    echo json_encode(array("PUT wird nicht unterstützt!"));
+}
+
+function Update()
+{
+    global $logger;
+    $logger->info("Ablage-anhand-ID-aktualisieren gestartet");
 
     $ablageObject = null;
 
@@ -49,7 +60,45 @@ function Save()
         echo json_encode($saveAblage->getMessages());
     }
 
-    $logger->info("Service Ablage-speichern beendet");
+    $logger->info("Ablage-anhand-ID-aktualisieren beendet");
+}
+
+function Delete()
+{
+    global $logger;
+    $logger->info("Ablage-anhand-ID-löschen gestartet");
+
+    $loadAblage = new LoadAblage();
+
+    if (isset($_GET["Id"]))
+    {
+        $loadAblage->setId(intval($_GET["Id"]));
+    }
+
+    if ($loadAblage->run())
+    {
+        $ablage = $loadAblage->getAblage();
+        
+        $deleteAblage = new DeleteAblage();
+        $deleteAblage->setAblage($ablage);
+
+        if ($deleteAblage->run())
+        {
+            echo json_encode("Ablage (".$ablage->getId().") ist gelöscht.");
+        }
+        else
+        {
+            http_response_code(500);
+            echo json_encode($deleteAblage->getMessages());
+        }
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($loadAblage->getMessages());
+    }
+
+    $logger->info("Ablage-anhand-ID-löschen beendet");
 }
 
 function Get()
@@ -58,7 +107,7 @@ function Get()
 
     if (isset($_GET["Id"]))
     {
-        $logger->info("Service Ablage-anhand-ID-laden (".$_GET["Id"].") gestartet");
+        $logger->info("Ablage-anhand-ID-laden gestartet");
         $loadAblage = new LoadAblage();
         $loadAblage->setId(intval($_GET["Id"]));
 
@@ -72,11 +121,11 @@ function Get()
             echo json_encode($loadAblage->getMessages());
         }
 
-        $logger->info("Service Ablage-anhand-ID-laden (".$_GET["Id"].") beendet");
+        $logger->info("Ablage-anhand-ID-laden beendet");
     }
     else
     {
-        $logger->info("Service Root-Ablage-laden gestartet");
+        $logger->info("Root-Ablagen-laden gestartet");
         $loadRootAblagen = new LoadRootAblagen();
 
         if ($loadRootAblagen->run())
@@ -89,49 +138,6 @@ function Get()
             echo json_encode($loadRootAblagen->getMessages());
         }
 
-        $logger->info("Service Root-Ablage-laden beendet");
+        $logger->info("Root-Ablagen-laden beendet");
     }
-}
-
-function Delete()
-{
-    global $logger;
-    $logger->info("Service Ablage-anhand-ID-löschen (".$_GET["Id"].") gestartet");
-
-    if (isset($_GET["Id"]))
-    {
-        $loadAblage = new LoadAblage();
-        $loadAblage->setId(intval($_GET["Id"]));
-
-        if ($loadAblage->run())
-        {
-            $ablage = $loadAblage->getAblage();
-            
-            $deleteAblage = new DeleteAblage();
-            $deleteAblage->setAblage($ablage);
-
-            if ($deleteAblage->run())
-            {
-                echo json_encode("Ablage (".$ablage->getId().") ist gelöscht.");
-            }
-            else
-            {
-                http_response_code(500);
-                echo json_encode($deleteAblage->getMessages());
-            }
-        }
-        else
-        {
-            http_response_code(500);
-            echo json_encode($loadAblage->getMessages());
-        }
-    }
-    else
-    {
-        http_response_code(500);
-        echo "Es wurde keine ID übergeben!";
-		$logger->warn("Es wurde keine ID übergeben!");      
-    }
-
-    $logger->info("Service Ablage-anhand-ID-löschen (".$_GET["Id"].") beendet");
 }

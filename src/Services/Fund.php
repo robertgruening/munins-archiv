@@ -6,25 +6,49 @@ require_once("../UserStories/Fund/LoadFund.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "PUT")
 {
-    //Create();
+    Create();
 }
 else if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-    //Update();
+    Update();
 }
 else if ($_SERVER["REQUEST_METHOD"] == "DELETE")
 {
-    //Delete();
+    Delete();
 }
 else
 {
-	Get();
+    Get();
+}
+
+function Create()
+{
+    global $logger;
+    $logger->error("PUT wird nicht unterstützt!");
+    http_response_code(500);
+    echo json_encode(array("PUT wird nicht unterstützt!"));
+}
+
+function Update()
+{
+    global $logger;
+    $logger->error("POST wird nicht unterstützt!");
+    http_response_code(500);
+    echo json_encode(array("POST wird nicht unterstützt!"));
+}
+
+function Delete()
+{
+    global $logger;
+    $logger->error("DELETE wird nicht unterstützt!");
+    http_response_code(500);
+    echo json_encode(array("DELETE wird nicht unterstützt!"));
 }
 
 function Get()
 {
 	global $logger;
-	$logger->info("Service Fund-laden gestartet");
+	$logger->info("Fund-laden gestartet");
 	
 	if (isset($_GET["Id"]))
 	{		
@@ -48,5 +72,5 @@ function Get()
 		$logger->warn("Es wurde keine ID übergeben!");
 	}
 	
-	$logger->info("Service Fund-laden beendet");
+	$logger->info("Fund-laden beendet");
 }

@@ -6,10 +6,13 @@ require_once("../UserStories/LfdNummer/LoadLfdNummer.php");
 require_once("../UserStories/LfdNummer/LoadLfdNummern.php");
 require_once("../Factory/LfdNummerFactory.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "PUT" ||
-    $_SERVER["REQUEST_METHOD"] == "POST")
+if ($_SERVER["REQUEST_METHOD"] == "PUT")
 {
-    Save();
+    Create();
+}
+else if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+    Update();
 }
 else if ($_SERVER["REQUEST_METHOD"] == "DELETE")
 {
@@ -20,30 +23,49 @@ else
     Get();
 }
 
-function Save()
+function Create()
 {
+    global $logger;
+    $logger->info("LfdNummer-anhand-ID-anlegen gestartet");
     $lfdNummer = new LfdNummer();
     $lfdNummer->setBezeichnung($_POST["Bezeichnung"]);
     
     $lfdNummerFactory = new LfdNummerFactory();
     $lfdNummer = $lfdNummerFactory->create($lfdNummer);
     echo json_encode($lfdNummer);
+    $logger->info("LfdNummer-anhand-ID-anlegen beendet");
+}
+
+function Update()
+{
+    global $logger;
+    $logger->error("POST wird nicht unterstützt!");
+    http_response_code(500);
+    echo json_encode(array("POST wird nicht unterstützt!"));
 }
 
 function Delete()
 {
+    global $logger;
+    $logger->info("LfdNummer-anhand-ID-löschen gestartet");
+
     if (isset($_GET["Id"]))
     {
         $lfdNummerFactory = new LfdNummerFactory();
         $lfdNummer = $lfdNummerFactory->loadById(intval($_GET["Id"]));
         return $lfdNummerFactory->delete($lfdNummer);
     }
+
+    $logger->info("LfdNummer-anhand-ID-löschen beendet");
 }
 
 function Get()
 {
+    global $logger;
+
     if (isset($_GET["Id"]))
     {
+        $logger->info("LfdNummer-anhand-ID-laden gestartet");
         $loadLfdNummer = new LoadLfdNummer();
         $loadLfdNummer->setId(intval($_GET["Id"]));
 
@@ -56,9 +78,11 @@ function Get()
             http_response_code(500);
             echo json_encode($loadLfdNummer->getMessages());
         }
+        $logger->info("LfdNummer-anhand-ID-laden beendet");
     }
     else
     {
+        $logger->info("LfdNummern-laden gestartet");
         $loadLfdNummern = new LoadLfdNummern();
 
         if ($loadLfdNummern->run())
@@ -70,5 +94,7 @@ function Get()
             http_response_code(500);
             echo json_encode($loadLfdNummern->getMessages());
         }
+
+        $logger->info("LfdNummern-laden beendet");
     }
 }

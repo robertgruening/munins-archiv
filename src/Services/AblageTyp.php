@@ -6,10 +6,13 @@ require_once("../UserStories/Ablage/Type/LoadAblageType.php");
 require_once("../UserStories/Ablage/Type/SaveAblageType.php");
 require_once("../UserStories/Ablage/Type/DeleteAblageType.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "PUT" ||
-    $_SERVER["REQUEST_METHOD"] == "POST")
+if ($_SERVER["REQUEST_METHOD"] == "PUT")
 {
-    Save();
+    Create();
+}
+else if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+    Update();
 }
 else if ($_SERVER["REQUEST_METHOD"] == "DELETE")
 {
@@ -20,18 +23,30 @@ else
     Get();
 }
 
-function Save()
+function Create()
 {
     global $logger;
-    $logger->info("Service Ablagetyp-speichern gestartet");
+    $logger->error("PUT wird nicht unterstützt!");
+    http_response_code(500);
+    echo json_encode(array("PUT wird nicht unterstützt!"));
+}
+
+function Update()
+{
+    global $logger;
+    $logger->info("Ablagetyp-anhand-ID-aktualisieren gestartet");
+
     $ablageTyp = new AblageTyp();
 
     if (isset($_GET["Id"]))
     {
-        $ablageTyp->setId($_GET["Id"]);
+        $ablageTyp->setId(inval($_GET["Id"]));    
     }
-    
-    $ablageTyp->setBezeichnung($_POST["Bezeichnung"]);
+
+    if (isset($_POST["Bezeichnung"]))
+    {
+        $ablageTyp->setBezeichnung($_POST["Bezeichnung"]);
+    }
     
     $saveAblageType = new SaveAblageType();
     $saveAblageType->setAblageType($ablageTyp);
@@ -46,45 +61,45 @@ function Save()
         echo json_encode($saveAblageType->getMessages());
     }
 
-    $logger->info("Service Ablagetyp-speichern beendet");
+    $logger->info("Ablagetyp-anhand-ID-aktualisieren beendet");
 }
 
 function Delete()
 {
     global $logger;
-    $logger->info("Service Ablagetyp-anhand-ID-löschen (".$_GET["Id"].") gestartet");
+    $logger->info("Ablagetyp-anhand-ID-löschen gestartet");
 
+    $loadAblageType = new LoadAblageType();
+    
     if (isset($_GET["Id"]))
     {
-        $loadAblageType = new LoadAblageType();
-        $loadAblageType->setId(intval($_GET["Id"]));
-        
-        if ($loadAblageType->run())
-        {
-            $ablageType = $loadAblageType->getAblageType();
-            
-            $deleteAblageType = new DeleteAblageType();
-            $deleteAblageType->setAblageType($ablageType);
+        $loadAblageType->setId(intval($_GET["Id"])); 
+    }
     
-            if ($deleteAblageType->run())
-            {
-                echo json_encode("Ablagetyp (".$ablageType->getId().") ist gelöscht.");
-            }
-            else
-            {
-                http_response_code(500);
-                echo json_encode($deleteAblageType->getMessages());
-            }
+    if ($loadAblageType->run())
+    {
+        $ablageType = $loadAblageType->getAblageType();
+        
+        $deleteAblageType = new DeleteAblageType();
+        $deleteAblageType->setAblageType($ablageType);
+
+        if ($deleteAblageType->run())
+        {
+            echo json_encode("Ablagetyp (".$ablageType->getId().") ist gelöscht.");
         }
         else
         {
             http_response_code(500);
-            echo json_encode($loadAblageType->getMessages());
-            $logger->warn("Es wurde keine ID übergeben!"); 
+            echo json_encode($deleteAblageType->getMessages());
         }
     }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($loadAblageType->getMessages());
+    }
 
-    $logger->info("Servicee Ablagetyp-anhand-ID-löschen (".$_GET["Id"].") beendet");
+    $logger->info("Ablagetyp-anhand-ID-löschen beendet");
 }
 
 function Get()
@@ -93,7 +108,7 @@ function Get()
 
     if (isset($_GET["Id"]))
     {
-        $logger->info("Service Ablagetyp-anhand-ID-laden (".$_GET["Id"].") gestartet");
+        $logger->info("Ablagetyp-anhand-ID-laden gestartet");
         $loadAblageType = new LoadAblageType();
         $loadAblageType->setId(intval($_GET["Id"]));
         
@@ -107,15 +122,14 @@ function Get()
             echo json_encode($loadAblageType->getMessages());
         }
 
-        $logger->info("Service Ablagetyp-anhand-ID-laden (".$_GET["Id"].") beendet");
+        $logger->info("Ablagetyp-anhand-ID-laden beendet");
     }
     else
     {
-        $logger->info("Service Ablagetypen-laden gestartet");
+        $logger->info("Ablagetypen-laden gestartet");
         $ablageTypFactory = new AblageTypFactory();
         $ablageTypen = $ablageTypFactory->loadAll();
         echo json_encode($ablageTypen);
-
-        $logger->info("Service Ablagetypen-laden beendet");
+        $logger->info("Ablagetypen-laden beendet");
     }
 }
