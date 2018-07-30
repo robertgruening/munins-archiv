@@ -111,13 +111,20 @@ class AblageTypFactory extends Factory implements iListFactory
     #region convert
     public function convertToInstance($object)
     {
+        global $logger;
+        $logger->debug("Konvertiere Daten zu Ablagetyp");
+
         if ($object == null)
         {
+            $logger->error("Ablagetyp ist nicht gesetzt!");
             return null;
         }
 
-        global $logger;
-        $logger->debug("Konvertiere Daten zu Ablagetyp");
+        if (!isset($object["Bezeichnung"]))
+        {
+            $logger->error("Bezeichnung ist nicht gesetzt!");
+            return null;
+        }
 
         $ablageTyp = new AblageTyp();
 
@@ -126,10 +133,7 @@ class AblageTypFactory extends Factory implements iListFactory
             $ablageTyp->setId(intval($object["Id"]));
         }
 
-        if (isset($object["Bezeichnung"]))
-        {
-            $ablageTyp->setBezeichnung($object["Bezeichnung"]);
-        }
+        $ablageTyp->setBezeichnung($object["Bezeichnung"]);
         
         return $ablageTyp;
     }

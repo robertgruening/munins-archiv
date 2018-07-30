@@ -161,13 +161,33 @@ class AblageFactory extends Factory implements iTreeFactory
     #region convert
     public function convertToInstance($object)
     {
+        global $logger;
+        $logger->debug("Konvertiere Daten zu Ablage");
+
         if ($object == null)
         {
+            $logger->error("Ablage ist nicht gesetzt!");
             return null;
         }
 
-        global $logger;
-        $logger->debug("Konvertiere Daten zu Ablage");
+        $isValid = true;
+
+        if (!isset($object["Bezeichnung"]))
+        {
+            $logger->error("Bezeichnung ist nicht gesetzt!");
+            $isValid = false;
+        }
+
+        if (!isset($object["Type"]))
+        {
+            $logger->error("Typ ist nicht gesetzt!");
+            $isValid = false;
+        }
+
+        if ($isValid)
+        {
+            return null;
+        }
 
         $ablage = new Ablage();
 

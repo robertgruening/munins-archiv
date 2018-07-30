@@ -4,6 +4,7 @@ ini_set("display_errors", 1);
 
 require_once("../Factory/FundAttributTypFactory.php");
 require_once("../UserStories/FundAttribut/Type/LoadFundAttributType.php");
+require_once("../UserStories/FundAttribut/Type/LoadFundAttributTypes.php");
 require_once("../UserStories/FundAttribut/Type/SaveFundAttributType.php");
 require_once("../UserStories/FundAttribut/Type/DeleteFundAttributType.php");
 
@@ -128,9 +129,17 @@ function Get()
     else
     {
         $logger->info("Fundattributtypen-laden gestartet");
-        $fundAttributTypFactory = new FundAttributTypFactory();
-        $fundAttributTypen = $fundAttributTypFactory->loadAll();
-        echo json_encode($fundAttributTypen);
+        $loadFundAttributTypes = new LoadFundAttributTypes();
+        
+        if ($loadFundAttributTypes->run())
+        {
+            echo json_encode($loadFundAttributTypes->getFundAttributTypes());
+        }
+        else
+        {
+            http_response_code(500);
+            echo json_encode($loadFundAttributTypes->getMessages());
+        }
         $logger->info("Fundattributtypen-laden beendet");
     }    
 }

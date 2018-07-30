@@ -154,10 +154,19 @@ function Get()
     }
     else
     {
-        $logger->info("Ablagetypen-laden gestartet");
-        $ortTypFactory = new OrtTypFactory();
-        $ortTypen = $ortTypFactory->loadAll();
-        echo json_encode($ortTypen);
-        $logger->info("Ablagetypen-laden beendet");
+        $logger->info("Orttypen-laden gestartet");
+        $loadOrtTypes = new LoadOrtTypes();
+        
+        if ($loadOrtTypes->run())
+        {
+            echo json_encode($loadOrtTypes->getOrtTypes());
+        }
+        else
+        {
+            http_response_code(500);
+            echo json_encode($loadOrtTypes->getMessages());
+        }
+
+        $logger->info("Orttypen-laden beendet");
     }
 }

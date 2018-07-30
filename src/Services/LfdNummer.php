@@ -4,6 +4,7 @@ ini_set("display_errors", 1);
 
 require_once("../UserStories/LfdNummer/LoadLfdNummer.php");
 require_once("../UserStories/LfdNummer/LoadLfdNummern.php");
+require_once("../UserStories/LfdNummer/DeleteLfdNummer.php");
 require_once("../Factory/LfdNummerFactory.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "PUT")
@@ -49,11 +50,34 @@ function Delete()
     global $logger;
     $logger->info("LfdNummer-anhand-ID-löschen gestartet");
 
+    $loadLfdNummer = new LoadLfdNummer();
+    
     if (isset($_GET["Id"]))
     {
-        $lfdNummerFactory = new LfdNummerFactory();
-        $lfdNummer = $lfdNummerFactory->loadById(intval($_GET["Id"]));
-        return $lfdNummerFactory->delete($lfdNummer);
+        $loadLfdNummer->setId(intval($_GET["Id"])); 
+    }
+    
+    if ($loadLfdNummer->run())
+    {
+        $lfdNummer = $loadLfdNummer->getLfdNummer();
+        
+        $deleteLfdNummer = new DeleteLfdNummer();
+        $deleteLfdNummer->setLfdNummer($lfdNummer);
+
+        if ($deleteLfdNummer->run())
+        {
+            echo json_encode("LfD-Nummer (".$lfdNummer->getId().") ist gelöscht.");
+        }
+        else
+        {
+            http_response_code(500);
+            echo json_encode($deleteLfdNummer->getMessages());
+        }
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($loadLfdNummer->getMessages());
     }
 
     $logger->info("LfdNummer-anhand-ID-löschen beendet");

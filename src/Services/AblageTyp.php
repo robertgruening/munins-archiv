@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
 require_once("../UserStories/Ablage/Type/LoadAblageType.php");
+require_once("../UserStories/Ablage/Type/LoadAblageTypes.php");
 require_once("../UserStories/Ablage/Type/SaveAblageType.php");
 require_once("../UserStories/Ablage/Type/DeleteAblageType.php");
 
@@ -35,6 +36,13 @@ function Update()
 {
     global $logger;
     $logger->info("Ablagetyp-anhand-ID-aktualisieren gestartet");
+
+    $ablageTypeObject = null;
+
+    if ($_POST != null)
+    {
+        $ablageTypeObject = json_decode($_POST["AblageType"], true);
+    }
 
     $ablageTyp = new AblageTyp();
 
@@ -127,9 +135,18 @@ function Get()
     else
     {
         $logger->info("Ablagetypen-laden gestartet");
-        $ablageTypFactory = new AblageTypFactory();
-        $ablageTypen = $ablageTypFactory->loadAll();
-        echo json_encode($ablageTypen);
+        $loadAblageTypes = new LoadAblageTypes();
+        
+        if ($loadAblageTypes->run())
+        {
+            echo json_encode($loadAblageTypes->getAblageTypes());
+        }
+        else
+        {
+            http_response_code(500);
+            echo json_encode($loadAblageTypes->getMessages());
+        }
+        
         $logger->info("Ablagetypen-laden beendet");
     }
 }
