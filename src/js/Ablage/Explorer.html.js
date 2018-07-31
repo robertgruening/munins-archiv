@@ -1,4 +1,27 @@
+function UiInitExplorer()
+{
+	this.Update = function(ablageTypes) {
+		console.log("Updating explorer ...");
+		InitGrid();
+	};
+}
+
+var _uiInitExplorer = new UiInitExplorer();
+
+function UiRefreshSelectedNodeInExplorer()
+{
+	this.Update = function(ablage) {
+		console.log("Refreshing selected node in explorer ...");
+		LoadAblagen();
+	};
+}
+
+var _uiRefreshSelectedNodeInExplorer = new UiRefreshSelectedNodeInExplorer();
+
 $(document).ready(function() {
+	_controllerAblageType.Register("loadAll", _uiInitExplorer);
+	_controllerAblage.Register("delete", _uiRefreshSelectedNodeInExplorer);
+
     $("#navigation").Navigation();
     
     $("#breadcrumb").Breadcrumb({
@@ -12,70 +35,10 @@ $(document).ready(function() {
     });
 
 	jsGrid.fields.icon = IconField;
-
-	$("#grid").jsGrid({
-        width: "70%",
-
-        inserting: true,
-        editing: false,
-        sorting: true,
-        paging: false,
-		autoload: false,
-		
-		controller: {
-			// insertItem: function(item) { 
-			// 	CreateAblageType(item);
-			// },
-			// updateItem: function(item) { 
-			// 	UpdateAblageType(item);
-			// },
-			deleteItem: function(item) { 
-				DeleteAblage(item);
-			}
-		},
-		
-		fields: [
-			{ 
-				title: "",
-				name: "Icon", 
-				type: "icon"
-			},
-			{ 
-				name: "Bezeichnung", 
-				type: "text", 
-				validate: "required"
-			},
-			{ 
-				title: "Typ",
-				name: "Type.Bezeichnung", 
-				type: "text"
-			},
-			{ 
-				type: "control"
-			}
-		],
-
-		rowDoubleClick: function(data) {
-			$("#tree").jstree(false).deselect_all();
-
-			var selectedNode = $("#tree").jstree(false).get_node(data.item.Id);
-
-			if (selectedNode == undefined)
-			{
-				return;
-			}
-
-			if (data.item.Bezeichnung === "..")
-			{
-				$("#tree").jstree(true).select_node(selectedNode.parent);
-			}
-			else
-			{
-				$("#tree").jstree(true).open_node(data.item.Id);
-				$("#tree").jstree(true).select_node(data.item.Id);
-			}
-		}
-	});
+	
+	// Prototyping: Ersetzt durch siehe unten
+	//LoadAblageTypes();
+	_controllerAblageType.LoadAll();
 
 	$("#tree")
 	.on("open_node.jstree", function(event, data) {
@@ -239,6 +202,79 @@ $(document).ready(function() {
 		}
     });
 });
+
+function InitGrid()
+{
+	$("#grid").jsGrid({
+        width: "70%",
+
+        inserting: true,
+        editing: true,
+        sorting: true,
+        paging: false,
+		autoload: false,
+		
+		controller: {
+			// insertItem: function(item) { 
+			// 	CreateAblageType(item);
+			// },
+			// updateItem: function(item) { 
+			// 	UpdateAblageType(item);
+			// },
+			deleteItem: function(item) { 
+				//DeleteAblage(item);
+				_controllerAblage.Delete(item);
+			}
+		},
+		
+		fields: [
+			{ 
+				title: "",
+				name: "Icon", 
+				type: "icon"
+			},
+			{ 
+				name: "Bezeichnung", 
+				type: "text", 
+				validate: "required"
+			},
+			{ 
+				title: "Typ",
+				name: "Type.Id",
+				type: "select",
+				items: GetAblageTypes(),
+				valueField: "Id",
+				textField: "Bezeichnung",
+				valueType: "number",
+				align: "left"
+			},
+			{ 
+				type: "control"
+			}
+		],
+
+		rowDoubleClick: function(data) {
+			$("#tree").jstree(false).deselect_all();
+
+			var selectedNode = $("#tree").jstree(false).get_node(data.item.Id);
+
+			if (selectedNode == undefined)
+			{
+				return;
+			}
+
+			if (data.item.Bezeichnung === "..")
+			{
+				$("#tree").jstree(true).select_node(selectedNode.parent);
+			}
+			else
+			{
+				$("#tree").jstree(true).open_node(data.item.Id);
+				$("#tree").jstree(true).select_node(data.item.Id);
+			}
+		}
+	});
+}
 
 function CreateAblageNode(ablage)
 {
