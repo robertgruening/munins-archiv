@@ -2,7 +2,7 @@ function UiInitExplorer()
 {
 	this.Update = function(ablageTypes) {
 		console.log("Updating explorer ...");
-		InitGrid();
+		InitGrid(ablageTypes);
 	};
 }
 
@@ -19,7 +19,7 @@ function UiRefreshSelectedNodeInExplorer()
 var _uiRefreshSelectedNodeInExplorer = new UiRefreshSelectedNodeInExplorer();
 
 $(document).ready(function() {
-	_controllerAblageType.Register("loadAll", _uiInitExplorer);
+	_webServiceClientAblageType.Register("loadAll", _uiInitExplorer);
 	_controllerAblage.Register("delete", _uiRefreshSelectedNodeInExplorer);
 
     $("#navigation").Navigation();
@@ -38,7 +38,7 @@ $(document).ready(function() {
 	
 	// Prototyping: Ersetzt durch siehe unten
 	//LoadAblageTypes();
-	_controllerAblageType.LoadAll();
+	_webServiceClientAblageType.LoadAll();
 
 	$("#tree")
 	.on("open_node.jstree", function(event, data) {
@@ -203,7 +203,7 @@ $(document).ready(function() {
     });
 });
 
-function InitGrid()
+function InitGrid(ablageTypes)
 {
 	$("#grid").jsGrid({
         width: "70%",
@@ -242,7 +242,7 @@ function InitGrid()
 				title: "Typ",
 				name: "Type.Id",
 				type: "select",
-				items: GetAblageTypes(),
+				items: ablageTypes,
 				valueField: "Id",
 				textField: "Bezeichnung",
 				valueType: "number",

@@ -37,18 +37,11 @@ function Update()
     global $logger;
     $logger->info("Ablagetyp-anhand-ID-aktualisieren gestartet");
 
-    $ablageTypeObject = null;
-
-    if ($_POST != null)
-    {
-        $ablageTypeObject = json_decode($_POST["AblageType"], true);
-    }
-
     $ablageTyp = new AblageTyp();
 
     if (isset($_GET["Id"]))
     {
-        $ablageTyp->setId(inval($_GET["Id"]));    
+        $ablageTyp->setId(intval($_GET["Id"]));    
     }
 
     if (isset($_POST["Bezeichnung"]))

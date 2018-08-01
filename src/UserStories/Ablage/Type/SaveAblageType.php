@@ -26,6 +26,15 @@ class SaveAblageType extends UserStory
     {
         global $logger;
         $ablageTyp = $this->getAblageType();
+
+        if ($ablageTyp->getBezeichnung() == null ||
+            trim($ablageTyp->getBezeichnung()) == "")
+        {
+            $logger->warn("Bezeichnung ist nicht gesetzt!");
+            $this->addMessage("Bezeichnung ist nicht gesetzt!");
+            return false;
+        }
+
         $ablageTypFactory = new AblageTypFactory();
         $ablageTypen = $ablageTypFactory->loadAll();
 

@@ -42,7 +42,7 @@ function Update()
 
     if (isset($_GET["Id"]))
     {
-        $fundAttributTyp->setId(inval($_GET["Id"]));    
+        $fundAttributTyp->setId(intval($_GET["Id"]));    
     }
 
     if (isset($_POST["Bezeichnung"]))

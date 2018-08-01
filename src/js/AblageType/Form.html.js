@@ -1,4 +1,65 @@
+function UiInitGrid()
+{
+	this.Update = function(ablageTypes) {
+		console.log("Updating Grid ...");
+		ShowAblageTypes(ablageTypes);
+    };
+    
+    this.Fail = function(messages) {
+		console.log("FAILED to update grid ...");
+    };
+}
+
+var _uiInitGrid = new UiInitGrid();
+
+function UiAddAblageTypeToGrid()
+{
+	this.Update = function(ablageTypes) {
+		console.log("Adding AblageType to grid ...");
+	};
+    
+    this.Fail = function(messages) {
+		console.log("FAILED to add AblageType to grid ...");
+        _webServiceClientAblageType.LoadAll();
+    };
+}
+
+var _uiAddAblageTypeToGrid = new UiAddAblageTypeToGrid();
+
+function UiUpdateAblageTypeInGrid()
+{
+	this.Update = function() {
+		console.log("Updating AblageType in grid ...");
+	};
+    
+    this.Fail = function(messages) {
+		console.log("FAILED to update AblageType in grid ...");
+        _webServiceClientAblageType.LoadAll();
+    };
+}
+
+var _uiUpdateAblageTypeInGrid = new UiUpdateAblageTypeInGrid();
+
+function UiRemoveAblageTypeFromGrid()
+{
+	this.Update = function(ablageTypes) {
+		console.log("Removing AblageType from grid ...");
+	};
+    
+    this.Fail = function(messages) {
+		console.log("FAILED to remove AblageType from grid ...");
+        _webServiceClientAblageType.LoadAll();
+    };
+}
+
+var _uiRemoveAblageTypeFromGrid = new UiRemoveAblageTypeFromGrid();
+
 $(document).ready(function() {
+    _webServiceClientAblageType.Register("loadAll", _uiInitGrid);
+    _webServiceClientAblageType.Register("create", _uiAddAblageTypeToGrid);
+    _webServiceClientAblageType.Register("save", _uiUpdateAblageTypeInGrid);
+    _webServiceClientAblageType.Register("delete", _uiRemoveAblageTypeFromGrid);
+
     $("#navigation").Navigation();
     $("#messageBox").dialog({
         autoOpen: false,
@@ -12,7 +73,7 @@ $(document).ready(function() {
 
     jsGrid.locale("de");
 
-    LoadAblageTypes();
+    _webServiceClientAblageType.LoadAll();
 });
 
 function ShowMessages(messages)
@@ -34,14 +95,14 @@ function ShowAblageTypes(ablageTypes)
         autoload: false,
 
         controller: {
-            insertItem: function(item) { 
-                CreateAblageType(item);
+            insertItem: function(item) {
+                _webServiceClientAblageType.Create(item);
             },
-            updateItem: function(item) { 
-                UpdateAblageType(item);
+            updateItem: function(item) {
+                _webServiceClientAblageType.Save(item);
             },
-            deleteItem: function(item) { 
-                DeleteAblageType(item);
+            deleteItem: function(item) {
+                _webServiceClientAblageType.Delete(item);
             }
         },
 

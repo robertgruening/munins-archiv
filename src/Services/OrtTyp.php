@@ -68,7 +68,7 @@ function Update()
 
     if (isset($_GET["Id"]))
     {
-        $ortTyp->setId(inval($_GET["Id"]));    
+        $ortTyp->setId(intval($_GET["Id"]));    
     }
 
     if (isset($_POST["Bezeichnung"]))
