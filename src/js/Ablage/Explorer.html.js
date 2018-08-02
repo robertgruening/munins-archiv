@@ -1,26 +1,6 @@
-function UiInitExplorer()
-{
-	this.Update = function(ablageTypes) {
-		console.log("Updating explorer ...");
-		InitGrid(ablageTypes);
-	};
-}
-
-var _uiInitExplorer = new UiInitExplorer();
-
-function UiRefreshSelectedNodeInExplorer()
-{
-	this.Update = function(ablage) {
-		console.log("Refreshing selected node in explorer ...");
-		LoadAblagen();
-	};
-}
-
-var _uiRefreshSelectedNodeInExplorer = new UiRefreshSelectedNodeInExplorer();
-
 $(document).ready(function() {
-	_webServiceClientAblageType.Register("loadAll", _uiInitExplorer);
-	_controllerAblage.Register("delete", _uiRefreshSelectedNodeInExplorer);
+	_webServiceClientAblageType.Register("loadAll", new GuiClient(InitGrid));
+	_webServiceClientAblage.Register("delete", new GuiClient(LoadAblagen));
 
     $("#navigation").Navigation();
     
@@ -36,8 +16,6 @@ $(document).ready(function() {
 
 	jsGrid.fields.icon = IconField;
 	
-	// Prototyping: Ersetzt durch siehe unten
-	//LoadAblageTypes();
 	_webServiceClientAblageType.LoadAll();
 
 	$("#tree")
@@ -221,9 +199,8 @@ function InitGrid(ablageTypes)
 			// updateItem: function(item) { 
 			// 	UpdateAblageType(item);
 			// },
-			deleteItem: function(item) { 
-				//DeleteAblage(item);
-				_controllerAblage.Delete(item);
+			deleteItem: function(item) {
+				_webServiceClientAblage.Delete(item);
 			}
 		},
 		
