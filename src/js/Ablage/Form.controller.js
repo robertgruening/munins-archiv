@@ -1,3 +1,6 @@
+var _webServiceClientAblageType = new WebServiceClientAblageType();
+var _webServiceClientAblage = new WebServiceClientAblage();
+
 var _ablage = null;
 
 function IsAblageSet()

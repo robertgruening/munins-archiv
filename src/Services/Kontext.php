@@ -5,11 +5,11 @@ ini_set("display_errors", 1);
 require_once("../UserStories/Kontext/LoadKontext.php");
 require_once("../UserStories/Kontext/LoadRootKontexte.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "PUT")
+if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
     Create();
 }
-else if ($_SERVER["REQUEST_METHOD"] == "POST")
+else if ($_SERVER["REQUEST_METHOD"] == "PUT")
 {
     Update();
 }

@@ -120,20 +120,26 @@ class AblageTypFactory extends Factory implements iListFactory
             return null;
         }
 
-        if (!isset($object["Bezeichnung"]))
-        {
-            $logger->error("Bezeichnung ist nicht gesetzt!");
-            return null;
-        }
-
         $ablageTyp = new AblageTyp();
 
         if (isset($object["Id"]))
         {
             $ablageTyp->setId(intval($object["Id"]));
         }
+        else
+        {
+            $logger->debug("Id ist nicht gesetzt!");
+        }
 
-        $ablageTyp->setBezeichnung($object["Bezeichnung"]);
+        if (isset($object["Bezeichnung"]))
+        {
+            $ablageTyp->setBezeichnung($object["Bezeichnung"]);
+        }
+        else
+        {
+            $logger->debug("Bezeichnung ist nicht gesetzt!");
+        }
+
         
         return $ablageTyp;
     }

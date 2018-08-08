@@ -1,4 +1,9 @@
 $(document).ready(function() {
+    _webServiceClientFundAttributType.Register("loadAll", new GuiClient(ShowFundAttributTypes));
+    _webServiceClientFundAttributType.Register("create", new GuiClient(undefined, LoadAllFundAttributTypen));
+    _webServiceClientFundAttributType.Register("save", new GuiClient(undefined, LoadAllFundAttributTypen));
+    _webServiceClientFundAttributType.Register("delete", new GuiClient(undefined, LoadAllFundAttributTypen));
+
     $("#navigation").Navigation();
     $("#messageBox").dialog({
         autoOpen: false,
@@ -35,13 +40,13 @@ function ShowFundAttributTypes(fundAttributTypes)
 
         controller: {
             insertItem: function(item) { 
-                CreateFundAttributType(item);
+                _webServiceClientAblageType.Create(item);
             },
             updateItem: function(item) { 
-                UpdateFundAttributType(item);
+                _webServiceClientAblageType.Save(item);
             },
             deleteItem: function(item) { 
-                DeleteFundAttributType(item);
+                _webServiceClientAblageType.Delete(item);
             }
         },
 

@@ -170,34 +170,34 @@ class AblageFactory extends Factory implements iTreeFactory
             return null;
         }
 
-        $isValid = true;
-
-        if (!isset($object["Bezeichnung"]))
-        {
-            $logger->error("Bezeichnung ist nicht gesetzt!");
-            $isValid = false;
-        }
-
-        if (!isset($object["Type"]))
-        {
-            $logger->error("Typ ist nicht gesetzt!");
-            $isValid = false;
-        }
-
-        if ($isValid)
-        {
-            return null;
-        }
-
         $ablage = new Ablage();
 
         if (isset($object["Id"]))
         {
             $ablage->setId(intval($object["Id"]));
         }
+        else
+        {
+            $logger->debug("Id ist nicht gesetzt!");
+        }
 
-        $ablage->setBezeichnung($object["Bezeichnung"]);
-        $ablage->setType($this->getAblageTypFactory()->convertToInstance($object["Type"]));
+        if (isset($object["Bezeichnung"]))
+        {
+            $ablage->setBezeichnung($object["Bezeichnung"]);
+        }
+        else
+        {
+            $logger->debug("Bezeichnung ist nicht gesetzt!");
+        }
+
+        if (isset($object["Type"]))
+        {
+            $ablage->setType($this->getAblageTypFactory()->convertToInstance($object["Type"]));
+        }
+        else
+        {
+            $logger->warn("Typ ist nicht gesetzt!");
+        }
 
         if (isset($object["Parent"]))
         {

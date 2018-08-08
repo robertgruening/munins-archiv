@@ -7,11 +7,11 @@ require_once("../UserStories/LfdNummer/LoadLfdNummern.php");
 require_once("../UserStories/LfdNummer/DeleteLfdNummer.php");
 require_once("../Factory/LfdNummerFactory.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "PUT")
+if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
     Create();
 }
-else if ($_SERVER["REQUEST_METHOD"] == "POST")
+else if ($_SERVER["REQUEST_METHOD"] == "PUT")
 {
     Update();
 }
@@ -27,22 +27,43 @@ else
 function Create()
 {
     global $logger;
-    $logger->info("LfdNummer-anhand-ID-anlegen gestartet");
+    $logger->info("LfdNummer-anlegen gestartet");
     $lfdNummer = new LfdNummer();
-    $lfdNummer->setBezeichnung($_POST["Bezeichnung"]);
+
+    if (isset($_PUT["Bezeichnung"]))
+    {
+        $lfdNummer->setBezeichnung($_POST["Bezeichnung"]);
+    }
     
     $lfdNummerFactory = new LfdNummerFactory();
     $lfdNummer = $lfdNummerFactory->create($lfdNummer);
     echo json_encode($lfdNummer);
-    $logger->info("LfdNummer-anhand-ID-anlegen beendet");
+    $logger->info("LfdNummer-anlegen beendet");
 }
 
 function Update()
 {
     global $logger;
-    $logger->error("POST wird nicht unterstützt!");
-    http_response_code(500);
-    echo json_encode(array("POST wird nicht unterstützt!"));
+    $logger->info("LfdNummer-anhand-ID-aktualisieren gestartet");
+
+    parse_str(file_get_contents("php://input"),$_PUT);
+
+    $lfdNummer = new LfdNummer();
+
+    if (isset($_GET["Id"]))
+    {
+        $lfdNummer->setId(intval($_GET["Id"]));    
+    }
+
+    if (isset($_PUT["Bezeichnung"]))
+    {
+        $lfdNummer->setBezeichnung($_PUT["Bezeichnung"]);
+    }
+        
+    $lfdNummerFactory = new LfdNummerFactory();
+    $lfdNummer = $lfdNummerFactory->create($lfdNummer);
+    echo json_encode($lfdNummer);
+    $logger->info("LfdNummer-anhand-ID-aktualisieren beendet");
 }
 
 function Delete()

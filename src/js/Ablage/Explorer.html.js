@@ -1,6 +1,7 @@
 $(document).ready(function() {
 	_webServiceClientAblageType.Register("loadAll", new GuiClient(InitGrid));
 	_webServiceClientAblage.Register("delete", new GuiClient(LoadAblagen));
+	_webServiceClientAblage.Register("create", new GuiClient(LoadAblagen));
 
     $("#navigation").Navigation();
     
@@ -193,9 +194,9 @@ function InitGrid(ablageTypes)
 		autoload: false,
 		
 		controller: {
-			// insertItem: function(item) { 
-			// 	CreateAblageType(item);
-			// },
+			insertItem: function(item) { 
+				_webServiceClientAblage.Create(ConvertToJson(item));
+			},
 			// updateItem: function(item) { 
 			// 	UpdateAblageType(item);
 			// },
@@ -287,4 +288,12 @@ function ShowMessages(messages)
     $("#messageBox").empty();
     $("#messageBox").append(messages);
     $("#messageBox").dialog("open");
+}
+
+function ConvertToJson(item)
+{
+	item.Parent = new Object();
+	item.Parent.Id = $("#tree").jstree(false).get_selected()[0];
+
+	return item;
 }

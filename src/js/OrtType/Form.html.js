@@ -1,4 +1,9 @@
 $(document).ready(function() {
+    _webServiceClientOrtType.Register("loadAll", new GuiClient(ShowOrtTypes));
+    _webServiceClientOrtType.Register("create", new GuiClient(undefined, LoadAllOrtTypen));
+    _webServiceClientOrtType.Register("save", new GuiClient(undefined, LoadAllOrtTypen));
+    _webServiceClientOrtType.Register("delete", new GuiClient(undefined, LoadAllOrtTypen));
+
     $("#navigation").Navigation();
     $("#messageBox").dialog({
         autoOpen: false,
@@ -35,13 +40,13 @@ function ShowOrtTypes(ortTypes)
 
         controller: {
             insertItem: function(item) { 
-                CreateOrtType(item);
+                _webServiceClientOrtType.Create(item);
             },
             updateItem: function(item) { 
-                UpdateOrtType(item);
+                _webServiceClientOrtType.Save(item);
             },
             deleteItem: function(item) { 
-                DeleteOrtType(item);
+                _webServiceClientOrtType.Delete(item);
             }
         },
 

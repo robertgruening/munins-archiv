@@ -1,8 +1,9 @@
-function WebServiceClientAblageType()
+function WebServiceClientKontextType()
 {
 	this._listeners = {
 		create: new Array(),
 		save: new Array(),
+		load: new Array(),
 		loadAll: new Array(),
 		delete: new Array()
 	};
@@ -21,6 +22,10 @@ function WebServiceClientAblageType()
 		else if (eventName == "save")
 		{
 			this._listeners.save.push(listener);
+		}
+		else if (eventName == "load")
+		{
+			this._listeners.load.push(listener);
 		}
 		else if (eventName == "loadAll")
 		{
@@ -42,6 +47,12 @@ function WebServiceClientAblageType()
 		else if (eventName == "save")
 		{
 			this._listeners.save.forEach(function(item) {
+				item.Update(data);
+			});
+		}
+		else if (eventName == "load")
+		{
+			this._listeners.load.forEach(function(item) {
 				item.Update(data);
 			});
 		}
@@ -72,6 +83,12 @@ function WebServiceClientAblageType()
 				item.Fail(messages);
 			});
 		}
+		else if (eventName == "load")
+		{
+			this._listeners.load.forEach(function(item) {
+				item.Fail(messages);
+			});
+		}
 		else if (eventName == "loadAll")
 		{
 			this._listeners.loadAll.forEach(function(item) {
@@ -86,15 +103,15 @@ function WebServiceClientAblageType()
 		}
 	};
 
-	this.Create = function(ablageType) {
+	this.Create = function(kontextType) {
 		var controller = this;
 
 		$.ajax(
 		{
 			type:"POST",
-			url:"../Services/Ablage/Typ/",
+			url:"../Services/Kontext/Typ/",
 			dataType: "json",
-			data: ablageType,
+			data: kontextType,
 			success:function(data, textStatus, jqXHR)
 			{
 				controller.Update("create", data);
@@ -115,15 +132,15 @@ function WebServiceClientAblageType()
 		});
 	}
 
-	this.Save = function(ablageType) {
+	this.Save = function(kontextType) {
 		var controller = this;
 
 		$.ajax(
 		{
 			type:"PUT",
-			url:"../Services/Ablage/Typ/" + ablageType.Id,
+			url:"../Services/Kontext/Typ/" + kontextType.Id,
 			dataType: "json",
-			data: ablageType,
+			data: kontextType,
 			success:function(data, textStatus, jqXHR)
 			{
 				controller.Update("save", data);
@@ -144,13 +161,41 @@ function WebServiceClientAblageType()
 		});
 	}
 
+	this.Load = function(kontextType) {
+		var controller = this;
+
+		$.ajax(
+		{
+			type:"GET",
+			url:"../Services/Kontext/Typ/" + kontextType.Id,
+			dataType: "json",
+			success:function(data, textStatus, jqXHR)
+			{
+				controller.Update("load", data);
+			},
+			error:function(jqXHR, textStatus, errorThrown)
+			{
+				if (jqXHR.status == 500)
+				{
+					ShowMessages(jqXHR.responseJSON);
+				    controller.Fail("load", jqXHR.responseJSON);
+				}
+				else
+				{
+					console.log("ERROR: " + jqXHR.responseJSON);
+				    controller.Fail("load", new Array("Es ist ein Servicerfehler aufgetreten!"));
+				}
+			}
+		});
+	};
+
 	this.LoadAll = function() {
 		var controller = this;
 
 		$.ajax(
 		{
 			type:"GET",
-			url:"../Services/Ablage/Typ/",
+			url:"../Services/Kontext/Typ/",
 			dataType: "json",
 			success:function(data, textStatus, jqXHR)
 			{
@@ -172,13 +217,13 @@ function WebServiceClientAblageType()
 		});
 	};
 
-	this.Delete = function(ablageType) {
+	this.Delete = function(kontextType) {
 		var controller = this;
 
 		$.ajax(
 		{
 			type:"DELETE",
-			url:"../Services/Ablage/Typ/" + ablageType.Id,
+			url:"../Services/Kontext/Typ/" + kontextType.Id,
 			dataType: "json",
 			success:function(data, textStatus, jqXHR)
 			{

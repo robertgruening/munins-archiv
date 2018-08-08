@@ -7,11 +7,11 @@ require_once("../UserStories/Ort/Type/LoadOrtType.php");
 require_once("../UserStories/Ort/Type/SaveOrtType.php");
 require_once("../UserStories/Ort/Type/DeleteOrtType.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "PUT")
+if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
     Create();
 }
-else if ($_SERVER["REQUEST_METHOD"] == "POST")
+else if ($_SERVER["REQUEST_METHOD"] == "PUT")
 {
     Update();
 }
@@ -26,12 +26,6 @@ else
 
 function Create()
 {
-    global $logger;
-    $logger->error("PUT wird nicht unterstützt!");
-    http_response_code(500);
-    echo json_encode(array("PUT wird nicht unterstützt!"));
-
-    /*
     global $logger;
     $logger->info("Ortstyp-anlegen gestartet");
 
@@ -56,13 +50,14 @@ function Create()
     }
 
     $logger->info("Ortstyp-anlegen beendet");
-    */
 }
 
 function Update()
 {
     global $logger;
     $logger->info("Ortstyp-anhand-ID-aktualisieren gestartet");
+
+    parse_str(file_get_contents("php://input"),$_PUT);
 
     $ortTyp = new OrtTyp();
 
@@ -71,9 +66,9 @@ function Update()
         $ortTyp->setId(intval($_GET["Id"]));    
     }
 
-    if (isset($_POST["Bezeichnung"]))
+    if (isset($_PUT["Bezeichnung"]))
     {
-        $ortTyp->setBezeichnung($_POST["Bezeichnung"]);
+        $ortTyp->setBezeichnung($_PUT["Bezeichnung"]);
     }
     
     $saveOrtType = new SaveOrtType();

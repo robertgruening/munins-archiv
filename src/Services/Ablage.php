@@ -7,11 +7,11 @@ require_once("../UserStories/Ablage/LoadRootAblagen.php");
 require_once("../UserStories/Ablage/SaveAblage.php");
 require_once("../UserStories/Ablage/DeleteAblage.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "PUT")
+if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
     Create();
 }
-else if ($_SERVER["REQUEST_METHOD"] == "POST")
+else if ($_SERVER["REQUEST_METHOD"] == "PUT")
 {
     Update();
 }
@@ -27,9 +27,27 @@ else
 function Create()
 {
     global $logger;
-    $logger->error("PUT wird nicht unterstützt!");
-    http_response_code(500);
-    echo json_encode(array("PUT wird nicht unterstützt!"));
+    $logger->info("Ablage-erzeugen gestartet");
+
+    parse_str(file_get_contents("php://input"), $ablageObject);
+    
+    $ablageFactory = new AblageFactory();
+    $ablage = $ablageFactory->convertToInstance($ablageObject);
+    
+    $saveAblage = new SaveAblage();
+    $saveAblage->setAblage($ablage);
+    
+    if ($saveAblage->run())
+    {
+        echo json_encode($saveAblage->getAblage());    
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($saveAblage->getMessages());
+    }
+
+    $logger->info("Ablage-erzeugen beendet");
 }
 
 function Update()
@@ -37,11 +55,11 @@ function Update()
     global $logger;
     $logger->info("Ablage-anhand-ID-aktualisieren gestartet");
 
-    $ablageObject = null;
+    parse_str(file_get_contents("php://input"),$ablageObject);
 
-    if ($_POST != null)
+    if (isset($_GET["Id"]))
     {
-        $ablageObject = json_decode($_POST["Ablage"], true);
+        $ablageObject["Id"] = $_GET["Id"];
     }
     
     $ablageFactory = new AblageFactory();

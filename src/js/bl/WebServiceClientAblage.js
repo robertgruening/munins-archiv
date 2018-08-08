@@ -108,7 +108,7 @@ function WebServiceClientAblage()
 
 		$.ajax(
 		{
-			type:"PUT",
+			type:"POST",
 			url:"../Services/Ablage/",
 			dataType: "json",
 			data: ablage,
@@ -137,7 +137,7 @@ function WebServiceClientAblage()
 
 		$.ajax(
 		{
-			type:"POST",
+			type:"PUT",
 			url:"../Services/Ablage/" + ablage.Id,
 			dataType: "json",
 			data: ablage,

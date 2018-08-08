@@ -8,11 +8,11 @@ require_once("../UserStories/FundAttribut/Type/LoadFundAttributTypes.php");
 require_once("../UserStories/FundAttribut/Type/SaveFundAttributType.php");
 require_once("../UserStories/FundAttribut/Type/DeleteFundAttributType.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "PUT")
+if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
     Create();
 }
-else if ($_SERVER["REQUEST_METHOD"] == "POST")
+else if ($_SERVER["REQUEST_METHOD"] == "PUT")
 {
     Update();
 }
@@ -28,15 +28,37 @@ else
 function Create()
 {
     global $logger;
-    $logger->error("PUT wird nicht unterstützt!");
-    http_response_code(500);
-    echo json_encode(array("PUT wird nicht unterstützt!"));
+    $logger->info("Fundattributtyp-anlegen gestartet");
+
+    $fundAttributTyp = new FundAttributTyp();
+
+    if (isset($_POST["Bezeichnung"]))
+    {
+        $fundAttributTyp->setBezeichnung($_POST["Bezeichnung"]);
+    }
+    
+    $saveFundAttributType = new SaveFundAttributType();
+    $saveFundAttributType->setFundAttributType($fundAttributTyp);
+    
+    if ($saveFundAttributType->run())
+    {
+        echo json_encode($saveFundAttributType->getFundAttributType());    
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($saveFundAttributType->getMessages());
+    }
+
+    $logger->info("Fundattributtyp-anlegen beendet");
 }
 
 function Update()
 {
     global $logger;
     $logger->info("Fundattributtyp-anhand-ID-aktualisieren gestartet");
+
+    parse_str(file_get_contents("php://input"),$_PUT);
 
     $fundAttributTyp = new FundAttributTyp();
 
@@ -45,9 +67,9 @@ function Update()
         $fundAttributTyp->setId(intval($_GET["Id"]));    
     }
 
-    if (isset($_POST["Bezeichnung"]))
+    if (isset($_PUT["Bezeichnung"]))
     {
-        $fundAttributTyp->setBezeichnung($_POST["Bezeichnung"]);
+        $fundAttributTyp->setBezeichnung($_PUT["Bezeichnung"]);
     }
     
     $saveFundAttributType = new SaveFundAttributType();

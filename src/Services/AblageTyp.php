@@ -2,16 +2,17 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
+require_once("../Factory/AblageTypFactory.php");
 require_once("../UserStories/Ablage/Type/LoadAblageType.php");
 require_once("../UserStories/Ablage/Type/LoadAblageTypes.php");
 require_once("../UserStories/Ablage/Type/SaveAblageType.php");
 require_once("../UserStories/Ablage/Type/DeleteAblageType.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "PUT")
+if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
     Create();
 }
-else if ($_SERVER["REQUEST_METHOD"] == "POST")
+else if ($_SERVER["REQUEST_METHOD"] == "PUT")
 {
     Update();
 }
@@ -27,9 +28,27 @@ else
 function Create()
 {
     global $logger;
-    $logger->error("PUT wird nicht unterstützt!");
-    http_response_code(500);
-    echo json_encode(array("PUT wird nicht unterstützt!"));
+    $logger->info("Ablagetyp-anlegen gestartet");
+
+    parse_str(file_get_contents("php://input"), $ablageTypObject);
+
+    $ablageTypeFactory = new AblageTypFactory();
+    $ablageTyp = $ablageTypeFactory->convertToInstance($ablageTypObject);
+    
+    $saveAblageType = new SaveAblageType();
+    $saveAblageType->setAblageType($ablageTyp);
+    
+    if ($saveAblageType->run())
+    {
+        echo json_encode($saveAblageType->getAblageType());    
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($saveAblageType->getMessages());
+    }
+
+    $logger->info("Ablagetyp-anlegen beendet");
 }
 
 function Update()
@@ -37,17 +56,15 @@ function Update()
     global $logger;
     $logger->info("Ablagetyp-anhand-ID-aktualisieren gestartet");
 
-    $ablageTyp = new AblageTyp();
+    parse_str(file_get_contents("php://input"), $ablageTypObject);
 
     if (isset($_GET["Id"]))
     {
-        $ablageTyp->setId(intval($_GET["Id"]));    
+        $ablageTypObject["Id"] = $_GET["Id"];
     }
 
-    if (isset($_POST["Bezeichnung"]))
-    {
-        $ablageTyp->setBezeichnung($_POST["Bezeichnung"]);
-    }
+    $ablageTypeFactory = new AblageTypFactory();
+    $ablageTyp = $ablageTypeFactory->convertToInstance($ablageTypObject);
     
     $saveAblageType = new SaveAblageType();
     $saveAblageType->setAblageType($ablageTyp);

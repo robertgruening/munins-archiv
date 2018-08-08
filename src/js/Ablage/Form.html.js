@@ -1,6 +1,8 @@
 //var _kartonschildIndex = 0;
 
 $(document).ready(function() {
+	_webServiceClientAblageType.Register("loadAll", new GuiClient(InitGrid));
+	
 	$("#navigation").Navigation();
 
     $("#messageBox").dialog({
