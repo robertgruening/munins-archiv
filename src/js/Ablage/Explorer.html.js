@@ -87,6 +87,28 @@ $(document).ready(function() {
 			}
 		});
 	})
+	.on("rename_node.jstree", function(event, data) {
+
+		var node = data.node.original.original;
+
+		var newName = data.text;
+		var typePrefix = node.Type.Bezeichnung + ": ";
+
+		if (newName.startsWith(typePrefix))
+		{
+			node.Bezeichnung = newName.substr(typePrefix.length);
+		}
+		else
+		{
+			node.Bezeichnung = newName;
+		}
+
+		console.log("Input: ");
+		console.log(data);
+		console.log("Knoten: ");
+		console.log(node);
+		//_webServiceClientAblage.Save(node);
+	})
     .jstree({
 		"plugins": [
 			"contextmenu"
@@ -169,11 +191,18 @@ $(document).ready(function() {
 		"contextmenu": {
 			"items": function($node) {
 				return {
-					"Beabeiten": {
+					"Edit": {
 						"label": "Beabeiten",
 						"title": "Beabeiten",
 						"action": function(obj) {
 							window.open("Form.html?Id=" + $node.id, "_self");
+						}
+					},
+					"Rename": {
+						"label": "Umbenennen",
+						"title": "Umbenennen",
+						"action": function (obj) { 
+							$("#tree").jstree(false).edit($node);
 						}
 					}
 				};
@@ -197,9 +226,9 @@ function InitGrid(ablageTypes)
 			insertItem: function(item) { 
 				_webServiceClientAblage.Create(ConvertToJson(item));
 			},
-			// updateItem: function(item) { 
-			// 	UpdateAblageType(item);
-			// },
+			updateItem: function(item) {
+				_webServiceClientAblage.Save(ConvertToJson(item));
+			},
 			deleteItem: function(item) {
 				_webServiceClientAblage.Delete(item);
 			}
