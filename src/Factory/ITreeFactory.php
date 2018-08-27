@@ -19,4 +19,6 @@ interface iTreeFactory
     public function synchroniseChildren(iTreeNode $node, array $children);
 
     public function getPath(iTreeNode $node);
+
+	//public static function isNodeInCircleCondition(iTreeNode $node);
 }

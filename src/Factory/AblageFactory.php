@@ -293,6 +293,11 @@ class AblageFactory extends Factory implements iTreeFactory
     {
         return $this->getTreeFactory()->loadRoots();
     }
+
+	public static function isNodeInCircleCondition(iTreeNode $node)
+	{
+        return TreeFactory::isNodeInCircleCondition($node);
+	}
     #endregion
 
     #region Kontext

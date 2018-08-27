@@ -38,6 +38,14 @@ class SaveAblage extends UserStory
             return false;
         }
 
+        if (AblageFactory::isNodeInCircleCondition($ablage))
+        {
+            global $logger;
+            $logger->warn("Ablage darf sich nicht selbst zum über- oder untergeordneten Knoten haben!");
+            $this->addMessage("Ablage darf sich nicht selbst zum über- oder untergeordneten Knoten haben!");
+            return false;
+        }
+
         return true;
     }
 

@@ -1,11 +1,12 @@
 $(document).ready(function() {
-	_webServiceClientAblageType.Register("loadAll", new GuiClient(InitGrid));
+	// _webServiceClientAblageType.Register("loadAll", new GuiClient(InitGrid));
 	_webServiceClientAblage.Register("delete", new GuiClient(LoadAblagen));
 	_webServiceClientAblage.Register("create", new GuiClient(LoadAblagen));
+	_webServiceClientAblage.Register("save", new GuiClient(RenameTreeNode));
 	_webServiceClientAblage.Register("loadAll", new GuiClient(FillTreeWithRootAblagen));
-	_webServiceClientAblage.Register("loadAll", new GuiClient(FillGridWithRootAblagen));
+	// _webServiceClientAblage.Register("loadAll", new GuiClient(FillGridWithRootAblagen));
 	_webServiceClientAblage.Register("load", new GuiClient(FillTreeWithAblageChildren));
-	_webServiceClientAblage.Register("load", new GuiClient(FillGridWithAblageChildren));
+	// _webServiceClientAblage.Register("load", new GuiClient(FillGridWithAblageChildren));
 
     $("#navigation").Navigation();
     
@@ -26,6 +27,7 @@ $(document).ready(function() {
 	$("#tree")
 	.on("open_node.jstree", function(event, data) {
 
+		console.log("open_node");
 		if (data.node.id != GetAbstractAblageNode().id)
 		{
 			$("#tree").jstree(true).set_icon(data.node.id, "fas fa-folder-open");
@@ -33,29 +35,50 @@ $(document).ready(function() {
 	})
 	.on("close_node.jstree", function(event, data) {
 
+		console.log("close_node");
 		if (data.node.id != GetAbstractAblageNode().id)
 		{
 			$("#tree").jstree(true).set_icon(data.node.id, "fas fa-folder");
 		}
 	})
 	.on("select_node.jstree", function(event, data) {
-		$("#path").val("/");
-		$("#grid").empty();
 
-		if (data.node.original.id == GetAbstractAblageNode().id)
+		console.log("select_node");
+		console.log(data);
+		if (!$("#tree").jstree(true).is_loaded(data.node))
 		{
-			_webServiceClientAblage.LoadAll();
+			$("#tree").jstree(true).load_node(data.node, function(){ console.log($("#tree").jstree(true).get_node(data.node)); });
 		}
-		else
-		{
-			var node = data.node.original.original;
-			$("#path").val("/" + node.Path);
-			_webServiceClientAblage.Load(node);
-		}
+		// $("#grid").jsGrid("cancelEdit");
+		// $("#grid").jsGrid("clearInsert");
+
+		// $("#path").val("/");
+
+		// if (data.node.original.id == GetAbstractAblageNode().id)
+		// {
+		// 	_webServiceClientAblage.LoadAll("tree.selected");
+		// }
+		// else
+		// {
+		// 	var node = data.node.original.original;
+		// 	$("#path").val("/" + node.Path);
+		// 	_webServiceClientAblage.Load(node, "tree.selected");
+		// }
 	})
 	.on("rename_node.jstree", function(event, data) {
 
-		var node = data.node.original.original;
+		console.log("rename_node");
+		var node = data.node.original;
+
+		// Refactoring: clean up!
+		// Removes the self reference added for the grid
+
+		if (node.Children != undefined &&
+			node.Children.length > 0 &&
+			node.Children[0].Id == node.Id)
+		{
+			node.Children.shift();
+		}
 
 		var newName = data.text;
 		var typePrefix = node.Type.Bezeichnung + ": ";
@@ -68,15 +91,15 @@ $(document).ready(function() {
 		{
 			node.Bezeichnung = newName;
 		}
-
-		console.log("Input: ");
-		console.log(data);
-		console.log("Knoten: ");
-		console.log(node);
-		//_webServiceClientAblage.Save(node);
+		
+		_webServiceClientAblage.Save(node, "tree.renamed");
 	})
 	.on("loaded.jstree", function(event, data) {
-		_webServiceClientAblage.LoadAll();
+
+		console.log("loaded");
+		$("#tree").jstree(true).open_node(GetAbstractAblageNode().id, function() {
+			$("#tree").jstree(true).select_node(GetAbstractAblageNode().id);
+		});
 	})
     .jstree({
 		"plugins": [
@@ -87,85 +110,29 @@ $(document).ready(function() {
 			"check_callback" : true,
 			"data" : function (node, callbackFunction) 
 			{	
+				console.log("data");
 				console.log(node);
 				if (node.id === "#")
 				{
 					callbackFunction(new Array(CreateAbstractAblageNode()));
 				}
-				else
+				else if (node.id == GetAbstractAblageNode().id)
 				{
-					console.log("core.data.else");
+					_webServiceClientAblage.LoadAll("tree.selected");
 					callbackFunction(new Array());
 				}
-				/*
-				else if (node.id === "-1")
-				{
-					$.ajax(
-					{
-						type:"GET",
-						url: "../Services/Ablage/",
-						dataType: "JSON",
-						success:function(data, textStatus, jqXHR)
-						{	
-							var retval = new Array();
-
-							for (var i = 0; i < data.length; i++)
-							{
-								var ablageNode = CreateAblageNode(data[i]);
-								ablageNode.parent = "-1";
-
-								retval.push(ablageNode);
-							}
-
-							callbackFunction(retval);
-						},
-						error:function(jqXHR, textStatus, errorThrown)
-						{
-							if (jqXHR.status == 500)
-							{
-								ShowMessages(jqXHR.responseJSON);
-							}
-							else
-							{
-								console.log("ERROR: " + jqXHR.responseJSON);
-							}
-						}
-					});
-				}
 				else
 				{
-					$.ajax(
+					if (node.original.original == undefined)
 					{
-						type:"GET",
-						url: "../Services/Ablage/" + node.id,
-						dataType: "JSON",
-						success:function(data, textStatus, jqXHR)
-						{
-							var retval = new Array();
-
-							for (var i = 0; i < data.Children.length; i++)
-							{
-								var ablageNode = CreateAblageNode(data.Children[i]);
-								ablageNode.parent = data.Id;
-
-								retval.push(ablageNode);
-							}
-
-							callbackFunction(retval);
-						},
-						error:function(jqXHR, textStatus, errorThrown)
-						{
-							if (jqXHR.status == 500)
-							{
-								ShowMessages(jqXHR.responseJSON);
-							}
-							else
-							{
-								console.log("ERROR: " + jqXHR.responseJSON);
-							}
-						}
-					});
-				}*/
+						_webServiceClientAblage.Load(node.original, "tree.selected");
+					}
+					else
+					{
+						_webServiceClientAblage.Load(node.original.original, "tree.selected");
+					}
+					callbackFunction(new Array());
+				}
 			}
 		},
 		"contextmenu": {
@@ -191,9 +158,11 @@ $(document).ready(function() {
     });
 });
 
-function FillTreeWithRootAblagen(rootAblagen)
+function FillTreeWithRootAblagen(rootAblagen, sender)
 {
 	console.log("FillTreeWithRootAblagen");
+	var children = $("#tree").jstree(true).get_node(GetAbstractAblageNode().id).children;
+	$("#tree").jstree(true).delete_node(children);
 
 	for (var i = 0; i < rootAblagen.length; i++)
 	{
@@ -201,15 +170,33 @@ function FillTreeWithRootAblagen(rootAblagen)
 		ablageNode.parent = "-1";
 		
 		$("#tree").jstree(true).create_node(ablageNode.parent, ablageNode, "last", function(){
-			$("#tree").jstree(true).get_node(ablageNode.parent).state.loaded = true;
-			console.log($("#tree").jstree(true).get_node(ablageNode.parent));
-		}, true);
+			//$("#tree").jstree(true).get_node(ablageNode.parent).state.loaded = true;
+		});
+	}
+	
+	$("#tree").jstree(true).open_node(GetAbstractAblageNode().id);
+}
+
+function RenameTreeNode(ablage, sender)
+{
+	console.log("RenameTreeNode");
+	console.log(ablage);
+	if (ablage.Parent == null)
+	{
+		$("#tree").jstree(true).refresh_node(GetAbstractAblageNode().id);
+	}
+	else
+	{
+		$("#tree").jstree(true).refresh_node(ablage.Parent.Id);
 	}
 }
 
-function FillTreeWithAblageChildren(ablage)
+function FillTreeWithAblageChildren(ablage, sender)
 {
 	console.log("FillTreeWithAblageChildren");
+	var node = $("#tree").jstree(true).get_node(ablage.Id);
+	$("#tree").jstree(true).delete_node(node.children);
+	node.original = ablage;
 
 	for (var i = 0; i < ablage.Children.length; i++)
 	{
@@ -217,10 +204,11 @@ function FillTreeWithAblageChildren(ablage)
 		ablageNode.parent = ablage.Id;
 		
 		$("#tree").jstree(true).create_node(ablageNode.parent, ablageNode, "last", function(){
-			$("#tree").jstree(true).get_node(ablageNode.parent).state.loaded = true;
-			console.log($("#tree").jstree(true).get_node(ablageNode.parent));
-		}, true);
+			//$("#tree").jstree(true).get_node(ablageNode.parent).state.loaded = true;
+		});
 	}
+
+	$("#tree").jstree(true).open_node(ablage.Id);
 }
 
 function InitGrid(ablageTypes)
@@ -236,14 +224,19 @@ function InitGrid(ablageTypes)
 		
 		controller: {
 			insertItem: function(item) { 
-				_webServiceClientAblage.Create(ConvertToJson(item));
+				_webServiceClientAblage.Create(ConvertToJson(item), "grid.created");
 			},
 			updateItem: function(item) {
-				_webServiceClientAblage.Save(ConvertToJson(item));
+				_webServiceClientAblage.Save(ConvertToJson(item), "grid.updated");
 			},
 			deleteItem: function(item) {
-				_webServiceClientAblage.Delete(item);
+				_webServiceClientAblage.Delete(item, "grid.deleted");
 			}
+		},
+
+		// Rewritten to avoid quick edit mode. Double click 
+		// should open the parent node or the child node.
+		rowClick: function() {
 		},
 		
 		fields: [
@@ -308,7 +301,6 @@ function CreateAbstractAblageNode()
 	node.children = true;
 	node.icon = "fas fa-hdd";
 	node.state = new Object();
-	node.state.opened = false;
 
 	return node;
 }
@@ -357,8 +349,16 @@ function ConvertToJson(item)
 	return item;
 }
 
-function FillGridWithRootAblagen(ablagen)
+function FillGridWithRootAblagen(ablagen, sender)
 {
+	if (sender == undefined ||
+		sender != "tree.selected")
+	{
+		return;
+	}
+
+	$("#grid").empty();
+
 	for (var i = 0; i < ablagen.length; i++)
 	{
 		ablagen[i].Icon = "fas fa-folder";
@@ -369,8 +369,16 @@ function FillGridWithRootAblagen(ablagen)
 	});
 }
 
-function FillGridWithAblageChildren(ablage)
+function FillGridWithAblageChildren(ablage, sender)
 {
+	if (sender == undefined ||
+		sender != "tree.selected")
+	{
+		return;
+	}
+
+	$("#grid").empty();
+
 	for (var i = 0; i < ablage.Children.length; i++)
 	{
 		ablage.Children[i].Icon = "fas fa-folder";

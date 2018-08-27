@@ -410,4 +410,23 @@ class TreeFactory implements iTreeFactory
                 WHERE Parent_Id IS NULL;";
 	}
 	#endregion
+
+	public static function isNodeInCircleCondition(iTreeNode $node)
+	{
+		if ($node->getParent() != null &&
+			$node->getParent()->getId() == $node->getId())
+		{
+			return true;	
+		}
+
+		for ($i = 0; $i < count($node->getChildren()); $i++)		
+		{
+			if ($node->getChildren()[$i]->getId() == $node->getId())
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
