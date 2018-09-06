@@ -1,12 +1,13 @@
 $(document).ready(function() {
-	// _webServiceClientAblageType.Register("loadAll", new GuiClient(InitGrid));
+	_webServiceClientAblageType.Register("loadAll", new GuiClient(InitGrid));
 	_webServiceClientAblage.Register("delete", new GuiClient(LoadAblagen));
 	_webServiceClientAblage.Register("create", new GuiClient(LoadAblagen));
 	_webServiceClientAblage.Register("save", new GuiClient(RenameTreeNode));
+	_webServiceClientAblage.Register("save", new GuiClient(MoveTreeNode));
 	_webServiceClientAblage.Register("loadAll", new GuiClient(FillTreeWithRootAblagen));
-	// _webServiceClientAblage.Register("loadAll", new GuiClient(FillGridWithRootAblagen));
+	_webServiceClientAblage.Register("loadAll", new GuiClient(FillGridWithRootAblagen));
 	_webServiceClientAblage.Register("load", new GuiClient(FillTreeWithAblageChildren));
-	// _webServiceClientAblage.Register("load", new GuiClient(FillGridWithAblageChildren));
+	_webServiceClientAblage.Register("load", new GuiClient(FillGridWithAblageChildren));
 
     $("#navigation").Navigation();
     
@@ -30,7 +31,7 @@ $(document).ready(function() {
 		console.log("open_node");
 		if (data.node.id != GetAbstractAblageNode().id)
 		{
-			$("#tree").jstree(true).set_icon(data.node.id, "fas fa-folder-open");
+			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Ablage", "open"));
 		}
 	})
 	.on("close_node.jstree", function(event, data) {
@@ -38,14 +39,25 @@ $(document).ready(function() {
 		console.log("close_node");
 		if (data.node.id != GetAbstractAblageNode().id)
 		{
-			$("#tree").jstree(true).set_icon(data.node.id, "fas fa-folder");
+			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Ablage"));
 		}
 	})
 	.on("select_node.jstree", function(event, data) {
 
 		console.log("select_node");
 		console.log(data);
-		if (!$("#tree").jstree(true).is_loaded(data.node))
+		if ($("#tree").jstree(true).is_loaded(data.node))
+		{
+			if (data.node.original.id == GetAbstractAblageNode().id)
+			{
+				_webServiceClientAblage.LoadAll("tree.selected");
+			}
+			else
+			{
+				_webServiceClientAblage.Load(data.node.original, "tree.selected");
+			}
+		}
+		else
 		{
 			$("#tree").jstree(true).load_node(data.node, function(){ console.log($("#tree").jstree(true).get_node(data.node)); });
 		}
@@ -101,9 +113,64 @@ $(document).ready(function() {
 			$("#tree").jstree(true).select_node(GetAbstractAblageNode().id);
 		});
 	})
+	.on("move_node.jstree", function(event, data) {
+		console.log("move_node.jstree");
+		console.log(data.node.original);
+		console.log(data.parent);
+
+		var node = null;
+
+		if (data.node.original.original == undefined)
+		{
+			node = data.node.original;
+		}
+		else
+		{
+			node = data.node.original.original;
+		}
+
+		// old parent
+		_elementsToBeRefreshed.push({
+			Id : node.Parent
+		});
+
+		// new parent
+		_elementsToBeRefreshed.push({
+			Id : data.parent
+		});
+
+		$("#tree").jstree(true).load_node(node.Id, function(){
+			node.Parent = new Object();
+			node.Parent.Id = data.parent;
+
+			if (node.Parent.Id == -1)
+			{
+				node.Parent.Id = null;
+			}
+
+			_webServiceClientAblage.Save(node, "tree.moved");
+			// TODO
+			//_webServiceClientAblage.Load(node.original, "tree.selected");
+		});
+
+		var oldParent = node.Parent;
+
+
+		if (!$("#tree").jstree(true).is_loaded(data.parent))
+		{
+			$("#tree").jstree(true).load_node(data.parent, function(){
+				if (!$("#tree").jstree(true).is_loaded(data.parent))
+				{
+					console.log("Elternknoten ist nachgeladen");
+				}
+			});
+		}
+
+	})
     .jstree({
 		"plugins": [
-			"contextmenu"
+			"contextmenu",
+			"dnd"
 		],
         "core": {
 			"multiple": false,
@@ -118,18 +185,18 @@ $(document).ready(function() {
 				}
 				else if (node.id == GetAbstractAblageNode().id)
 				{
-					_webServiceClientAblage.LoadAll("tree.selected");
+					_webServiceClientAblage.LoadAll("tree.loaded");
 					callbackFunction(new Array());
 				}
 				else
 				{
 					if (node.original.original == undefined)
 					{
-						_webServiceClientAblage.Load(node.original, "tree.selected");
+						_webServiceClientAblage.Load(node.original, "tree.loaded");
 					}
 					else
 					{
-						_webServiceClientAblage.Load(node.original.original, "tree.selected");
+						_webServiceClientAblage.Load(node.original.original, "tree.loaded");
 					}
 					callbackFunction(new Array());
 				}
@@ -160,6 +227,12 @@ $(document).ready(function() {
 
 function FillTreeWithRootAblagen(rootAblagen, sender)
 {
+	if (sender == undefined ||
+		sender != "tree.loaded")
+	{
+		return;
+	}
+
 	console.log("FillTreeWithRootAblagen");
 	var children = $("#tree").jstree(true).get_node(GetAbstractAblageNode().id).children;
 	$("#tree").jstree(true).delete_node(children);
@@ -179,6 +252,12 @@ function FillTreeWithRootAblagen(rootAblagen, sender)
 
 function RenameTreeNode(ablage, sender)
 {
+	if (sender != undefined &&
+		sender != "tree.renamed")
+	{
+		return;
+	}
+
 	console.log("RenameTreeNode");
 	console.log(ablage);
 	if (ablage.Parent == null)
@@ -191,8 +270,33 @@ function RenameTreeNode(ablage, sender)
 	}
 }
 
+function MoveTreeNode(ablage, sender)
+{
+	if (sender != undefined &&
+		sender != "tree.moved")
+	{
+		return;
+	}
+
+	console.log("MoveTreeNode");
+	console.log(ablage);
+	console.log(_elementsToBeRefreshed);
+
+	while (_elementsToBeRefreshed.length > 0)
+	{
+		$("#tree").jstree(true).refresh_node(_elementsToBeRefreshed[0].Id);
+		_elementsToBeRefreshed.shift();
+	}
+}
+
 function FillTreeWithAblageChildren(ablage, sender)
 {
+	if (sender == undefined ||
+		sender != "tree.loaded")
+	{
+		return;
+	}
+
 	console.log("FillTreeWithAblageChildren");
 	var node = $("#tree").jstree(true).get_node(ablage.Id);
 	$("#tree").jstree(true).delete_node(node.children);
@@ -216,8 +320,8 @@ function InitGrid(ablageTypes)
 	$("#grid").jsGrid({
         width: "70%",
 
-        inserting: true,
-        editing: true,
+        inserting: false,
+        editing: false,
         sorting: true,
         paging: false,
 		autoload: false,
@@ -252,16 +356,8 @@ function InitGrid(ablageTypes)
 			},
 			{ 
 				title: "Typ",
-				name: "Type.Id",
-				type: "select",
-				items: ablageTypes,
-				valueField: "Id",
-				textField: "Bezeichnung",
-				valueType: "number",
-				align: "left"
-			},
-			{ 
-				type: "control"
+				name: "Type",
+				type: "text"
 			}
 		],
 
@@ -277,12 +373,15 @@ function InitGrid(ablageTypes)
 
 			if (data.item.Bezeichnung === "..")
 			{
+				console.log(selectedNode.parent);
 				$("#tree").jstree(true).select_node(selectedNode.parent);
+				//$("#tree").jstree(true).load_node(selectedNode.parent);
 			}
 			else
 			{
-				$("#tree").jstree(true).open_node(data.item.Id);
-				$("#tree").jstree(true).select_node(data.item.Id);
+				$("#tree").jstree(true).open_node(data.item.Id, function(){
+					$("#tree").jstree(true).select_node(data.item.Id);
+				});
 			}
 		}
 	});
@@ -299,7 +398,7 @@ function CreateAbstractAblageNode()
 	node.id = -1;
 	node.text = "Ablagen";
 	node.children = true;
-	node.icon = "fas fa-hdd";
+	node.icon = GetIcon("Root");
 	node.state = new Object();
 
 	return node;
@@ -312,7 +411,7 @@ function CreateAblageNode(ablage)
 	node.text = ablage.Type.Bezeichnung + ": " + ablage.Bezeichnung;
 	node.original = ablage;
 	node.children = true;
-	node.icon = "fas fa-folder";
+	node.icon = GetIcon("Ablage");
 
 	return node;
 }
@@ -351,47 +450,164 @@ function ConvertToJson(item)
 
 function FillGridWithRootAblagen(ablagen, sender)
 {
-	if (sender == undefined ||
-		sender != "tree.selected")
+	if (sender == undefined || 
+		(sender != "tree.loaded" &&
+		 sender != "tree.selected"))
 	{
 		return;
 	}
 
 	$("#grid").empty();
 
-	for (var i = 0; i < ablagen.length; i++)
-	{
-		ablagen[i].Icon = "fas fa-folder";
-	}
+	var entries = new Array();
+
+	ablagen.forEach(ablage => {
+		var entry = new Object();
+		entry.Bezeichnung = ablage.Bezeichnung;
+		entry.Type = ablage.Type.Bezeichnung;
+		entry.Icon = GetIcon("Ablage");
+		entry.Original = ablage;
+		entries.push(entry);
+	});
 
 	$("#grid").jsGrid({
-		data: ablagen
+		data: entries
 	});
 }
 
 function FillGridWithAblageChildren(ablage, sender)
 {
-	if (sender == undefined ||
-		sender != "tree.selected")
+	if (sender == undefined || 
+		(sender != "tree.loaded" &&
+		 sender != "tree.selected"))
 	{
 		return;
 	}
 
 	$("#grid").empty();
 
-	for (var i = 0; i < ablage.Children.length; i++)
-	{
-		ablage.Children[i].Icon = "fas fa-folder";
-	}
+	var entries = new Array();
 
-	ablage.Children.unshift({
-		"Id": ablage.Id,
-		"Icon": "fas fa-folder-open",
-		"Bezeichnung": "..", 
-		"Type": ""
+	var entry = new Object();
+	entry.Bezeichnung = "..";
+	entry.Type = ablage.Type.Bezeichnung;
+	entry.Icon = GetIcon("Ablage", "open");
+	entry.Original = ablage;
+	entries.push(entry);
+
+	ablage.Children.forEach(child => {
+		var entry = new Object();
+		entry.Bezeichnung = child.Bezeichnung;
+		entry.Type = child.Type.Bezeichnung;
+		entry.Icon = GetIcon("Ablage");
+		entry.Original = child;
+		entries.push(entry);
+	});
+
+	ablage.Funde.forEach(fund => {
+		var entry = new Object();
+		entry.Bezeichnung = GetFundLabelText(fund);
+		entry.Type = "Fund";
+		entry.Icon = GetIcon("Fund");
+		entry.Original = fund;
+		entries.push(entry);
 	});
 
 	$("#grid").jsGrid({
-		data: ablage.Children
+		data: entries
 	});
+}
+
+function GetFundLabelText(fund)
+{
+	var labelText = "";
+	labelText += fund.Anzahl.toString().replace("-", ">")+"x ";
+	
+	if (fund.FundAttribute != undefined &&
+		fund.FundAttribute != null &&
+		fund.FundAttribute.length > 0)
+	{
+		var material = null;
+		var gegenstand = null;
+		var erhaltung = null;
+		
+		for (var j = 0; j < fund.FundAttribute.length; j++)
+		{
+			if (fund.FundAttribute[j].Type.Bezeichnung == "Material")
+			{
+				material = fund.FundAttribute[j];
+			}
+			else if (fund.FundAttribute[j].Type.Bezeichnung == "Gegenstand")
+			{
+				gegenstand = fund.FundAttribute[j];
+			}
+			else if (fund.FundAttribute[j].Type.Bezeichnung == "Erhaltung")
+			{
+				erhaltung = fund.FundAttribute[j];
+			}
+				
+			if (material != null &&
+				gegenstand != null &&
+				erhaltung != null)
+			{
+				break;
+			}
+		}
+
+		if (material != null)
+		{
+			labelText += material.Bezeichnung + " ";
+		}
+			
+		if (gegenstand != null)
+		{
+			labelText += gegenstand.Bezeichnung + " ";
+		}
+			
+		if (erhaltung != null)
+		{
+			labelText += erhaltung.Bezeichnung + " ";
+		}
+	}
+	
+	if (fund.Bezeichnung != null &&
+		fund.Bezeichnung != "")
+	{
+		labelText += ": \"" + fund.Bezeichnung + "\"";
+	}
+
+	labelText = labelText.trim();
+
+	return labelText;
+}
+
+function GetIcon(type, state)
+{
+	if (type == undefined)
+	{
+		return "";
+	}
+
+	if (type == "Root")
+	{
+		return "fas fa-hdd root";
+	}
+
+	if (type == "Ablage")
+	{
+		if (state != undefined &&
+			state == "open")
+		{
+			return "fas fa-folder-open node";
+		}
+
+		return "fas fa-folder node";
+	}
+
+	if (type == "Fund")
+	{
+		return "fas fa-file leaf";
+	}
+
+	return "";
 }

@@ -12,3 +12,15 @@
     width: 70%;
     float: left;
 }
+
+i.root {
+   color: Black;   
+}
+
+i.node {
+   color: #e78f08;
+}
+
+i.leaf {
+   color: SteelBlue;
+}
