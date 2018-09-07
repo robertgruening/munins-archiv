@@ -29,7 +29,11 @@ $(document).ready(function() {
 	.on("open_node.jstree", function(event, data) {
 
 		console.log("open_node");
-		if (data.node.id != GetAbstractAblageNode().id)
+		if (data.node.id == GetAbstractAblageNode().id)
+		{
+			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Root", "open"));
+		}
+		else
 		{
 			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Ablage", "open"));
 		}
@@ -37,7 +41,11 @@ $(document).ready(function() {
 	.on("close_node.jstree", function(event, data) {
 
 		console.log("close_node");
-		if (data.node.id != GetAbstractAblageNode().id)
+		if (data.node.id == GetAbstractAblageNode().id)
+		{
+			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Root"));
+		}
+		else
 		{
 			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Ablage"));
 		}
@@ -590,7 +598,13 @@ function GetIcon(type, state)
 
 	if (type == "Root")
 	{
-		return "fas fa-hdd root";
+		if (state != undefined &&
+			state == "open")
+		{
+			return "fas fa-door-open root";
+		}
+
+		return "fas fa-door-closed root";
 	}
 
 	if (type == "Ablage")
@@ -598,15 +612,15 @@ function GetIcon(type, state)
 		if (state != undefined &&
 			state == "open")
 		{
-			return "fas fa-folder-open node";
+			return "fas fa-box-open node";
 		}
 
-		return "fas fa-folder node";
+		return "fas fa-box node";
 	}
 
 	if (type == "Fund")
 	{
-		return "fas fa-file leaf";
+		return "fas fa-puzzle-piece leaf";
 	}
 
 	return "";
