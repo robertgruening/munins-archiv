@@ -60,7 +60,6 @@ class LoadFundAttribut extends UserStory
 
         $fundAttribut = $fundAttributFactory->loadParent($fundAttribut);
         $fundAttribut = $fundAttributFactory->loadChildren($fundAttribut);
-        $fundAttribut = $fundAttributFactory->loadFunde($fundAttribut);
         $this->setFundAttribut($fundAttribut);
 
         return true;

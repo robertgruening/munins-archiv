@@ -11,7 +11,6 @@ class FundAttributFactory extends Factory implements iTreeFactory
     #region variables
     private $_treeFactory = null;
     private $_fundAttributTypFactory = null;
-    private $_fundFactory = null;
     #endregion
 
     #region properties
@@ -23,16 +22,6 @@ class FundAttributFactory extends Factory implements iTreeFactory
     protected function getFundAttributTypFactory()
     {
         return $this->_fundAttributTypFactory;
-    }
-    
-    protected function getFundFactory()
-    {
-        if ($this->_fundFactory == null)
-        {
-            $this->_fundFactory = new FundFactory();
-        }
-
-        return $this->_fundFactory;
     }
     #endregion
 
@@ -55,8 +44,8 @@ class FundAttributFactory extends Factory implements iTreeFactory
     #region load
     protected function getSQLStatementToLoadById($id)
     {
-        return "SELECT Id, Bezeichnung, Typ_Id
-                FROM FundAttribut
+        return "SELECT Id, Bezeichnung, Typ_Id, COUNT(*) AS CountOfFunde
+                FROM FundAttribut RIGHT JOIN Fund_FundAttribut ON FundAttribut.Id = Fund_FundAttribut.FundAttribut_Id
                 WHERE Id = ".$id.";";
     }
 
@@ -103,6 +92,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
         $fundAttribut->setBezeichnung($dataSet["Bezeichnung"]);
         $fundAttribut->setPath($this->getPath($fundAttribut));
         $fundAttribut->setType($this->getFundAttributTypFactory()->loadById(intval($dataSet["Typ_Id"])));
+        $fundAttribut->setCountOfFunde(intval($dataSet["CountOfFunde"]));
         
         return $fundAttribut;
     }
@@ -155,7 +145,10 @@ class FundAttributFactory extends Factory implements iTreeFactory
             }
         }
 
-        // Review: convert Funde
+        if (isset($object["CountOfFunde"]))
+        {
+            $fundAttribut->setCountOfFunde(intval($object["CountOfFunde"]));
+        }
         
         return $fundAttribut;
     }
@@ -229,16 +222,6 @@ class FundAttributFactory extends Factory implements iTreeFactory
     public function loadRoots()
     {
         return $this->getTreeFactory()->loadRoots();
-    }
-    #endregion
-
-    #region Funde
-    public function loadFunde(FundAttribut $element)
-    {        
-        $funde = $this->getFundFactory()->loadByFundAttribut($element);
-        $element->setFunde($funde);
-        
-        return $element;
     }
     #endregion
 }

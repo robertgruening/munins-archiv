@@ -59,7 +59,6 @@ class SaveFundAttribut extends UserStory
         $fundAttributFromDatabase = $loadFundAttribut->getFundAttribut();
         $fundAttributFromDatabase = $fundAttributFactory->updateParent($fundAttributFromDatabase, $this->getFundAttribut()->getParent());
         $fundAttributFromDatabase = $fundAttributFactory->synchroniseChildren($fundAttributFromDatabase, $this->getFundAttribut()->getChildren());
-        $fundAttributFromDatabase = $fundAttributFactory->synchroniseFunde($fundAttributFromDatabase, $this->getFundAttribut()->getFunde());
         $this->setFundAttribut($fundAttributFromDatabase);
 
         return true;

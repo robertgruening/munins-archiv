@@ -12,7 +12,7 @@ class FundAttribut implements iNode, iTypedNode, iTreeNode
     public $Parent;
     public $Children;
     public $Path;
-    public $Funde;
+    public $CountOfFunde;
     
     
     public function getId()
@@ -102,31 +102,14 @@ class FundAttribut implements iNode, iTypedNode, iTreeNode
         return $this->Path;
     }
     
-    public function getFunde()
+    public function getCountOfFunde()
     {
-        return $this->Funde;
+        return $this->CountOfFunde;
     }
     
-    public function setFunde($funde)
+    public function setCountOfFunde($countOfFunde)
     {
-        $this->Funde = $funde;
-    }
-    
-    public function addFund($fund)
-    {
-        array_push($this->Funde, $fund);
-    }
-    
-    public function removeFund($fund)
-    {
-        for ($i = 0; $i < count($this->Funde); $i++)
-        {
-            if ($this->Funde[$i]->getId() == $fund->getId())
-            {
-                array_splice($this->Funde, $i, 1);
-                break;
-            }
-        }
+        $this->CountOfFunde = $countOfFunde;
     }
     
     function __construct()
@@ -138,6 +121,6 @@ class FundAttribut implements iNode, iTypedNode, iTreeNode
         $this->Parent = null;
         $this->Children = array();
         $this->Path = null;
-        $this->Funde = array();
+        $this->CountOfFunde = 0;
     }
 }
