@@ -8,6 +8,7 @@ $(document).ready(function() {
 	_webServiceClientAblage.Register("loadAll", new GuiClient(FillGridWithRootAblagen));
 	_webServiceClientAblage.Register("load", new GuiClient(FillTreeWithAblageChildren));
 	_webServiceClientAblage.Register("load", new GuiClient(FillGridWithAblageChildren));
+	_webServiceClientAblage.Register("load", new GuiClient(SetSelectedElement));
 
     $("#navigation").Navigation();
     
@@ -86,10 +87,12 @@ $(document).ready(function() {
 				if (data.node.original.original == undefined)
 				{
 					SetSelectedElement(data.node.original);
+					SetPath(data.node.original);
 				}
 				else
 				{
 					SetSelectedElement(data.node.original.original);
+					SetPath(data.node.original.original);
 				}
 
 				_webServiceClientAblage.Load(GetSelectedElement(), "tree.selected");
@@ -111,28 +114,15 @@ $(document).ready(function() {
 					if (loadedSelectedNode.original.original == undefined)
 					{
 						SetSelectedElement(loadedSelectedNode.original);
+						SetPath(oadedSelectedNode.original);
 					}
 					else
 					{
 						SetSelectedElement(loadedSelectedNode.original.original);
+						SetPath(loadedSelectedNode.original.original);
 					}
 				}
 			});
-		}
-
-		if (data.node != undefined &&
-			data.node.original != undefined &&
-			(data.node.original.id == undefined ||
-			 data.node.original.id != GetAbstractAblageNode().id))
-		{
-			if (data.node.original.original == undefined)
-			{
-				SetPath(data.node.original);
-			}
-			else
-			{
-				SetPath(data.node.original.origina);
-			}
 		}
 	})
 	.on("rename_node.jstree", function(event, data) {
@@ -412,7 +402,7 @@ function InitGrid()
 			if (args.item.BaseType == "Ablage")
 			{
 				SetPath(args.item.Original);
-				SetSelectedElement(args.item.Original);
+				_webServiceClientAblage.Load(args.item.Original, "grid.selected");
 			}
 			
 			$selectedRow = $(args.event.target).closest("tr");
@@ -736,7 +726,7 @@ function ShowFormCreate()
 				newNode.Type = new Object();
 				newNode.Type.Id = GetAblageTypeId();
 				
-				_webServiceClientAblage.Save(newNode, "saved");
+				_webServiceClientAblage.Create(newNode, "saved");
 
 				$(this).dialog("close");
 			},
