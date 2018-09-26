@@ -61,6 +61,7 @@ class LoadKontext extends UserStory
         $kontext = $kontextFactory->loadParent($kontext);
         $kontext = $kontextFactory->loadChildren($kontext);
         $kontext = $kontextFactory->loadFunde($kontext);
+        $kontext = $kontextFactory->loadOrte($kontext);
         $this->setKontext($kontext);
 
         return true;

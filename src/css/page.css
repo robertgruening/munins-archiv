@@ -17,6 +17,10 @@ html, body {
     padding-left: 16px;
 }
 
+.dialog {
+	width: 80%;	
+}
+
 
 /**********/
 /* colors */
@@ -26,4 +30,17 @@ html, body {
 	font-family: Verdana, Arial;
 	background-color: #eeeeee;
 	color: #333333;
+}
+
+.fa-question-circle {
+	color: SteelBlue;
+}
+
+
+/**************/
+/* visibility */
+/**************/
+
+.dialog {
+	display: none;
 }

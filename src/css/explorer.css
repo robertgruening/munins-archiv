@@ -1,5 +1,6 @@
 #path {
-    width: 100%;
+    float: left;
+    width: 85%;
 }
 
 #tree {
@@ -13,14 +14,63 @@
     float: left;
 }
 
-i.root {
+.selected-row,
+.selected-row td.jsgrid-cell {
+    background: #c4e2ff;
+    border-color: #c4e2ff;
+}
+
+#toolBar {
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0px 5px 5px;
+}
+
+#toolBar li {
+    display: inline;
+    padding: 5px;
+}
+
+#toolBar li a:hover {
+    color: SteelBlue;
+}
+
+#create {
+
+}
+
+#edit {
+
+}
+
+#delete {
+
+}
+
+.fa-door,
+.fa-door-open,
+.fa-folder,
+.fa-folder-open,
+.fa-tags {
    color: Black;   
 }
 
-i.node {
-   color: #e78f08;
+.fa-box,
+.fa-box-open,
+.fa-calendar-alt,
+.fa-tag  {
+    color: #e78f08;
 }
 
-i.leaf {
+.fa-puzzle-piece,
+.fa-map-marker{
    color: SteelBlue;
+}
+
+.fa-flag {
+    color: #b81900;
+}
+
+.fa-map {
+    color: #67b021;
 }

@@ -1,55 +1,64 @@
 //var _kartonschildIndex = 0;
 
-$(document).ready(function() {
-	_webServiceClientAblageType.Register("loadAll", new GuiClient(InitGrid));
+// $(document).ready(function() {
+// 	_webServiceClientAblageType.Register("loadAll", new GuiClient(InitGrid));
 	
-	$("#navigation").Navigation();
+// 	$("#navigation").Navigation();
 
-    $("#messageBox").dialog({
-        autoOpen: false,
-        height: "auto",
-        modal: true
-    });
+//     $("#messageBox").dialog({
+//         autoOpen: false,
+//         height: "auto",
+//         modal: true
+//     });
 
-	$("#buttonCreateFund").attr("disabled",true);
-	$("#buttonDelete").attr("disabled",true);
+// 	$("#buttonCreateFund").attr("disabled",true);
+// 	$("#buttonDelete").attr("disabled",true);
 	
-	//$("#buttonAddKarton").click(function() { AddAblageToKartonschildSeite(); });
-	$("#textboxBezeichnung").keyup(function() { checkBezeichnung($(this)); })
-	                        .change(function() { checkBezeichnung($(this)); });
+// 	//$("#buttonAddKarton").click(function() { AddAblageToKartonschildSeite(); });
+// 	$("#textboxBezeichnung").keyup(function() { checkBezeichnung($(this)); })
+// 	                        .change(function() { checkBezeichnung($(this)); });
 	
-	LoadSelectionType();
+// 	LoadSelectionType();
 	
-	if (GetURLParameter("Id"))
-	{
-	    $("#breadcrumb").Breadcrumb({
-		    PageName : "AblageFormEdit"
-		});
+// 	if (GetURLParameter("Id"))
+// 	{
+// 	    $("#breadcrumb").Breadcrumb({
+// 		    PageName : "AblageFormEdit"
+// 		});
 		
-		LoadAblageById(GetURLParameter("Id"));
+// 		LoadAblageById(GetURLParameter("Id"));
 		
-		$("#buttonCreateFund").click(function() { OpenPageNewFund(); });
-		$("#buttonCreateFund").attr("disabled",false);
+// 		$("#buttonCreateFund").click(function() { OpenPageNewFund(); });
+// 		$("#buttonCreateFund").attr("disabled",false);
 		
-		$("#buttonDelete").attr("disabled",false);
+// 		$("#buttonDelete").attr("disabled",false);
 		
-		return;
-	}
+// 		return;
+// 	}
 
-	$("#breadcrumb").Breadcrumb({
-		PageName : "AblageFormNew"
-	});
+// 	$("#breadcrumb").Breadcrumb({
+// 		PageName : "AblageFormNew"
+// 	});
 	
-	SetAblageJSON();
+// 	SetAblageJSON();
 	
-	if (GetURLParameter("Parent_Id"))
-	{
-		$("#textboxParentId").val(GetURLParameter("Parent_Id"));
-		LoadListParents();
+// 	if (GetURLParameter("Parent_Id"))
+// 	{
+// 		$("#textboxParentId").val(GetURLParameter("Parent_Id"));
+// 		LoadListParents();
 		
-		return;
-	}
-});
+// 		return;
+// 	}
+// });
+
+function FillEditForm(node)
+{
+	SetAblageBezeichnung(node.Bezeichnung);
+	SetAblageType(node.Type.Bezeichnung);
+	SetAblagePath(node.Path);
+	SetAblageCountOfChildren(node.Children);
+	SetAblageCountOfFunde(node.Funde);
+}
 
 function FillSelectionAblageType(types)
 {
@@ -87,14 +96,9 @@ function CreateOptionType(type, select)
 	return option;
 }
 
-function selectTypen_onChange()
-{
-	ShowFormFieldBlocksByType();
-}
-
 function SetAblageType(typeBezeichnung)
 {
-	var typeId = $("#selectTypen option").filter(function () { return $(this).html() == "Raum"; }).val();
+	var typeId = $("#selectTypen option").first().val();
 
 	if (typeBezeichnung != undefined &&
 		typeBezeichnung != null)
@@ -103,25 +107,6 @@ function SetAblageType(typeBezeichnung)
 	}
 	
 	$("#selectTypen").val(typeId);
-	ShowFormFieldBlocksByType();
-}
-
-function ShowFormFieldBlocksByType()
-{
-	$("#divParent").hide();
-	
-	if ($("#selectTypen option:selected").text() == "Raum")
-	{
-	}
-	else
-	{
-		$("#divParent").show();
-	}
-}
-
-function SetFormTitle(title)
-{
-	document.title = title;
 }
 
 function GetAblageBezeichnung()
@@ -141,168 +126,183 @@ function GetAblageTypeId()
 
 function GetAblagePath()
 {
-	return $("#textboxPath").val();
+	if ($("#labelPath").text().length >= 1)
+	{
+		return $("#labelPath").text().substr(1);
+	}
+
+	return "";
 }
 
 function SetAblagePath(path)
 {
-	$("#textboxPath").val(path);
+	$("#labelPath").text("/" + path);
 }
 
-function SetAblageParent(parent)
+// function SetAblageParent(parent)
+// {
+// 	$("#divParent #divList").empty();
+// 	$("#divParent #divList").append("<ul></ul>");
+
+// 	if (parent == undefined ||
+// 		parent == null)
+// 	{
+// 		return;
+// 	}
+
+// 	$("#divParent #divList ul").append("<li><a href='../Ablage/Form.html?Id=" + parent.Id + "'>" + parent.Type.Bezeichnung + ": " + parent.Bezeichnung + "</a></li>");
+// }
+
+// function SetShortView(ablage)
+// {
+// 	$("#shortView").AblageShortView({
+// 		Element : ablage
+// 	});
+// }
+
+// function LoadListChildren(children)
+// {
+// 	$("#divAblagen #divList").empty();
+
+// 	if (children == undefined ||
+// 		children == null ||
+// 		children.length == 0)
+// 	{
+// 		$("#divAblagen #divList").append("<label>keine</label>");
+// 		return;
+// 	}
+
+// 	$("#divAblagen #divList").append("<ul></ul>");
+
+// 	for (var i = 0; i < children.length; i++)
+// 	{
+// 		$("#divAblagen #divList ul").append("<li><a href='../Ablage/Form.html?Id=" + children[i].Id + "'>" + children[i].Type.Bezeichnung + ": " + children[i].Bezeichnung + "</a></li>");
+// 	}
+// }
+
+function SetAblageCountOfChildren(children)
 {
-	$("#divParent #divList").empty();
-	$("#divParent #divList").append("<ul></ul>");
-
-	if (parent == undefined ||
-		parent == null)
-	{
-		return;
-	}
-
-	$("#divParent #divList ul").append("<li><a href='../Ablage/Form.html?Id=" + parent.Id + "'>" + parent.Type.Bezeichnung + ": " + parent.Bezeichnung + "</a></li>");
+	$("#divAblagen #labelCountOfChildren").text(children.length);
 }
 
-function SetShortView(ablage)
+function SetAblageCountOfFunde(funde)
 {
-	$("#shortView").AblageShortView({
-		Element : ablage
-	});
+	$("#divFunde #labelCountOfFunde").text(funde.length);
 }
 
-function LoadListChildren(children)
-{
-	$("#divAblagen #divList").empty();
+// function LoadListFunde(funde)
+// {
+// 	$("#divFunde #divList").empty();
+// 	$("#divFunde #divList").append("<ul></ul>");
 
-	if (children == undefined ||
-		children == null ||
-		children.length == 0)
-	{
-		$("#divAblagen #divList").append("<label>keine</label>");
-		return;
-	}
-
-	$("#divAblagen #divList").append("<ul></ul>");
-
-	for (var i = 0; i < children.length; i++)
-	{
-		$("#divAblagen #divList ul").append("<li><a href='../Ablage/Form.html?Id=" + children[i].Id + "'>" + children[i].Type.Bezeichnung + ": " + children[i].Bezeichnung + "</a></li>");
-	}
-}
-
-function LoadListFunde(funde)
-{
-	$("#divFunde #divList").empty();
-	$("#divFunde #divList").append("<ul></ul>");
-
-	for (var i = 0; i < funde.length; i++)
-	{
-		var listItemText = "";
-		listItemText += funde[i].Anzahl.toString().replace("-", ">")+"x ";
+// 	for (var i = 0; i < funde.length; i++)
+// 	{
+// 		var listItemText = "";
+// 		listItemText += funde[i].Anzahl.toString().replace("-", ">")+"x ";
 		
-		if (funde[i].FundAttribute != undefined &&
-			funde[i].FundAttribute != null &&
-			funde[i].FundAttribute.length > 0)
-		{
-			var material = null;
-			var gegenstand = null;
-			var erhaltung = null;
+// 		if (funde[i].FundAttribute != undefined &&
+// 			funde[i].FundAttribute != null &&
+// 			funde[i].FundAttribute.length > 0)
+// 		{
+// 			var material = null;
+// 			var gegenstand = null;
+// 			var erhaltung = null;
 			
-			for (var j = 0; j < funde[i].FundAttribute.length; j++)
-			{
-				if (funde[i].FundAttribute[j].Type.Bezeichnung == "Material")
-					material = funde[i].FundAttribute[j];
-				else if (funde[i].FundAttribute[j].Type.Bezeichnung == "Gegenstand")
-					gegenstand = funde[i].FundAttribute[j];
-				else if (funde[i].FundAttribute[j].Type.Bezeichnung == "Erhaltung")
-					erhaltung = funde[i].FundAttribute[j];
+// 			for (var j = 0; j < funde[i].FundAttribute.length; j++)
+// 			{
+// 				if (funde[i].FundAttribute[j].Type.Bezeichnung == "Material")
+// 					material = funde[i].FundAttribute[j];
+// 				else if (funde[i].FundAttribute[j].Type.Bezeichnung == "Gegenstand")
+// 					gegenstand = funde[i].FundAttribute[j];
+// 				else if (funde[i].FundAttribute[j].Type.Bezeichnung == "Erhaltung")
+// 					erhaltung = funde[i].FundAttribute[j];
 					
-				if (material != null &&
-					gegenstand != null &&
-					erhaltung != null)
-					break;
-			}
-			if (material != null)
-				listItemText += material.Bezeichnung + " ";
+// 				if (material != null &&
+// 					gegenstand != null &&
+// 					erhaltung != null)
+// 					break;
+// 			}
+// 			if (material != null)
+// 				listItemText += material.Bezeichnung + " ";
 				
-			if (gegenstand != null)
-				listItemText += gegenstand.Bezeichnung + " ";
+// 			if (gegenstand != null)
+// 				listItemText += gegenstand.Bezeichnung + " ";
 				
-			if (erhaltung != null)
-				listItemText += erhaltung.Bezeichnung + " ";
-		}
+// 			if (erhaltung != null)
+// 				listItemText += erhaltung.Bezeichnung + " ";
+// 		}
 		
-		if (funde[i].Bezeichnung == null)
-			listItemText += " ";
-		else
-			listItemText += ": \""+funde[i].Bezeichnung+"\" ";
+// 		if (funde[i].Bezeichnung == null)
+// 			listItemText += " ";
+// 		else
+// 			listItemText += ": \""+funde[i].Bezeichnung+"\" ";
 		
-		$("#divFunde #divList ul").append("<li><a href='../Fund/Form.html?Id=" + funde[i].Id + "'>" + listItemText + "</a></li>");
-	}
-}
+// 		$("#divFunde #divList ul").append("<li><a href='../Fund/Form.html?Id=" + funde[i].Id + "'>" + listItemText + "</a></li>");
+// 	}
+// }
 
-function buttonNeu_onClick()
-{
-	OpenPageNewAblage();
-}
+// function buttonNeu_onClick()
+// {
+// 	OpenPageNewAblage();
+// }
 
-function buttonSpeichern_onClick()
-{	
-	SaveAblage();	
-}
+// function buttonSpeichern_onClick()
+// {	
+// 	SaveAblage();	
+// }
 
-function buttonDelete_onClick()
-{
-	if (!IsAblageSet())
-	{
-		return;
-	}
+// function buttonDelete_onClick()
+// {
+// 	if (!IsAblageSet())
+// 	{
+// 		return;
+// 	}
 	
-	var dialog = "<div id=dialogDelete title='Ablage löschen'>";
-	dialog += "<p>";
-	dialog += "<span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 20px 0;'></span>";
-	dialog += "Möchten Sie die Ablage (" + _ablage.Id + ") wirklich löschen?</p>";
-	dialog += "</div>";
-	$("body").append(dialog);
-	$("#dialogDelete").dialog({
-		resizable: true,
-		modal: true,
-		buttons: {
-			"Ja": function() {
-				$(this).dialog("close");
-				DeleteAblage();
-				$("#dialogDelete").remove();
-			},
-			"Nein": function() {
-				$(this).dialog("close");
-				$("#dialogDelete").remove();
-			}
-		}
-	});
-}
+// 	var dialog = "<div id=dialogDelete title='Ablage löschen'>";
+// 	dialog += "<p>";
+// 	dialog += "<span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 20px 0;'></span>";
+// 	dialog += "Möchten Sie die Ablage (" + _ablage.Id + ") wirklich löschen?</p>";
+// 	dialog += "</div>";
+// 	$("body").append(dialog);
+// 	$("#dialogDelete").dialog({
+// 		resizable: true,
+// 		modal: true,
+// 		buttons: {
+// 			"Ja": function() {
+// 				$(this).dialog("close");
+// 				DeleteAblage();
+// 				$("#dialogDelete").remove();
+// 			},
+// 			"Nein": function() {
+// 				$(this).dialog("close");
+// 				$("#dialogDelete").remove();
+// 			}
+// 		}
+// 	});
+// }
 
-function GetURLParameter(name)
-{
-	var url = window.location.search.substring(1);
-	var parameters = url.split("&");
+// function GetURLParameter(name)
+// {
+// 	var url = window.location.search.substring(1);
+// 	var parameters = url.split("&");
 
-	for (var i = 0; i < parameters.length; i++)
-	{
-		var parameter = parameters[i].split("=");
+// 	for (var i = 0; i < parameters.length; i++)
+// 	{
+// 		var parameter = parameters[i].split("=");
 
-		if (parameter[0] == name)
-		{
-			return parameter[1];
-		}
-	}
-}
+// 		if (parameter[0] == name)
+// 		{
+// 			return parameter[1];
+// 		}
+// 	}
+// }
 
-function ShowMessages(messages)
-{
-    $("#messageBox").empty();
-    $("#messageBox").append(messages);
-    $("#messageBox").dialog("open");
-}
+// function ShowMessages(messages)
+// {
+//     $("#messageBox").empty();
+//     $("#messageBox").append(messages);
+//     $("#messageBox").dialog("open");
+// }
 
 /*
 function AddAblageToKartonschildSeite()

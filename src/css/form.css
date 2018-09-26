@@ -34,21 +34,12 @@
     float: left;
 }
 
-.formBlock .fieldBlock input[type="text"] {
-	min-width: 200px;
-	width: 99%;
-}
-
-.formBlock .fieldBlock textarea {
-	min-width: 200px;
-	width: 99%;
-	height: 100px;
-	resize: vertical;
-}
-
+.formBlock .fieldBlock input[type="text"],
+.formBlock .fieldBlock textarea,
 .formBlock .fieldBlock select {
-	min-width: 204px;
 	width: 100%;
+	resize: vertical;
+	box-sizing: border-box;
 }
 
 .formBlock .fieldBlock 
@@ -58,6 +49,14 @@ input[type="button"] {
 
 .clear {
     clear: both;
+}
+
+.fieldDescription {
+	width: 200px;
+}
+
+.fieldValue {
+	width: 514px;
 }
 
 .fieldDescription label{

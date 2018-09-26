@@ -1,7 +1,14 @@
-var _webServiceClientAblageType = new WebServiceClientAblageType();
 var _webServiceClientAblage = new WebServiceClientAblage();
+var _webServiceClientAblageType = new WebServiceClientAblageType();
+var _elementsToBeRefreshed = new Array();
+var _selectedElement = null;
 
-function OpenAblageFormular(ablage)
+function SetSelectedElement(selectedElement)
 {
-    window.open("Form.html?Id=" + ablage.id, "_self");
+    _selectedElement = selectedElement;
+}
+
+function GetSelectedElement()
+{
+    return _selectedElement;
 }
