@@ -429,7 +429,14 @@ function LoadAblagen(node, sender)
 	if (sender == "saved" ||
 		sender == "deleted")
 	{
-		$("#tree").jstree(true).refresh_node(GetSelectedElement().Parent.Id);
+		if (GetSelectedElement().Parent == null)
+		{
+			$("#tree").jstree(true).refresh_node(GetAbstractAblageNode().id);
+		}
+		else
+		{
+			$("#tree").jstree(true).refresh_node(GetSelectedElement().Parent.Id);
+		}
 	}
 	else
 	{
