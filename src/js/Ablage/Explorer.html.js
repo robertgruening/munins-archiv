@@ -2,7 +2,7 @@ $(document).ready(function() {
 	_webServiceClientAblageType.Register("loadAll", new GuiClient(FillSelectionAblageType));
 	_webServiceClientAblage.Register("delete", new GuiClient(LoadAblagen));
 	_webServiceClientAblage.Register("create", new GuiClient(LoadAblagen));
-	_webServiceClientAblage.Register("save", new GuiClient(RenameTreeNode));
+	_webServiceClientAblage.Register("save", new GuiClient(LoadAblagen));
 	_webServiceClientAblage.Register("save", new GuiClient(MoveTreeNode));
 	_webServiceClientAblage.Register("loadAll", new GuiClient(FillTreeWithRootAblagen));
 	_webServiceClientAblage.Register("loadAll", new GuiClient(FillGridWithRootAblagen));
@@ -125,33 +125,6 @@ $(document).ready(function() {
 			});
 		}
 	})
-	.on("rename_node.jstree", function(event, data) {
-		var node = data.node.original;
-
-		// Refactoring: clean up!
-		// Removes the self reference added for the grid
-
-		if (node.Children != undefined &&
-			node.Children.length > 0 &&
-			node.Children[0].Id == node.Id)
-		{
-			node.Children.shift();
-		}
-
-		var newName = data.text;
-		var typePrefix = node.Type.Bezeichnung + ": ";
-
-		if (newName.startsWith(typePrefix))
-		{
-			node.Bezeichnung = newName.substr(typePrefix.length);
-		}
-		else
-		{
-			node.Bezeichnung = newName;
-		}
-		
-		_webServiceClientAblage.Save(node, "tree.renamed");
-	})
 	.on("loaded.jstree", function(event, data) {
 		$("#tree").jstree(true).open_node(GetAbstractAblageNode().id, function() {
 			$("#tree").jstree(true).select_node(GetAbstractAblageNode().id);
@@ -257,13 +230,6 @@ $(document).ready(function() {
 							ShowFormEdit();
 						}
 					},
-					"Rename": {
-						"label": "Umbenennen",
-						"title": "Umbenennen",
-						"action": function (obj) { 
-							$("#tree").jstree(true).edit($node);
-						}
-					},
 					"Delete": {
 						"label": "Löschen",
 						"title": "Löschen",
@@ -296,24 +262,6 @@ function FillTreeWithRootAblagen(rootAblagen, sender)
 	}
 	
 	$("#tree").jstree(true).open_node(GetAbstractAblageNode().id);
-}
-
-function RenameTreeNode(ablage, sender)
-{
-	if (sender != undefined &&
-		sender != "tree.renamed")
-	{
-		return;
-	}
-
-	if (ablage.Parent == null)
-	{
-		$("#tree").jstree(true).refresh_node(GetAbstractAblageNode().id);
-	}
-	else
-	{
-		$("#tree").jstree(true).refresh_node(ablage.Parent.Id);
-	}
 }
 
 function MoveTreeNode(ablage, sender)
@@ -401,7 +349,6 @@ function InitGrid()
 
 			if (args.item.BaseType == "Ablage")
 			{
-				SetPath(args.item.Original);
 				_webServiceClientAblage.Load(args.item.Original, "grid.selected");
 			}
 			
@@ -477,11 +424,17 @@ IconField.prototype = new jsGrid.Field({
 	}
 });
 
-function LoadAblagen()
+function LoadAblagen(node, sender)
 {
-	var selectedNodeId = $("#tree").jstree(true).get_selected();
-	$("#tree").jstree(true).deselect_all();
-	$("#tree").jstree(true).select_node(selectedNodeId);
+	if (sender == "saved" ||
+		sender == "deleted")
+	{
+		$("#tree").jstree(true).refresh_node(GetSelectedElement().Parent.Id);
+	}
+	else
+	{
+		$("#tree").jstree(true).refresh_node(GetSelectedElement().Id);
+	}
 }
 
 function ShowMessages(messages)
@@ -560,7 +513,7 @@ function FillGridWithAblageChildren(ablage, sender)
 
 	ablage.Funde.forEach(fund => {
 		var entry = new Object();
-		entry.Bezeichnung = GetFundLabelText(fund);
+		entry.Bezeichnung = getFundLabelText(fund);
 		entry.Type = "Fund";
 		entry.BaseType = "Fund";
 		entry.Icon = GetIcon("Fund");
@@ -571,69 +524,6 @@ function FillGridWithAblageChildren(ablage, sender)
 	$("#grid").jsGrid({
 		data: entries
 	});
-}
-
-function GetFundLabelText(fund)
-{
-	var labelText = "";
-	labelText += fund.Anzahl.toString().replace("-", ">")+"x ";
-	
-	if (fund.FundAttribute != undefined &&
-		fund.FundAttribute != null &&
-		fund.FundAttribute.length > 0)
-	{
-		var material = null;
-		var gegenstand = null;
-		var erhaltung = null;
-		
-		for (var j = 0; j < fund.FundAttribute.length; j++)
-		{
-			if (fund.FundAttribute[j].Type.Bezeichnung == "Material")
-			{
-				material = fund.FundAttribute[j];
-			}
-			else if (fund.FundAttribute[j].Type.Bezeichnung == "Gegenstand")
-			{
-				gegenstand = fund.FundAttribute[j];
-			}
-			else if (fund.FundAttribute[j].Type.Bezeichnung == "Erhaltung")
-			{
-				erhaltung = fund.FundAttribute[j];
-			}
-				
-			if (material != null &&
-				gegenstand != null &&
-				erhaltung != null)
-			{
-				break;
-			}
-		}
-
-		if (material != null)
-		{
-			labelText += material.Bezeichnung + " ";
-		}
-			
-		if (gegenstand != null)
-		{
-			labelText += gegenstand.Bezeichnung + " ";
-		}
-			
-		if (erhaltung != null)
-		{
-			labelText += erhaltung.Bezeichnung + " ";
-		}
-	}
-	
-	if (fund.Bezeichnung != null &&
-		fund.Bezeichnung != "")
-	{
-		labelText += ": \"" + fund.Bezeichnung + "\"";
-	}
-
-	labelText = labelText.trim();
-
-	return labelText;
 }
 
 function GetIcon(type, state)
@@ -711,8 +601,6 @@ function ShowFormCreate()
 	newNode.Children = new Array();
 	newNode.Funde = new Array();
 
-	console.log(GetSelectedElement());
-
 	$("#form").dialog({
 		height: "auto",
 		width: 750,
@@ -723,7 +611,6 @@ function ShowFormCreate()
 			"Speichern": function()
 			{
 				newNode.Bezeichnung = GetAblageBezeichnung();
-				newNode.Type = new Object();
 				newNode.Type.Id = GetAblageTypeId();
 				
 				_webServiceClientAblage.Create(newNode, "saved");
@@ -749,8 +636,6 @@ function ShowFormEdit()
 	{
 		return;
 	}
-
-	console.log(GetSelectedElement());
 
 	$("#form").dialog({
 		height: "auto",
@@ -783,8 +668,6 @@ function ShowFormEdit()
 function ShowDialogDelete()
 {
 	var selectedNode = GetSelectedElement();
-
-	console.log(GetSelectedElement());
 
 	$("#dialogDelete").empty();
 	$("#dialogDelete").append(
