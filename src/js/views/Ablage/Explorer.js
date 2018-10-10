@@ -5,51 +5,101 @@ $(document).ready(function() {
 	_webServiceClientAblage.Register("save", new GuiClient(LoadAblagen));
 	_webServiceClientAblage.Register("save", new GuiClient(MoveTreeNode));
 	_webServiceClientAblage.Register("loadAll", new GuiClient(FillTreeWithRootAblagen));
+	_webServiceClientAblage.Register("loadAll", new GuiClient(FillTreeMoveWithRootAblagen));
 	_webServiceClientAblage.Register("loadAll", new GuiClient(FillGridWithRootAblagen));
 	_webServiceClientAblage.Register("load", new GuiClient(FillTreeWithAblageChildren));
+	_webServiceClientAblage.Register("load", new GuiClient(FillTreeMoveWithAblageChildren));
 	_webServiceClientAblage.Register("load", new GuiClient(FillGridWithAblageChildren));
 	_webServiceClientAblage.Register("load", new GuiClient(SetSelectedElement));
+	_webServiceClientAblage.Register("load", new GuiClient(SetSelectedParentElement));
 
-    $("#navigation").Navigation();
-    
-    $("#breadcrumb").Breadcrumb({
-        PageName : "AblageExplorer"
-	});
+	InitMessageBox();
+	InitNavigation();
+    InitBreadcrumb();
+	InitToolbar();	
+	InitTree();
+	InitTreeMove();
+	InitGrid();
+});
 
+function InitMessageBox()
+{
     $("#messageBox").dialog({
         autoOpen: false,
         height: "auto",
         modal: true
     });
+}
 
-	jsGrid.fields.icon = IconField;
+function InitNavigation()
+{
+    $("#navigation").Navigation();
+}
 
-	_webServiceClientAblageType.LoadAll();
-
-	InitToolbar();
-	
-	InitGrid();
-	
-	$("#textboxBezeichnung").on("input",function(e){
-		console.log("Bezeichnung ändert sich");
-		var bezeichnung = GetAblageBezeichnung();
-		var path = GetAblagePath();
-		
-		var lastSlashIndex = path.lastIndexOf("/");
-
-		if (lastSlashIndex == -1)
-		{
-			path = bezeichnung;
-		}
-		else
-		{
-			path = path.substr(0, lastSlashIndex);
-			path += "/" + bezeichnung;
-		}
-
-		SetAblagePath(path);
+function InitBreadcrumb()
+{
+    $("#breadcrumb").Breadcrumb({
+        PageName : "AblageExplorer"
 	});
+}
 
+function InitToolbar()
+{
+	DisableCreateButton();
+	$("#create").click(ShowFormCreate);
+
+	DisableEditButton();
+	$("#edit").click(ShowFormEdit);
+
+	DisableMoveButton();
+	$("#move").click(ShowFormMove);
+
+	DisableDeleteButton();
+	$("#delete").click(ShowDialogDelete);
+}
+
+function EnableCreateButton()
+{
+	$("#create").removeClass("disabled");
+}
+
+function DisableCreateButton()
+{
+	$("#create").addClass("disabled");
+}
+
+function EnableEditButton()
+{
+	$("#edit").removeClass("disabled");
+}
+
+function DisableEditButton()
+{
+	$("#edit").addClass("disabled");
+}
+
+function EnableMoveButton()
+{
+	$("#move").removeClass("disabled");
+}
+
+function DisableMoveButton()
+{
+	$("#move").addClass("disabled");
+}
+
+function EnableDeleteButton()
+{
+	$("#delete").removeClass("disabled");
+}
+
+function DisableDeleteButton()
+{
+	$("#delete").addClass("disabled");
+}
+
+function InitTree()
+{
 	$("#tree")
 	.on("open_node.jstree", function(event, data) {
 		if (data.node.id == GetAbstractAblageNode().id)
@@ -79,7 +129,7 @@ $(document).ready(function() {
 			if (data.node.original.id != undefined &&
 				data.node.original.id == GetAbstractAblageNode().id)
 			{
-				SetSelectedElement(null);
+				SetSelectedElement(GetAbstractAblageNode());
 				_webServiceClientAblage.LoadAll("tree.selected");
 			}
 			else
@@ -106,7 +156,7 @@ $(document).ready(function() {
 				if (data.node.original.id != undefined &&
 					data.node.original.id == GetAbstractAblageNode().id)
 				{
-					SetSelectedElement(null);
+					SetSelectedElement(GetAbstractAblageNode());
 					_webServiceClientAblage.LoadAll("tree.selected");
 				}
 				else
@@ -130,66 +180,15 @@ $(document).ready(function() {
 			$("#tree").jstree(true).select_node(GetAbstractAblageNode().id);
 		});
 	})
-	.on("move_node.jstree", function(event, data) {
-		var node = null;
-
-		if (data.node.original.original == undefined)
-		{
-			node = data.node.original;
-		}
-		else
-		{
-			node = data.node.original.original;
-		}
-
-		// old parent
-		_elementsToBeRefreshed.push({
-			Id : node.Parent
-		});
-
-		// new parent
-		_elementsToBeRefreshed.push({
-			Id : data.parent
-		});
-
-		$("#tree").jstree(true).load_node(node.Id, function(){
-			node.Parent = new Object();
-			node.Parent.Id = data.parent;
-
-			if (node.Parent.Id == -1)
-			{
-				node.Parent.Id = null;
-			}
-
-			_webServiceClientAblage.Save(node, "tree.moved");
-			// TODO
-			//_webServiceClientAblage.Load(node.original, "tree.selected");
-		});
-
-		var oldParent = node.Parent;
-
-		if (!$("#tree").jstree(true).is_loaded(data.parent))
-		{
-			$("#tree").jstree(true).load_node(data.parent, function(){
-				if (!$("#tree").jstree(true).is_loaded(data.parent))
-				{
-					console.log("Elternknoten ist nachgeladen");
-				}
-			});
-		}
-
-	})
     .jstree({
 		"plugins": [
-			"contextmenu",
-			"dnd"
+			"contextmenu"
 		],
         "core": {
 			"multiple": false,
 			"check_callback" : true,
 			"data" : function (node, callbackFunction) 
 			{
-				console.log("data tree");
 				if (node.id === "#")
 				{
 					callbackFunction(new Array(CreateAbstractAblageNode()));
@@ -230,6 +229,13 @@ $(document).ready(function() {
 							ShowFormEdit();
 						}
 					},
+					"Move": {
+						"label": "Verschieben",
+						"title": "Verschieben",
+						"action": function(obj) {
+							ShowFormMove();
+						}
+					},
 					"Delete": {
 						"label": "Löschen",
 						"title": "Löschen",
@@ -241,69 +247,12 @@ $(document).ready(function() {
 			}
 		}
     });
-});
-
-function FillTreeWithRootAblagen(rootAblagen, sender)
-{
-	if (sender == undefined ||
-		sender != "tree.loaded")
-	{
-		return;
-	}
-
-	var children = $("#tree").jstree(true).get_node(GetAbstractAblageNode().id).children;
-	$("#tree").jstree(true).delete_node(children);
-
-	for (var i = 0; i < rootAblagen.length; i++)
-	{
-		var ablageNode = CreateAblageNode(rootAblagen[i]);
-		ablageNode.parent = "-1";
-		$("#tree").jstree(true).create_node(ablageNode.parent, ablageNode, "last");
-	}
-	
-	$("#tree").jstree(true).open_node(GetAbstractAblageNode().id);
-}
-
-function MoveTreeNode(ablage, sender)
-{
-	if (sender != undefined &&
-		sender != "tree.moved")
-	{
-		return;
-	}
-
-	while (_elementsToBeRefreshed.length > 0)
-	{
-		$("#tree").jstree(true).refresh_node(_elementsToBeRefreshed[0].Id);
-		_elementsToBeRefreshed.shift();
-	}
-}
-
-function FillTreeWithAblageChildren(ablage, sender)
-{
-	if (sender == undefined ||
-		sender != "tree.loaded")
-	{
-		return;
-	}
-
-	var node = $("#tree").jstree(true).get_node(ablage.Id);
-	$("#tree").jstree(true).delete_node(node.children);
-	node.original = ablage;
-
-	for (var i = 0; i < ablage.Children.length; i++)
-	{
-		var ablageNode = CreateAblageNode(ablage.Children[i]);
-		ablageNode.parent = ablage.Id;
-		
-		$("#tree").jstree(true).create_node(ablageNode.parent, ablageNode, "last");
-	}
-
-	$("#tree").jstree(true).open_node(ablage.Id);
 }
 
 function InitGrid()
 {
+	_webServiceClientAblageType.LoadAll();
+	jsGrid.fields.icon = IconField;
 	$("#grid").jsGrid({
         width: "70%",
 
@@ -351,17 +300,19 @@ function InitGrid()
 			{
 				_webServiceClientAblage.Load(args.item.Original, "grid.selected");
 			}
+			else
+			{
+				SetSelectedElement(null);
+			}
 			
 			$selectedRow = $(args.event.target).closest("tr");
 			$selectedRow.addClass("selected-row");
 		},
 
 		rowDoubleClick: function(data) {
-			console.log(data);
 			$("#tree").jstree(true).deselect_all();
 
 			var selectedNode = $("#tree").jstree(true).get_node(data.item.Original.Id);
-			console.log(selectedNode);
 
 			if (selectedNode == undefined)
 			{
@@ -383,6 +334,125 @@ function InitGrid()
 	});
 }
 
+function FillTreeWithRootAblagen(rootAblagen, sender)
+{
+	if (sender == undefined ||
+		sender != "tree.loaded")
+	{
+		return;
+	}
+
+	var children = $("#tree").jstree(true).get_node(GetAbstractAblageNode().id).children;
+	$("#tree").jstree(true).delete_node(children);
+
+	for (var i = 0; i < rootAblagen.length; i++)
+	{
+		var ablageNode = CreateAblageNode(rootAblagen[i]);
+		ablageNode.parent = GetAbstractAblageNode().id;
+		$("#tree").jstree(true).create_node(ablageNode.parent, ablageNode, "last");
+	}
+	
+	$("#tree").jstree(true).open_node(GetAbstractAblageNode().id);
+}
+
+function FillTreeMoveWithRootAblagen(rootAblagen, sender)
+{
+	if (sender == undefined ||
+		sender != "treeMove.loaded")
+	{
+		return;
+	}
+
+	var selectedElement = GetSelectedElement();
+
+	var children = $("#treeMove").jstree(true).get_node(GetAbstractAblageNode().id).children;
+	$("#treeMove").jstree(true).delete_node(children);
+
+	for (var i = 0; i < rootAblagen.length; i++)
+	{
+		if (selectedElement != null &&
+			selectedElement.Id == rootAblagen[i].Id)
+		{
+			continue;
+		}
+
+		var ablageNode = CreateAblageNode(rootAblagen[i]);
+		ablageNode.parent = GetAbstractAblageNode().id;
+		$("#treeMove").jstree(true).create_node(ablageNode.parent, ablageNode, "last");
+	}
+	
+	$("#treeMove").jstree(true).open_node(GetAbstractAblageNode().id);
+}
+
+function MoveTreeNode(ablage, sender)
+{
+	if (sender != undefined &&
+		sender != "tree.moved")
+	{
+		return;
+	}
+
+	while (_elementsToBeRefreshed.length > 0)
+	{
+		$("#tree").jstree(true).refresh_node(_elementsToBeRefreshed[0].Id);
+		_elementsToBeRefreshed.shift();
+	}
+}
+
+function FillTreeWithAblageChildren(ablage, sender)
+{
+	if (sender == undefined ||
+		sender != "tree.loaded")
+	{
+		return;
+	}
+
+	var node = $("#tree").jstree(true).get_node(ablage.Id);
+	$("#tree").jstree(true).delete_node(node.children);
+	node.original = ablage;
+
+	for (var i = 0; i < ablage.Children.length; i++)
+	{
+		var ablageNode = CreateAblageNode(ablage.Children[i]);
+		ablageNode.parent = ablage.Id;
+		
+		$("#tree").jstree(true).create_node(ablageNode.parent, ablageNode, "last");
+	}
+
+	$("#tree").jstree(true).open_node(ablage.Id);
+}
+
+function FillTreeMoveWithAblageChildren(ablage, sender)
+{
+	if (sender == undefined ||
+		sender != "treeMove.loaded")
+	{
+		return;
+	}
+	
+	var selectedElement = GetSelectedElement();
+
+	var node = $("#treeMove").jstree(true).get_node(ablage.Id);
+	$("#treeMove").jstree(true).delete_node(node.children);
+	node.original = ablage;
+
+	for (var i = 0; i < ablage.Children.length; i++)
+	{
+		if (selectedElement != null &&
+			selectedElement.Id == ablage.Children[i].Id)
+		{
+			continue;
+		}
+
+		var ablageNode = CreateAblageNode(ablage.Children[i]);
+		ablageNode.parent = ablage.Id;
+		
+		$("#treeMove").jstree(true).create_node(ablageNode.parent, ablageNode, "last");
+	}
+
+	$("#treeMove").jstree(true).open_node(ablage.Id);
+}
+
 function GetAbstractAblageNode()
 {
 	return CreateAbstractAblageNode();
@@ -396,7 +466,6 @@ function CreateAbstractAblageNode()
 	node.children = true;
 	node.icon = GetIcon("Root");
 	node.BaseType = "Root";
-	node.state = new Object();
 
 	return node;
 }
@@ -408,8 +477,8 @@ function CreateAblageNode(ablage)
 	node.text = ablage.Type.Bezeichnung + ": " + ablage.Bezeichnung;
 	node.original = ablage;
 	node.children = true;
-	node.BaseType = "Ablage";
 	node.icon = GetIcon("Ablage");
+	node.BaseType = "Ablage";
 
 	return node;
 }
@@ -442,13 +511,6 @@ function LoadAblagen(node, sender)
 	{
 		$("#tree").jstree(true).refresh_node(GetSelectedElement().Id);
 	}
-}
-
-function ShowMessages(messages)
-{
-    $("#messageBox").empty();
-    $("#messageBox").append(messages);
-    $("#messageBox").dialog("open");
 }
 
 function ConvertToJson(item)
@@ -535,39 +597,7 @@ function FillGridWithAblageChildren(ablage, sender)
 
 function GetIcon(type, state)
 {
-	if (type == undefined)
-	{
-		return "";
-	}
-
-	if (type == "Root")
-	{
-		if (state != undefined &&
-			state == "open")
-		{
-			return "fas fa-door-open root";
-		}
-
-		return "fas fa-door-closed root";
-	}
-
-	if (type == "Ablage")
-	{
-		if (state != undefined &&
-			state == "open")
-		{
-			return "fas fa-box-open node";
-		}
-
-		return "fas fa-box node";
-	}
-
-	if (type == "Fund")
-	{
-		return "fas fa-puzzle-piece leaf";
-	}
-
-	return "";
+	return IconConfig.getCssClasses(type, state);
 }
 
 function ResetPath()
@@ -590,23 +620,17 @@ function SetPath(node)
 	}
 }
 
-function InitToolbar()
-{
-	$("#create").click(ShowFormCreate);
-	$("#edit").click(ShowFormEdit);
-	$("#delete").click(ShowDialogDelete);
-}
-
 function ShowFormCreate()
 {
 	var selectedNode = GetSelectedElement();
 
-	var newNode = new Object();
-	newNode.Parent = selectedNode;
-	newNode.Path = newNode.Parent == null ? null : selectedNode.Path + "/";
-	newNode.Type = new Object();
-	newNode.Children = new Array();
-	newNode.Funde = new Array();
+	var newNode = new Ablage();
+
+	if (selectedNode.Id != undefined)
+	{
+		newNode.Parent = selectedNode;
+		newNode.Path = selectedNode.Path + "/";
+	}
 
 	$("#form").dialog({
 		height: "auto",
@@ -670,6 +694,166 @@ function ShowFormEdit()
 
 	$("#form").dialog("open");
 	FillEditForm(selectedNode);
+}
+
+function ShowFormMove()
+{
+	var selectedNode = GetSelectedElement();
+
+	if (selectedNode == null)
+	{
+		return;
+	}
+
+	$("#dialogMove").dialog({
+		height: "auto",
+		width: 750,
+		title: "Verschieben",
+		modal: true,
+		resizable: false,
+		buttons: {
+			"Speichern": function()
+			{
+				var selectedElement = GetSelectedElement();
+
+				if (GetSelectedParentElement() == null)
+				{	
+					$(this).dialog("close");				
+				}
+				else if (GetSelectedParentElement().Id == GetAbstractAblageNode().Id)
+				{
+					selectedElement.Parent = null;
+				}
+				else
+				{
+					selectedElement.Parent = GetSelectedParentElement();
+				}
+				
+				_webServiceClientAblage.Save(selectedNode, "saved");
+
+				$(this).dialog("close");
+				$("#tree").jstree(true).refresh();
+			},
+			"Abbrechen": function()
+			{
+				$(this).dialog("close");
+			}
+		}
+	});
+
+	$("#treeMove").jstree(true).refresh();
+
+	$("#dialogMove").dialog("open");
+	//FillEditForm(selectedNode);
+}
+
+function InitTreeMove()
+{
+	$("#treeMove")
+	.on("open_node.jstree", function(event, data) {
+		if (data.node.id == GetAbstractAblageNode().id)
+		{
+			$("#treeMove").jstree(true).set_icon(data.node.id, GetIcon("Root", "open"));
+		}
+		else
+		{
+			$("#treeMove").jstree(true).set_icon(data.node.id, GetIcon("Ablage", "open"));
+		}
+	})
+	.on("close_node.jstree", function(event, data) {
+		if (data.node.id == GetAbstractAblageNode().id)
+		{
+			$("#treeMove").jstree(true).set_icon(data.node.id, GetIcon("Root"));
+		}
+		else
+		{
+			$("#treeMove").jstree(true).set_icon(data.node.id, GetIcon("Ablage"));
+		}
+	})
+	.on("select_node.jstree", function(event, data) {
+
+		if ($("#treeMove").jstree(true).is_loaded(data.node))
+		{
+			if (data.node.original.id != undefined &&
+				data.node.original.id == GetAbstractAblageNode().id)
+			{
+				SetSelectedParentElement(GetAbstractAblageNode());
+				_webServiceClientAblage.LoadAll("treeMove.selected");
+			}
+			else
+			{
+				if (data.node.original.original == undefined)
+				{
+					SetSelectedParentElement(data.node.original);
+				}
+				else
+				{
+					SetSelectedParentElement(data.node.original.original);
+				}
+
+				_webServiceClientAblage.Load(GetSelectedElement(), "treeMove.selected");
+			}
+		}
+		else
+		{
+			$("#treeMove").jstree(true).load_node(data.node, function() {
+				var loadedSelectedNode = $("#treeMove").jstree(true).get_node(data.node);
+
+				if (data.node.original.id != undefined &&
+					data.node.original.id == GetAbstractAblageNode().id)
+				{
+					SetSelectedParentElement(GetAbstractAblageNode());
+					_webServiceClientAblage.LoadAll("treeMove.selected");
+				}
+				else
+				{
+					if (loadedSelectedNode.original.original == undefined)
+					{
+						SetSelectedParentElement(loadedSelectedNode.original);
+					}
+					else
+					{
+						SetSelectedParentElement(loadedSelectedNode.original.original);
+					}
+				}
+			});
+		}
+	})
+	.on("loaded.jstree", function(event, data) {
+		$("#treeMove").jstree(true).open_node(GetAbstractAblageNode().id, function() {
+			$("#treeMove").jstree(true).select_node(GetAbstractAblageNode().id);
+		});
+	})
+    .jstree({
+        "core": {
+			"multiple": false,
+			"check_callback" : true,
+			"data" : function (node, callbackFunction) 
+			{
+				if (node.id === "#")
+				{
+					callbackFunction(new Array(CreateAbstractAblageNode()));
+				}
+				else if (node.id == GetAbstractAblageNode().id)
+				{
+					_webServiceClientAblage.LoadAll("treeMove.loaded");
+					callbackFunction(new Array());
+				}
+				else
+				{
+					if (node.original.original == undefined)
+					{
+						_webServiceClientAblage.Load(node.original, "treeMove.loaded");
+					}
+					else
+					{
+						_webServiceClientAblage.Load(node.original.original, "treeMove.loaded");
+					}
+					callbackFunction(new Array());
+				}
+			}
+		}
+	});
 }
 
 function ShowDialogDelete()

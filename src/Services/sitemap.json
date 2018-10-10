@@ -113,30 +113,9 @@
 				"Children" :
 				[
 					{
-						"Title" : "neu anlegen",
-						"URL" : "/Munins Archiv/src/Ablage/Form.html",
-						"PageName" : "AblageFormNew"
-					},
-					{
 						"Title" : "bearbeiten",
-						"URL" : "/Munins Archiv/src/Ablage/Form.html",
-						"PageName" : "AblageFormEdit",
-						"Visible" : false
-					},
-					{
-						"Title" : "durchsuchen",
 						"URL" : "/Munins Archiv/src/Ablage/Explorer.html",
 						"PageName" : "AblageExplorer"
-					},
-					{
-						"Title" : "in Kontexten suchen",
-						"URL" : "/Munins Archiv/src/Ablage/SearchInKontexten.html",
-						"PageName" : "AblageSearchInKontext"
-					},
-					{
-						"Title" : "suchen",
-						"URL" : "/Munins Archiv/src/Ablage/Search.html",
-						"PageName" : "AblageSearch"
 					}
 				]
 			},
