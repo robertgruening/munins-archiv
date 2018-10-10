@@ -178,3 +178,12 @@ function HideSubMenu(id)
 {
 	$("#"+id).hide();
 }
+
+function InitNavigation()
+{
+    $("#navigation").Navigation();
+}
+
+$(document).ready(function() {
+	InitNavigation();
+});

@@ -1,4 +1,6 @@
-$(document).ready(function() {	
+$(document).ready(function() {
+	_webServiceClientAblageType.Register("loadAll", new GuiClient(FillSelectionAblageType));
+		
 	$("#textboxBezeichnung").on("input", UpdatePath);
 });
 

@@ -1,3 +1,12 @@
+function InitMessageBox()
+{
+    $("#messageBox").dialog({
+        autoOpen: false,
+        height: "auto",
+        modal: true
+    });
+}
+
 function ShowMessages(messages)
 {
 	$("#messageBox").empty();
@@ -11,3 +20,7 @@ function ShowMessages(messages)
 	});
     $("#messageBox").dialog("open");
 }
+
+$(document).ready(function() {
+	InitMessageBox();
+});

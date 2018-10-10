@@ -4,27 +4,22 @@ $(document).ready(function() {
     _webServiceClientFundAttributType.Register("save", new GuiClient(undefined, LoadAllFundAttributTypen));
     _webServiceClientFundAttributType.Register("delete", new GuiClient(undefined, LoadAllFundAttributTypen));
 
-    $("#navigation").Navigation();
-    $("#messageBox").dialog({
-        autoOpen: false,
-        height: "auto",
-        modal: true
-    });
-    
-    $("#breadcrumb").Breadcrumb({
-        PageName : "FundAttributTypeManagement"
-    });
+    InitBreadcrumb();
+    InitGrid();
 
-    jsGrid.locale("de");
-
-    LoadFundAttributTypes();
+    LoadAllFundAttributTypen();
 });
 
-function ShowMessages(messages)
+function InitBreadcrumb()
 {
-    $("#messageBox").empty();
-    $("#messageBox").append(messages);
-    $("#messageBox").dialog("open");
+    $("#breadcrumb").Breadcrumb({
+        PageName : "FundAttributTypeManagement"
+	});
+}
+
+function InitGrid()
+{
+    jsGrid.locale("de");
 }
 
 function ShowFundAttributTypes(fundAttributTypes)

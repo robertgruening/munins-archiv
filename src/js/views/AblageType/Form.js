@@ -3,28 +3,23 @@ $(document).ready(function() {
     _webServiceClientAblageType.Register("create", new GuiClient(undefined, LoadAllAblageTypen));
     _webServiceClientAblageType.Register("save", new GuiClient(undefined, LoadAllAblageTypen));
     _webServiceClientAblageType.Register("delete", new GuiClient(undefined, LoadAllAblageTypen));
-
-    $("#navigation").Navigation();
-    $("#messageBox").dialog({
-        autoOpen: false,
-        height: "auto",
-        modal: true
-    });
     
-    $("#breadcrumb").Breadcrumb({
-        PageName : "AblageTypeManagement"
-    });
-
-    jsGrid.locale("de");
-
+    InitBreadcrumb();
+    InitGrid();
+    
     LoadAllAblageTypen();
 });
 
-function ShowMessages(messages)
+function InitBreadcrumb()
 {
-    $("#messageBox").empty();
-    $("#messageBox").append(messages);
-    $("#messageBox").dialog("open");
+    $("#breadcrumb").Breadcrumb({
+        PageName : "AblageTypeManagement"
+	});
+}
+
+function InitGrid()
+{
+    jsGrid.locale("de");
 }
 
 function ShowAblageTypes(ablageTypes)

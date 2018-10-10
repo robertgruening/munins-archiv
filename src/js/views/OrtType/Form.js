@@ -4,27 +4,22 @@ $(document).ready(function() {
     _webServiceClientOrtType.Register("save", new GuiClient(undefined, LoadAllOrtTypen));
     _webServiceClientOrtType.Register("delete", new GuiClient(undefined, LoadAllOrtTypen));
 
-    $("#navigation").Navigation();
-    $("#messageBox").dialog({
-        autoOpen: false,
-        height: "auto",
-        modal: true
-    });
-    
-    $("#breadcrumb").Breadcrumb({
-        PageName : "OrtTypeManagement"
-    });
+    InitBreadcrumb();
+    InitGrid();
 
-    jsGrid.locale("de");
-
-    LoadOrtTypes();
+    LoadAllOrtTypen();
 });
 
-function ShowMessages(messages)
+function InitBreadcrumb()
 {
-    $("#messageBox").empty();
-    $("#messageBox").append(messages);
-    $("#messageBox").dialog("open");
+    $("#breadcrumb").Breadcrumb({
+        PageName : "OrtTypeManagement"
+	});
+}
+
+function InitGrid()
+{
+    jsGrid.locale("de");
 }
 
 function ShowOrtTypes(ortTypes)
