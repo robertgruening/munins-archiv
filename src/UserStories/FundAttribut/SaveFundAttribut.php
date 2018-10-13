@@ -38,6 +38,14 @@ class SaveFundAttribut extends UserStory
             return false;
         }
 
+        if (FundAttributFactory::isNodeInCircleCondition($fundAttribut))
+        {
+            global $logger;
+            $logger->warn("Fundattribut darf sich nicht selbst zum über- oder untergeordneten Knoten haben!");
+            $this->addMessage("Fundattribut darf sich nicht selbst zum über- oder untergeordneten Knoten haben!");
+            return false;
+        }
+
         return true;
     }
 

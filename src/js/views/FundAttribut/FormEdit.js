@@ -1,13 +1,13 @@
 $(document).ready(function() {
-	_webServiceClientAblageType.Register("loadAll", new GuiClient(FillSelectionAblageType));
+	_webServiceClientFundAttributType.Register("loadAll", new GuiClient(FillSelectionFundAttributType));
 		
 	$("#textboxBezeichnung").on("input", UpdatePath);
 });
 
 function UpdatePath(e)
 {
-	var bezeichnung = GetAblageBezeichnung();
-	var path = GetAblagePath();
+	var bezeichnung = GetFundAttributBezeichnung();
+	var path = GetFundAttributPath();
 	
 	var lastSlashIndex = path.lastIndexOf("/");
 
@@ -21,19 +21,19 @@ function UpdatePath(e)
 		path += "/" + bezeichnung;
 	}
 
-	SetAblagePath(path);
+	SetFundAttributPath(path);
 }
 
 function FillEditForm(node)
 {
-	SetAblageBezeichnung(node.Bezeichnung);
-	SetAblageType(node.Type.Bezeichnung);
-	SetAblagePath(node.Path);
-	SetAblageCountOfChildren(node.Children);
-	SetAblageCountOfFunde(node.Funde);
+	SetFundAttributBezeichnung(node.Bezeichnung);
+	SetFundAttributType(node.Type.Bezeichnung);
+	SetFundAttributPath(node.Path);
+	SetFundAttributCountOfChildren(node.Children);
+	SetFundAttributCountOfFunde(node.CountOfFunde);
 }
 
-function FillSelectionAblageType(types)
+function FillSelectionFundAttributType(types)
 {
 	var options = "";
 
@@ -68,7 +68,7 @@ function CreateOptionType(type, select)
 	return option;
 }
 
-function SetAblageType(typeBezeichnung)
+function SetFundAttributType(typeBezeichnung)
 {
 	var typeId = $("#selectTypen option").first().val();
 
@@ -81,22 +81,22 @@ function SetAblageType(typeBezeichnung)
 	$("#selectTypen").val(typeId);
 }
 
-function GetAblageBezeichnung()
+function GetFundAttributBezeichnung()
 {
 	return $("#textboxBezeichnung").val();
 }
 
-function SetAblageBezeichnung(bezeichnung)
+function SetFundAttributBezeichnung(bezeichnung)
 {
 	$("#textboxBezeichnung").val(bezeichnung);
 }
 
-function GetAblageTypeId()
+function GetFundAttributTypeId()
 {
 	return $("#selectTypen option:selected").val();
 }
 
-function GetAblagePath()
+function GetFundAttributPath()
 {
 	if ($("#labelPath").text().length >= 1)
 	{
@@ -106,17 +106,17 @@ function GetAblagePath()
 	return "";
 }
 
-function SetAblagePath(path)
+function SetFundAttributPath(path)
 {
 	$("#labelPath").text("/" + path);
 }
 
-function SetAblageCountOfChildren(children)
+function SetFundAttributCountOfChildren(children)
 {
 	$("#divChildren #labelCountOfChildren").text(children.length);
 }
 
-function SetAblageCountOfFunde(funde)
+function SetFundAttributCountOfFunde(countOfFunde)
 {
-	$("#divFunde #labelCountOfFunde").text(funde.length);
+	$("#divFunde #labelCountOfFunde").text(countOfFunde);
 }

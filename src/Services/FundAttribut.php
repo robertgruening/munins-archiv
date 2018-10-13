@@ -4,6 +4,8 @@ ini_set("display_errors", 1);
 
 require_once("../UserStories/FundAttribut/LoadFundAttribut.php");
 require_once("../UserStories/FundAttribut/LoadRootFundAttribute.php");
+require_once("../UserStories/FundAttribut/SaveFundAttribut.php");
+require_once("../UserStories/FundAttribut/DeleteFundAttribut.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
@@ -25,17 +27,35 @@ else
 function Create()
 {
     global $logger;
-    $logger->error("PUT wird nicht unterstützt!");
-    http_response_code(500);
-    echo json_encode(array("PUT wird nicht unterstützt!"));
+    $logger->info("Fundattribut-erzeugen gestartet");
+
+    parse_str(file_get_contents("php://input"), $fundAttributObject);
+    
+    $fundAttributFactory = new FundAttributFactory();
+    $fundAttribut = $fundAttributFactory->convertToInstance($fundAttributObject);
+    
+    $saveFundAttribut = new SaveFundAttribut();
+    $saveFundAttribut->setFundAttribut($fundAttribut);
+    
+    if ($saveFundAttribut->run())
+    {
+        echo json_encode($saveFundAttribut->getFundAttribut());    
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($saveFundAttribut->getMessages());
+    }
+
+    $logger->info("Fundattribut-erzeugen beendet");
 }
 
 function Update()
 {
     global $logger;
-    $logger->error("POST wird nicht unterstützt!");
+    $logger->error("PUT wird nicht unterstützt!");
     http_response_code(500);
-    echo json_encode(array("POST wird nicht unterstützt!"));
+    echo json_encode(array("PUT wird nicht unterstützt!"));
 }
 
 function Delete()

@@ -161,25 +161,9 @@
 				"Children" :
 				[
 					{
-						"Title" : "neu anlegen",
-						"URL" : "/Munins Archiv/src/FundAttribut/Form.html",
-						"PageName" : "FundAttributFormNew"
-					},
-					{
 						"Title" : "bearbeiten",
-						"URL" : "/Munins Archiv/src/FundAttribut/Form.html",
-						"PageName" : "FundAttributFormEdit",
-						"Visible" : false
-					},
-					{
-						"Title" : "durchsuchen",
 						"URL" : "/Munins Archiv/src/FundAttribut/Explorer.html",
 						"PageName" : "FundAttributExplorer"
-					},
-					{
-						"Title" : "suchen",
-						"URL" : "/Munins Archiv/src/FundAttribut/Search.html",
-						"PageName" : "FundAttributSearch"
 					}
 				]
 			}

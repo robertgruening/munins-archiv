@@ -14,10 +14,10 @@ IconConfig.getCssClasses = function(type, state)
 		if (state != undefined &&
 			state == "open")
 		{
-			return "fas fa-chevron-circle-down root";
+			return "fas fa-chevron-circle-down";
 		}
 
-		return "fas fa-chevron-circle-right root";
+		return "fas fa-chevron-circle-right";
 	}
 
 	if (type == "Ablage")
@@ -25,15 +25,20 @@ IconConfig.getCssClasses = function(type, state)
 		if (state != undefined &&
 			state == "open")
 		{
-			return "fas fa-box-open node";
+			return "fas fa-box-open";
 		}
 
-		return "fas fa-box node";
+		return "fas fa-box";
 	}
 
 	if (type == "Fund")
 	{
-		return "fas fa-puzzle-piece leaf";
+		return "fas fa-puzzle-piece";
+	}
+
+	if (type == "FundAttribut")
+	{
+		return "fas fa-tag";
 	}
 
 	return "";

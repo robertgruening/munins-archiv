@@ -33,6 +33,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
     }
     #endregion
 
+    #region methods
     /**
      * Returns the name of the database table.
      */
@@ -42,11 +43,41 @@ class FundAttributFactory extends Factory implements iTreeFactory
     }
 
     #region load
+    /**
+     * Returns the SQL statement to load ID, Bezeichnung, Fundattribut type ID and count of Funde
+     * by Fundattribut ID.
+     * 
+     * @param $id ID of the Fundattribut to load.
+     */
     protected function getSQLStatementToLoadById($id)
     {
         return "SELECT Id, Bezeichnung, Typ_Id, COUNT(*) AS CountOfFunde
                 FROM FundAttribut RIGHT JOIN Fund_FundAttribut ON FundAttribut.Id = Fund_FundAttribut.FundAttribut_Id
                 WHERE Id = ".$id.";";
+    }
+    
+    /**
+     * Creates an Fundattribut instance and fills
+     * the ID, Bezeichnung, Fundattribut type and 
+     * count of Funde by the given dataset.
+     * 
+     * @param $dataSet Dataset from Fundattribut table.
+     */
+    protected function fill($dataSet)
+    {
+        if ($dataSet == null)
+        {
+            return null;
+        }
+
+        $fundAttribut = new FundAttribut();
+        $fundAttribut->setId(intval($dataSet["Id"]));
+        $fundAttribut->setBezeichnung($dataSet["Bezeichnung"]);
+        $fundAttribut->setPath($this->getPath($fundAttribut));
+        $fundAttribut->setType($this->getFundAttributTypFactory()->loadById(intval($dataSet["Typ_Id"])));
+        $fundAttribut->setCountOfFunde(intval($dataSet["CountOfFunde"]));
+        
+        return $fundAttribut;
     }
 
     public function loadByFund($fund)
@@ -59,8 +90,12 @@ class FundAttributFactory extends Factory implements iTreeFactory
 			$mysqli->set_charset("utf8");
 			$ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByFund($fund));	
 			
-			if (!$mysqli->errno)
+			if ($mysqli->errno)
 			{
+				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+			}
+            else
+            {
 				while ($datensatz = $ergebnis->fetch_assoc())
 				{
 					array_push($fundAttribute, $this->loadById(intval($datensatz["Id"])));
@@ -79,37 +114,30 @@ class FundAttributFactory extends Factory implements iTreeFactory
                 FROM Fund_FundAttribut
                 WHERE Fund_Id = ".$fund->getId().";";
     }
-    
-    protected function fill($dataSet)
-    {
-        if ($dataSet == null)
-        {
-            return null;
-        }
-
-        $fundAttribut = new FundAttribut();
-        $fundAttribut->setId(intval($dataSet["Id"]));
-        $fundAttribut->setBezeichnung($dataSet["Bezeichnung"]);
-        $fundAttribut->setPath($this->getPath($fundAttribut));
-        $fundAttribut->setType($this->getFundAttributTypFactory()->loadById(intval($dataSet["Typ_Id"])));
-        $fundAttribut->setCountOfFunde(intval($dataSet["CountOfFunde"]));
-        
-        return $fundAttribut;
-    }
     #endregion
 
     #region save
+    /**
+     * Returns the SQL statement to insert Bezeichnung and Fundattribut type ID.
+     * 
+     * @param iNode $element Fundattribut to be inserted.
+     */
     protected function getSQLStatementToInsert(iNode $element)
-    {
+    {        
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
                 VALUES ('".$element->getBezeichnung()."', ".$element->getType()->getId().");";
     }
-
+    
+    /**
+     * Returns the SQL statement to update Bezeichnung and Fundattribut type ID.
+     * 
+     * @param iNode $element Fundattribut to be updated.
+     */
     protected function getSQLStatementToUpdate(iNode $element)
     {
         return "UPDATE ".$this->getTableName()."
                 SET Bezeichnung = '".$element->getBezeichnung()."',
-                SET Typ_Id = ".$element->getType()->getId()."
+                    Typ_Id = ".$element->getType()->getId()."
                 WHERE Id = ".$element->getId().";";
     }
     #endregion
@@ -117,8 +145,12 @@ class FundAttributFactory extends Factory implements iTreeFactory
     #region convert
     public function convertToInstance($object)
     {
+        global $logger;
+        $logger->debug("Konvertiere Daten zu Fundattribut");
+
         if ($object == null)
         {
+            $logger->error("Fundattribut ist nicht gesetzt!");
             return null;
         }
 
@@ -128,9 +160,28 @@ class FundAttributFactory extends Factory implements iTreeFactory
         {
             $fundAttribut->setId(intval($object["Id"]));
         }
+        else
+        {
+            $logger->debug("Id ist nicht gesetzt!");
+        }
 
-        $fundAttribut->setBezeichnung($object["Bezeichnung"]);
-        $fundAttribut->setType($this->getFundAttributTypFactory()->convertToInstance($object["Type"]));
+        if (isset($object["Bezeichnung"]))
+        {
+            $fundAttribut->setBezeichnung($object["Bezeichnung"]);
+        }
+        else
+        {
+            $logger->debug("Bezeichnung ist nicht gesetzt!");
+        }
+
+        if (isset($object["Type"]))
+        {
+            $fundAttribut->setType($this->getFundAttributTypFactory()->convertToInstance($object["Type"]));
+        }
+        else
+        {
+            $logger->warn("Typ ist nicht gesetzt!");
+        }
 
         if (isset($object["Parent"]))
         {
@@ -223,5 +274,11 @@ class FundAttributFactory extends Factory implements iTreeFactory
     {
         return $this->getTreeFactory()->loadRoots();
     }
+
+	public static function isNodeInCircleCondition(iTreeNode $node)
+	{
+        return TreeFactory::isNodeInCircleCondition($node);
+	}
+    #endregion
     #endregion
 }

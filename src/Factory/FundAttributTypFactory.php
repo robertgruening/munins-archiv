@@ -90,8 +90,12 @@ class FundAttributTypFactory extends Factory implements iListFactory
     #region convert
     public function convertToInstance($object)
     {
+        global $logger;
+        $logger->debug("Konvertiere Daten zu Fundattributtyp");
+
         if ($object == null)
         {
+            $logger->error("Fundattributtyp ist nicht gesetzt!");
             return null;
         }
 
@@ -101,8 +105,20 @@ class FundAttributTypFactory extends Factory implements iListFactory
         {
             $fundAttributTyp->setId(intval($object["Id"]));
         }
+        else
+        {
+            $logger->debug("Id ist nicht gesetzt!");
+        }
 
-        $fundAttributTyp->setBezeichnung($object["Bezeichnung"]);
+        if (isset($object["Bezeichnung"]))
+        {
+            $fundAttributTyp->setBezeichnung($object["Bezeichnung"]);
+        }
+        else
+        {
+            $logger->debug("Bezeichnung ist nicht gesetzt!");
+        }
+
         
         return $fundAttributTyp;
     }
