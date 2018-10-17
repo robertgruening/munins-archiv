@@ -56,7 +56,7 @@ class DeleteFundAttribut extends UserStory
             $areParametersValid = false;
         }
     
-        if (count($fundAttribut->getFunde()) > 0)
+        if ($fundAttribut->getCountOfFunde() > 0)
         {
             $logger->warn("Fundattribut enthält Funde!");
             $this->addMessage("Fundattribut enthält Funde!");

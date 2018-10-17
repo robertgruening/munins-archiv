@@ -1,0 +1,1 @@
+var _webServiceClientOrtType = new WebServiceClientOrtType();

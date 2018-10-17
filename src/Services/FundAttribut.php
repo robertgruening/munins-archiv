@@ -53,17 +53,70 @@ function Create()
 function Update()
 {
     global $logger;
-    $logger->error("PUT wird nicht unterstützt!");
-    http_response_code(500);
-    echo json_encode(array("PUT wird nicht unterstützt!"));
+    $logger->info("Fundattribut-anhand-ID-aktualisieren gestartet");
+
+    parse_str(file_get_contents("php://input"),$fundAttributObject);
+
+    if (isset($_GET["Id"]))
+    {
+        $fundAttributObject["Id"] = $_GET["Id"];
+    }
+    
+    $fundAttributFactory = new FundAttributFactory();
+    $fundAttribut = $fundAttributFactory->convertToInstance($fundAttributObject);
+    
+    $saveFundAttribut = new SaveFundAttribut();
+    $saveFundAttribut->setFundAttribut($fundAttribut);
+    
+    if ($saveFundAttribut->run())
+    {
+        echo json_encode($saveFundAttribut->getFundAttribut());
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($saveFundAttribut->getMessages());
+    }
+
+    $logger->info("Fundattribut-anhand-ID-aktualisieren beendet");
 }
 
 function Delete()
 {
     global $logger;
-    $logger->error("DELETE wird nicht unterstützt!");
-    http_response_code(500);
-    echo json_encode(array("DELETE wird nicht unterstützt!"));
+    $logger->info("Fundattribut-anhand-ID-löschen gestartet");
+
+    $loadFundAttribut = new LoadFundAttribut();
+
+    if (isset($_GET["Id"]))
+    {
+        $loadFundAttribut->setId(intval($_GET["Id"]));
+    }
+
+    if ($loadFundAttribut->run())
+    {
+        $fundAttribut = $loadFundAttribut->getFundAttribut();
+        
+        $deleteFundAttribut = new DeleteFundAttribut();
+        $deleteFundAttribut->setFundAttribut($fundAttribut);
+
+        if ($deleteFundAttribut->run())
+        {
+            echo json_encode("Fundattribut (".$fundAttribut->getId().") ist gelöscht.");
+        }
+        else
+        {
+            http_response_code(500);
+            echo json_encode($deleteFundAttribut->getMessages());
+        }
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($loadFundAttribut->getMessages());
+    }
+
+    $logger->info("Fundattribut-anhand-ID-löschen beendet");
 }
 
 function Get()

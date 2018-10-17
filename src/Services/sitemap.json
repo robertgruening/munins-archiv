@@ -30,21 +30,10 @@
 			{
 				"Title" : "Orte",
 				"Typ" : "Thema",
-				"Children" : 
+				"Children" :
 				[
 					{
-						"Title" : "neu anlegen",
-						"URL" : "/Munins Archiv/src/Ort/Form.html",
-						"PageName" : "OrtFormNew"
-					},
-					{
 						"Title" : "bearbeiten",
-						"URL" : "/Munins Archiv/src/Ort/Form.html",
-						"PageName" : "OrtFormEdit",
-						"Visible" : false
-					},
-					{
-						"Title" : "durchsuchen",
 						"URL" : "/Munins Archiv/src/Ort/Explorer.html",
 						"PageName" : "OrtExplorer"
 					},
@@ -62,11 +51,6 @@
 						"Title" : "Flurnamen verwalten",
 						"URL" : "/Munins Archiv/src/Ort/Flurname/Form.html",
 						"Enabled" : false
-					},
-					{
-						"Title" : "suchen",
-						"URL" : "/Munins Archiv/src/Ort/Search.html",
-						"PageName" : "OrtSearch"
 					}
 				]
 			},

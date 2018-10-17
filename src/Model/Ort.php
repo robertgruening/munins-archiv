@@ -12,7 +12,7 @@ class Ort implements iNode, iTypedNode, iTreeNode
     public $Parent;
     public $Children;
     public $Path;
-    public $Kontexte;
+    public $CountOfKontexte;
     
     
     public function getId()
@@ -102,31 +102,14 @@ class Ort implements iNode, iTypedNode, iTreeNode
         return $this->Path;
     }
     
-    public function getKontexte()
+    public function getCountOfKontexte()
     {
-        return $this->Kontexte;
+        return $this->CountOfKontexte;
     }
     
-    public function setKontexte($kontexte)
+    public function setCountOfKontexte($countOfKontexte)
     {
-        $this->Kontexte = $kontexte;
-    }
-    
-    public function addKontext($kontext)
-    {
-        array_push($this->Kontexte, $kontext);
-    }
-    
-    public function removeKontext($kontext)
-    {
-        for ($i = 0; $i < count($this->Kontexte); $i++)
-        {
-            if ($this->Kontexte[$i]->getId() == $kontext->getId())
-            {
-                array_splice($this->Kontexte, $i, 1);
-                break;
-            }
-        }
+        $this->CountOfKontexte = $countOfKontexte;
     }
     
     function __construct()
@@ -138,6 +121,6 @@ class Ort implements iNode, iTypedNode, iTreeNode
         $this->Parent = null;
         $this->Children = array();
         $this->Path = null;
-        $this->Kontexte = array();
+        $this->CountOfKontexte = 0;
     }
 }

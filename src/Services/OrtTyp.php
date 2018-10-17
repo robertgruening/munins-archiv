@@ -4,6 +4,7 @@ ini_set("display_errors", 1);
 
 require_once("../Factory/OrtTypFactory.php");
 require_once("../UserStories/Ort/Type/LoadOrtType.php");
+require_once("../UserStories/Ort/Type/LoadOrtTypes.php");
 require_once("../UserStories/Ort/Type/SaveOrtType.php");
 require_once("../UserStories/Ort/Type/DeleteOrtType.php");
 

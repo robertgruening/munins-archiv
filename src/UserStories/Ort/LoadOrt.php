@@ -60,7 +60,6 @@ class LoadOrt extends UserStory
 
         $ort = $ortFactory->loadParent($ort);
         $ort = $ortFactory->loadChildren($ort);
-        $ort = $ortFactory->loadKontexte($ort);
         $this->setOrt($ort);
 
         return true;

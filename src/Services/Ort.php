@@ -29,19 +29,10 @@ function Create()
     global $logger;
     $logger->info("Ort-erzeugen gestartet");
 
-	$ort = new Ort();
-	
-    if (isset($_GET["Id"]))
-    {
-		$parent = new Ort();
-		$parent->setId(intval($_GET["Id"]));
-        $ort->setParent($parent);    
-    }
-
-    if (isset($_POST["Bezeichnung"]))
-    {
-        $ort->setBezeichnung($_POST["Bezeichnung"]);
-    }
+    parse_str(file_get_contents("php://input"), $ortObject);
+    
+    $ortFactory = new OrtFactory();
+    $ort = $ortFactory->convertToInstance($ortObject);
     
     $saveOrt = new SaveOrt();
     $saveOrt->setOrt($ort);
@@ -64,19 +55,15 @@ function Update()
     global $logger;
     $logger->info("Ort-anhand-ID-aktualisieren gestartet");
 
-    parse_str(file_get_contents("php://input"),$_PUT);
-
-    $ort = new Ort();
+    parse_str(file_get_contents("php://input"), $ortObject);
 
     if (isset($_GET["Id"]))
     {
-        $ort->setId(intval($_GET["Id"]));    
+        $ortObject["Id"] = $_GET["Id"];
     }
-
-    if (isset($_PUT["Bezeichnung"]))
-    {
-        $ort->setBezeichnung($_PUT["Bezeichnung"]);
-    }
+    
+    $ortFactory = new OrtFactory();
+    $ort = $ortFactory->convertToInstance($ortObject);
     
     $saveOrt = new SaveOrt();
     $saveOrt->setOrt($ort);

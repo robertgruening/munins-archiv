@@ -90,21 +90,37 @@ class OrtTypFactory extends Factory implements iListFactory
     #region convert
     public function convertToInstance($object)
     {
+        global $logger;
+        $logger->debug("Konvertiere Daten zu Ortstyp");
+
         if ($object == null)
         {
+            $logger->error("Ortstyp ist nicht gesetzt!");
             return null;
         }
 
-        $kontextTyp = new KontextTyp();
+        $ortTyp = new OrtTyp();
 
         if (isset($object["Id"]))
         {
-            $kontextTyp->setId(intval($object["Id"]));
+            $ortTyp->setId(intval($object["Id"]));
+        }
+        else
+        {
+            $logger->debug("Id ist nicht gesetzt!");
         }
 
-        $kontextTyp->setBezeichnung($object["Bezeichnung"]);
+        if (isset($object["Bezeichnung"]))
+        {
+            $ortTyp->setBezeichnung($object["Bezeichnung"]);
+        }
+        else
+        {
+            $logger->debug("Bezeichnung ist nicht gesetzt!");
+        }
+
         
-        return $kontextTyp;
+        return $ortTyp;
     }
     #endregion
     #endregion

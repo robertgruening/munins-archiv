@@ -41,5 +41,10 @@ IconConfig.getCssClasses = function(type, state)
 		return "fas fa-tag";
 	}
 
+	if (type == "Ort")
+	{
+		return "fas fa-map-marker";
+	}
+
 	return "";
 }

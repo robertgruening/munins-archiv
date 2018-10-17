@@ -136,9 +136,9 @@ function FillTreeMoveWithRootFundAttribute(rootFundAttribute, sender)
 			continue;
 		}
 
-		var FundAttributeode = CreateFundAttributNode(rootFundAttribute[i]);
-		FundAttributeode.parent = GetAbstractFundAttributNode().id;
-		$("#treeMove").jstree(true).create_node(FundAttributeode.parent, FundAttributeode, "last");
+		var FundAttributNode = CreateFundAttributNode(rootFundAttribute[i]);
+		FundAttributNode.parent = GetAbstractFundAttributNode().id;
+		$("#treeMove").jstree(true).create_node(FundAttributNode.parent, FundAttributNode, "last");
 	}
 	
 	$("#treeMove").jstree(true).open_node(GetAbstractFundAttributNode().id);
@@ -166,10 +166,10 @@ function FillTreeMoveWithFundAttributChildren(fundAttribut, sender)
 			continue;
 		}
 
-		var FundAttributeode = CreateFundAttributNode(fundAttribut.Children[i]);
-		FundAttributeode.parent = fundAttribut.Id;
+		var FundAttributNode = CreateFundAttributNode(fundAttribut.Children[i]);
+		FundAttributNode.parent = fundAttribut.Id;
 		
-		$("#treeMove").jstree(true).create_node(FundAttributeode.parent, FundAttributeode, "last");
+		$("#treeMove").jstree(true).create_node(FundAttributNode.parent, FundAttributNode, "last");
 	}
 
 	$("#treeMove").jstree(true).open_node(fundAttribut.Id);
