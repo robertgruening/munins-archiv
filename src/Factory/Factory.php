@@ -141,7 +141,7 @@ abstract class Factory
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->getSQLStatementToDelete($element));	
+			$ergebnis = $mysqli->multi_query($this->getSQLStatementToDelete($element));	
 			
 			if ($mysqli->errno)
 			{

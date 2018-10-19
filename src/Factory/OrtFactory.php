@@ -237,5 +237,38 @@ class OrtFactory extends Factory implements iTreeFactory
         return TreeFactory::isNodeInCircleCondition($node);
 	}
     #endregion
+        
+    #region Kontext
+    public function loadByKontext($kontext)
+    {
+        $elemente = array();
+        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByKontext($kontext));	
+			
+			if (!$mysqli->errno)
+			{
+				while ($datensatz = $ergebnis->fetch_assoc())
+				{
+					array_push($elemente, $this->loadById(intval($datensatz["Id"])));
+				}
+			}
+		}
+		
+		$mysqli->close();
+		
+		return $elemente;
+    }
+    
+    protected function getSQLStatementToLoadIdsByKontext($kontext)
+    {
+        return "SELECT Ort_Id AS Id
+                FROM Kontext_".$this->getTableName()."
+                WHERE Kontext_Id = ".$kontext->getId().";";
+    }
+    #endregion
     #endregion
 }

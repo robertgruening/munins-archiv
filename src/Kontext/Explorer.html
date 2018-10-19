@@ -9,14 +9,21 @@
 	<script type="text/javascript" src="../js/controls/control.Navigation.js"></script>
 	<script type="text/javascript" src="../js/controls/control.Breadcrumb.js"></script>
     <script type="text/javascript" src="../js/controls/control.KontextShortView.js"></script>
+	<script type="text/javascript" src="../js/controls/control.MessageBox.js"></script>
 	<script type="text/javascript" src="../js/ui/jquery-ui/jquery-ui.js"></script>
-	<script type="text/javascript" src="../js/ui/controls/control.List.js"></script>
 	<script type="text/javascript" src="../js/page.js"></script>
+	<script type="text/javascript" src="../js/bl/Fundstelle.js"></script>
+	<script type="text/javascript" src="../js/bl/Begehungsfläche.js"></script>
+	<script type="text/javascript" src="../js/bl/Begehung.js"></script>
 	<script type="text/javascript" src="../js/bl/WebServiceClientKontext.js"></script>
 	<script type="text/javascript" src="../js/bl/WebServiceClientKontextType.js"></script>
 	<script type="text/javascript" src="../js/ui/GuiClient.js"></script>
-	<script type="text/javascript" src="../js/Kontext/Explorer.html.js"></script>
-	<script type="text/javascript" src="../js/Kontext/Explorer.controller.js"></script>
+	<script type="text/javascript" src="../js/ui/IconConfig.js"></script>
+	<script type="text/javascript" src="../js/viewModels/Kontext/Explorer.js"></script>
+	<script type="text/javascript" src="../js/viewModels/Kontext/FormEdit.js"></script>
+	<script type="text/javascript" src="../js/views/Kontext/Explorer.js"></script>
+	<script type="text/javascript" src="../js/views/Kontext/FormEdit.js"></script>
+	<script type="text/javascript" src="../js/Fund/Factory.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="../js/ui/jquery-ui/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="../js/controls/vakata-jstree/themes/default/style.min.css" />
@@ -26,6 +33,7 @@
 	<link rel="stylesheet" type="text/css" href="../css/solid.css" />
 	<link rel="stylesheet" type="text/css" href="../css/fontawesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="../css/explorer.css" />
+	<link rel="stylesheet" type="text/css" href="../css/form.css" />
 	<link rel="stylesheet" type="text/css" href="../css/navigation.css" />
 	<link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
 	<link rel="stylesheet" type="text/css" href="../css/leftSidebar.css" />
@@ -44,11 +52,137 @@
 	<div id=content>
 		<div id=explorer>
 			<input id=path type=text />
+			<ul id=toolBar>
+				<li><a id=create title=anlegen><i class="fas fa-plus"></i></a></li>
+				<li><a id=edit title=bearbeiten><i class="fas fa-edit"></i></a></li>
+				<li><a id=move title=verschieben><i class="fas fa-arrows-alt"></i></a></li>
+				<li><a id=delete title=löschen><i class="fas fa-trash-alt"></i></a></li>
+			</ul>
+			<div class=clear></div>		
 			<div id=tree></div>
 			<div id=grid></div>
 			<div class=clear></div>
 		</div>
-		<div id="messageBox" title="Nachrichten"></div>
+		<div id=form class="dialog formBlock">
+			<div class=fieldBlock>
+				<div class=fieldDescription>
+					<i class="help notToPrint fas fa-question-circle" title="Gibt an, um was für eine Ablage es sich handelt."></i>
+					<label>Typ: </label>
+				</div>
+				<div class=fieldValue>
+					<select id=selectTypen class=field></select>
+				</div>
+				<div class=clear></div>
+			</div>
+			<div class=fieldBlock>
+				<div class=fieldDescription>
+					<i class="help notToPrint fas fa-question-circle" title="Kann ein Name oder eine Kennung sein."></i>
+					<label>Bezeichnung: </label>
+				</div>
+				<div class=fieldValue>
+					<input id=textboxBezeichnung type=text class=field/>
+				</div>
+				<div class=clear></div>	
+			</div>
+			<div id=divPath class=fieldBlock>
+				<div class=fieldDescription>
+					<label>Pfad: </label>
+				</div>
+				<div class=fieldValue>
+					<label id=labelPath class=field></label>
+				</div>
+				<div class=clear></div>
+			</div>
+			<div id=divChildren class=fieldBlock>
+				<div class=fieldDescription>
+					<label>Kinder: </label>
+				</div>
+				<div class=fieldValue>
+					<label id=labelCountOfChildren class=field></label>
+				</div>
+				<div class=clear></div>
+			</div>
+			<div class=fieldBlock id=divBegehungLfDErfassungsJahr>
+				<div class=fieldDescription>
+					<i class="help notToPrint fas fa-question-circle" title="Das Jahr, in dem das LfD die Begehung erfasst hat."></i>
+					<label>LfD-Erfassungs-Jahr: </label>
+				</div>
+				<div class=fieldValue>
+					<input id=textboxBegehungLfDErfassungsJahr type=text class=field/>
+				</div>
+			</div>
+			<div class=fieldBlock id=divBegehungLfDErfassungsNr>
+				<div class=fieldDescription>
+					<i class="help notToPrint fas fa-question-circle" title="Die Eingangsnummer, die das LfD der Begehung in einem Jahr zuweist."></i>
+					<label>LfD-Erfassungs-Nr.: </label>
+				</div>
+				<div class=fieldValue>
+					<input id=textboxBegehungLfDErfassungsNr type=text class=field/>
+				</div>
+			</div>
+			<div class=fieldBlock id=divBegehungDatum>
+				<div class=fieldDescription>
+					<i class="help notToPrint fas fa-question-circle" title="Datum der Begehung, z. B.: 01.09.2015 oder 09/2015 oder 2015."></i>
+					<label>Datum: </label>
+				</div>
+				<div class=fieldValue>
+					<input id=textboxBegehungDatum type=text class=field/>
+				</div>
+			</div>
+			<div class=fieldBlock id=divBegehungKommentar>
+				<div class=fieldDescription>
+					<i class="help notToPrint fas fa-question-circle" title="Der Kommentar kann eine Auflistung der Funde oder Hervorhebung einzelner Funde oder Fundumstände in Textform sein."></i>
+					<label>Kommentar: </label>
+				</div>
+				<div class=fieldValue>
+					<textarea id=textboxBegehungKommentar class=field></textarea>		
+				</div>
+			</div>
+			<div id=divLfDs class=fieldBlock>
+				<div class=fieldDescription>
+					<i class="help notToPrint fas fa-question-circle" title="Umfasst den Messtischblattausschnitt und die zugehörige Eingangsnummer, z. B.: 6528 / 25"></i>
+					<label>LfDs: </label>
+				</div>
+				<div class=fieldValue>		
+					<div id=divList class=field></div>
+					<input type=button id=buttonAddLfD value=Hinzufügen class="field notToPrint formButton"/>
+				</div>
+			</div>
+			<div id=divOrte class=fieldBlock>
+				<div class=fieldDescription>
+					<i class="help notToPrint fas fa-question-circle" title="Kontexte müssen mit einem Ort verknüpft werden."></i>
+					<label>Orte: </label>			
+				</div>
+				<div class=fieldValue>
+					<div id=divList class=field></div>
+					<input type=button id=buttonAddOrt value=Hinzufügen class="field notToPrint formButton"/>
+				</div>
+			</div>
+			<div id=divAblagen class=fieldBlock>
+				<div class=fieldDescription>
+					<i class="help notToPrint fas fa-question-circle" title="Kontexte, die Funde hervorgebracht haben, müssen mit den Ablagen explizit verknüpft werden."></i>
+					<label>Ablagen: </label>
+				</div>
+				<div class=fieldValue>
+					<div id=divList class=field></div>
+					<input type=button id=buttonAddAblage value=Hinzufügen class="field notToPrint formButton"/>
+				</div>
+			</div>
+			<div id=divFunde class=fieldBlock>
+				<div class=fieldDescription>
+					<label>Funde: </label>
+				</div>
+				<div class=fieldValue>
+					<label id=labelCountOfFunde class=field></label>
+				</div>
+				<div class=clear></div>
+			</div>
+		</div>
+		<div id=dialogMove title=Verschieben class=dialog>
+			<div id=treeMove></div>
+		</div>
+		<div id=messageBox title=Nachrichten class=dialog></div>
+		<div id=dialogDelete title=Löschen class=dialog></div>
     </div>
 	<div id=clipboard class="notToPrint"></div>
 </body>

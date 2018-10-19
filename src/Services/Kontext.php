@@ -4,6 +4,7 @@ ini_set("display_errors", 1);
 
 require_once("../UserStories/Kontext/LoadKontext.php");
 require_once("../UserStories/Kontext/LoadRootKontexte.php");
+require_once("../UserStories/Kontext/DeleteKontext.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
@@ -41,9 +42,39 @@ function Update()
 function Delete()
 {
     global $logger;
-    $logger->error("DELETE wird nicht unterstützt!");
-    http_response_code(500);
-    echo json_encode(array("DELETE wird nicht unterstützt!"));
+    $logger->info("Kontext-anhand-ID-löschen gestartet");
+
+    $loadKontext = new LoadKontext();
+
+    if (isset($_GET["Id"]))
+    {
+        $loadKontext->setId(intval($_GET["Id"]));
+    }
+
+    if ($loadKontext->run())
+    {
+        $kontext = $loadKontext->getKontext();
+        
+        $deleteKontext = new DeleteKontext();
+        $deleteKontext->setKontext($kontext);
+
+        if ($deleteKontext->run())
+        {
+            echo json_encode("Kontext (".$kontext->getId().") ist gelöscht.");
+        }
+        else
+        {
+            http_response_code(500);
+            echo json_encode($deleteKontext->getMessages());
+        }
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($loadKontext->getMessages());
+    }
+
+    $logger->info("Kontext-anhand-ID-löschen beendet");
 }
 
 function Get()

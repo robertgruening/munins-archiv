@@ -59,30 +59,9 @@
 				"Children" :
 				[
 					{
-						"Title" : "neu anlegen",
-						"URL" : "/Munins Archiv/src/Kontext/Form.html",
-						"PageName" : "KontextFormNew"
-					},
-					{
 						"Title" : "bearbeiten",
-						"URL" : "/Munins Archiv/src/Kontext/Form.html",
-						"PageName" : "KontextFormEdit",
-						"Visible" : false
-					},
-					{
-						"Title" : "durchsuchen",
 						"URL" : "/Munins Archiv/src/Kontext/Explorer.html",
 						"PageName" : "KontextExplorer"
-					},
-					{
-						"Title" : "in Orten suchen",
-						"URL" : "/Munins Archiv/src/Kontext/SearchInOrten.html",
-						"PageName" : "KontextSearchInOrt"
-					},
-					{
-						"Title" : "suchen",
-						"URL" : "/Munins Archiv/src/Kontext/Search.html",
-						"PageName" : "KontextSearch"
 					}
 				]
 			}

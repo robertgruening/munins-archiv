@@ -223,6 +223,38 @@ class KontextFactory extends Factory implements iTreeFactory
     }
     #endregion
 
+    #region delete
+	protected function getSQLStatementToDelete($element)
+	{  
+        $statement = "";
+
+        switch ($element->getType()->getBezeichnung())
+        {
+            case "Fundstelle":
+            {
+                break;
+            }
+            case "Begehungsfläche":
+            {
+                break;
+            }
+            case "Begehung":
+            {
+                $statement .= "DELETE
+                        FROM Begehung
+                        WHERE Id = ".$element->getId().";";
+                break;
+            }
+        }
+
+		$statement .= "DELETE
+				FROM ".$this->getTableName()."
+                WHERE Id = ".$element->getId().";";
+                
+        return $statement;
+	}
+    #endregion
+
     #region convert
     public function convertToInstance($object)
     {
