@@ -139,7 +139,7 @@ class LfdNummerFactory extends Factory implements iListFactory
     protected function getSQLStatementToLoadIdsByKontext($kontext)
     {
         return "SELECT LfdNummer_Id AS Id
-                FROM Kontext_".".$this->getTableName()."."
+                FROM Kontext_".$this->getTableName()."
                 WHERE Kontext_Id = ".$kontext->getId().";";
     }
     

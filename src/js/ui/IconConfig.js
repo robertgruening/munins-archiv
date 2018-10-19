@@ -63,7 +63,7 @@ IconConfig.getCssClasses = function(type, state)
 
 	if (type == "LfD-Nummer")
 	{
-		return "fas fa-hastag node";
+		return "fas fa-hashtag node";
 	}
 
 	return "";

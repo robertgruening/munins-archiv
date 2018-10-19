@@ -20,7 +20,7 @@ class KontextFactory extends Factory implements iTreeFactory
     private $_fundFactory = null;
     private $_ortFactory = null;
     private $_ablageFactory = null;
-    private $_lfdNummernFactory = null;
+    private $_lfdNummerFactory = null;
     #endregion
 
     #region properties
@@ -64,14 +64,14 @@ class KontextFactory extends Factory implements iTreeFactory
         return $this->_ablageFactory;
     }
     
-    protected function getLfdNummernFactory()
+    protected function getLfdNummerFactory()
     {
-        if ($this->_lfdNummernFactory == null)
+        if ($this->_lfdNummerFactory == null)
         {
-            $this->_lfdNummernFactory = new LfdNummernFactory();
+            $this->_lfdNummerFactory = new LfdNummerFactory();
         }
 
-        return $this->_lfdNummernFactory;
+        return $this->_lfdNummerFactory;
     }
     #endregion
 
@@ -425,7 +425,7 @@ class KontextFactory extends Factory implements iTreeFactory
     }
     #endregion
 
-    #region Ort    
+    #region Ort
     public function loadByOrt($ort)
     {
         $kontexte = array();
@@ -505,7 +505,7 @@ class KontextFactory extends Factory implements iTreeFactory
 
     public function loadLfdNummern($element)
     {        
-        $lfdNummern = $this->getLfdNummernFactory()->loadByKontext($element);
+        $lfdNummern = $this->getLfdNummerFactory()->loadByKontext($element);
         $element->setLfdNummern($lfdNummern);
         
         return $element;
