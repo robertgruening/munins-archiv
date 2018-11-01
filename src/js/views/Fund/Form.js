@@ -5,49 +5,175 @@ var _selectorTextboxKontextId = "#textboxSelectedKontextId";
 var _offset = 0;
 
 $(document).ready(function() {
-	$("#navigation").Navigation();
-	
-	if (GetURLParameter("Id"))
-	{
-	    $("#breadcrumb").Breadcrumb({
-		    PageName : "FundFormEdit"
-	    });
-	}
-	else
-	{
-	    $("#breadcrumb").Breadcrumb({
-		    PageName : "FundFormNew"
-	    });
-	}
+	//_webServiceClientFund.Register("load", new GuiClient(Fill));
+	_webServiceClientFund.Register("load", new GuiClient(SetSelectedElement));
+	_webServiceClientFund.Register("delete", new GuiClient(OpenFormNewFund));
 
-	$("#textboxId").attr("disabled",true);
+	InitBreadcrumb();
+	InitButtonNew();
+	InitButtonSave();
+	InitButtonDelete();
+	InitButtonSelectAblage();
+
 	$(_selectorTextboxAblageId).attr("disabled",true);
 	$(_selectorTextboxKontextId).attr("disabled",true);
 	
 	$("#buttonAddFundAttribut").click(function() { AddAttribut(); });
 	$("#buttonSearch").click(function() { Search(); } );
 	
-	if (GetURLParameter("Id"))
+	if (GetUrlParameterValue("Id"))
 	{	    
-		LoadFundById(GetURLParameter("Id"));
+		LoadFundById(GetUrlParameterValue("Id"));
 		
 		return;
 	}
 	
 	ClearFields();
 	
-	if (GetURLParameter("Ablage_Id"))
+	if (GetUrlParameterValue("Ablage_Id"))
 	{
-		$(_selectorTextboxAblageId).val(GetURLParameter("Ablage_Id"));
+		$(_selectorTextboxAblageId).val(GetUrlParameterValue("Ablage_Id"));
 		LoadMultiDropdownAblage($(_selectorTextboxAblageId).val());
 	}	
 	
-	if (GetURLParameter("Kontext_Id"))
+	if (GetUrlParameterValue("Kontext_Id"))
 	{
-		$(_selectorTextboxKontextId).val(GetURLParameter("Kontext_Id"));
+		$(_selectorTextboxKontextId).val(GetUrlParameterValue("Kontext_Id"));
 		LoadMultiDropdownKontext($(_selectorTextboxKontextId).val());
 	}
 });
+
+function OpenFormNewFund()
+{
+	window.open(window.location.href);
+}
+
+function GetFormMode()
+{
+	if (ContainsUrlParameter("id"))
+	{
+		return "edit";
+	}
+
+	return "create";
+}
+
+function InitBreadcrumb()
+{
+	if (GetFormMode() == "create")
+	{
+	    $("#breadcrumb").Breadcrumb({
+		    PageName : "FundFormNew"
+	    });
+	}
+	else if (GetFormMode() == "edit")
+	{
+	    $("#breadcrumb").Breadcrumb({
+		    PageName : "FundFormEdit"
+	    });
+	}
+}
+
+function InitButtonNew()
+{
+	EnableButtonNew();
+	$("#buttonNew").click(OpenFormNewFund);
+}
+
+function InitButtonSave()
+{
+	EnableButtonSave();
+	$("#buttonSave").click(SaveFund);
+}
+
+function InitButtonDelete()
+{
+	DisableButtonDelete();
+	$("#buttonDelete").click(ShowDialogDelete);
+}
+
+function InitButtonSelectAblage()
+{
+	$("#buttonSelectAblage").click(ShowFormSelectAblage);
+}
+
+function EnableButtonNew()
+{
+	$("#buttonNew").removeClass("disabled");
+	$("#buttonNew").prop("disabled", false);
+}
+
+function DisableButtonNew()
+{
+	$("#buttonNew").addClass("disabled");
+	$("#buttonNew").prop("disabled", true);
+}
+
+function EnableButtonSave()
+{
+	$("#buttonSave").removeClass("disabled");
+	$("#buttonSave").prop("disabled", false);
+}
+
+function DisableButtonSave()
+{
+	$("#buttonSave").addClass("disabled");
+	$("#buttonSave").prop("disabled", true);
+}
+
+function EnableButtonDelete()
+{
+	$("#buttonDelete").removeClass("disabled");
+	$("#buttonDelete").prop("disabled", false);
+}
+
+function DisableButtonDelete()
+{
+	$("#buttonDelete").addClass("disabled");
+	$("#buttonDelete").prop("disabled", true);
+}
+
+function SetAblageInformation()
+{
+	var ablage = GetSelectedElement().Ablage;
+
+	$("#textboxSelectedAblageId").val(ablage == null ? "" : "/" + ablage.Path);
+}
+
+function ShowFormSelectAblage()
+{
+	$("#dialogSelectAblage").dialog({
+		height: "auto",
+		width: 750,
+		title: "Ablage auswählen",
+		modal: true,
+		resizable: false,
+		buttons: {
+			"Speichern": function()
+			{
+				var fund = GetSelectedElement();
+				fund.Ablage = GetSelectedAblage();
+				SetSelectedElement(fund);				
+
+				$(this).dialog("close");
+				//$("#tree").jstree(true).refresh();
+			},
+			"Abbrechen": function()
+			{
+				$(this).dialog("close");
+			}
+		}
+	});
+
+	$("#treeSelectAblage").jstree(true).refresh();
+
+	$("#dialogSelectAblage").dialog("open");
+}
+
+function GetIcon(type, state)
+{
+	return IconConfig.getCssClasses(type, state);
+}
 
 function buttonNeu_onClick()
 {
@@ -56,7 +182,6 @@ function buttonNeu_onClick()
 
 function ClearFields()
 {
-	$("#textboxId").val("");
 	$("#textboxBeschriftung").val("");
 	$("#textboxAnzahl").val("1");
 	$(_selectorTextboxAblageId).val("");
@@ -89,7 +214,6 @@ function GetFundJSON()
 
 function SetFundJSON(fund)
 {
-	$("#textboxId").val(fund.Id);
 	$("#textboxBeschriftung").val(fund.Bezeichnung);
 	$("#textboxAnzahl").val(ConvertFundAnzahl(fund.Anzahl));
 	$("#textboxDimension1").val(fund.Dimension1);
@@ -253,11 +377,6 @@ function SaveAssociationWithAttribut(attributId)
 	});	
 }
 
-function GetCurrentElementId()
-{
-	return $("#textboxId").val();
-}
-
 function LoadMultiDropdownAblage(ablageId)
 {
 	$(_selectorMultiDropdownAblage).MultiDropdown(
@@ -378,18 +497,40 @@ function LoadFundById(id)
 	});	
 }
 
-function GetURLParameter(name)
+function ContainsUrlParameter(name)
 {
 	var url = window.location.search.substring(1);
 	var parameters = url.split("&");
+
 	for (var i = 0; i < parameters.length; i++)
 	{
 		var parameter = parameters[i].split("=");
+		
+		if (parameter[0] == name)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function GetUrlParameterValue(name)
+{
+	var url = window.location.search.substring(1);
+	var parameters = url.split("&");
+
+	for (var i = 0; i < parameters.length; i++)
+	{
+		var parameter = parameters[i].split("=");
+
 		if (parameter[0] == name)
 		{
 			return parameter[1];
 		}
 	}
+
+	return null;
 }
 
 function GetValueForNoSelection()
@@ -515,4 +656,33 @@ function ConvertFundAnzahl(fundAnzahl)
 		return ">" + (fundAnzahl * (-1));
 		
 	return fundAnzahl;
+}
+
+function ShowDialogDelete()
+{
+	var selectedNode = GetSelectedElement();
+
+	$("#dialogDelete").empty();
+	$("#dialogDelete").append(
+		$("<p>").append("Möchten Sie diesen Fund löschen?")
+	);
+	$("#dialogDelete").dialog({
+		height: "auto",
+		width: 750,
+		modal: true,
+		buttons: {
+			"Löschen": function()
+			{
+				_webServiceClientFund.Delete(selectedNode, "deleted");
+
+				$(this).dialog("close");
+			},
+			"Abbrechen": function()
+			{
+				$(this).dialog("close");
+			}
+		}
+	});
+
+	$("#DialogDelete").dialog("open");
 }

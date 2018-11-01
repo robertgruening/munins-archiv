@@ -32,6 +32,34 @@ html, body {
 	color: #333333;
 }
 
+.fa-door,
+.fa-door-open,
+.fa-folder,
+.fa-folder-open,
+.fa-tags {
+   color: Black;   
+}
+
+.fa-box,
+.fa-box-open,
+.fa-calendar-alt,
+.fa-tag  {
+    color: #e78f08;
+}
+
+.fa-puzzle-piece,
+.fa-map-marker{
+   color: SteelBlue;
+}
+
+.fa-flag {
+    color: #b81900;
+}
+
+.fa-map {
+    color: #67b021;
+}
+
 .fa-question-circle {
 	color: SteelBlue;
 }

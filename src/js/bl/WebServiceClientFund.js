@@ -1,4 +1,4 @@
-function WebServiceClientFundAttribut()
+function WebServiceClientFund()
 {
 	this._listeners = {
 		create: new Array(),
@@ -103,15 +103,15 @@ function WebServiceClientFundAttribut()
 		}
 	};
 
-	this.Create = function(fundAttribut) {
+	this.Create = function(fund) {
 		var controller = this;
 
 		$.ajax(
 		{
 			type:"POST",
-			url:"../Services/FundAttribut/",
+			url:"../Services/Fund/",
 			dataType: "json",
-			data: fundAttribut,
+			data: fund,
 			success:function(data, textStatus, jqXHR)
 			{
 				controller.Update("create", data);
@@ -132,15 +132,15 @@ function WebServiceClientFundAttribut()
 		});
 	}
 
-	this.Save = function(fundAttribut) {
+	this.Save = function(fund) {
 		var controller = this;
 
 		$.ajax(
 		{
 			type:"PUT",
-			url:"../Services/FundAttribut/" + fundAttribut.Id,
+			url:"../Services/Fund/" + fund.Id,
 			dataType: "json",
-			data: fundAttribut,
+			data: fund,
 			success:function(data, textStatus, jqXHR)
 			{
 				controller.Update("save", data);
@@ -161,13 +161,13 @@ function WebServiceClientFundAttribut()
 		});
 	}
 
-	this.Load = function(fundAttribut) {
+	this.Load = function(fund) {
 		var controller = this;
 
 		$.ajax(
 		{
 			type:"GET",
-			url:"../Services/FundAttribut/" + fundAttribut.Id,
+			url:"../Services/Fund/" + fund.Id,
 			dataType: "json",
 			success:function(data, textStatus, jqXHR)
 			{
@@ -195,7 +195,7 @@ function WebServiceClientFundAttribut()
 		$.ajax(
 		{
 			type:"GET",
-			url:"../Services/FundAttribut/",
+			url:"../Services/Fund/",
 			dataType: "json",
 			success:function(data, textStatus, jqXHR)
 			{
@@ -217,13 +217,13 @@ function WebServiceClientFundAttribut()
 		});
 	};
 
-	this.Delete = function(fundAttribut) {
+	this.Delete = function(fund) {
 		var controller = this;
 
 		$.ajax(
 		{
 			type:"DELETE",
-			url:"../Services/FundAttribut/" + fundAttribut.Id,
+			url:"../Services/Fund/" + fund.Id,
 			dataType: "json",
 			success:function(data, textStatus, jqXHR)
 			{

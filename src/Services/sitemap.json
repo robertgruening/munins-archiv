@@ -98,21 +98,6 @@
 						"Visible" : false
 					},
 					{
-						"Title" : "in Ablagen suchen",
-						"URL" : "/Munins Archiv/src/Fund/SearchInAblagen.html",
-						"PageName" : "FundSearchInAblage"
-					},
-					{
-						"Title" : "in Kontexten suchen",
-						"URL" : "/Munins Archiv/src/Fund/SearchInKontexten.html",
-						"PageName" : "FundSearchInKontext"
-					},
-					{
-						"Title" : "in Fundattributen suchen",
-						"URL" : "/Munins Archiv/src/Fund/SearchInFundAttributen.html",
-						"PageName" : "FundSearchInFundAttribut"
-					},
-					{
 						"Title" : "suchen",
 						"URL" : "/Munins Archiv/src/Fund/Search.html",
 						"PageName" : "FundSearch"
