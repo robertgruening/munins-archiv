@@ -13,6 +13,7 @@ $(document).ready(function() {
 	InitButtonNew();
 	InitButtonSave();
 	InitButtonDelete();
+	InitButtonSelectKontext();
 	InitButtonSelectAblage();
 
 	$(_selectorTextboxAblageId).attr("disabled",true);
@@ -90,6 +91,11 @@ function InitButtonDelete()
 {
 	DisableButtonDelete();
 	$("#buttonDelete").click(ShowDialogDelete);
+}
+
+function InitButtonSelectKontext()
+{
+	$("#buttonSelectKontext").click(ShowFormSelectKontext);
 }
 
 function InitButtonSelectAblage()
@@ -170,6 +176,43 @@ function ShowFormSelectAblage()
 	$("#dialogSelectAblage").dialog("open");
 }
 
+function SetKontextInformation()
+{
+	var kontext = GetSelectedElement().Kontext;
+
+	$("#textboxSelectedKontextId").val(kontext == null ? "" : "/" + kontext.Path);
+}
+
+function ShowFormSelectKontext()
+{
+	$("#dialogSelectKontext").dialog({
+		height: "auto",
+		width: 750,
+		title: "Kontext auswählen",
+		modal: true,
+		resizable: false,
+		buttons: {
+			"Speichern": function()
+			{
+				var fund = GetSelectedElement();
+				fund.Kontext = GetSelectedKontext();
+				SetSelectedElement(fund);				
+
+				$(this).dialog("close");
+				//$("#tree").jstree(true).refresh();
+			},
+			"Abbrechen": function()
+			{
+				$(this).dialog("close");
+			}
+		}
+	});
+
+	$("#treeSelectKontext").jstree(true).refresh();
+
+	$("#dialogSelectKontext").dialog("open");
+}
+
 function GetIcon(type, state)
 {
 	return IconConfig.getCssClasses(type, state);
@@ -186,8 +229,8 @@ function ClearFields()
 	$("#textboxAnzahl").val("1");
 	$(_selectorTextboxAblageId).val("");
 	$(_selectorTextboxKontextId).val("");
-	LoadMultiDropdownAblage(null);
-	LoadMultiDropdownKontext(null);
+	//LoadMultiDropdownAblage(null);
+	//LoadMultiDropdownKontext(null);
 	//setTimeout(LoadListAttribute(), 1000);
 	$("#divFundAttribute #divList").empty();
 	$("#buttonAddFundAttribut").attr("disabled", true);

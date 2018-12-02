@@ -16,6 +16,7 @@ function SetSelectedElement(selectedElement, sender)
 
     _selectedElement = selectedElement;
 
+    SetKontextInformation();
     SetAblageInformation();
 }
 
