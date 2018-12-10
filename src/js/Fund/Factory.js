@@ -1,7 +1,7 @@
 function getFundLabelText(fund)
 {
 	var labelText = "";
-	labelText += fund.Anzahl.toString().replace("-", ">")+"x ";
+	labelText += getFundAnzahlLabelText(fund)+"x ";
 	
 	if (fund.FundAttribute != undefined &&
 		fund.FundAttribute != null &&
@@ -59,4 +59,21 @@ function getFundLabelText(fund)
 	labelText = labelText.trim();
 
 	return labelText;
+}
+
+function getFundAnzahlLabelText(fund)
+{	
+	return fund.Anzahl.toString().replace("-", ">");
+}
+
+function setFundAnzahlInputText(fund, anzahlInputText)
+{	
+	fund.Anzahl = convertAnzahlInputText(anzahlInputText);
+
+	return fund;
+}
+
+function convertAnzahlInputText(anzahlInputText)
+{	
+	return anzahlInputText.toString().replace(">", "-");
 }

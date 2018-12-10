@@ -98,7 +98,7 @@ class AblageFactory extends Factory implements iTreeFactory
         global $logger;
         $logger->debug("Lade Ablage anhand Fund (".$fund->getId().")");
 
-        $ablagen = array();
+        $ablage = null;
         $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
 		if (!$mysqli->connect_errno)
@@ -112,16 +112,16 @@ class AblageFactory extends Factory implements iTreeFactory
 			}
             else
             {
-				while ($datensatz = $ergebnis->fetch_assoc())
+				if ($datensatz = $ergebnis->fetch_assoc())
 				{
-					array_push($ablagen, $this->loadById(intval($datensatz["Id"])));
+					$ablage = $this->loadById(intval($datensatz["Id"]));
 				}
 			}
 		}
 		
 		$mysqli->close();
 		
-		return $ablagen;
+		return $ablage;
     }
     
     protected function getSQLStatementToLoadIdsByFund($fund)

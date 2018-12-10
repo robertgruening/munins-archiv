@@ -177,7 +177,10 @@ class KontextFactory extends Factory implements iTreeFactory
     
     public function loadByFund($fund)
     {
-        $kontexte = array();
+        global $logger;
+        $logger->debug("Lade Kontext anhand Fund (".$fund->getId().")");
+
+        $kontext = null;
         $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
         
         if (!$mysqli->connect_errno)
@@ -185,18 +188,22 @@ class KontextFactory extends Factory implements iTreeFactory
             $mysqli->set_charset("utf8");
             $ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByFund($fund));	
             
-            if (!$mysqli->errno)
+			if ($mysqli->errno)
+			{
+				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+			}
+            else
             {
-                while ($datensatz = $ergebnis->fetch_assoc())
-                {
-                    array_push($kontexte, $this->loadById(intval($datensatz["Id"])));
-                }
+				if ($datensatz = $ergebnis->fetch_assoc())
+				{
+                    $kontext = $this->loadById(intval($datensatz["Id"]));
+				}
             }
         }
         
         $mysqli->close();
         
-        return $kontexte;
+        return $kontext;
     }
     
     protected function getSQLStatementToLoadIdsByFund($fund)

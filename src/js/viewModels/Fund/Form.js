@@ -16,8 +16,7 @@ function SetSelectedElement(selectedElement, sender)
 
     _selectedElement = selectedElement;
 
-    SetKontextInformation();
-    SetAblageInformation();
+    SetFundJSON(_selectedElement);
 }
 
 function GetSelectedElement()
