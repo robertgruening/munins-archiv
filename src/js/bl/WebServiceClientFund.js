@@ -10,100 +10,38 @@ function WebServiceClientFund()
 
 	this.Register = function(eventName, listener) {
 		if (listener == undefined ||
-			listener == null)
+			listener == null ||
+			this._listeners[eventName] == undefined)
 		{
 			return;
 		}
-
-		if (eventName == "create")
-		{
-			this._listeners.create.push(listener);
-		}
-		else if (eventName == "save")
-		{
-			this._listeners.save.push(listener);
-		}
-		else if (eventName == "load")
-		{
-			this._listeners.load.push(listener);
-		}
-		else if (eventName == "loadAll")
-		{
-			this._listeners.loadAll.push(listener);
-		}
-		else if (eventName == "delete")
-		{
-			this._listeners.delete.push(listener);
-		}
+		
+		this._listeners[eventName].push(listener);
 	};
 
-	this.Update = function(eventName, data) {
-		if (eventName == "create")
+	this.Update = function(eventName, data, sender) {
+		if (this._listeners[eventName] == undefined)
 		{
-			this._listeners.create.forEach(function(item) {
-				item.Update(data);
-			});
+			return;
 		}
-		else if (eventName == "save")
-		{
-			this._listeners.save.forEach(function(item) {
-				item.Update(data);
-			});
-		}
-		else if (eventName == "load")
-		{
-			this._listeners.load.forEach(function(item) {
-				item.Update(data);
-			});
-		}
-		else if (eventName == "loadAll")
-		{
-			this._listeners.loadAll.forEach(function(item) {
-				item.Update(data);
-			});
-		}
-		else if (eventName == "delete")
-		{
-			this._listeners.delete.forEach(function(item) {
-				item.Update(data);
-			});
-		}
+		
+		this._listeners[eventName].forEach(function(item) {
+			item.Update(data, sender);
+		});
 	};
 
-	this.Fail = function(eventName, messages) {
-		if (eventName == "create")
+	this.Fail = function(eventName, messages, sender) {
+		if (this._listeners[eventName] == undefined)
 		{
-			this._listeners.create.forEach(function(item) {
-				item.Fail(messages);
-			});
+			return;
 		}
-		else if (eventName == "save")
-		{
-			this._listeners.save.forEach(function(item) {
-				item.Fail(messages);
-			});
-		}
-		else if (eventName == "load")
-		{
-			this._listeners.load.forEach(function(item) {
-				item.Fail(messages);
-			});
-		}
-		else if (eventName == "loadAll")
-		{
-			this._listeners.loadAll.forEach(function(item) {
-				item.Fail(messages);
-			});
-		}
-		else if (eventName == "delete")
-		{
-			this._listeners.delete.forEach(function(item) {
-				item.Fail(messages);
-			});
-		}
+		
+		this._listeners[eventName].forEach(function(item) {
+			item.Fail(data, sender);
+		});
 	};
 
-	this.Create = function(fund) {
+	this.Create = function(fund, sender) {
 		var controller = this;
 
 		$.ajax(
@@ -114,25 +52,25 @@ function WebServiceClientFund()
 			data: fund,
 			success:function(data, textStatus, jqXHR)
 			{
-				controller.Update("create", data);
+				controller.Update("create", data, sender);
 			},
 			error:function(jqXHR, textStatus, errorThrown)
 			{
 				if (jqXHR.status == 500)
 				{
 					ShowMessages(jqXHR.responseJSON);
-				    controller.Fail("create", jqXHR.responseJSON);
+				    controller.Fail("create", jqXHR.responseJSON, sender);
 				}
 				else
 				{
 					console.log("ERROR: " + jqXHR.responseJSON);
-				    controller.Fail("create", new Array("Es ist ein Servicerfehler aufgetreten!"));
+				    controller.Fail("create", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
 				}                
 			}
 		});
 	}
 
-	this.Save = function(fund) {
+	this.Save = function(fund, sender) {
 		var controller = this;
 
 		$.ajax(
@@ -143,25 +81,25 @@ function WebServiceClientFund()
 			data: fund,
 			success:function(data, textStatus, jqXHR)
 			{
-				controller.Update("save", data);
+				controller.Update("save", data, sender);
 			},
 			error:function(jqXHR, textStatus, errorThrown)
 			{
 				if (jqXHR.status == 500)
 				{
 					ShowMessages(jqXHR.responseJSON);
-				    controller.Fail("save", jqXHR.responseJSON);
+				    controller.Fail("save", jqXHR.responseJSON, sender);
 				}
 				else
 				{
 					console.log("ERROR: " + jqXHR.responseJSON);
-				    controller.Fail("save", new Array("Es ist ein Servicerfehler aufgetreten!"));
+				    controller.Fail("save", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
 				}                
 			}
 		});
 	}
 
-	this.Load = function(fund) {
+	this.Load = function(fund, sender) {
 		var controller = this;
 
 		$.ajax(
@@ -171,25 +109,25 @@ function WebServiceClientFund()
 			dataType: "json",
 			success:function(data, textStatus, jqXHR)
 			{
-				controller.Update("load", data);
+				controller.Update("load", data, sender);
 			},
 			error:function(jqXHR, textStatus, errorThrown)
 			{
 				if (jqXHR.status == 500)
 				{
 					ShowMessages(jqXHR.responseJSON);
-				    controller.Fail("load", jqXHR.responseJSON);
+				    controller.Fail("load", jqXHR.responseJSON, sender);
 				}
 				else
 				{
 					console.log("ERROR: " + jqXHR.responseJSON);
-				    controller.Fail("load", new Array("Es ist ein Servicerfehler aufgetreten!"));
+				    controller.Fail("load", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
 				}
 			}
 		});
 	};
 
-	this.LoadAll = function() {
+	this.LoadAll = function(sender) {
 		var controller = this;
 
 		$.ajax(
@@ -199,25 +137,25 @@ function WebServiceClientFund()
 			dataType: "json",
 			success:function(data, textStatus, jqXHR)
 			{
-				controller.Update("loadAll", data);
+				controller.Update("loadAll", data, sender);
 			},
 			error:function(jqXHR, textStatus, errorThrown)
 			{
 				if (jqXHR.status == 500)
 				{
 					ShowMessages(jqXHR.responseJSON);
-				    controller.Fail("loadAll", jqXHR.responseJSON);
+				    controller.Fail("loadAll", jqXHR.responseJSON, sender);
 				}
 				else
 				{
 					console.log("ERROR: " + jqXHR.responseJSON);
-				    controller.Fail("loadAll", new Array("Es ist ein Servicerfehler aufgetreten!"));
+				    controller.Fail("loadAll", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
 				}
 			}
 		});
 	};
 
-	this.Delete = function(fund) {
+	this.Delete = function(fund, sender) {
 		var controller = this;
 
 		$.ajax(
@@ -227,19 +165,19 @@ function WebServiceClientFund()
 			dataType: "json",
 			success:function(data, textStatus, jqXHR)
 			{
-				controller.Update("delete", data);
+				controller.Update("delete", data, sender);
 			},
 			error:function(jqXHR, textStatus, errorThrown)
 			{
 				if (jqXHR.status == 500)
 				{
 					ShowMessages(jqXHR.responseJSON);
-                    controller.Fail("delete", jqXHR.responseJSON);
+                    controller.Fail("delete", jqXHR.responseJSON, sender);
 				}
 				else
 				{
 					console.log("ERROR: " + jqXHR.responseJSON);
-                    controller.Fail("delete", new Array("Es ist ein Servicerfehler aufgetreten!"));
+                    controller.Fail("delete", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
                 }
 			}
 		});

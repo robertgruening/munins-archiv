@@ -3,7 +3,7 @@ require_once(__DIR__."/../../UserStories/UserStory.php");
 require_once(__DIR__."/../../Factory/FundFactory.php");
 require_once(__DIR__."/../../UserStories/Fund/LoadFund.php");
 
-class SaveAblage extends UserStory
+class SaveFund extends UserStory
 {
     #region variables
     private $_fund = null;

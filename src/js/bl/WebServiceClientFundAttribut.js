@@ -10,97 +10,35 @@ function WebServiceClientFundAttribut()
 
 	this.Register = function(eventName, listener) {
 		if (listener == undefined ||
-			listener == null)
+			listener == null ||
+			this._listeners[eventName] == undefined)
 		{
 			return;
 		}
-
-		if (eventName == "create")
-		{
-			this._listeners.create.push(listener);
-		}
-		else if (eventName == "save")
-		{
-			this._listeners.save.push(listener);
-		}
-		else if (eventName == "load")
-		{
-			this._listeners.load.push(listener);
-		}
-		else if (eventName == "loadAll")
-		{
-			this._listeners.loadAll.push(listener);
-		}
-		else if (eventName == "delete")
-		{
-			this._listeners.delete.push(listener);
-		}
+		
+		this._listeners[eventName].push(listener);
 	};
 
 	this.Update = function(eventName, data, sender) {
-		if (eventName == "create")
+		if (this._listeners[eventName] == undefined)
 		{
-			this._listeners.create.forEach(function(item) {
-				item.Update(data, sender);
-			});
+			return;
 		}
-		else if (eventName == "save")
-		{
-			this._listeners.save.forEach(function(item) {
-				item.Update(data, sender);
-			});
-		}
-		else if (eventName == "load")
-		{
-			this._listeners.load.forEach(function(item) {
-				item.Update(data, sender);
-			});
-		}
-		else if (eventName == "loadAll")
-		{
-			this._listeners.loadAll.forEach(function(item) {
-				item.Update(data, sender);
-			});
-		}
-		else if (eventName == "delete")
-		{
-			this._listeners.delete.forEach(function(item) {
-				item.Update(data, sender);
-			});
-		}
+		
+		this._listeners[eventName].forEach(function(item) {
+			item.Update(data, sender);
+		});
 	};
 
 	this.Fail = function(eventName, messages, sender) {
-		if (eventName == "create")
+		if (this._listeners[eventName] == undefined)
 		{
-			this._listeners.create.forEach(function(item) {
-				item.Fail(messages, sender);
-			});
+			return;
 		}
-		else if (eventName == "save")
-		{
-			this._listeners.save.forEach(function(item) {
-				item.Fail(messages, sender);
-			});
-		}
-		else if (eventName == "load")
-		{
-			this._listeners.load.forEach(function(item) {
-				item.Fail(messages, sender);
-			});
-		}
-		else if (eventName == "loadAll")
-		{
-			this._listeners.loadAll.forEach(function(item) {
-				item.Fail(messages, sender);
-			});
-		}
-		else if (eventName == "delete")
-		{
-			this._listeners.delete.forEach(function(item) {
-				item.Fail(messages, sender);
-			});
-		}
+		
+		this._listeners[eventName].forEach(function(item) {
+			item.Fail(data, sender);
+		});
 	};
 
 	this.Create = function(fundAttribut, sender) {
