@@ -1,7 +1,7 @@
 $(document).ready(function() {
     _webServiceClientAblage.Register("loadAll", new GuiClient(FillTreeSelectWithRootAblagen));
     _webServiceClientAblage.Register("load", new GuiClient(FillTreeSelectWithAblageChildren));
-    _webServiceClientAblage.Register("load", new GuiClient(SetSelectedElement));
+    _webServiceClientAblage.Register("load", new GuiClient(GetSelectedAblage));
 
 	InitTreeSelectAblage();
 });

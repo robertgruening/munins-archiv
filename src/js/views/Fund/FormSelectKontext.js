@@ -1,7 +1,7 @@
 $(document).ready(function() {
     _webServiceClientKontext.Register("loadAll", new GuiClient(FillTreeSelectWithRootKontexte));
     _webServiceClientKontext.Register("load", new GuiClient(FillTreeSelectWithKontextChildren));
-    _webServiceClientKontext.Register("load", new GuiClient(SetSelectedElement));
+    _webServiceClientKontext.Register("load", new GuiClient(SetSelectedKontext));
 
 	InitTreeSelectKontext();
 });

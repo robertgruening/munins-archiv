@@ -64,6 +64,36 @@ html, body {
 	color: SteelBlue;
 }
 
+.linkButton {
+    padding: 5px;
+    color:#333333;
+}
+
+.linkButton:hover {
+    color:azure;
+    background-color: SteelBlue;
+}
+
+.linkButton.riskyAction {
+    padding: 5px;
+    color:#333333;
+}
+
+.linkButton.riskyAction:hover {
+    color:azure;
+    background-color: #b81900;
+}
+
+.linkButton.disabled {
+    padding: 5px;
+    color: #969696;
+}
+
+.linkButton.disabled:hover {
+    color: #969696;
+    background-color: inherit;
+}
+
 
 /**************/
 /* visibility */

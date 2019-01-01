@@ -29,34 +29,3 @@
 #toolBar li {
     display: inline;
 }
-
-#create,
-#edit,
-#move,
-#delete {
-    padding: 5px;
-}
-
-#create:hover,
-#edit:hover,
-#move:hover,
-#delete:hover {
-    color:azure;
-    background-color: SteelBlue;
-}
-
-#create.disabled,
-#edit.disabled,
-#move.disabled,
-#delete.disabled {
-    padding: 5px;
-    color: #969696;
-}
-
-#create.disabled:hover,
-#edit.disabled:hover,
-#move.disabled:hover,
-#delete.disabled:hover {
-    color: #969696;
-    background-color: inherit;
-}

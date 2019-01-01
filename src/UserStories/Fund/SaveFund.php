@@ -56,6 +56,18 @@ class SaveFund extends UserStory
 
         $fundFromDatabase = $loadFund->getFund();
         $fundFromDatabase = $fundFactory->synchroniseFundAttribute($fundFromDatabase, $this->getFund()->getFundAttribute());
+
+        $loadFund = new LoadFund();
+        $loadFund->setId($savedFund->getId());
+        
+        if (!$loadFund->run())
+        {
+            $this->addMessages($loadFund->getMessages());
+            return false;
+        }
+
+        $fundFromDatabase = $loadFund->getFund();
+
         $this->setFund($fundFromDatabase);
 
         return true;

@@ -90,20 +90,27 @@ class FundFactory extends Factory
     #region save
     protected function getSQLStatementToInsert(iNode $element)
     {
-        return "INSERT INTO ".$this->getTableName()." (Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse)
-                VALUES (".$element->getAnzahl().", '".$element->getBezeichnung()."', ".$element->getDimension1().",
-                        ".$element->getDimension2().", ".$element->getDimension3().", ".$element->getMasse().");";
+        return "INSERT INTO ".$this->getTableName()." (Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse, Kontext_Id, Ablage_Id)
+                VALUES (".$element->getAnzahl().", '".$element->getBezeichnung()."', 
+                        ".($element->getDimension1() === null ? "NULL" : $element->getDimension1()).",
+                        ".($element->getDimension2() === null ? "NULL" : $element->getDimension2()).", 
+                        ".($element->getDimension3() === null ? "NULL" : $element->getDimension3()).", 
+                        ".($element->getMasse() === null ? "NULL" : $element->getMasse()).",
+                        ".($element->getKontext() === null ? "NULL" : $element->getKontext()->getId()).", 
+                        ".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId()).");";
     }
 
     protected function getSQLStatementToUpdate(iNode $element)
     {
         return "UPDATE ".$this->getTableName()."
                 SET Anzahl = ".$element->getAnzahl().",
-                SET Bezeichnung = '".$element->getBezeichnung()."',
-                SET Dimension1 = ".$element->getDimension1().",
-                SET Dimension2 = ".$element->getDimension2().",
-                SET Dimension3 = ".$element->getDimension3().",
-                SET Masse = ".$element->getMasse()."
+                    Bezeichnung = '".$element->getBezeichnung()."',
+                    Dimension1 = ".($element->getDimension1() === null ? "NULL" : $element->getDimension1()).",
+                    Dimension2 = ".($element->getDimension2() === null ? "NULL" : $element->getDimension2()).",
+                    Dimension3 = ".($element->getDimension3() === null ? "NULL" : $element->getDimension3()).",
+                    Masse = ".($element->getMasse() === null ? "NULL" : $element->getMasse()).",
+                    Kontext_Id = ".($element->getKontext() === null ? "NULL" : $element->getKontext()->getId()).",
+                    Ablage_Id = ".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId())."
                 WHERE Id = ".$element->getId().";";
     }
     #endregion
@@ -111,8 +118,12 @@ class FundFactory extends Factory
     #region convert
     public function convertToInstance($object)
     {
+        global $logger;
+        $logger->debug("Konvertiere Daten zu Fund");
+
         if ($object == null)
         {
+            $logger->error("Fund ist nicht gesetzt!");
             return null;
         }
 
@@ -123,7 +134,93 @@ class FundFactory extends Factory
             $fund->setId(intval($object["Id"]));
         }
 
-        $fund->setBezeichnung($object["Bezeichnung"]);
+        if (isset($object["Anzahl"]))
+        {
+            $fund->setAnzahl(intval($object["Anzahl"]));
+        }
+        else
+        {
+            $logger->debug("Anzahl ist nicht gesetzt!");
+        }
+
+        if (isset($object["Bezeichnung"]))
+        {
+            $fund->setBezeichnung($object["Bezeichnung"]);
+        }
+        else
+        {
+            $logger->debug("Bezeichnung ist nicht gesetzt!");
+        }
+
+        if (isset($object["FundAttribute"]))
+        {
+            for ($i = 0; $i < count($object["FundAttribute"]); $i++)
+            {
+                $fund->addFundAttribut($this->getFundAttributFactory()->convertToInstance($object["FundAttribute"][$i]));
+            }
+        }
+        else
+        {
+            $logger->debug("FundAttribute ist nicht gesetzt!");
+        }
+        
+        if (isset($object["Dimension1"]) &&
+            !empty($object["Dimension1"]))
+        {
+            $fund->setDimension1(intval($object["Dimension1"]));
+        }
+        else
+        {
+            $logger->debug("Dimension1 ist nicht gesetzt!");
+        }
+
+        if (isset($object["Dimension2"]) &&
+            !empty($object["Dimension2"]))
+        {
+            $fund->setDimension2(intval($object["Dimension2"]));
+        }
+        else
+        {
+            $logger->debug("Dimension2 ist nicht gesetzt!");
+        }
+
+        if (isset($object["Dimension3"]) &&
+            !empty($object["Dimension3"]))
+        {
+            $fund->setDimension3(intval($object["Dimension3"]));
+        }
+        else
+        {
+            $logger->debug("Dimension3 ist nicht gesetzt!");
+        }
+
+        if (isset($object["Masse"]) &&
+            !empty($object["Masse"]))
+        {
+            $fund->setMasse(intval($object["Masse"]));
+        }
+        else
+        {
+            $logger->debug("Masse ist nicht gesetzt!");
+        }
+
+        if (isset($object["Ablage"]))
+        {
+            $fund->setAblage($this->getAblageFactory()->convertToInstance($object["Ablage"]));
+        }
+        else
+        {
+            $logger->warn("Ablage ist nicht gesetzt!");
+        }
+
+        if (isset($object["Kontext"]))
+        {
+            $fund->setKontext($this->getKontextFactory()->convertToInstance($object["Kontext"]));
+        }
+        else
+        {
+            $logger->warn("Kontext ist nicht gesetzt!");
+        }
         
         return $fund;
     }

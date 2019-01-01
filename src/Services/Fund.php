@@ -28,24 +28,17 @@ function Create()
     global $logger;
     $logger->info("Fund-anlegen gestartet");
 
-    $fund = new Fund();
-
-    if (isset($_POST["Bezeichnung"]))
-    {
-        $fund->setBezeichnung($_POST["Bezeichnung"]);
-    }
-
-    if (isset($_POST["Anzahl"]))
-    {
-        $fund->setAnzahl($_POST["Anzahl"]);
-    }
+    parse_str(file_get_contents("php://input"), $fundObject);
+    
+    $fundFactory = new FundFactory();
+    $fund = $fundFactory->convertToInstance($fundObject);
     
     $saveFund = new SaveFund();
-    $saveFund->setFunde($fund);
+    $saveFund->setFund($fund);
     
     if ($saveFund->run())
     {
-        echo json_encode($saveFund->getFunde());    
+        echo json_encode($saveFund->getFund());    
     }
     else
     {
@@ -61,37 +54,29 @@ function Update()
     global $logger;
     $logger->info("Fund-anhand-ID-aktualisieren gestartet");
 
-    parse_str(file_get_contents("php://input"),$_PUT);
-
-    $fund = new Fund();
+    parse_str(file_get_contents("php://input"),$fundObject);
 
     if (isset($_GET["Id"]))
     {
-        $fund->setId(intval($_GET["Id"]));    
+        $fundObject["Id"] = $_GET["Id"];    
     }
-
-    if (isset($_PUT["Bezeichnung"]))
-    {
-        $fund->setBezeichnung($_PUT["Bezeichnung"]);
-    }
-
-    if (isset($_POST["Anzahl"]))
-    {
-        $fund->setAnzahl($_POST["Anzahl"]);
-    }
+    
+    $fundFactory = new FundFactory();
+    $fund = $fundFactory->convertToInstance($fundObject);
     
     $saveFund = new SaveFund();
     $saveFund->setFund($fund);
     
     if ($saveFund->run())
     {
-        echo json_encode($saveFund->getFund());    
+        echo json_encode($saveFund->getFund());
     }
     else
     {
         http_response_code(500);
         echo json_encode($saveFund->getMessages());
     }
+
     $logger->info("Fund-anhand-ID-aktualisieren beendet");
 }
 

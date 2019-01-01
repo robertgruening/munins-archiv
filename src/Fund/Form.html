@@ -14,15 +14,17 @@
 	<script type="text/javascript" src="../js/page.js"></script>
 	<script type="text/javascript" src="../js/bl/Fund.js"></script>
 	<script type="text/javascript" src="../js/bl/WebServiceClientFund.js"></script>
+	<script type="text/javascript" src="../js/bl/WebServiceClientFundAttribut.js"></script>
 	<script type="text/javascript" src="../js/bl/WebServiceClientKontext.js"></script>
 	<script type="text/javascript" src="../js/bl/WebServiceClientAblage.js"></script>
 	<script type="text/javascript" src="../js/ui/GuiClient.js"></script>
 	<script type="text/javascript" src="../js/ui/IconConfig.js"></script>
 	<script type="text/javascript" src="../js/viewModels/FundViewModel.js"></script>
-	<script type="text/javascript" src="../js/viewModels/Fund/Form.js"></script>
+	<script type="text/javascript" src="../js/viewModels/Fund/FormSelectFundAttribut.js"></script>
 	<script type="text/javascript" src="../js/viewModels/Fund/FormSelectKontext.js"></script>
 	<script type="text/javascript" src="../js/viewModels/Fund/FormSelectAblage.js"></script>
 	<script type="text/javascript" src="../js/views/Fund/Form.js"></script>
+	<script type="text/javascript" src="../js/views/Fund/FormSelectFundAttribut.js"></script>
 	<script type="text/javascript" src="../js/views/Fund/FormSelectKontext.js"></script>
 	<script type="text/javascript" src="../js/views/Fund/FormSelectAblage.js"></script>
 	<script type="text/javascript" src="../js/Fund/Factory.js"></script>
@@ -57,8 +59,8 @@
 					    <label>Attribute: </label>
 				    </div>
 				    <div class=fieldValue>
-					    <div id=divList class=field></div>
-					    <input type=button id=buttonAddFundAttribut value=Hinzufügen class="field notToPrint formButton" />
+						<div id=divList class=field></div>
+						<a id=buttonAddFundAttribut title="hinzufügen" class="notToPrint linkButton"><i class="fas fa-plus"></i></a>
 				    </div>	
 			    </div>
 			    <div class=fieldBlock>
@@ -121,9 +123,8 @@
 					    <label>Zugeordneter Kontext: </label>
 				    </div>
 				    <div class=fieldValue>
-					    <input type=text id=textboxSelectedKontext class=field />
-					    <div id=divKontextSelections class=field></div>
-						<input type=button id=buttonSelectKontext value=auswählen />
+						<a id=linkSelectedKontext></a>
+						<a id=buttonSelectKontext title="auswählen" class="notToPrint linkButton"><i class="fas fa-edit"></i></a>
 				    </div>	
 			    </div>
 			    <div id=divAblage class=fieldBlock>
@@ -132,9 +133,8 @@
 					    <label>Zugeordnete Ablage: </label>
 				    </div>
 				    <div class=fieldValue>
-					    <input type=text id=textboxSelectedAblage class=field />
-						<div id=divAblageSelections class=field></div>
-						<input type=button id=buttonSelectAblage value=auswählen />
+						<a id=linkSelectedAblage></a>
+						<a id=buttonSelectAblage title="auswählen" class="notToPrint linkButton"><i class="fas fa-edit"></i></a>
 				    </div>	
 			    </div>
 			    <div class="buttonBlock notToPrint">
@@ -144,6 +144,9 @@
 			    </div>
 		    </div>
 	    </div>
+		<div id=dialogSelectFundAttribut title="Fundattribut auswählen" class=dialog>
+			<div id=treeSelectFundAttribut></div>
+		</div>
 		<div id=dialogSelectKontext title="Kontext auswählen" class=dialog>
 			<div id=treeSelectKontext></div>
 		</div>

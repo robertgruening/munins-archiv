@@ -225,7 +225,7 @@ class KontextFactory extends Factory implements iTreeFactory
     {
         return "UPDATE ".$this->getTableName()."
                 SET Bezeichnung = '".$kontext->getBezeichnung()."',
-                SET Typ_Id = ".$kontext->getType()->getId()."
+                    Typ_Id = ".$kontext->getType()->getId()."
                 WHERE Id = ".$kontext->getId().";";
     }
     #endregion
@@ -265,9 +265,18 @@ class KontextFactory extends Factory implements iTreeFactory
     #region convert
     public function convertToInstance($object)
     {
-        if ($object == null ||
-            !isset($object["Type"]))
+        global $logger;
+        $logger->debug("Konvertiere Daten zu Kontext");
+
+        if ($object == null)
         {
+            $logger->error("Kontext ist nicht gesetzt!");
+            return null;
+        }
+
+        if (!isset($object["Type"]))
+        {
+            $logger->error("Typ ist nicht gesetzt!");
             return null;
         }
 
@@ -293,8 +302,8 @@ class KontextFactory extends Factory implements iTreeFactory
             }
             default :
             {
+                $logger->error("Unbekannter Kontexttyp!");
                 return null;
-                // throw new Exception("Unbekannter Kontexttyp!");
             }
         }
 
@@ -303,7 +312,15 @@ class KontextFactory extends Factory implements iTreeFactory
             $kontext->setId(intval($object["Id"]));
         }
 
-        $kontext->setBezeichnung($object["Bezeichnung"]);
+        if (isset($object["Bezeichnung"]))
+        {
+            $kontext->setBezeichnung($object["Bezeichnung"]);
+        }
+        else
+        {
+            $logger->debug("Bezeichnung ist nicht gesetzt!");
+        }
+        
         $kontext->setType($kontextTyp);
 
         if (isset($object["Parent"]))

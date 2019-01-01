@@ -5,9 +5,11 @@ $(document).ready(function() {
 	InitButtonNew();
 	InitButtonSave();
 	InitButtonDelete();
+	InitButtonSelectFundAttribut();
 	InitButtonSelectKontext();
 	InitButtonSelectAblage();
 
+	InitFieldId();
 	InitFieldBeschriftung();
 	InitFieldFundattribute();
 	InitFieldAnzahl();
@@ -17,16 +19,13 @@ $(document).ready(function() {
 	InitFieldMasse();
 	InitFieldAblage();
 	InitFieldKontext();
-	
-	$("#buttonAddFundAttribut").click(function() { AddAttribut(); });
-	
+		
 	if (getUrlParameterValue("Id"))
 	{
 		_fundViewModel.load(getUrlParameterValue("Id"));
 	}
 });
 
-//#region init
 function InitBreadcrumb()
 {
 	if (getFormMode() == "create")
@@ -43,7 +42,8 @@ function InitBreadcrumb()
 	}
 }
 
-//#region button new
+//#region form actions
+//#region new
 function InitButtonNew()
 {
 	EnableButtonNew();
@@ -63,7 +63,7 @@ function DisableButtonNew()
 }
 //#endregion
 
-//#region button save
+//#region save
 function InitButtonSave()
 {
 	EnableButtonSave();
@@ -83,7 +83,7 @@ function DisableButtonSave()
 }
 //#endregion
 
-//#region button delete
+//#region delete
 function InitButtonDelete()
 {
 	DisableButtonDelete();
@@ -100,157 +100,6 @@ function DisableButtonDelete()
 {
 	$("#buttonDelete").addClass("disabled");
 	$("#buttonDelete").prop("disabled", true);
-}
-//#endregion
-
-function InitButtonSelectKontext()
-{
-	$("#buttonSelectKontext").click(ShowFormSelectKontext);
-}
-
-function InitButtonSelectAblage()
-{
-	$("#buttonSelectAblage").click(ShowFormSelectAblage);
-}
-
-function InitFieldBeschriftung()
-{
-	_fundViewModel.register("bezeichnung", new GuiClient(setBezeichnung));
-	$("#textboxBeschriftung").change(function() {
-		_fundViewModel.setBezeichnung($("#textboxBeschriftung").val())
-	});
-}
-
-function InitFieldFundattribute()
-{
-	_fundViewModel.register("fundAttribute", new GuiClient(setFundAttribute));
-}
-
-function InitFieldAnzahl()
-{
-	_fundViewModel.register("anzahl", new GuiClient(setAnzahl));
-	$("#textboxAnzahl").change(function() {
-		_fundViewModel.setAnzahl($("#textboxAnzahl").val())
-	});
-}
-
-function InitFieldDimension1()
-{
-	_fundViewModel.register("dimension1", new GuiClient(setDimension1));
-	$("#textboxDimension1").change(function() {
-		_fundViewModel.setDimension1($("#textboxDimension1").val())
-	});
-}
-
-function InitFieldDimension2()
-{
-	_fundViewModel.register("dimension2", new GuiClient(setDimension2));
-	$("#textboxDimension2").change(function() {
-		_fundViewModel.setDimension2($("#textboxDimension2").val())
-	});
-}
-
-function InitFiledDimension3()
-{
-	_fundViewModel.register("dimension3", new GuiClient(setDimension3));
-	$("#textboxDimension3").change(function() {
-		_fundViewModel.setDimension3($("#textboxDimension3").val())
-	});
-}
-
-function InitFieldMasse()
-{
-	_fundViewModel.register("masse", new GuiClient(setMasse));
-	$("#textboxMasse").change(function() {
-		_fundViewModel.setMasse($("#textboxMasse").val())
-	});
-}
-
-function InitFieldKontext()
-{
-	$("#textboxSelectedKontext").attr("disabled",true);
-	_fundViewModel.register("kontext", new GuiClient(setKontext));
-}
-
-function InitFieldAblage()
-{
-	$("#textboxSelectedAblage").attr("disabled",true);
-	_fundViewModel.register("ablage", new GuiClient(setAblage));
-}
-//#endregion
-
-function ShowFormSelectAblage()
-{
-	$("#dialogSelectAblage").dialog({
-		height: "auto",
-		width: 750,
-		title: "Ablage auswählen",
-		modal: true,
-		resizable: false,
-		buttons: {
-			"Speichern": function()
-			{
-				_fundViewModel.setAblage(GetSelectedAblage());
-				setAblage(_fundViewModel.getAblage());
-				$(this).dialog("close");
-			},
-			"Abbrechen": function()
-			{
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#treeSelectAblage").jstree(true).refresh();
-
-	$("#dialogSelectAblage").dialog("open");
-}
-
-function ShowFormSelectKontext()
-{
-	$("#dialogSelectKontext").dialog({
-		height: "auto",
-		width: 750,
-		title: "Kontext auswählen",
-		modal: true,
-		resizable: false,
-		buttons: {
-			"Speichern": function()
-			{
-				_fundViewModel.setKontext(GetSelectedKontext());
-				setKontext(_fundViewModel.getKontext());
-				$(this).dialog("close");
-			},
-			"Abbrechen": function()
-			{
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#treeSelectKontext").jstree(true).refresh();
-
-	$("#dialogSelectKontext").dialog("open");
-}
-
-function GetIcon(type, state)
-{
-	return IconConfig.getCssClasses(type, state);
-}
-
-function SetFundJSON(fund)
-{
-	SetFundAttribute(fund.FundAttribute);
-	$("#buttonAddFundAttribut").attr("disabled", false);
-	
-	if (fund.Id == null)
-	{
-		document.title = "Fund";
-	}
-	else
-	{
-		document.title = "("+fund.Id+") Fund: "+fund.Bezeichnung;
-	}
 }
 
 function ShowDialogDelete()
@@ -281,8 +130,35 @@ function ShowDialogDelete()
 
 	$("#DialogDelete").dialog("open");
 }
+//#endregion
+//#endregion
+
+function GetIcon(type, state)
+{
+	return IconConfig.getCssClasses(type, state);
+}
+
+//#region Id
+function InitFieldId()
+{
+	_fundViewModel.register("id", new GuiClient(setId));
+}
+
+function setId(id)
+{
+	document.title = "Fund" + (id === null ? "" : " (" + id + ")");
+}
+//#endregion
 
 //#region Bezeichnung
+function InitFieldBeschriftung()
+{
+	_fundViewModel.register("bezeichnung", new GuiClient(setBezeichnung));
+	$("#textboxBeschriftung").change(function() {
+		_fundViewModel.setBezeichnung($("#textboxBeschriftung").val())
+	});
+}
+
 function setBezeichnung(bezeichnung)
 {
 	$("#textboxBeschriftung").val(bezeichnung);
@@ -290,15 +166,90 @@ function setBezeichnung(bezeichnung)
 //#endregion
 
 //#region Fundattribute
+function InitFieldFundattribute()
+{
+	_fundViewModel.register("fundAttribute", new GuiClient(setFundAttribute));
+}
+
+function InitButtonSelectFundAttribut()
+{
+	$("#buttonAddFundAttribut").click(ShowFormSelectFundAttribut);
+}
+
+function ShowFormSelectFundAttribut()
+{
+	$("#dialogSelectFundAttribut").dialog({
+		height: "auto",
+		width: 750,
+		title: "Fundattribut auswählen",
+		modal: true,
+		resizable: false,
+		buttons: {
+			"Speichern": function()
+			{
+				console.log(GetSelectedFundAttribut());
+				_fundViewModel.addFundAttribut(GetSelectedFundAttribut());				
+				$(this).dialog("close");
+			},
+			"Abbrechen": function()
+			{
+				$(this).dialog("close");
+			}
+		}
+	});
+
+	$("#treeSelectFundAttribut").jstree(true).refresh();
+
+	$("#dialogSelectFundAttribut").dialog("open");
+}
+
 function setFundAttribute(fundAttribute)
 {
 	$("#divFundAttribute div #divList").empty();
+	$("#divFundAttribute div #divList").append($("<ul>"));
 
-	$("#divFundAttribute div #divList").text(fundAttribute.length);
+	fundAttribute.forEach(fundAttribut => {	
+		console.log(fundAttribut);	
+		var li = $("<li>");
+		var linkFundAttribut = $("<a>");
+		linkFundAttribut.attr("title", "gehe zu");
+		linkFundAttribut.attr("href", "../FundAttribut/Explorer.html?Id=" + fundAttribut.Id);
+		linkFundAttribut.text("/" + fundAttribut.Path);
+		li.append(linkFundAttribut);
+		
+		var linkButtonDelete = $("<a>");
+		linkButtonDelete.attr("title", "löschen");
+		linkButtonDelete.attr("class", "linkButton riskyAction");
+		linkButtonDelete.attr("href", "javascript:removeFundAttribut("+fundAttribut.Id+");");
+
+		var icon = $("<i>");
+		icon.attr("class", "fas fa-trash-alt");
+		linkButtonDelete.append(icon);		
+		li.append(linkButtonDelete);
+
+
+		$("#divFundAttribute div #divList ul").append(li);
+	});
+}
+
+function removeFundAttribut(fundAttributId)
+{
+	var fundAttribut = new Object();
+	fundAttribut.Id = fundAttributId;
+
+	_fundViewModel.removeFundAttribut(fundAttribut);
 }
 //#endregion
 
 //#region Anzahl
+function InitFieldAnzahl()
+{
+	_fundViewModel.register("anzahl", new GuiClient(setAnzahl));
+	$("#textboxAnzahl").change(function() {
+		_fundViewModel.setAnzahl($("#textboxAnzahl").val())
+	});
+}
+
 function setAnzahl(anzahl)
 {
 	$("#textboxAnzahl").val(anzahl);
@@ -306,6 +257,14 @@ function setAnzahl(anzahl)
 //#endregion
 
 //#region Dimension1
+function InitFieldDimension1()
+{
+	_fundViewModel.register("dimension1", new GuiClient(setDimension1));
+	$("#textboxDimension1").change(function() {
+		_fundViewModel.setDimension1($("#textboxDimension1").val())
+	});
+}
+
 function setDimension1(dimension1)
 {
 	$("#textboxDimension1").val(dimension1);
@@ -313,6 +272,14 @@ function setDimension1(dimension1)
 //#endregion
 
 //#region Dimension2
+function InitFieldDimension2()
+{
+	_fundViewModel.register("dimension2", new GuiClient(setDimension2));
+	$("#textboxDimension2").change(function() {
+		_fundViewModel.setDimension2($("#textboxDimension2").val())
+	});
+}
+
 function setDimension2(dimension2)
 {
 	$("#textboxDimension2").val(dimension2);
@@ -320,6 +287,14 @@ function setDimension2(dimension2)
 //#endregion
 
 //#region Dimension3
+function InitFiledDimension3()
+{
+	_fundViewModel.register("dimension3", new GuiClient(setDimension3));
+	$("#textboxDimension3").change(function() {
+		_fundViewModel.setDimension3($("#textboxDimension3").val())
+	});
+}
+
 function setDimension3(dimension3)
 {
 	$("#textboxDimension3").val(dimension3);
@@ -327,6 +302,14 @@ function setDimension3(dimension3)
 //#endregion
 
 //#region Masse
+function InitFieldMasse()
+{
+	_fundViewModel.register("masse", new GuiClient(setMasse));
+	$("#textboxMasse").change(function() {
+		_fundViewModel.setMasse($("#textboxMasse").val())
+	});
+}
+
 function setMasse(masse)
 {
 	$("#textboxMasse").val(masse);
@@ -334,15 +317,107 @@ function setMasse(masse)
 //#endregion
 
 //#region Ablage
+function InitFieldAblage()
+{
+	_fundViewModel.register("ablage", new GuiClient(setAblage));
+}
+
+function InitButtonSelectAblage()
+{
+	$("#buttonSelectAblage").click(ShowFormSelectAblage);
+}
+
 function setAblage(ablage)
 {
-	$("#textboxSelectedAblage").val(ablage == null ? "" : ("/" + ablage.Path));
+	if (ablage == null)
+	{
+		$("#linkSelectedAblage").text("");
+		$("#linkSelectedAblage").attr("href", "");
+	}
+	else
+	{
+		$("#linkSelectedAblage").text("/" + ablage.Path);
+		$("#linkSelectedAblage").attr("href", "../Ablage/Explorer.html?Id=" + ablage.Id);
+	}
+}
+
+function ShowFormSelectAblage()
+{
+	$("#dialogSelectAblage").dialog({
+		height: "auto",
+		width: 750,
+		title: "Ablage auswählen",
+		modal: true,
+		resizable: false,
+		buttons: {
+			"Speichern": function()
+			{
+				_fundViewModel.setAblage(GetSelectedAblage());
+				setAblage(_fundViewModel.getAblage());
+				$(this).dialog("close");
+			},
+			"Abbrechen": function()
+			{
+				$(this).dialog("close");
+			}
+		}
+	});
+
+	$("#treeSelectAblage").jstree(true).refresh();
+
+	$("#dialogSelectAblage").dialog("open");
 }
 //#endregion
 
 //#region Kontext
+function InitFieldKontext()
+{
+	_fundViewModel.register("kontext", new GuiClient(setKontext));
+}
+
+function InitButtonSelectKontext()
+{
+	$("#buttonSelectKontext").click(ShowFormSelectKontext);
+}
+
 function setKontext(kontext)
 {
-	$("#textboxSelectedKontext").val(kontext == null ? "" : ("/" + kontext.Path));
+	if (kontext == null)
+	{
+		$("#linkSelectedKontext").text("");
+		$("#linkSelectedKontext").attr("href", "");
+	}
+	else
+	{
+		$("#linkSelectedKontext").text("/" + kontext.Path);
+		$("#linkSelectedKontext").attr("href", "../Kontext/Explorer.html?Id=" + kontext.Id);
+	}
+}
+
+function ShowFormSelectKontext()
+{
+	$("#dialogSelectKontext").dialog({
+		height: "auto",
+		width: 750,
+		title: "Kontext auswählen",
+		modal: true,
+		resizable: false,
+		buttons: {
+			"Speichern": function()
+			{
+				_fundViewModel.setKontext(GetSelectedKontext());
+				setKontext(_fundViewModel.getKontext());
+				$(this).dialog("close");
+			},
+			"Abbrechen": function()
+			{
+				$(this).dialog("close");
+			}
+		}
+	});
+
+	$("#treeSelectKontext").jstree(true).refresh();
+
+	$("#dialogSelectKontext").dialog("open");
 }
 //#endregion

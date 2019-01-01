@@ -1,10 +1,12 @@
 function FundViewModel()
 {
 	//#region variables
-	this._fund = null;
+	this._fund = new Fund();
 	this._hasChanged = false;
 	this._webServiceClientFund = new WebServiceClientFund();
 	this._listeners = {
+		changed: new Array(),
+		id:new Array(),
 		bezeichnung: new Array(),
 		fundAttribute: new Array(),
 		anzahl: new Array(),
@@ -18,10 +20,10 @@ function FundViewModel()
 	//#endregion
 
 	//#region init
-	_webServiceClientFund.Register("load", this);
-	_webServiceClientFund.Register("create", this);
-	_webServiceClientFund.Register("save", this);
-	_webServiceClientFund.Register("delete", this);
+	this._webServiceClientFund.Register("load", this);
+	this._webServiceClientFund.Register("create", this);
+	this._webServiceClientFund.Register("save", this);
+	this._webServiceClientFund.Register("delete", this);
 	//#endregion
 
 	//#region properties
@@ -40,6 +42,7 @@ function FundViewModel()
 	this.addFundAttribut = function(fundAttribut) {
 		this._fund.FundAttribute.push(fundAttribut);
 		this._hasChanged = true;
+		this._update("fundAttribute", this._fund.FundAttribute);
 	};
 	
 	this.removeFundAttribut = function(fundAttribut) {
@@ -47,11 +50,12 @@ function FundViewModel()
 		{
 			if (this._fund.FundAttribute[i].Id == fundAttribut.Id)
 			{
-				this._fund.FundAttribute.splice(i, 0);
+				this._fund.FundAttribute.splice(i, 1);
 				break;
 			}
 		}
 		this._hasChanged = true;
+		this._update("fundAttribute", this._fund.FundAttribute);
 	};
 	//#endregion
 
@@ -104,7 +108,7 @@ function FundViewModel()
 		return this._fund.Masse;
 	};
 	
-	this.SsetMasse = function(masse) {
+	this.setMasse = function(masse) {
 		this._fund.Masse = masse;
 		this._hasChanged = true;
 	};
@@ -144,19 +148,26 @@ function FundViewModel()
 	this.load = function(id) {
 		var fund = new Object();
 		fund.Id = id;
-		_webServiceClientFund.Load(fund, "load");
+		this._webServiceClientFund.Load(fund, "load");
 	};
 
 	this.create = function() {
-		_webServiceClientFund.Create(this._fund, "create");
+		this._webServiceClientFund.Create(this._fund, "create");
 	};
 
 	this.save = function() {
-		_webServiceClientFund.Save(this._fund, "save");
+		if (this._fund.Id == null)
+		{
+			this.create();
+		}
+		else
+		{
+			this._webServiceClientFund.Save(this._fund, "save");
+		}
 	};
 
 	this.delete = function() {
-		_webServiceClientFund.Delete(this._fund, "delete");
+		this._webServiceClientFund.Delete(this._fund, "delete");
 	};
 	//#endregion
 
@@ -187,6 +198,8 @@ function FundViewModel()
 		this._fund = element;		
 		this._hasChanged = false;
 
+		this._update("changed");
+		this._update("id", this._fund.Id);
 		this._update("bezeichnung", this._fund.Bezeichnung);
 		this._update("fundAttribute", this._fund.FundAttribute);
 		this._update("anzahl", this._fund.Anzahl);
@@ -199,11 +212,37 @@ function FundViewModel()
 	};
 
 	this._updateCreate = function(element) {
+		this._fund = element;		
 		this._hasChanged = false;
+
+		this._update("changed");
+		this._update("id", this._fund.Id);
+		this._update("bezeichnung", this._fund.Bezeichnung);
+		this._update("fundAttribute", this._fund.FundAttribute);
+		this._update("anzahl", this._fund.Anzahl);
+		this._update("dimension1", this._fund.Dimension1);
+		this._update("dimension2", this._fund.Dimension2);
+		this._update("dimension3", this._fund.Dimension3);
+		this._update("masse", this._fund.Masse);
+		this._update("ablage", this._fund.Ablage);
+		this._update("kontext", this._fund.Kontext);
 	};
 
 	this._updateSave = function(element) {
+		this._fund = element;		
 		this._hasChanged = false;
+
+		this._update("changed");
+		this._update("id", this._fund.Id);
+		this._update("bezeichnung", this._fund.Bezeichnung);
+		this._update("fundAttribute", this._fund.FundAttribute);
+		this._update("anzahl", this._fund.Anzahl);
+		this._update("dimension1", this._fund.Dimension1);
+		this._update("dimension2", this._fund.Dimension2);
+		this._update("dimension3", this._fund.Dimension3);
+		this._update("masse", this._fund.Masse);
+		this._update("ablage", this._fund.Ablage);
+		this._update("kontext", this._fund.Kontext);
 	};
 
 	this._updateDelete = function() {
