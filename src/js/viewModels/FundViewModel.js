@@ -5,8 +5,9 @@ function FundViewModel()
 	this._hasChanged = false;
 	this._webServiceClientFund = new WebServiceClientFund();
 	this._listeners = {
-		changed: new Array(),
-		id:new Array(),
+		dataChanged: new Array(),
+		statusChanged: new Array(),		
+		id: new Array(),
 		bezeichnung: new Array(),
 		fundAttribute: new Array(),
 		anzahl: new Array(),
@@ -17,13 +18,6 @@ function FundViewModel()
 		kontext: new Array(),
 		ablage: new Array()
 	};
-	//#endregion
-
-	//#region init
-	this._webServiceClientFund.Register("load", this);
-	this._webServiceClientFund.Register("create", this);
-	this._webServiceClientFund.Register("save", this);
-	this._webServiceClientFund.Register("delete", this);
 	//#endregion
 
 	//#region properties
@@ -172,33 +166,41 @@ function FundViewModel()
 	//#endregion
 
 	//#region observer methods
+	this.registerToWebServiceClientFund = function()
+	{
+		this._webServiceClientFund.Register("load", this);
+		this._webServiceClientFund.Register("create", this);
+		this._webServiceClientFund.Register("save", this);
+		this._webServiceClientFund.Register("delete", this);
+	}
+
 	this.Update = function(data, sender)
-	{		
+	{
 		switch (sender) {
 			case "load": {
-				this._updateLoad(data);
+				this._updateAllListeners(data);
 				break;
 			}
 			case "create": {
-				this._updateCreate(data);
+				this._updateAllListeners(data);
 				break;
 			}
 			case "save": {
-				this._updateSave(data);
+				this._updateAllListeners(data);
 				break;
 			}
 			case "delete": {
-				this._updateDelete(data);
+				this._updateAllListeners(new Fund());
 				break;
 			}
 		}
 	};
 
-	this._updateLoad = function(element) {
+	this._updateAllListeners = function(element) {
 		this._fund = element;		
 		this._hasChanged = false;
 
-		this._update("changed");
+		this._update("dataChanged");
 		this._update("id", this._fund.Id);
 		this._update("bezeichnung", this._fund.Bezeichnung);
 		this._update("fundAttribute", this._fund.FundAttribute);
@@ -211,44 +213,46 @@ function FundViewModel()
 		this._update("kontext", this._fund.Kontext);
 	};
 
-	this._updateCreate = function(element) {
-		this._fund = element;		
-		this._hasChanged = false;
-
-		this._update("changed");
-		this._update("id", this._fund.Id);
-		this._update("bezeichnung", this._fund.Bezeichnung);
-		this._update("fundAttribute", this._fund.FundAttribute);
-		this._update("anzahl", this._fund.Anzahl);
-		this._update("dimension1", this._fund.Dimension1);
-		this._update("dimension2", this._fund.Dimension2);
-		this._update("dimension3", this._fund.Dimension3);
-		this._update("masse", this._fund.Masse);
-		this._update("ablage", this._fund.Ablage);
-		this._update("kontext", this._fund.Kontext);
+	this.Fail = function(messages, sender)
+	{		
+		switch (sender) {
+			case "load": {
+				this._failLoad(messages);
+				break;
+			}
+			case "create": {
+				this._failCreate(messages);
+				break;
+			}
+			case "save": {
+				this._failSave(messages);
+				break;
+			}
+			case "delete": {
+				this._failDelete(messages);
+				break;
+			}
+		}
 	};
 
-	this._updateSave = function(element) {
-		this._fund = element;		
-		this._hasChanged = false;
-
-		this._update("changed");
-		this._update("id", this._fund.Id);
-		this._update("bezeichnung", this._fund.Bezeichnung);
-		this._update("fundAttribute", this._fund.FundAttribute);
-		this._update("anzahl", this._fund.Anzahl);
-		this._update("dimension1", this._fund.Dimension1);
-		this._update("dimension2", this._fund.Dimension2);
-		this._update("dimension3", this._fund.Dimension3);
-		this._update("masse", this._fund.Masse);
-		this._update("ablage", this._fund.Ablage);
-		this._update("kontext", this._fund.Kontext);
+	this._failLoad = function(messages) {
+		this._fail("statusChanged", messages);
 	};
 
-	this._updateDelete = function() {
-		this._hasChanged = false;
+	this._failCreate = function(messages) {
+		this._fail("statusChanged", messages);
 	};
 
+	this._failSave = function(messages) {
+		this._fail("statusChanged", messages);
+	};
+
+	this._failDelete = function(messages) {
+		this._fail("statusChanged", messages);
+	};
+	//#endregion
+
+	//#region observable subject methods
 	this.register = function(eventName, listener) {
 		if (listener == undefined ||
 			listener == null)
@@ -282,9 +286,13 @@ function FundViewModel()
 		}
 		
 		this._listeners[eventName].forEach(function(item) {
-			item.Fail(data);
+			item.Fail(messages);
 		});
 	};
 	//#endregion
+	//#endregion
+
+	//#region init
+	this.registerToWebServiceClientFund();
 	//#endregion
 }

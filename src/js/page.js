@@ -69,5 +69,5 @@ function getFormMode()
 
 function openFormNewElement()
 {
-	window.open(window.location.href);
+	window.open(window.location.href.replace(window.location.search, ""));
 }

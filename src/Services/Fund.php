@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
+require_once("../UserStories/Fund/ConvertFund.php");
 require_once("../UserStories/Fund/LoadFund.php");
 require_once("../UserStories/Fund/SaveFund.php");
 require_once("../UserStories/Fund/DeleteFund.php");
@@ -30,8 +31,19 @@ function Create()
 
     parse_str(file_get_contents("php://input"), $fundObject);
     
-    $fundFactory = new FundFactory();
-    $fund = $fundFactory->convertToInstance($fundObject);
+    $convertFund = new ConvertFund();
+    $convertFund->setMultidimensionalArray($fundObject);
+
+    if ($convertFund->run())
+    {
+        $fund = $convertFund->getFund();
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($convertFund->getMessages());
+        return;
+    }
     
     $saveFund = new SaveFund();
     $saveFund->setFund($fund);
@@ -61,8 +73,19 @@ function Update()
         $fundObject["Id"] = $_GET["Id"];    
     }
     
-    $fundFactory = new FundFactory();
-    $fund = $fundFactory->convertToInstance($fundObject);
+    $convertFund = new ConvertFund();
+    $convertFund->setMultidimensionalArray($fundObject);
+
+    if ($convertFund->run())
+    {
+        $fund = $convertFund->getFund();
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($convertFund->getMessages());
+        return;
+    }
     
     $saveFund = new SaveFund();
     $saveFund->setFund($fund);

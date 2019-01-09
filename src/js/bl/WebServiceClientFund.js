@@ -37,7 +37,7 @@ function WebServiceClientFund()
 		}
 		
 		this._listeners[eventName].forEach(function(item) {
-			item.Fail(data, sender);
+			item.Fail(messages, sender);
 		});
 	};
 

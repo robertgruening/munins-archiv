@@ -42,11 +42,13 @@ class DeleteFund extends UserStory
             return false;
         }
 
-        return $true;
+        return true;
     }
 
     protected function execute()
     {
+        $fund = $this->getFund();
+        
         $fundFactory = new FundFactory();
         $fund = $fundFactory->unlinkAllFundAttribute($fund);
         

@@ -1,6 +1,7 @@
 var _fundViewModel = new FundViewModel();
 
 $(document).ready(function() {
+	InitStatusChanged();
 	InitBreadcrumb();
 	InitButtonNew();
 	InitButtonSave();
@@ -25,6 +26,11 @@ $(document).ready(function() {
 		_fundViewModel.load(getUrlParameterValue("Id"));
 	}
 });
+
+function InitStatusChanged()
+{
+	_fundViewModel.register("statusChanged", new GuiClient(showMessages, showMessages));
+}
 
 function InitBreadcrumb()
 {
@@ -86,7 +92,7 @@ function DisableButtonSave()
 //#region delete
 function InitButtonDelete()
 {
-	DisableButtonDelete();
+	//DisableButtonDelete();
 	$("#buttonDelete").click(ShowDialogDelete);
 }
 
@@ -104,8 +110,6 @@ function DisableButtonDelete()
 
 function ShowDialogDelete()
 {
-	var selectedNode = GetSelectedElement();
-
 	$("#dialogDelete").empty();
 	$("#dialogDelete").append(
 		$("<p>").append("Möchten Sie diesen Fund löschen?")
@@ -141,19 +145,28 @@ function GetIcon(type, state)
 //#region Id
 function InitFieldId()
 {
-	_fundViewModel.register("id", new GuiClient(setId));
+	_fundViewModel.register("id", new GuiClient(setId, showMessages));
 }
 
 function setId(id)
 {
-	document.title = "Fund" + (id === null ? "" : " (" + id + ")");
+	if (id == null)
+	{
+		document.title = "Fund";
+		DisableButtonDelete();
+	}
+	else
+	{
+		document.title = "Fund: (" + id + ")";
+		EnableButtonDelete();
+	}
 }
 //#endregion
 
 //#region Bezeichnung
 function InitFieldBeschriftung()
 {
-	_fundViewModel.register("bezeichnung", new GuiClient(setBezeichnung));
+	_fundViewModel.register("bezeichnung", new GuiClient(setBezeichnung, showMessages));
 	$("#textboxBeschriftung").change(function() {
 		_fundViewModel.setBezeichnung($("#textboxBeschriftung").val())
 	});
@@ -168,7 +181,7 @@ function setBezeichnung(bezeichnung)
 //#region Fundattribute
 function InitFieldFundattribute()
 {
-	_fundViewModel.register("fundAttribute", new GuiClient(setFundAttribute));
+	_fundViewModel.register("fundAttribute", new GuiClient(setFundAttribute, showMessages));
 }
 
 function InitButtonSelectFundAttribut()
@@ -187,7 +200,6 @@ function ShowFormSelectFundAttribut()
 		buttons: {
 			"Speichern": function()
 			{
-				console.log(GetSelectedFundAttribut());
 				_fundViewModel.addFundAttribut(GetSelectedFundAttribut());				
 				$(this).dialog("close");
 			},
@@ -208,8 +220,7 @@ function setFundAttribute(fundAttribute)
 	$("#divFundAttribute div #divList").empty();
 	$("#divFundAttribute div #divList").append($("<ul>"));
 
-	fundAttribute.forEach(fundAttribut => {	
-		console.log(fundAttribut);	
+	fundAttribute.forEach(fundAttribut => {
 		var li = $("<li>");
 		var linkFundAttribut = $("<a>");
 		linkFundAttribut.attr("title", "gehe zu");
@@ -244,7 +255,7 @@ function removeFundAttribut(fundAttributId)
 //#region Anzahl
 function InitFieldAnzahl()
 {
-	_fundViewModel.register("anzahl", new GuiClient(setAnzahl));
+	_fundViewModel.register("anzahl", new GuiClient(setAnzahl, showMessages));
 	$("#textboxAnzahl").change(function() {
 		_fundViewModel.setAnzahl($("#textboxAnzahl").val())
 	});
@@ -259,7 +270,7 @@ function setAnzahl(anzahl)
 //#region Dimension1
 function InitFieldDimension1()
 {
-	_fundViewModel.register("dimension1", new GuiClient(setDimension1));
+	_fundViewModel.register("dimension1", new GuiClient(setDimension1, showMessages));
 	$("#textboxDimension1").change(function() {
 		_fundViewModel.setDimension1($("#textboxDimension1").val())
 	});
@@ -274,7 +285,7 @@ function setDimension1(dimension1)
 //#region Dimension2
 function InitFieldDimension2()
 {
-	_fundViewModel.register("dimension2", new GuiClient(setDimension2));
+	_fundViewModel.register("dimension2", new GuiClient(setDimension2, showMessages));
 	$("#textboxDimension2").change(function() {
 		_fundViewModel.setDimension2($("#textboxDimension2").val())
 	});
@@ -289,7 +300,7 @@ function setDimension2(dimension2)
 //#region Dimension3
 function InitFiledDimension3()
 {
-	_fundViewModel.register("dimension3", new GuiClient(setDimension3));
+	_fundViewModel.register("dimension3", new GuiClient(setDimension3, showMessages));
 	$("#textboxDimension3").change(function() {
 		_fundViewModel.setDimension3($("#textboxDimension3").val())
 	});
@@ -304,7 +315,7 @@ function setDimension3(dimension3)
 //#region Masse
 function InitFieldMasse()
 {
-	_fundViewModel.register("masse", new GuiClient(setMasse));
+	_fundViewModel.register("masse", new GuiClient(setMasse, showMessages));
 	$("#textboxMasse").change(function() {
 		_fundViewModel.setMasse($("#textboxMasse").val())
 	});
@@ -319,7 +330,7 @@ function setMasse(masse)
 //#region Ablage
 function InitFieldAblage()
 {
-	_fundViewModel.register("ablage", new GuiClient(setAblage));
+	_fundViewModel.register("ablage", new GuiClient(setAblage, showMessages));
 }
 
 function InitButtonSelectAblage()
@@ -372,7 +383,7 @@ function ShowFormSelectAblage()
 //#region Kontext
 function InitFieldKontext()
 {
-	_fundViewModel.register("kontext", new GuiClient(setKontext));
+	_fundViewModel.register("kontext", new GuiClient(setKontext, showMessages));
 }
 
 function InitButtonSelectKontext()

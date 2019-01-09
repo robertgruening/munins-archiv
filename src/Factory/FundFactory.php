@@ -136,7 +136,7 @@ class FundFactory extends Factory
 
         if (isset($object["Anzahl"]))
         {
-            $fund->setAnzahl(intval($object["Anzahl"]));
+                $fund->setAnzahl(intval($object["Anzahl"]));
         }
         else
         {
@@ -561,7 +561,7 @@ class FundFactory extends Factory
 
     public function unlinkAllFundAttribute($fund)
     {
-        return unlinkObsoleteFundAttribute($fund, array());
+        return $this->unlinkObsoleteFundAttribute($fund, array());
     }
     #endregion
     #endregion
