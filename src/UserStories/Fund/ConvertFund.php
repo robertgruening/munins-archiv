@@ -1,6 +1,8 @@
 <?php
 require_once(__DIR__."/../../UserStories/UserStory.php");
-require_once(__DIR__."/../../Factory/FundFactory.php");
+require_once(__DIR__."/../../Factory/FundAttributFactory.php");
+require_once(__DIR__."/../../Factory/AblageFactory.php");
+require_once(__DIR__."/../../Factory/KontextFactory.php");
 
 class ConvertFund extends UserStory
 {
@@ -36,7 +38,7 @@ class ConvertFund extends UserStory
     /**
      * Returns the converted Fund.
      */
-    private function getFund()
+    public function getFund()
     {
         return $this->_fund;
     }
@@ -45,7 +47,7 @@ class ConvertFund extends UserStory
      * Sets the conbverted Fund.
      * @param Fund $fund Fund, which was converted.
      */
-    public function setFund($fund)
+    private function setFund($fund)
     {
         $this->_fund = $fund;
     }
@@ -250,5 +252,9 @@ class ConvertFund extends UserStory
             $fund->setKontext($this->getKontextFactory()->convertToInstance($multidimensionalArray["Kontext"]));
         }
         #endregion
+
+        $this->setFund($fund);
+
+        return (count($this->getMessages()) == 0);
     }
 }

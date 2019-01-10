@@ -2,10 +2,10 @@ function FundViewModel()
 {
 	//#region variables
 	this._fund = new Fund();
-	this._hasChanged = false;
 	this._webServiceClientFund = new WebServiceClientFund();
 	this._listeners = {
 		dataChanged: new Array(),
+		dataResetted: new Array(),
 		statusChanged: new Array(),		
 		id: new Array(),
 		bezeichnung: new Array(),
@@ -28,14 +28,14 @@ function FundViewModel()
 	
 	this.setBezeichnung = function(bezeichnung) {
 		this._fund.Bezeichnung = bezeichnung;
-		this._hasChanged = true;
+		this._update("dataChanged");
 	};
 	//#endregion
 	
 	//#region Fundattribute
 	this.addFundAttribut = function(fundAttribut) {
 		this._fund.FundAttribute.push(fundAttribut);
-		this._hasChanged = true;
+		this._update("dataChanged");
 		this._update("fundAttribute", this._fund.FundAttribute);
 	};
 	
@@ -48,7 +48,7 @@ function FundViewModel()
 				break;
 			}
 		}
-		this._hasChanged = true;
+		this._update("dataChanged");
 		this._update("fundAttribute", this._fund.FundAttribute);
 	};
 	//#endregion
@@ -60,7 +60,7 @@ function FundViewModel()
 	
 	this.setAnzahl = function(anzahl) {
 		this._fund.Anzahl = anzahl;
-		this._hasChanged = true;
+		this._update("dataChanged");
 	};
 	//#endregion
 
@@ -71,7 +71,7 @@ function FundViewModel()
 	
 	this.setDimension1 = function(dimension1) {
 		this._fund.Dimension1 = dimension1;
-		this._hasChanged = true;
+		this._update("dataChanged");
 	};
 	//#endregion
 
@@ -82,7 +82,7 @@ function FundViewModel()
 	
 	this.setDimension2 = function(dimension2) {
 		this._fund.Dimension2 = dimension2;
-		this._hasChanged = true;
+		this._update("dataChanged");
 	};
 	//#endregion
 
@@ -93,7 +93,7 @@ function FundViewModel()
 	
 	this.setDimension3 = function(dimension3) {
 		this._fund.Dimension3 = dimension3;
-		this._hasChanged = true;
+		this._update("dataChanged");
 	};
 	//#endregion
 
@@ -104,7 +104,7 @@ function FundViewModel()
 	
 	this.setMasse = function(masse) {
 		this._fund.Masse = masse;
-		this._hasChanged = true;
+		this._update("dataChanged");
 	};
 	//#endregion
 
@@ -115,7 +115,7 @@ function FundViewModel()
 	
 	this.setAblage = function(ablage) {
 		this._fund.Ablage = ablage;
-		this._hasChanged = true;
+		this._update("dataChanged");
 	};
 	//#endregion
 
@@ -126,13 +126,7 @@ function FundViewModel()
 	
 	this.setKontext = function(kontext) {
 		this._fund.Kontext = kontext;
-		this._hasChanged = true;
-	};
-	//#endregion
-
-	//#region status
-	this.hasChanged = function() {
-		return this._hasChanged;
+		this._update("dataChanged");
 	};
 	//#endregion
 	//#endregion
@@ -163,10 +157,22 @@ function FundViewModel()
 	this.delete = function() {
 		this._webServiceClientFund.Delete(this._fund, "delete");
 	};
+
+	this.undoAllChanges = function() {
+		if (this._fund.Id == undefined)
+		{
+			this._updateAllPropertyListeners(new Fund());
+			this._update("dataResetted");			
+		}
+		else
+		{
+			this._webServiceClientFund.Load(this._fund, "load");
+		}
+	};
 	//#endregion
 
 	//#region observer methods
-	this.registerToWebServiceClientFund = function()
+	this._registerToWebServiceClientFund = function()
 	{
 		this._webServiceClientFund.Register("load", this);
 		this._webServiceClientFund.Register("create", this);
@@ -178,29 +184,35 @@ function FundViewModel()
 	{
 		switch (sender) {
 			case "load": {
-				this._updateAllListeners(data);
+				this._updateAllPropertyListeners(data);
+				this._update("dataResetted");
 				break;
 			}
 			case "create": {
-				this._updateAllListeners(data);
+				this._updateAllPropertyListeners(data);
+				this._update("dataResetted");
 				break;
 			}
 			case "save": {
-				this._updateAllListeners(data);
+				this._updateAllPropertyListeners(data);
+				this._update("dataResetted");
 				break;
 			}
 			case "delete": {
-				this._updateAllListeners(new Fund());
+				this._updateAllPropertyListeners(new Fund());
+				this._update("dataResetted");
 				break;
 			}
 		}
 	};
 
-	this._updateAllListeners = function(element) {
-		this._fund = element;		
-		this._hasChanged = false;
+	this.updateAllListeners = function() {
+		this._updateAllPropertyListeners(this._fund);
+	};
 
-		this._update("dataChanged");
+	this._updateAllPropertyListeners = function(element) {
+		this._fund = element;
+
 		this._update("id", this._fund.Id);
 		this._update("bezeichnung", this._fund.Bezeichnung);
 		this._update("fundAttribute", this._fund.FundAttribute);
@@ -293,6 +305,6 @@ function FundViewModel()
 	//#endregion
 
 	//#region init
-	this.registerToWebServiceClientFund();
+	this._registerToWebServiceClientFund();
 	//#endregion
 }

@@ -2,10 +2,12 @@ var _fundViewModel = new FundViewModel();
 
 $(document).ready(function() {
 	InitStatusChanged();
+	InitDataChanged();
 	InitBreadcrumb();
 	InitButtonNew();
 	InitButtonSave();
 	InitButtonDelete();
+	InitButtonUndo();
 	InitButtonSelectFundAttribut();
 	InitButtonSelectKontext();
 	InitButtonSelectAblage();
@@ -25,11 +27,20 @@ $(document).ready(function() {
 	{
 		_fundViewModel.load(getUrlParameterValue("Id"));
 	}
+	else
+	{
+		_fundViewModel.updateAllListeners();
+	}
 });
 
 function InitStatusChanged()
 {
 	_fundViewModel.register("statusChanged", new GuiClient(showMessages, showMessages));
+}
+
+function InitDataChanged()
+{
+	_fundViewModel.register("dataChanged", new GuiClient(EnableButtonUndo, showMessages));
 }
 
 function InitBreadcrumb()
@@ -92,7 +103,7 @@ function DisableButtonSave()
 //#region delete
 function InitButtonDelete()
 {
-	//DisableButtonDelete();
+	DisableButtonDelete();
 	$("#buttonDelete").click(ShowDialogDelete);
 }
 
@@ -133,6 +144,27 @@ function ShowDialogDelete()
 	});
 
 	$("#DialogDelete").dialog("open");
+}
+//#endregion
+
+//#region undo
+function InitButtonUndo()
+{
+	DisableButtonUndo();
+	_fundViewModel.register("dataResetted", new GuiClient(DisableButtonUndo, showMessages));
+	$("#buttonUndo").click(function(){_fundViewModel.undoAllChanges();});
+}
+
+function EnableButtonUndo()
+{
+	$("#buttonUndo").removeClass("disabled");
+	$("#buttonUndo").prop("disabled", false);
+}
+
+function DisableButtonUndo()
+{
+	$("#buttonUndo").removeClass("disabled");
+	$("#buttonUndo").prop("disabled", true);
 }
 //#endregion
 //#endregion
