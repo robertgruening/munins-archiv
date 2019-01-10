@@ -30,7 +30,7 @@ function containsUrlParameter(name)
     {
         var parameter = parameters[i].split("=");
         
-        if (parameter[0] == name)
+        if (parameter[0].toLowerCase() == name.toLowerCase())
         {
             return true;
         }
