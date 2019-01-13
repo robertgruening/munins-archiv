@@ -176,6 +176,10 @@
 						"Title" : "Log einsehen",
 						"URL" : "/Munins Archiv/src/Logs/Log.html",
 						"Enabled" : true
+					},
+					{
+						"Title" : "Version 1.1",
+						"Enabled" : false
 					}
 				]
 			}
