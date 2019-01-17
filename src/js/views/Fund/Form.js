@@ -36,6 +36,10 @@ $(document).ready(function() {
 function InitStatusChanged()
 {
 	_fundViewModel.register("statusChanged", new GuiClient(showMessages, showMessages));
+	_fundViewModel.register("loaded", new GuiClient(showActionBannerLoaded, showMessages));
+	_fundViewModel.register("created", new GuiClient(showActionBannerCreated, showMessages));
+	_fundViewModel.register("saved", new GuiClient(showActionBannerSaved, showMessages));
+	_fundViewModel.register("deleted", new GuiClient(showActionBannerDeleted, showMessages));
 }
 
 function InitDataChanged()
@@ -462,5 +466,39 @@ function ShowFormSelectKontext()
 	$("#treeSelectKontext").jstree(true).refresh();
 
 	$("#dialogSelectKontext").dialog("open");
+}
+//#endregion
+
+//#region actionBanner
+function showActionBannerLoaded()
+{
+	$("#actionBanner").empty();
+	$("#actionBanner").append("<p>Fund geladen</p>");
+	$("#actionBanner").show("fade", {}, 500);
+	$("#actionBanner").hide("fade", {}, 3000);
+}
+
+function showActionBannerCreated()
+{
+	$("#actionBanner").empty();
+	$("#actionBanner").append("<p>Fund erzeugt</p>");
+	$("#actionBanner").show("fade", {}, 500);
+	$("#actionBanner").hide("fade", {}, 3000);
+}
+
+function showActionBannerSaved()
+{
+	$("#actionBanner").empty();
+	$("#actionBanner").append("<p>Fund gespeichert</p>");
+	$("#actionBanner").show("fade", {}, 500);
+	$("#actionBanner").hide("fade", {}, 3000);
+}
+
+function showActionBannerDeleted()
+{
+	$("#actionBanner").empty();
+	$("#actionBanner").append("<p>Fund gelöscht</p>");
+	$("#actionBanner").show("fade", {}, 500);
+	$("#actionBanner").hide("fade", {}, 3000);
 }
 //#endregion

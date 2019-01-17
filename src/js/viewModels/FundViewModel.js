@@ -6,7 +6,11 @@ function FundViewModel()
 	this._listeners = {
 		dataChanged: new Array(),
 		dataResetted: new Array(),
-		statusChanged: new Array(),		
+		statusChanged: new Array(),
+		loaded: new Array(),
+		created: new Array(),
+		saved: new Array(),
+		deleted: new Array(),
 		id: new Array(),
 		bezeichnung: new Array(),
 		fundAttribute: new Array(),
@@ -186,21 +190,25 @@ function FundViewModel()
 			case "load": {
 				this._updateAllPropertyListeners(data);
 				this._update("dataResetted");
+				this._update("loaded");
 				break;
 			}
 			case "create": {
 				this._updateAllPropertyListeners(data);
 				this._update("dataResetted");
+				this._update("created");
 				break;
 			}
 			case "save": {
 				this._updateAllPropertyListeners(data);
 				this._update("dataResetted");
+				this._update("saved");
 				break;
 			}
 			case "delete": {
 				this._updateAllPropertyListeners(new Fund());
 				this._update("dataResetted");
+				this._update("deleted");
 				break;
 			}
 		}
