@@ -1,4 +1,4 @@
-var _fundViewModel = new FundViewModel();
+var _fundViewModel = new FundViewModel(new WebServiceClientFund());
 
 $(document).ready(function() {
 	InitStatusChanged();
@@ -35,11 +35,10 @@ $(document).ready(function() {
 
 function InitStatusChanged()
 {
-	_fundViewModel.register("statusChanged", new GuiClient(showMessages, showMessages));
-	_fundViewModel.register("loaded", new GuiClient(showActionBannerLoaded, showMessages));
-	_fundViewModel.register("created", new GuiClient(showActionBannerCreated, showMessages));
-	_fundViewModel.register("saved", new GuiClient(showActionBannerSaved, showMessages));
-	_fundViewModel.register("deleted", new GuiClient(showActionBannerDeleted, showMessages));
+	_fundViewModel.register("load", new GuiClient(showActionBannerLoaded, showMessages));
+	_fundViewModel.register("create", new GuiClient(showActionBannerCreated, showMessages));
+	_fundViewModel.register("save", new GuiClient(showActionBannerSaved, showMessages));
+	_fundViewModel.register("delete", new GuiClient(showActionBannerDeleted, showMessages));
 }
 
 function InitDataChanged()
@@ -473,6 +472,28 @@ function ShowFormSelectKontext()
 function showActionBannerLoaded()
 {
 	$("#actionBanner").empty();
+	$("#actionBanner").click(function()
+	{
+		$("#actionBanner").attr("clicked", "true");
+		$("#actionBanner").stop().hide();
+	});
+	$("#actionBanner").mouseenter(function()
+	{
+		$("#actionBanner").stop();
+		$("#actionBanner").fadeTo(0, 1);
+	});
+	$("#actionBanner").mouseleave(function()
+	{
+		if ($("#actionBanner").attr("clicked") == undefined ||			
+			$("#actionBanner").attr("clicked") == "false")
+		{
+			$("#actionBanner").stop();
+			$("#actionBanner").fadeTo(3000, 0, function()
+			{
+				$("#actionBanner").stop().hide();
+			});
+		}
+	});
 	$("#actionBanner").append("<p>Fund geladen</p>");
 	$("#actionBanner").show("fade", {}, 500);
 	$("#actionBanner").hide("fade", {}, 3000);

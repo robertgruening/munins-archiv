@@ -1,16 +1,15 @@
-function FundViewModel()
+function FundViewModel(webServiceClient)
 {
 	//#region variables
 	this._fund = new Fund();
-	this._webServiceClientFund = new WebServiceClientFund();
+	this._webServiceClientFund = webServiceClient;
 	this._listeners = {
 		dataChanged: new Array(),
 		dataResetted: new Array(),
-		statusChanged: new Array(),
-		loaded: new Array(),
-		created: new Array(),
-		saved: new Array(),
-		deleted: new Array(),
+		load: new Array(),
+		create: new Array(),
+		save: new Array(),
+		delete: new Array(),
 		id: new Array(),
 		bezeichnung: new Array(),
 		fundAttribute: new Array(),
@@ -190,25 +189,25 @@ function FundViewModel()
 			case "load": {
 				this._updateAllPropertyListeners(data);
 				this._update("dataResetted");
-				this._update("loaded");
+				this._update("load");
 				break;
 			}
 			case "create": {
 				this._updateAllPropertyListeners(data);
 				this._update("dataResetted");
-				this._update("created");
+				this._update("create");
 				break;
 			}
 			case "save": {
 				this._updateAllPropertyListeners(data);
 				this._update("dataResetted");
-				this._update("saved");
+				this._update("save");
 				break;
 			}
 			case "delete": {
 				this._updateAllPropertyListeners(new Fund());
 				this._update("dataResetted");
-				this._update("deleted");
+				this._update("delete");
 				break;
 			}
 		}
@@ -256,19 +255,43 @@ function FundViewModel()
 	};
 
 	this._failLoad = function(messages) {
-		this._fail("statusChanged", messages);
+		this._fail("load", messages);
 	};
 
 	this._failCreate = function(messages) {
-		this._fail("statusChanged", messages);
+		var properties = [
+			"id",
+			"bezeichnung",
+			"fundAttribute",
+			"anzahl",
+			"dimension1",
+			"dimension2",
+			"dimension3",
+			"masse",
+			"ablage",
+			"kontext"
+		];
+
+		for (var i = 0; i < messages.length; i++)
+		{
+			for (var j = 0; j < properties.length; j++)
+			{
+				if (messages[i].toLowerCase().startsWith(properties[j].toLowerCase()))
+				{
+					this._fail(properties[j], messages);
+					break;
+				}
+			}
+		}
+		this._fail("create", messages);
 	};
 
 	this._failSave = function(messages) {
-		this._fail("statusChanged", messages);
+		this._fail("save", messages);
 	};
 
 	this._failDelete = function(messages) {
-		this._fail("statusChanged", messages);
+		this._fail("delete", messages);
 	};
 	//#endregion
 
