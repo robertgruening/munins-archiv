@@ -1,4 +1,5 @@
 var _fundViewModel = new FundViewModel(new WebServiceClientFund());
+_fundViewModel.init();
 
 $(document).ready(function() {
 	InitStatusChanged();
