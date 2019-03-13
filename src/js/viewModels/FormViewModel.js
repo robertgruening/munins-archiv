@@ -7,6 +7,9 @@ var FormViewModel = function (webServiceClient) {
 		return new Array();
 	};
 
+	this._updateAllPropertyListeners = function () {
+	};
+
 	//#region variables
 	this._model = null;
 	this._webServiceClient = webServiceClient;
@@ -104,9 +107,6 @@ var FormViewModel = function (webServiceClient) {
 	// TODO: to review, überdenken, siehe Nutzung im Formular
 	this.updateAllListeners = function () {
 		this._updateAllPropertyListeners();
-	};
-
-	this._updateAllPropertyListeners = function () {
 	};
 
 	this.Fail = function (messages, sender) {

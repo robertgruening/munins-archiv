@@ -20,6 +20,19 @@ var FundViewModel = function (webServiceClient) {
 		};
 	};
 
+	this._updateAllPropertyListeners = function () {
+		this._update("id", this._model.Id);
+		this._update("bezeichnung", this._model.Bezeichnung);
+		this._update("fundAttribute", this._model.FundAttribute);
+		this._update("anzahl", this._model.Anzahl);
+		this._update("dimension1", this._model.Dimension1);
+		this._update("dimension2", this._model.Dimension2);
+		this._update("dimension3", this._model.Dimension3);
+		this._update("masse", this._model.Masse);
+		this._update("kontext", this._model.Kontext);
+		this._update("ablage", this._model.Ablage);
+	};
+
 	//#region properties
 	//#region Bezeichnung
 	this.getBezeichnung = function () {

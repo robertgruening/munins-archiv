@@ -1,4 +1,7 @@
-var _fundViewModel = new FundViewModel(new WebServiceClientFund());
+var _webServiceClientFund = new WebServiceClientFund();
+_webServiceClientFund.init();
+
+var _fundViewModel = new FundViewModel(_webServiceClientFund);
 _fundViewModel.init();
 
 $(document).ready(function() {
