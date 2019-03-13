@@ -1,4 +1,6 @@
 var _webServiceClientAblageParent = new WebServiceClientAblage();
+_webServiceClientAblageParent.init();
+
 var _selectedParentElement = null;
 
 function SetSelectedParentElement(selectedParentElement, sender)

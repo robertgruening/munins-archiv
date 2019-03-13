@@ -1,4 +1,6 @@
 var _webServiceClientKontext = new WebServiceClientKontext();
+_webServiceClientKontext.init();
+
 var _selectedElement = null;
 
 function SetSelectedElement(selectedElement, sender)

@@ -1,4 +1,6 @@
 var _webServiceClientFundAttribut = new WebServiceClientFundAttribut();
+_webServiceClientFundAttribut.init();
+
 var _selectedFundAttribut = null;
 
 function SetSelectedFundAttribut(selectedFundAttribut, sender)

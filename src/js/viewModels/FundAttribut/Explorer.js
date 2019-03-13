@@ -1,4 +1,6 @@
 var _webServiceClientFundAttribut = new WebServiceClientFundAttribut();
+_webServiceClientFundAttribut.init();
+
 var _selectedElement = null;
 
 function SetSelectedElement(selectedElement, sender)

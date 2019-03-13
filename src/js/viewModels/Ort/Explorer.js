@@ -1,4 +1,6 @@
 var _webServiceClientOrt = new WebServiceClientOrt();
+_webServiceClientOrt.init();
+
 var _selectedElement = null;
 
 function SetSelectedElement(selectedElement, sender)

@@ -1,4 +1,6 @@
 var _webServiceClientAblage = new WebServiceClientAblage();
+_webServiceClientAblage.init();
+
 var _selectedElement = null;
 
 function SetSelectedElement(selectedElement, sender)
