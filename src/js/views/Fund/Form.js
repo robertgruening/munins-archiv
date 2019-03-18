@@ -1,10 +1,9 @@
-var _webServiceClientFund = new WebServiceClientFund();
-_webServiceClientFund.init();
+var _fundViewModel = null;
 
-var _fundViewModel = new FundViewModel(_webServiceClientFund);
-_fundViewModel.init();
+$(document).ready(function () {
+	var viewModelFactory = new ViewModelFactory();
+	_fundViewModel = viewModelFactory.getViewModelFormFund();
 
-$(document).ready(function() {
 	InitStatusChanged();
 	InitDataChanged();
 	InitBreadcrumb();
@@ -26,108 +25,91 @@ $(document).ready(function() {
 	InitFieldMasse();
 	InitFieldAblage();
 	InitFieldKontext();
-		
-	if (getUrlParameterValue("Id"))
-	{
+
+	if (getUrlParameterValue("Id")) {
 		_fundViewModel.load(getUrlParameterValue("Id"));
 	}
-	else
-	{
+	else {
 		_fundViewModel.updateAllListeners();
 	}
 });
 
-function InitStatusChanged()
-{
+function InitStatusChanged() {
 	_fundViewModel.register("load", new GuiClient(showActionBannerLoaded, showMessages));
 	_fundViewModel.register("create", new GuiClient(showActionBannerCreated, showMessages));
 	_fundViewModel.register("save", new GuiClient(showActionBannerSaved, showMessages));
 	_fundViewModel.register("delete", new GuiClient(showActionBannerDeleted, showMessages));
 }
 
-function InitDataChanged()
-{
+function InitDataChanged() {
 	_fundViewModel.register("dataChanged", new GuiClient(EnableButtonUndo, showMessages));
 }
 
-function InitBreadcrumb()
-{
-	if (getFormMode() == "create")
-	{
-	    $("#breadcrumb").Breadcrumb({
-		    PageName : "FundFormNew"
-	    });
+function InitBreadcrumb() {
+	if (getFormMode() == "create") {
+		$("#breadcrumb").Breadcrumb({
+			PageName: "FundFormNew"
+		});
 	}
-	else if (getFormMode() == "edit")
-	{
-	    $("#breadcrumb").Breadcrumb({
-		    PageName : "FundFormEdit"
-	    });
+	else if (getFormMode() == "edit") {
+		$("#breadcrumb").Breadcrumb({
+			PageName: "FundFormEdit"
+		});
 	}
 }
 
 //#region form actions
 //#region new
-function InitButtonNew()
-{
+function InitButtonNew() {
 	EnableButtonNew();
 	$("#buttonNew").click(openFormNewElement);
 }
 
-function EnableButtonNew()
-{
+function EnableButtonNew() {
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
 }
 
-function DisableButtonNew()
-{
+function DisableButtonNew() {
 	$("#buttonNew").addClass("disabled");
 	$("#buttonNew").prop("disabled", true);
 }
 //#endregion
 
 //#region save
-function InitButtonSave()
-{
+function InitButtonSave() {
 	EnableButtonSave();
-	$("#buttonSave").click(function(){_fundViewModel.save();});
+	$("#buttonSave").click(function () { _fundViewModel.save(); });
 }
 
-function EnableButtonSave()
-{
+function EnableButtonSave() {
 	$("#buttonSave").removeClass("disabled");
 	$("#buttonSave").prop("disabled", false);
 }
 
-function DisableButtonSave()
-{
+function DisableButtonSave() {
 	$("#buttonSave").addClass("disabled");
 	$("#buttonSave").prop("disabled", true);
 }
 //#endregion
 
 //#region delete
-function InitButtonDelete()
-{
+function InitButtonDelete() {
 	DisableButtonDelete();
 	$("#buttonDelete").click(ShowDialogDelete);
 }
 
-function EnableButtonDelete()
-{
+function EnableButtonDelete() {
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
 }
 
-function DisableButtonDelete()
-{
+function DisableButtonDelete() {
 	$("#buttonDelete").addClass("disabled");
 	$("#buttonDelete").prop("disabled", true);
 }
 
-function ShowDialogDelete()
-{
+function ShowDialogDelete() {
 	$("#dialogDelete").empty();
 	$("#dialogDelete").append(
 		$("<p>").append("Möchten Sie diesen Fund löschen?")
@@ -137,14 +119,12 @@ function ShowDialogDelete()
 		width: 750,
 		modal: true,
 		buttons: {
-			"Löschen": function()
-			{
+			"Löschen": function () {
 				_fundViewModel.delete();
 
 				$(this).dialog("close");
 			},
-			"Abbrechen": function()
-			{
+			"Abbrechen": function () {
 				$(this).dialog("close");
 			}
 		}
@@ -155,47 +135,44 @@ function ShowDialogDelete()
 //#endregion
 
 //#region undo
-function InitButtonUndo()
-{
+function InitButtonUndo() {
 	DisableButtonUndo();
 	_fundViewModel.register("dataResetted", new GuiClient(DisableButtonUndo, showMessages));
-	$("#buttonUndo").click(function(){_fundViewModel.undoAllChanges();});
+	_fundViewModel.register("dataResetted", new GuiClient(ResetPropertiesMessages, showMessages));
+	$("#buttonUndo").click(function () { _fundViewModel.undoAllChanges(); });
 }
 
-function EnableButtonUndo()
-{
+function EnableButtonUndo() {
 	$("#buttonUndo").removeClass("disabled");
 	$("#buttonUndo").prop("disabled", false);
 }
 
-function DisableButtonUndo()
-{
+function DisableButtonUndo() {
 	$("#buttonUndo").removeClass("disabled");
 	$("#buttonUndo").prop("disabled", true);
+}
+
+function ResetPropertiesMessages() {
+	$(".fieldValue div[name=messages]").empty();
 }
 //#endregion
 //#endregion
 
-function GetIcon(type, state)
-{
+function GetIcon(type, state) {
 	return IconConfig.getCssClasses(type, state);
 }
 
 //#region Id
-function InitFieldId()
-{
+function InitFieldId() {
 	_fundViewModel.register("id", new GuiClient(setId, showMessages));
 }
 
-function setId(id)
-{
-	if (id == null)
-	{
+function setId(id) {
+	if (id == null) {
 		document.title = "Fund";
 		DisableButtonDelete();
 	}
-	else
-	{
+	else {
 		document.title = "Fund: (" + id + ")";
 		EnableButtonDelete();
 	}
@@ -203,33 +180,32 @@ function setId(id)
 //#endregion
 
 //#region Bezeichnung
-function InitFieldBeschriftung()
-{
-	_fundViewModel.register("bezeichnung", new GuiClient(setBezeichnung, showMessages));
-	$("#textboxBeschriftung").change(function() {
+function InitFieldBeschriftung() {
+	_fundViewModel.register("bezeichnung", new GuiClient(setBezeichnung, showMessagesBeschriftung));
+	$("#textboxBeschriftung").change(function () {
 		_fundViewModel.setBezeichnung($("#textboxBeschriftung").val())
 	});
 }
 
-function setBezeichnung(bezeichnung)
-{
+function setBezeichnung(bezeichnung) {
 	$("#textboxBeschriftung").val(bezeichnung);
+}
+
+function showMessagesBeschriftung(messages) {
+	$("#divBeschriftung .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 
 //#region Fundattribute
-function InitFieldFundattribute()
-{
-	_fundViewModel.register("fundAttribute", new GuiClient(setFundAttribute, showMessages));
+function InitFieldFundattribute() {
+	_fundViewModel.register("fundAttribute", new GuiClient(setFundAttribute, showMessagesFundAttribute));
 }
 
-function InitButtonSelectFundAttribut()
-{
+function InitButtonSelectFundAttribut() {
 	$("#buttonAddFundAttribut").click(ShowFormSelectFundAttribut);
 }
 
-function ShowFormSelectFundAttribut()
-{
+function ShowFormSelectFundAttribut() {
 	$("#dialogSelectFundAttribut").dialog({
 		height: "auto",
 		width: 750,
@@ -237,13 +213,11 @@ function ShowFormSelectFundAttribut()
 		modal: true,
 		resizable: false,
 		buttons: {
-			"Speichern": function()
-			{
-				_fundViewModel.addFundAttribut(GetSelectedFundAttribut());				
+			"Speichern": function () {
+				_fundViewModel.addFundAttribut(GetSelectedFundAttribut());
 				$(this).dialog("close");
 			},
-			"Abbrechen": function()
-			{
+			"Abbrechen": function () {
 				$(this).dialog("close");
 			}
 		}
@@ -254,8 +228,7 @@ function ShowFormSelectFundAttribut()
 	$("#dialogSelectFundAttribut").dialog("open");
 }
 
-function setFundAttribute(fundAttribute)
-{
+function setFundAttribute(fundAttribute) {
 	$("#divFundAttribute div #divList").empty();
 	$("#divFundAttribute div #divList").append($("<ul>"));
 
@@ -266,15 +239,15 @@ function setFundAttribute(fundAttribute)
 		linkFundAttribut.attr("href", "../FundAttribut/Explorer.html?Id=" + fundAttribut.Id);
 		linkFundAttribut.text("/" + fundAttribut.Path);
 		li.append(linkFundAttribut);
-		
+
 		var linkButtonDelete = $("<a>");
 		linkButtonDelete.attr("title", "löschen");
 		linkButtonDelete.attr("class", "linkButton riskyAction");
-		linkButtonDelete.attr("href", "javascript:removeFundAttribut("+fundAttribut.Id+");");
+		linkButtonDelete.attr("href", "javascript:removeFundAttribut(" + fundAttribut.Id + ");");
 
 		var icon = $("<i>");
 		icon.attr("class", "fas fa-trash-alt");
-		linkButtonDelete.append(icon);		
+		linkButtonDelete.append(icon);
 		li.append(linkButtonDelete);
 
 
@@ -282,117 +255,124 @@ function setFundAttribute(fundAttribute)
 	});
 }
 
-function removeFundAttribut(fundAttributId)
-{
+function removeFundAttribut(fundAttributId) {
 	var fundAttribut = new Object();
 	fundAttribut.Id = fundAttributId;
 
 	_fundViewModel.removeFundAttribut(fundAttribut);
 }
+
+function showMessagesFundAttribute(messages) {
+	$("#divFundAttribute .fieldValue div[name=messages]").text(messages);
+}
 //#endregion
 
 //#region Anzahl
-function InitFieldAnzahl()
-{
-	_fundViewModel.register("anzahl", new GuiClient(setAnzahl, showMessages));
-	$("#textboxAnzahl").change(function() {
+function InitFieldAnzahl() {
+	_fundViewModel.register("anzahl", new GuiClient(setAnzahl, showMessagesAnzahl));
+	$("#textboxAnzahl").change(function () {
 		_fundViewModel.setAnzahl($("#textboxAnzahl").val())
 	});
 }
 
-function setAnzahl(anzahl)
-{
+function setAnzahl(anzahl) {
 	$("#textboxAnzahl").val(anzahl);
+}
+
+function showMessagesAnzahl(messages) {
+	$("#divAnzahl .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 
 //#region Dimension1
-function InitFieldDimension1()
-{
-	_fundViewModel.register("dimension1", new GuiClient(setDimension1, showMessages));
-	$("#textboxDimension1").change(function() {
+function InitFieldDimension1() {
+	_fundViewModel.register("dimension1", new GuiClient(setDimension1, showMessagesDimension1));
+	$("#textboxDimension1").change(function () {
 		_fundViewModel.setDimension1($("#textboxDimension1").val())
 	});
 }
 
-function setDimension1(dimension1)
-{
+function setDimension1(dimension1) {
 	$("#textboxDimension1").val(dimension1);
+}
+
+function showMessagesDimension1(messages) {
+	$("#divDimension1 .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 
 //#region Dimension2
-function InitFieldDimension2()
-{
-	_fundViewModel.register("dimension2", new GuiClient(setDimension2, showMessages));
-	$("#textboxDimension2").change(function() {
+function InitFieldDimension2() {
+	_fundViewModel.register("dimension2", new GuiClient(setDimension2, showMessagesDimension2));
+	$("#textboxDimension2").change(function () {
 		_fundViewModel.setDimension2($("#textboxDimension2").val())
 	});
 }
 
-function setDimension2(dimension2)
-{
+function setDimension2(dimension2) {
 	$("#textboxDimension2").val(dimension2);
+}
+
+function showMessagesDimension2(messages) {
+	$("#divDimension2 .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 
 //#region Dimension3
-function InitFiledDimension3()
-{
-	_fundViewModel.register("dimension3", new GuiClient(setDimension3, showMessages));
-	$("#textboxDimension3").change(function() {
+function InitFiledDimension3() {
+	_fundViewModel.register("dimension3", new GuiClient(setDimension3, showMessagesDimension3));
+	$("#textboxDimension3").change(function () {
 		_fundViewModel.setDimension3($("#textboxDimension3").val())
 	});
 }
 
-function setDimension3(dimension3)
-{
+function setDimension3(dimension3) {
 	$("#textboxDimension3").val(dimension3);
+}
+
+function showMessagesDimension3(messages) {
+	$("#divDimension3 .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 
 //#region Masse
-function InitFieldMasse()
-{
-	_fundViewModel.register("masse", new GuiClient(setMasse, showMessages));
-	$("#textboxMasse").change(function() {
+function InitFieldMasse() {
+	_fundViewModel.register("masse", new GuiClient(setMasse, showMessagesMasse));
+	$("#textboxMasse").change(function () {
 		_fundViewModel.setMasse($("#textboxMasse").val())
 	});
 }
 
-function setMasse(masse)
-{
+function setMasse(masse) {
 	$("#textboxMasse").val(masse);
+}
+
+function showMessagesMasse(messages) {
+	$("#divMasse .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 
 //#region Ablage
-function InitFieldAblage()
-{
-	_fundViewModel.register("ablage", new GuiClient(setAblage, showMessages));
+function InitFieldAblage() {
+	_fundViewModel.register("ablage", new GuiClient(setAblage, showMessagesAblage));
 }
 
-function InitButtonSelectAblage()
-{
+function InitButtonSelectAblage() {
 	$("#buttonSelectAblage").click(ShowFormSelectAblage);
 }
 
-function setAblage(ablage)
-{
-	if (ablage == null)
-	{
+function setAblage(ablage) {
+	if (ablage == null) {
 		$("#linkSelectedAblage").text("");
 		$("#linkSelectedAblage").attr("href", "");
 	}
-	else
-	{
+	else {
 		$("#linkSelectedAblage").text("/" + ablage.Path);
 		$("#linkSelectedAblage").attr("href", "../Ablage/Explorer.html?Id=" + ablage.Id);
 	}
 }
 
-function ShowFormSelectAblage()
-{
+function ShowFormSelectAblage() {
 	$("#dialogSelectAblage").dialog({
 		height: "auto",
 		width: 750,
@@ -400,14 +380,12 @@ function ShowFormSelectAblage()
 		modal: true,
 		resizable: false,
 		buttons: {
-			"Speichern": function()
-			{
+			"Speichern": function () {
 				_fundViewModel.setAblage(GetSelectedAblage());
 				setAblage(_fundViewModel.getAblage());
 				$(this).dialog("close");
 			},
-			"Abbrechen": function()
-			{
+			"Abbrechen": function () {
 				$(this).dialog("close");
 			}
 		}
@@ -417,35 +395,33 @@ function ShowFormSelectAblage()
 
 	$("#dialogSelectAblage").dialog("open");
 }
+
+function showMessagesAblage(messages) {
+	$("#divAblage .fieldValue div[name=messages]").text(messages);
+}
 //#endregion
 
 //#region Kontext
-function InitFieldKontext()
-{
-	_fundViewModel.register("kontext", new GuiClient(setKontext, showMessages));
+function InitFieldKontext() {
+	_fundViewModel.register("kontext", new GuiClient(setKontext, showMessagesKontext));
 }
 
-function InitButtonSelectKontext()
-{
+function InitButtonSelectKontext() {
 	$("#buttonSelectKontext").click(ShowFormSelectKontext);
 }
 
-function setKontext(kontext)
-{
-	if (kontext == null)
-	{
+function setKontext(kontext) {
+	if (kontext == null) {
 		$("#linkSelectedKontext").text("");
 		$("#linkSelectedKontext").attr("href", "");
 	}
-	else
-	{
+	else {
 		$("#linkSelectedKontext").text("/" + kontext.Path);
 		$("#linkSelectedKontext").attr("href", "../Kontext/Explorer.html?Id=" + kontext.Id);
 	}
 }
 
-function ShowFormSelectKontext()
-{
+function ShowFormSelectKontext() {
 	$("#dialogSelectKontext").dialog({
 		height: "auto",
 		width: 750,
@@ -453,14 +429,12 @@ function ShowFormSelectKontext()
 		modal: true,
 		resizable: false,
 		buttons: {
-			"Speichern": function()
-			{
+			"Speichern": function () {
 				_fundViewModel.setKontext(GetSelectedKontext());
 				setKontext(_fundViewModel.getKontext());
 				$(this).dialog("close");
 			},
-			"Abbrechen": function()
-			{
+			"Abbrechen": function () {
 				$(this).dialog("close");
 			}
 		}
@@ -470,30 +444,28 @@ function ShowFormSelectKontext()
 
 	$("#dialogSelectKontext").dialog("open");
 }
+
+function showMessagesKontext(messages) {
+	$("#divKontext .fieldValue div[name=messages]").text(messages);
+}
 //#endregion
 
 //#region actionBanner
-function showActionBannerLoaded()
-{
+function showActionBannerLoaded() {
 	$("#actionBanner").empty();
-	$("#actionBanner").click(function()
-	{
+	$("#actionBanner").click(function () {
 		$("#actionBanner").attr("clicked", "true");
 		$("#actionBanner").stop().hide();
 	});
-	$("#actionBanner").mouseenter(function()
-	{
+	$("#actionBanner").mouseenter(function () {
 		$("#actionBanner").stop();
 		$("#actionBanner").fadeTo(0, 1);
 	});
-	$("#actionBanner").mouseleave(function()
-	{
-		if ($("#actionBanner").attr("clicked") == undefined ||			
-			$("#actionBanner").attr("clicked") == "false")
-		{
+	$("#actionBanner").mouseleave(function () {
+		if ($("#actionBanner").attr("clicked") == undefined ||
+			$("#actionBanner").attr("clicked") == "false") {
 			$("#actionBanner").stop();
-			$("#actionBanner").fadeTo(3000, 0, function()
-			{
+			$("#actionBanner").fadeTo(3000, 0, function () {
 				$("#actionBanner").stop().hide();
 			});
 		}
@@ -503,24 +475,21 @@ function showActionBannerLoaded()
 	$("#actionBanner").hide("fade", {}, 3000);
 }
 
-function showActionBannerCreated()
-{
+function showActionBannerCreated() {
 	$("#actionBanner").empty();
 	$("#actionBanner").append("<p>Fund erzeugt</p>");
 	$("#actionBanner").show("fade", {}, 500);
 	$("#actionBanner").hide("fade", {}, 3000);
 }
 
-function showActionBannerSaved()
-{
+function showActionBannerSaved() {
 	$("#actionBanner").empty();
 	$("#actionBanner").append("<p>Fund gespeichert</p>");
 	$("#actionBanner").show("fade", {}, 500);
 	$("#actionBanner").hide("fade", {}, 3000);
 }
 
-function showActionBannerDeleted()
-{
+function showActionBannerDeleted() {
 	$("#actionBanner").empty();
 	$("#actionBanner").append("<p>Fund gelöscht</p>");
 	$("#actionBanner").show("fade", {}, 500);

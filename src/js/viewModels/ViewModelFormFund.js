@@ -1,4 +1,4 @@
-var FundViewModel = function (webServiceClient) {
+var ViewModelFormFund = function (webServiceClient) {
 	this._webServiceClient = webServiceClient;
 
 	this._createModel = function () {
@@ -146,4 +146,4 @@ var FundViewModel = function (webServiceClient) {
 	//#endregion
 };
 
-FundViewModel.prototype = new FormViewModel();
+ViewModelFormFund.prototype = new ViewModelForm();

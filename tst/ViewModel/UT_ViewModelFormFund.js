@@ -1,4 +1,4 @@
-QUnit.module("FundViewModel");
+QUnit.module("ViewModelFormFund");
 QUnit.test("FAIL_LoadById_NoElementWithId23", function (assert) {
     function MockWebServiceClientFund() {
         this._listeners = {
@@ -46,9 +46,9 @@ QUnit.test("FAIL_LoadById_NoElementWithId23", function (assert) {
         };
     }
 
-    var fundViewModel = new FundViewModel(new MockWebServiceClientFund());
-    fundViewModel.init();
-    fundViewModel.register("load", new GuiClient(
+    var viewModelFormFund = new ViewModelFormFund(new MockWebServiceClientFund());
+    viewModelFormFund.init();
+    viewModelFormFund.register("load", new GuiClient(
         function (element) {
             assert.ok(false, "Must not load an element!")
         },
@@ -58,7 +58,7 @@ QUnit.test("FAIL_LoadById_NoElementWithId23", function (assert) {
         })
     );
 
-    fundViewModel.load(23);
+    viewModelFormFund.load(23);
 });
 
 QUnit.test("SUCCESS_LoadById_ElementWithId23", function (assert) {
@@ -108,9 +108,9 @@ QUnit.test("SUCCESS_LoadById_ElementWithId23", function (assert) {
         };
     }
 
-    var fundViewModel = new FundViewModel(new MockWebServiceClientFund());
-    fundViewModel.init();
-    fundViewModel.register("id", new GuiClient(
+    var viewModelFormFund = new ViewModelFormFund(new MockWebServiceClientFund());
+    viewModelFormFund.init();
+    viewModelFormFund.register("id", new GuiClient(
         function (id) {
             assert.ok(id != undefined, "ID is defined.");
             assert.ok(id != null, "ID is set.");
@@ -120,7 +120,7 @@ QUnit.test("SUCCESS_LoadById_ElementWithId23", function (assert) {
             assert.ok(false, "Must not have invalid ID!")
         })
     );
-    fundViewModel.register("dataResetted", new GuiClient(
+    viewModelFormFund.register("dataResetted", new GuiClient(
         function () {
             assert.ok(true, "Load event is successful.");
         },
@@ -128,7 +128,7 @@ QUnit.test("SUCCESS_LoadById_ElementWithId23", function (assert) {
             assert.ok(false, "Must return an object with ID 23!")
         })
     );
-    fundViewModel.register("load", new GuiClient(
+    viewModelFormFund.register("load", new GuiClient(
         function () {
             assert.ok(true, "Data are unchanged.");
         },
@@ -137,5 +137,5 @@ QUnit.test("SUCCESS_LoadById_ElementWithId23", function (assert) {
         })
     );
 
-    fundViewModel.load(23);
+    viewModelFormFund.load(23);
 });

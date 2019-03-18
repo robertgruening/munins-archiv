@@ -1,13 +1,14 @@
 <!doctype html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
 	<script type="text/javascript" src="../js/solid.min.js"></script>
-    <script type="text/javascript" src="../js/controls/vakata-jstree/jstree.min.js"></script>
+	<script type="text/javascript" src="../js/controls/vakata-jstree/jstree.min.js"></script>
 	<script type="text/javascript" src="../js/controls/control.Navigation.js"></script>
 	<script type="text/javascript" src="../js/controls/control.Breadcrumb.js"></script>
-    <script type="text/javascript" src="../js/controls/control.FundShortView.js"></script>
+	<script type="text/javascript" src="../js/controls/control.FundShortView.js"></script>
 	<script type="text/javascript" src="../js/controls/control.MessageBox.js"></script>
 	<script type="text/javascript" src="../js/ui/jquery-ui/jquery-ui.js"></script>
 	<script type="text/javascript" src="../js/ui/controls/control.List.js"></script>
@@ -20,11 +21,13 @@
 	<script type="text/javascript" src="../js/webServiceClients/WebServiceClientAblage.js"></script>
 	<script type="text/javascript" src="../js/ui/GuiClient.js"></script>
 	<script type="text/javascript" src="../js/ui/IconConfig.js"></script>
-	<script type="text/javascript" src="../js/viewModels/FormViewModel.js"></script>
-	<script type="text/javascript" src="../js/viewModels/FundViewModel.js"></script>
+	<script type="text/javascript" src="../js/viewModels/ViewModelForm.js"></script>
+	<script type="text/javascript" src="../js/viewModels/ViewModelFormFund.js"></script>
 	<script type="text/javascript" src="../js/viewModels/Fund/FormSelectFundAttribut.js"></script>
 	<script type="text/javascript" src="../js/viewModels/Fund/FormSelectKontext.js"></script>
 	<script type="text/javascript" src="../js/viewModels/Fund/FormSelectAblage.js"></script>
+	<script type="text/javascript" src="../js/factories/webServiceClientFactory.js"></script>
+	<script type="text/javascript" src="../js/factories/viewModelFactory.js"></script>
 	<script type="text/javascript" src="../js/views/Fund/Form.js"></script>
 	<script type="text/javascript" src="../js/views/Fund/FormSelectFundAttribut.js"></script>
 	<script type="text/javascript" src="../js/views/Fund/FormSelectKontext.js"></script>
@@ -47,107 +50,117 @@
 	<link rel=icon type="image/png" href="../images/system/IconMunin_001.png">
 	<title>Fund</title>
 </head>
+
 <body>
 	<div id=navigation class="notToPrint"></div>
 	<div id=breadcrumb class="notToPrint"></div>
-    <div id=leftSidebar class="notToPrint">
-        <div id=shortView></div>
+	<div id=leftSidebar class="notToPrint">
+		<div id=shortView></div>
 	</div>
 	<div id=content>
-	    <div class=form>
-		    <div class=formBlock>
-			    <div id=divFundAttribute class=fieldBlock>
-				    <div class=fieldDescription>
-					    <i class="help notToPrint fas fa-question-circle" title="Attribute, die den Fund beschreiben, z. B. Material, Zeitstellung oder Verzierung."></i>
-					    <label>Attribute: </label>
-				    </div>
-				    <div class=fieldValue>
+		<div class=form>
+			<div class=formBlock>
+				<div id=divFundAttribute class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Attribute, die den Fund beschreiben, z. B. Material, Zeitstellung oder Verzierung."></i>
+						<label>Attribute: </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
 						<div id=divList class=field></div>
 						<a id=buttonAddFundAttribut title="hinzufügen" class="notToPrint linkButton"><i class="fas fa-plus"></i></a>
-				    </div>	
-			    </div>
-			    <div class=fieldBlock>
-				    <div class=fieldDescription>
-					    <i class="help notToPrint fas fa-question-circle" title="Die Beschriftung auf dem Fund, die vom Bearbeiter vergeben und auf dem Fund fixiert wird."></i>
-					    <label>Beschriftung: </label>
-				    </div>
-				    <div class=fieldValue>
-					    <input id=textboxBeschriftung type=text class=field />
-				    </div>	
-			    </div>
-			    <div id=divAnzahl class=fieldBlock>
-				    <div class=fieldDescription>
-					    <i class="help notToPrint fas fa-question-circle" title="Anzahl der Funde. Bei einem Fund ist 1 anzugeben. Genaue Zählungen sind zu bevorzugen. Bei großen Mengen kann auch > (größer als) verwendet werden, z. B.: >20."></i>
-					    <label>Anzahl: </label>
-				    </div>
-				    <div class=fieldValue>
-					    <input type=text id=textboxAnzahl class=field />
-				    </div>	
-			    </div>
-			    <div id=divDimension1 class=fieldBlock>
-				    <div class=fieldDescription>
-					    <i class="help notToPrint fas fa-question-circle" title="Optionale Angabe! Jeder Körper hat ein Höhe, Breite und Tiefe. Die erste Dimension ist die längste der drei Raumdimensionen. Angabe in Millimeter (mm)."></i>
-					    <label>1. Dimension (mm): </label>
-				    </div>
-				    <div class=fieldValue>
-					    <input type=text id=textboxDimension1 class=field />
-				    </div>	
-			    </div>
-			    <div id=divDimension2 class=fieldBlock>
-				    <div class=fieldDescription>
-					    <i class="help notToPrint fas fa-question-circle" title="Optionale Angabe! Jeder Körper hat ein Höhe, Breite und Tiefe. Die zweite Dimension ist die mittlere der drei Raumdimensionen. Angabe in Millimeter (mm)."></i>
-					    <label>2. Dimension (mm): </label>
-				    </div>
-				    <div class=fieldValue>
-					    <input type=text id=textboxDimension2 class=field />
-				    </div>	
-			    </div>
-			    <div id=divDimension3 class=fieldBlock>
-				    <div class=fieldDescription>
-					    <i class="help notToPrint fas fa-question-circle" title="Optionale Angabe! Jeder Körper hat ein Höhe, Breite und Tiefe. Die dritte Dimension ist die kürzeste der drei Raumdimensionen. Angabe in Millimeter (mm)."></i>
-					    <label>3. Dimension (mm): </label>
-				    </div>
-				    <div class=fieldValue>
-					    <input type=text id=textboxDimension3 class=field />
-				    </div>	
-			    </div>
-			    <div id=divMasse class=fieldBlock>
-				    <div class=fieldDescription>
-					    <i class="help notToPrint fas fa-question-circle" title="Optionale Angabe! Die durch wiegen ermittelte Masse. Angabe in Gramm (g)."></i>
-					    <label>Masse (g): </label>
-				    </div>
-				    <div class=fieldValue>
-					    <input type=text id=textboxMasse class=field />
-				    </div>	
-			    </div>
-			    <div id=divKontext class=fieldBlock>
-				    <div class=fieldDescription>
-					    <i class="help notToPrint fas fa-question-circle" title="Kontext, in dem der Fund gemacht wurde."></i>
-					    <label>Zugeordneter Kontext: </label>
-				    </div>
-				    <div class=fieldValue>
+					</div>
+				</div>
+				<div id=divBeschriftung class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Die Beschriftung auf dem Fund, die vom Bearbeiter vergeben und auf dem Fund fixiert wird."></i>
+						<label>Beschriftung: </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
+						<input id=textboxBeschriftung type=text class=field />
+					</div>
+				</div>
+				<div id=divAnzahl class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Anzahl der Funde. Bei einem Fund ist 1 anzugeben. Genaue Zählungen sind zu bevorzugen. Bei großen Mengen kann auch > (größer als) verwendet werden, z. B.: >20."></i>
+						<label>Anzahl: </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
+						<input type=text id=textboxAnzahl class=field />
+					</div>
+				</div>
+				<div id=divDimension1 class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Optionale Angabe! Jeder Körper hat ein Höhe, Breite und Tiefe. Die erste Dimension ist die längste der drei Raumdimensionen. Angabe in Millimeter (mm)."></i>
+						<label>1. Dimension (mm): </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
+						<input type=text id=textboxDimension1 class=field />
+					</div>
+				</div>
+				<div id=divDimension2 class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Optionale Angabe! Jeder Körper hat ein Höhe, Breite und Tiefe. Die zweite Dimension ist die mittlere der drei Raumdimensionen. Angabe in Millimeter (mm)."></i>
+						<label>2. Dimension (mm): </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
+						<input type=text id=textboxDimension2 class=field />
+					</div>
+				</div>
+				<div id=divDimension3 class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Optionale Angabe! Jeder Körper hat ein Höhe, Breite und Tiefe. Die dritte Dimension ist die kürzeste der drei Raumdimensionen. Angabe in Millimeter (mm)."></i>
+						<label>3. Dimension (mm): </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
+						<input type=text id=textboxDimension3 class=field />
+					</div>
+				</div>
+				<div id=divMasse class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Optionale Angabe! Die durch wiegen ermittelte Masse. Angabe in Gramm (g)."></i>
+						<label>Masse (g): </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
+						<input type=text id=textboxMasse class=field />
+					</div>
+				</div>
+				<div id=divKontext class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Kontext, in dem der Fund gemacht wurde."></i>
+						<label>Zugeordneter Kontext: </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
 						<a id=linkSelectedKontext></a>
 						<a id=buttonSelectKontext title="auswählen" class="notToPrint linkButton"><i class="fas fa-edit"></i></a>
-				    </div>	
-			    </div>
-			    <div id=divAblage class=fieldBlock>
-				    <div class=fieldDescription>
-					    <i class="help notToPrint fas fa-question-circle" title="Ablage, in welcher der Fund aufbewahrt wird."></i>
-					    <label>Zugeordnete Ablage: </label>
-				    </div>
-				    <div class=fieldValue>
+					</div>
+				</div>
+				<div id=divAblage class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Ablage, in welcher der Fund aufbewahrt wird."></i>
+						<label>Zugeordnete Ablage: </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
 						<a id=linkSelectedAblage></a>
 						<a id=buttonSelectAblage title="auswählen" class="notToPrint linkButton"><i class="fas fa-edit"></i></a>
-				    </div>	
-			    </div>
-			    <div class="buttonBlock notToPrint">
-				    <input type=button id=buttonNew value=Neu />
-				    <input type=button id=buttonSave value=Speichern />
-				    <input type=button id=buttonUndo value="Änderungen verwerfen" />
-				    <input type=button id=buttonDelete value=Löschen />		
-			    </div>
-		    </div>
-	    </div>
+					</div>
+				</div>
+				<div class="buttonBlock notToPrint">
+					<input type=button id=buttonNew value=Neu />
+					<input type=button id=buttonSave value=Speichern />
+					<input type=button id=buttonUndo value="Änderungen verwerfen" />
+					<input type=button id=buttonDelete value=Löschen />
+				</div>
+			</div>
+		</div>
 		<div id=dialogSelectFundAttribut title="Fundattribut auswählen" class=dialog>
 			<div id=treeSelectFundAttribut></div>
 		</div>
@@ -163,4 +176,5 @@
 	</div>
 	<div id=clipboard class="notToPrint"></div>
 </body>
+
 </html>

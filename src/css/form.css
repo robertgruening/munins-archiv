@@ -20,6 +20,10 @@
 	border-color: DarkGray;
 }
 
+.formBlock .fieldValue div[name=messages] {
+	color: red;
+}
+
 /* boxing and sizing */
 .formBlock {
 	padding-right: 20px;

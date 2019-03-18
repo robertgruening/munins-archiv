@@ -41,7 +41,7 @@ var WebServiceClient = function () {
 		}
 
 		this._listeners[eventName].forEach(function (item) {
-			item.Fail(data, sender);
+			item.Fail(messages, sender);
 		});
 	};
 
@@ -59,11 +59,9 @@ var WebServiceClient = function () {
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					if (jqXHR.status == 500) {
-						ShowMessages(jqXHR.responseJSON);
 						controller.Fail("create", jqXHR.responseJSON, sender);
 					}
 					else {
-						console.log("ERROR: " + jqXHR.responseJSON);
 						controller.Fail("create", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
 					}
 				}
@@ -84,11 +82,9 @@ var WebServiceClient = function () {
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					if (jqXHR.status == 500) {
-						ShowMessages(jqXHR.responseJSON);
 						controller.Fail("save", jqXHR.responseJSON, sender);
 					}
 					else {
-						console.log("ERROR: " + jqXHR.responseJSON);
 						controller.Fail("save", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
 					}
 				}
@@ -108,11 +104,9 @@ var WebServiceClient = function () {
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					if (jqXHR.status == 500) {
-						ShowMessages(jqXHR.responseJSON);
 						controller.Fail("load", jqXHR.responseJSON, sender);
 					}
 					else {
-						console.log("ERROR: " + jqXHR.responseJSON);
 						controller.Fail("load", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
 					}
 				}
@@ -132,11 +126,9 @@ var WebServiceClient = function () {
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					if (jqXHR.status == 500) {
-						ShowMessages(jqXHR.responseJSON);
 						controller.Fail("loadAll", jqXHR.responseJSON, sender);
 					}
 					else {
-						console.log("ERROR: " + jqXHR.responseJSON);
 						controller.Fail("loadAll", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
 					}
 				}
@@ -156,11 +148,9 @@ var WebServiceClient = function () {
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					if (jqXHR.status == 500) {
-						ShowMessages(jqXHR.responseJSON);
 						controller.Fail("delete", jqXHR.responseJSON, sender);
 					}
 					else {
-						console.log("ERROR: " + jqXHR.responseJSON);
 						controller.Fail("delete", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
 					}
 				}

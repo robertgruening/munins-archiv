@@ -1,6 +1,5 @@
-var _webServiceClientAblage = new WebServiceClientAblage();
-_webServiceClientAblage.init();
-
+var _viewModelFactory = new ViewModelFactory();
+var _webServiceClientAblage = _viewModelFactory.getWebServiceClientAblage();
 var _selectedElement = null;
 
 function SetSelectedElement(selectedElement, sender)

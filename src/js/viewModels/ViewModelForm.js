@@ -1,4 +1,4 @@
-var FormViewModel = function (webServiceClient) {
+var ViewModelForm = function (webServiceClient) {
 	this._createModel = function () {
 		return null;
 	};
@@ -137,19 +137,79 @@ var FormViewModel = function (webServiceClient) {
 	this._failCreate = function (messages) {
 		var properties = Object.keys(this._listeners.properties);
 
-		for (var i = 0; i < messages.length; i++) {
-			for (var j = 0; j < properties.length; j++) {
-				if (messages[i].toLowerCase().startsWith(properties[j].toLowerCase())) {
-					this._fail(properties[j], messages);
+		properties.forEach(property => {
+			var messagesForOneProperty = new Array();
+
+			messages.forEach(message => {
+				if (message.toLowerCase().startsWith(property.toLowerCase())) {
+					messagesForOneProperty.push(message);
+				}
+			});
+
+			if (messagesForOneProperty.length > 0) {
+				this._fail(property, messagesForOneProperty);
+			}
+		});
+
+		var messagesForNoProperty = new Array();
+
+		messages.forEach(message => {
+			var isAboutProperty = false;
+
+			for (var i = 0; i < properties.length; i++) {
+				if (message.toLowerCase().startsWith(properties[i].toLowerCase())) {
+					isAboutProperty = true;
 					break;
 				}
 			}
+
+			if (!isAboutProperty) {
+				messagesForNoProperty.push(message);
+			}
+		});
+
+		if (messagesForNoProperty.length > 0) {
+			this._fail("create", messagesForNoProperty);
 		}
-		this._fail("create", messages);
 	};
 
 	this._failSave = function (messages) {
-		this._fail("save", messages);
+		var properties = Object.keys(this._listeners.properties);
+
+		properties.forEach(property => {
+			var messagesForOneProperty = new Array();
+
+			messages.forEach(message => {
+				if (message.toLowerCase().startsWith(property.toLowerCase())) {
+					messagesForOneProperty.push(message);
+				}
+			});
+
+			if (messagesForOneProperty.length > 0) {
+				this._fail(property, messagesForOneProperty);
+			}
+		});
+
+		var messagesForNoProperty = new Array();
+
+		messages.forEach(message => {
+			var isAboutProperty = false;
+
+			for (var i = 0; i < properties.length; i++) {
+				if (message.toLowerCase().startsWith(properties[i].toLowerCase())) {
+					isAboutProperty = true;
+					break;
+				}
+			}
+
+			if (!isAboutProperty) {
+				messagesForNoProperty.push(message);
+			}
+		});
+
+		if (messagesForNoProperty.length > 0) {
+			this._fail("save", messagesForNoProperty);
+		}
 	};
 
 	this._failDelete = function (messages) {
