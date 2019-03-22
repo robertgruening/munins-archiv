@@ -1,6 +1,6 @@
 <?php
 include_once(__DIR__."/Factory.php");
-include_once(__DIR__."/AblageTypFactory.php");
+include_once(__DIR__."/AblageTypeFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/FundFactory.php");
@@ -10,7 +10,7 @@ class AblageFactory extends Factory implements iTreeFactory
 {
     #region variables
     private $_treeFactory = null;
-    private $_ablageTypFactory = null;
+    private $_ablageTypeFactory = null;
     private $_fundFactory = null;
     #endregion
 
@@ -20,9 +20,9 @@ class AblageFactory extends Factory implements iTreeFactory
         return $this->_treeFactory;
     }
 
-    protected function getAblageTypFactory()
+    protected function getAblageTypeFactory()
     {
-        return $this->_ablageTypFactory;
+        return $this->_ablageTypeFactory;
     }
     
     protected function getFundFactory()
@@ -40,7 +40,7 @@ class AblageFactory extends Factory implements iTreeFactory
     function __construct()
     {
         $this->_treeFactory = new TreeFactory($this);
-        $this->_ablageTypFactory = new AblageTypFactory();
+        $this->_ablageTypeFactory = new AblageTypeFactory();
     }
     #endregion
 
@@ -88,7 +88,7 @@ class AblageFactory extends Factory implements iTreeFactory
         $ablage->setId(intval($dataset["Id"]));
         $ablage->setBezeichnung($dataset["Bezeichnung"]);
         $ablage->setPath($this->getPath($ablage));
-        $ablage->setType($this->getAblageTypFactory()->loadById(intval($dataset["Typ_Id"])));
+        $ablage->setType($this->getAblageTypeFactory()->loadById(intval($dataset["Typ_Id"])));
         
         return $ablage;
     }
@@ -192,7 +192,7 @@ class AblageFactory extends Factory implements iTreeFactory
 
         if (isset($object["Type"]))
         {
-            $ablage->setType($this->getAblageTypFactory()->convertToInstance($object["Type"]));
+            $ablage->setType($this->getAblageTypeFactory()->convertToInstance($object["Type"]));
         }
         else
         {

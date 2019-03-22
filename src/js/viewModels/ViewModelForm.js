@@ -64,7 +64,7 @@ var ViewModelForm = function (webServiceClient) {
 	//#endregion
 
 	//#region observer methods
-	this._registerToWebServiceClientFund = function () {
+	this._registerToWebServiceClient = function () {
 		this._webServiceClient.Register("load", this);
 		this._webServiceClient.Register("create", this);
 		this._webServiceClient.Register("save", this);
@@ -296,7 +296,7 @@ var ViewModelForm = function (webServiceClient) {
 	this.init = function () {
 		this._initModel();
 		this._initPropertyListeners();
-		this._registerToWebServiceClientFund();
+		this._registerToWebServiceClient();
 	};
 	//#endregion
 };

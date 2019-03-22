@@ -13,6 +13,6 @@ final class LoadAblageTypeTest extends TestCase
         $loadAblageType->setId(1);
 
         $this->assertTrue($loadAblageType->run());
-        $this->assertInstanceOf(AblageTyp::class, $loadAblageType->getAblageType());
+        $this->assertInstanceOf(AblageType::class, $loadAblageType->getAblageType());
     }
 }

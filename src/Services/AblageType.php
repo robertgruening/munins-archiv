@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
-require_once("../Factory/AblageTypFactory.php");
+require_once("../Factory/AblageTypeFactory.php");
 require_once("../UserStories/Ablage/Type/LoadAblageType.php");
 require_once("../UserStories/Ablage/Type/LoadAblageTypes.php");
 require_once("../UserStories/Ablage/Type/SaveAblageType.php");
@@ -30,13 +30,13 @@ function Create()
     global $logger;
     $logger->info("Ablagetyp-anlegen gestartet");
 
-    parse_str(file_get_contents("php://input"), $ablageTypObject);
+    parse_str(file_get_contents("php://input"), $ablageTypeObject);
 
-    $ablageTypeFactory = new AblageTypFactory();
-    $ablageTyp = $ablageTypeFactory->convertToInstance($ablageTypObject);
+    $ablageTypeFactory = new AblageTypeFactory();
+    $ablageType = $ablageTypeFactory->convertToInstance($ablageTypeObject);
     
     $saveAblageType = new SaveAblageType();
-    $saveAblageType->setAblageType($ablageTyp);
+    $saveAblageType->setAblageType($ablageType);
     
     if ($saveAblageType->run())
     {
@@ -56,18 +56,18 @@ function Update()
     global $logger;
     $logger->info("Ablagetyp-anhand-ID-aktualisieren gestartet");
 
-    parse_str(file_get_contents("php://input"), $ablageTypObject);
+    parse_str(file_get_contents("php://input"), $ablageTypeObject);
 
     if (isset($_GET["Id"]))
     {
-        $ablageTypObject["Id"] = $_GET["Id"];
+        $ablageTypeObject["Id"] = $_GET["Id"];
     }
 
-    $ablageTypeFactory = new AblageTypFactory();
-    $ablageTyp = $ablageTypeFactory->convertToInstance($ablageTypObject);
+    $ablageTypeFactory = new AblageTypeFactory();
+    $ablageType = $ablageTypeFactory->convertToInstance($ablageTypeObject);
     
     $saveAblageType = new SaveAblageType();
-    $saveAblageType->setAblageType($ablageTyp);
+    $saveAblageType->setAblageType($ablageType);
     
     if ($saveAblageType->run())
     {

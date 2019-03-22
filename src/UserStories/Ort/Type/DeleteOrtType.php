@@ -1,7 +1,7 @@
 <?php
-require_once(__DIR__."/../../../Model/OrtTyp.php");
+require_once(__DIR__."/../../../Model/OrtType.php");
 require_once(__DIR__."/../../../UserStories/UserStory.php");
-require_once(__DIR__."/../../../Factory/OrtTypFactory.php");
+require_once(__DIR__."/../../../Factory/OrtTypeFactory.php");
 
 class DeleteOrtType extends UserStory
 {
@@ -21,7 +21,7 @@ class DeleteOrtType extends UserStory
 
     /**
      * Sets the Ort type, which is to delete.
-     * @param OrtTyp $ortType Ort type, which is to delete.
+     * @param OrtType $ortType Ort type, which is to delete.
      */
     public function setOrtType($ortType)
     {
@@ -55,8 +55,8 @@ class DeleteOrtType extends UserStory
 
     protected function execute()
     {
-        $ortTypFactory = new OrtTypFactory();
+        $ortTypeFactory = new OrtTypeFactory();
         
-        return $ortTypFactory->delete($this->getOrtType());
+        return $ortTypeFactory->delete($this->getOrtType());
     }
 }

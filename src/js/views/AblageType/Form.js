@@ -1,13 +1,18 @@
+var _webServiceClientAblageType = null;
+
 $(document).ready(function() {
+	var webServiceClientFactory = new WebServiceClientFactory();
+    _webServiceClientAblageType = webServiceClientFactory.getWebServiceClientAblageType();
+    
     _webServiceClientAblageType.Register("loadAll", new GuiClient(ShowAblageTypes));
-    _webServiceClientAblageType.Register("create", new GuiClient(undefined, LoadAllAblageTypen));
-    _webServiceClientAblageType.Register("save", new GuiClient(undefined, LoadAllAblageTypen));
-    _webServiceClientAblageType.Register("delete", new GuiClient(undefined, LoadAllAblageTypen));
+    _webServiceClientAblageType.Register("create", new GuiClient(undefined, LoadAllAblageTypes));
+    _webServiceClientAblageType.Register("save", new GuiClient(undefined, LoadAllAblageTypes));
+    _webServiceClientAblageType.Register("delete", new GuiClient(undefined, LoadAllAblageTypes));
     
     InitBreadcrumb();
     InitGrid();
     
-    LoadAllAblageTypen();
+    LoadAllAblageTypes();
 });
 
 function InitBreadcrumb()

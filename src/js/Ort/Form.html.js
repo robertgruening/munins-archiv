@@ -29,7 +29,7 @@ $(document).ready(function() {
 	$("#textboxBezeichnung").keyup(function() { checkBezeichnung($(this)); })
 	                        .change(function() { checkBezeichnung($(this)); });
 	
-	LoadSelectionTyp();
+	LoadSelectionType();
 	LoadListRootOrte();
 	
 	if (GetURLParameter("Id"))
@@ -52,29 +52,29 @@ $(document).ready(function() {
 	}
 });
 
-function selectTypen_onChange()
+function selectTypes_onChange()
 {
-	SelectTypId($("#selectTypen option:selected").val());
+	SelectTypeId($("#selectTypes option:selected").val());
 }
 
-function SelectTypId(typId)
+function SelectTypeId(typeId)
 {
-	if (typId == undefined ||
-		typId == null)
+	if (typeId == undefined ||
+		typeId == null)
 	{
-		typId = $("#selectTypen option").filter(function () { return $(this).html() == "Landkreis"; }).val();
+		typeId = $("#selectTypes option").filter(function () { return $(this).html() == "Landkreis"; }).val();
 	}
 	
-	$("#selectTypen").val(typId);				
-	ShowFormFieldBlocksByTyp();
+	$("#selectTypes").val(typeId);				
+	ShowFormFieldBlocksByType();
 }
 
-function ShowFormFieldBlocksByTyp()
+function ShowFormFieldBlocksByType()
 {	
 	/*
 	$("#divParent").hide();
 	
-	if ($("#selectTypen option:selected").text() == "Landkreis")
+	if ($("#selectTypes option:selected").text() == "Landkreis")
 	{
 	}
 	else
@@ -92,7 +92,7 @@ function buttonNeu_onClick()
 function ClearFields()
 {
 	$("#textboxId").val("");
-	SelectTypId();
+	SelectTypeId();
 	$("#textboxBezeichnung").val("");
 	$(_selectorTextboxParentId).val("");
 	setTimeout(LoadListParents(), 1000);
@@ -107,7 +107,7 @@ function GetOrtJSON()
 	var ort = {
 		"Id" : $("#textboxId").val(),
 		"Bezeichnung" : $("#textboxBezeichnung").val(),
-		"OrtTyp_Id" : $("#selectTypen option:selected").val(),
+		"OrtTyp_Id" : $("#selectTypes option:selected").val(),
 		"Parent_Id" : $(_selectorTextboxParentId).val() == "" ? null : $(_selectorTextboxParentId).val()
 	};
 	
@@ -118,7 +118,7 @@ function SetOrtJSON(ort)
 {
 	$("#textboxId").val(ort.Id);
 	$("#textboxBezeichnung").val(ort.Bezeichnung);
-	SelectTypId(ort.Typ.Id);
+	SelectTypeId(ort.Type.Id);
 	LoadListChildren(ort.Id);
 	LoadListKontexte(ort.Id);
 	LoadListTeile(ort.Id);
@@ -130,7 +130,7 @@ function SetOrtJSON(ort)
 
 	LoadListParents();
 		
-	document.title = "("+ort.Id+") "+ort.Typ.Bezeichnung+": "+ort.Bezeichnung;
+	document.title = "("+ort.Id+") "+ort.Type.Bezeichnung+": "+ort.Bezeichnung;
 }
 
 function SetShortView(ort)
@@ -186,7 +186,7 @@ function LoadListParents()
 		UrlGetElements : "../Dienste/Ort/GetWithParents/" + $("#textboxParentId").val() + "/AsList",
 		SetListItemText : function(element)
 		{
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
 		ListItemLink : "../Ort/Form.html"
 	});
@@ -206,7 +206,7 @@ function LoadListChildren(ortId)
 		UrlGetElements : "../Dienste/Ort/GetWithChildren/" + ortId,
 		SetListItemText : function(element)
 		{
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
 		ListItemLink : "../Ort/Form.html"
 	});
@@ -237,10 +237,10 @@ function LoadListKontexte(ortId)
 		{
 			if (element.FullBezeichnung == "")
 			{
-				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+				return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 			}
 				
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
 		ListItemLink : "../Kontext/Form.html",
 		IsDeletable : true
@@ -284,7 +284,7 @@ function LoadListRootOrte()
 		UrlGetElements : "../Dienste/Ort/GetWithChildren/",
 		SetListItemText : function(element)
 		{
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
 		ListItemLink : "../Ort/Form.html"
 	});
@@ -327,16 +327,16 @@ function LoadMultiDropdownParent()
 		UrlGetChildren : "../Dienste/Ort/GetWithChildren/",
 		SetOptionBackgroundImage : function(element)
 		{		
-			return "../images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
+			return "../images/system/Icon"+element.Type.Bezeichnung.replace(" ","_")+"_16px.png";
 		},
 		SetOptionText : function(element)
 		{
 			if (element.FullBezeichnung == "")
 			{
-				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+				return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 			}
 				
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
 		SetSelectedElementId : function(elementId)
 		{
@@ -390,33 +390,33 @@ function DeleteOrt()
 	});
 }
 
-function LoadSelectionTyp()
+function LoadSelectionType()
 {
 	$.ajax(
 	{
 		type:"GET",
-		url:"../Dienste/Ort/Typ/Get/",
+		url:"../Dienste/Ort/Type/Get/",
 		success:function(data, textStatus, jqXHR)
 		{
 			if (data)
 			{
-				var typen = $.parseJSON(data);
+				var types = $.parseJSON(data);
 				var options = "";
 
-				for (var i = 0; i < typen.length; i++)
+				for (var i = 0; i < types.length; i++)
 				{
 					if (i == 0)
 					{
-						options += CreateOptionTyp(typen[i], true);
+						options += CreateOptionType(types[i], true);
 					}
 					else
 					{
-						options += CreateOptionTyp(typen[i], false);
+						options += CreateOptionType(types[i], false);
 					}
 				}
 
-				$("#selectTypen").html(options);
-				SelectTypId();
+				$("#selectTypes").html(options);
+				SelectTypeId();
 			}
 		},
 		error:function(jqXHR, textStatus, errorThrown)
@@ -426,18 +426,18 @@ function LoadSelectionTyp()
 	});	
 }
 
-function CreateOptionTyp(typ, select)
+function CreateOptionType(type, select)
 {
-	var option = "<option value=" + typ.Id + " ";
+	var option = "<option value=" + type.Id + " ";
 
 	if (select == true)
 	{
 		option += "selected=selected ";
 	}
 
-	option += "style=\"background-image:url(../images/system/Icon"+typ.Bezeichnung.replace(" ","_")+"_16px.png);background-repeat: no-repeat; padding-left: 20px;\" ";
+	option += "style=\"background-image:url(../images/system/Icon"+type.Bezeichnung.replace(" ","_")+"_16px.png);background-repeat: no-repeat; padding-left: 20px;\" ";
 	option += ">";
-	option += typ.Bezeichnung;
+	option += type.Bezeichnung;
 	option += "</option>";
 	
 	return option;
@@ -541,14 +541,14 @@ function LoadMultiDropdownKontext()
 		UrlGetChildren : "../Dienste/Kontext/GetWithChildren/",
 		SetOptionBackgroundImage : function(element)
 		{		
-			return "../images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
+			return "../images/system/Icon"+element.Type.Bezeichnung.replace(" ","_")+"_16px.png";
 		},
 		SetOptionText : function(element)
 		{
 			if (element.FullBezeichnung == "")
-				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+				return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 			
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
 		SetSelectedElementId : function(elementId)
 		{
@@ -617,10 +617,10 @@ function LoadMultiDropdownTeil()
 		{
 			if (element.FullBezeichnung == "")
 			{
-				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+				return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 			}
 			
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
 		SetSelectedElementId : function(elementId)
 		{

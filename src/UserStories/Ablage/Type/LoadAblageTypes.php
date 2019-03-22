@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__."/../../../UserStories/UserStory.php");
-require_once(__DIR__."/../../../Factory/AblageTypFactory.php");
+require_once(__DIR__."/../../../Factory/AblageTypeFactory.php");
 
 class LoadAblageTypes extends UserStory
 {
@@ -42,7 +42,7 @@ class LoadAblageTypes extends UserStory
 
     protected function execute()
     {
-        $ablageTypeFactory = new AblageTypFactory();
+        $ablageTypeFactory = new AblageTypeFactory();
         $this->setAblageTypes($ablageTypeFactory->loadAll());
         
         return true;

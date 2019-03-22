@@ -31,7 +31,7 @@ $(document).ready(function() {
 	$("#textboxBezeichnung").keyup(function() { checkBezeichnung($(this)); })
 	                        .change(function() { checkBezeichnung($(this)); });
 	
-	LoadSelectionTyp();
+	LoadSelectionType();
 	LoadListRootKontexte();
 	
 	if (GetURLParameter("Id"))
@@ -58,24 +58,24 @@ $(document).ready(function() {
 	}
 });
 
-function selectTypen_onChange()
+function selectTypes_onChange()
 {
-	SelectTypId($("#selectTypen option:selected").val());
+	SelectTypeId($("#selectTypes option:selected").val());
 }
 
-function SelectTypId(typId)
+function SelectTypeId(typeId)
 {
-	if (typId == undefined ||
-		typId == null)
+	if (typeId == undefined ||
+		typeId == null)
 	{
-		typId = $("#selectTypen option").filter(function () { return $(this).html() == "Raum"; }).val();
+		typeId = $("#selectTypes option").filter(function () { return $(this).html() == "Raum"; }).val();
 	}
 	
-	$("#selectTypen").val(typId);				
-	ShowFormFieldBlocksByTyp();
+	$("#selectTypes").val(typeId);				
+	ShowFormFieldBlocksByType();
 }
 
-function ShowFormFieldBlocksByTyp()
+function ShowFormFieldBlocksByType()
 {	
 	$("#divParent").hide();
 	$("#divBegehungLfDErfassungsJahr").hide();
@@ -87,16 +87,16 @@ function ShowFormFieldBlocksByTyp()
 	$("#divAblagen").hide();
 	$("#divFunde").hide();
 	
-	if ($("#selectTypen option:selected").text() == "Fundstelle")
+	if ($("#selectTypes option:selected").text() == "Fundstelle")
 	{
 	}
-	else if ($("#selectTypen option:selected").text() == "Begehungsfläche")
+	else if ($("#selectTypes option:selected").text() == "Begehungsfläche")
 	{
 		$("#divParent").show();
 		$("#divLfDs").show();
 		$("#divOrte").show();
 	}
-	else if ($("#selectTypen option:selected").text() == "Begehung")
+	else if ($("#selectTypes option:selected").text() == "Begehung")
 	{
 		$("#divParent").show();
 		$("#divBegehungLfDErfassungsJahr").show();
@@ -107,24 +107,24 @@ function ShowFormFieldBlocksByTyp()
 		$("#divAblagen").show();
 		$("#divFunde").show();
 	}
-	else if ($("#selectTypen option:selected").text() == "Grabung")
+	else if ($("#selectTypes option:selected").text() == "Grabung")
 	{
 		$("#divParent").show();
 	}
-	else if ($("#selectTypen option:selected").text() == "Fläche")
+	else if ($("#selectTypes option:selected").text() == "Fläche")
 	{
 		$("#divParent").show();
 		$("#divOrte").show();
 		$("#divAblagen").show();
 		$("#divFunde").show();
 	}
-	else if ($("#selectTypen option:selected").text() == "Befund")
+	else if ($("#selectTypes option:selected").text() == "Befund")
 	{
 		$("#divParent").show();
 		$("#divAblagen").show();
 		$("#divFunde").show();
 	}
-	else if ($("#selectTypen option:selected").text() == "Laufende Nummer")
+	else if ($("#selectTypes option:selected").text() == "Laufende Nummer")
 	{
 		$("#divParent").show();
 		$("#divAblagen").show();
@@ -140,7 +140,7 @@ function buttonNeu_onClick()
 function ClearFields()
 {
 	$("#textboxId").val("");
-	SelectTypId();
+	SelectTypeId();
 	$("#textboxBezeichnung").val("");
 	$("#textboxBegehungLfDErfassungsJahr").val("");
 	$("#textboxBegehungLfDErfassungsNr").val("");
@@ -162,11 +162,11 @@ function GetKontextJSON()
 	var kontext = {
 		"Id" : $("#textboxId").val(),
 		"Bezeichnung" : $("#textboxBezeichnung").val(),
-		"KontextTyp_Id" : $("#selectTypen option:selected").val(),
+		"KontextTyp_Id" : $("#selectTypes option:selected").val(),
 		"Parent_Id" : $(_selectorTextboxParentId).val() == "" ? null : $(_selectorTextboxParentId).val()
 	};
 	
-	if ($("#selectTypen option:selected").text() == "Begehung")
+	if ($("#selectTypes option:selected").text() == "Begehung")
 	{
 		kontext.LfDErfassungsJahr = $("#textboxBegehungLfDErfassungsJahr").val();
 		kontext.LfDErfassungsNr = $("#textboxBegehungLfDErfassungsNr").val();
@@ -181,7 +181,7 @@ function SetKontextJSON(kontext)
 {
 	$("#textboxId").val(kontext.Id);
 	$("#textboxBezeichnung").val(kontext.Bezeichnung);
-	SelectTypId(kontext.Typ.Id);
+	SelectTypeId(kontext.Type.Id);
 	LoadListChildren(kontext.Id);
 	LoadListAblagen(kontext.Id);
 	LoadListFunde(kontext.Id);
@@ -194,11 +194,11 @@ function SetKontextJSON(kontext)
 
 	LoadListParents();
 	
-	if (kontext.Typ.Bezeichnung == "Begehungsfläche")
+	if (kontext.Type.Bezeichnung == "Begehungsfläche")
 	{
 		LoadListLfDs(kontext.Id);
 	}
-	else if (kontext.Typ.Bezeichnung == "Begehung")
+	else if (kontext.Type.Bezeichnung == "Begehung")
 	{
 		$("#textboxBegehungLfDErfassungsJahr").val(kontext.LfDErfassungsJahr);
 		$("#textboxBegehungLfDErfassungsNr").val(kontext.LfDErfassungsNr);
@@ -206,7 +206,7 @@ function SetKontextJSON(kontext)
 		$("#textboxBegehungKommentar").val(kontext.Kommentar);
 	}
 	
-	document.title = "("+kontext.Id+") "+kontext.Typ.Bezeichnung+": "+kontext.Bezeichnung;
+	document.title = "("+kontext.Id+") "+kontext.Type.Bezeichnung+": "+kontext.Bezeichnung;
 }
 
 function SetShortView(kontext)
@@ -262,7 +262,7 @@ function LoadListParents()
 		UrlGetElements : "../Dienste/Kontext/GetWithParents/" + $("#textboxParentId").val() + "/AsList",
 		SetListItemText : function(element)
 		{
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
 		ListItemLink : "../Kontext/Form.html"
 	});
@@ -283,7 +283,7 @@ function LoadListChildren(kontextId)
 		UrlGetElements : "../Dienste/Kontext/GetWithChildren/" + kontextId,
 		SetListItemText : function(element)
 		{
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
 		ListItemLink : "../Kontext/Form.html"
 	});
@@ -315,9 +315,9 @@ function LoadListAblagen(kontextId)
 		SetListItemText : function(element)
 		{
 			if (element.FullBezeichnung == "")
-				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+				return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 				
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
 		ListItemLink : "../Ablage/Form.html"
 	});
@@ -351,11 +351,11 @@ function LoadListFunde(kontextId)
 				
 				for (var i = 0; i < element.Attribute.length; i++)
 				{
-					if (element.Attribute[i].Typ.Bezeichnung == "Material")
+					if (element.Attribute[i].Type.Bezeichnung == "Material")
 						material = element.Attribute[i];
-					else if (element.Attribute[i].Typ.Bezeichnung == "Gegenstand")
+					else if (element.Attribute[i].Type.Bezeichnung == "Gegenstand")
 						gegenstand = element.Attribute[i];
-					else if (element.Attribute[i].Typ.Bezeichnung == "Erhaltung")
+					else if (element.Attribute[i].Type.Bezeichnung == "Erhaltung")
 						erhaltung = element.Attribute[i];
 						
 					if (material != null &&
@@ -416,7 +416,7 @@ function LoadListRootKontexte()
 		UrlGetElements : "../Dienste/Kontext/GetWithChildren/",
 		SetListItemText : function(element)
 		{
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 		},
 		ListItemLink : "../Kontext/Form.html"
 	});
@@ -461,14 +461,14 @@ function LoadMultiDropdownParent()
 		//Blacklist : [],
 		SetOptionBackgroundImage : function(element)
 		{		
-			return "../images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
+			return "../images/system/Icon"+element.Type.Bezeichnung.replace(" ","_")+"_16px.png";
 		},
 		SetOptionText : function(element)
 		{
 			if (element.FullBezeichnung == "")
-				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+				return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 				
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
 		SetSelectedElementId : function(elementId)
 		{
@@ -522,27 +522,27 @@ function DeleteKontext()
 	});
 }
 
-function LoadSelectionTyp()
+function LoadSelectionType()
 {
 	$.ajax(
 	{
 		type:"GET",
-		url:"../Dienste/Kontext/Typ/Get/",
+		url:"../Dienste/Kontext/Type/Get/",
 		success:function(data, textStatus, jqXHR)
 		{
 			if (data)
 			{
-				var typen = $.parseJSON(data);
+				var types = $.parseJSON(data);
 				var options = "";
-				for (var i = 0; i < typen.length; i++)
+				for (var i = 0; i < types.length; i++)
 				{
 					if (i == 0)
-						options += CreateOptionTyp(typen[i], true);
+						options += CreateOptionType(types[i], true);
 					else
-						options += CreateOptionTyp(typen[i], false);
+						options += CreateOptionType(types[i], false);
 				}
-				$("#selectTypen").html(options);
-				SelectTypId();
+				$("#selectTypes").html(options);
+				SelectTypeId();
 			}
 		},
 		error:function(jqXHR, textStatus, errorThrown)
@@ -552,14 +552,14 @@ function LoadSelectionTyp()
 	});	
 }
 
-function CreateOptionTyp(typ, select)
+function CreateOptionType(type, select)
 {
-	var option = "<option value=" + typ.Id + " ";
+	var option = "<option value=" + type.Id + " ";
 	if (select == true)
 		option += "selected=selected ";
-	option += "style=\"background-image:url(../images/system/Icon"+typ.Bezeichnung.replace(" ","_")+"_16px.png);background-repeat: no-repeat; padding-left: 20px;\" ";
+	option += "style=\"background-image:url(../images/system/Icon"+type.Bezeichnung.replace(" ","_")+"_16px.png);background-repeat: no-repeat; padding-left: 20px;\" ";
 	option += ">";
-	option += typ.Bezeichnung;
+	option += type.Bezeichnung;
 	option += "</option>";
 	
 	return option;
@@ -661,14 +661,14 @@ function LoadMultiDropdownAblage()
 		//SelectedElementId : null,
 		SetOptionBackgroundImage : function(element)
 		{		
-			return "../images/system/Icon"+element.Typ.Bezeichnung.replace(" ","_")+"_16px.png";
+			return "../images/system/Icon"+element.Type.Bezeichnung.replace(" ","_")+"_16px.png";
 		},
 		SetOptionText : function(element)
 		{
 			if (element.FullBezeichnung == "")
-				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+				return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 				
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
 		SetSelectedElementId : function(elementId)
 		{
@@ -731,9 +731,9 @@ function LoadMultiDropdownOrt()
 		SetOptionText : function(element)
 		{
 			if (element.FullBezeichnung == "")
-				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+				return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 				
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
 		SetSelectedElementId : function(elementId)
 		{
@@ -877,9 +877,9 @@ function LoadListOrte(kontextId)
 		SetListItemText : function(element)
 		{
 			if (element.FullBezeichnung == "")
-				return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
+				return element.Type.Bezeichnung+": "+element.Bezeichnung+" ("+element.Id+")";
 				
-			return element.Typ.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
+			return element.Type.Bezeichnung+": "+element.Bezeichnung+" ["+element.FullBezeichnung+"] ("+element.Id+")";
 		},
 		ListItemLink : "../Ort/Form.html",
 		IsDeletable : true

@@ -33,22 +33,22 @@ TreeAblage.prototype.private_TransformiereElement = function(element){
 	transformiertesElement += ",";
 	transformiertesElement += "\"elementId\":\"" + element.Id + "\"";
 	
-	if (element.Typ.Bezeichnung == "Raum" ||
-	element.Typ.Bezeichnung == "Stellplatz" ||
-	element.Typ.Bezeichnung == "Regal" ||
-	element.Typ.Bezeichnung == "Regalbrett" ||
-	element.Typ.Bezeichnung == "Karton")
+	if (element.Type.Bezeichnung == "Raum" ||
+	element.Type.Bezeichnung == "Stellplatz" ||
+	element.Type.Bezeichnung == "Regal" ||
+	element.Type.Bezeichnung == "Regalbrett" ||
+	element.Type.Bezeichnung == "Karton")
 	{
 		transformiertesElement += ",";
-		transformiertesElement += "\"icon\":\"images/system/Icon" + element.Typ.Bezeichnung.replace(" ", "_") + ".png\"";
+		transformiertesElement += "\"icon\":\"images/system/Icon" + element.Type.Bezeichnung.replace(" ", "_") + ".png\"";
 	}
 	
 	transformiertesElement += ",";
-	transformiertesElement += "\"text\":\"" + element.Typ.Bezeichnung + " : " + element.Bezeichnung + " (" + element.Id + ")\"";
+	transformiertesElement += "\"text\":\"" + element.Type.Bezeichnung + " : " + element.Bezeichnung + " (" + element.Id + ")\"";
 
 	transformiertesElement += ",";
 	transformiertesElement += "\"state\":{";
-	if (element.Typ.Bezeichnung == "Karton")
+	if (element.Type.Bezeichnung == "Karton")
 		transformiertesElement += 	"\"opened\":" + true + ",";
 	else
 		transformiertesElement += 	"\"opened\":" + this.Opened + ",";
@@ -133,13 +133,13 @@ TreeAblage.prototype.private_TransformiereKontextElement = function(element){
 TreeAblage.prototype.private_GetKennung = function(element){
 	
 	var kennung = "";
-	if (element.Typ.Bezeichnung != "Grabung")
+	if (element.Type.Bezeichnung != "Grabung")
 		kennung += element.Bezeichnung;
 	
 	if (element.Children != undefined &&
 		element.Children.length > 0)
 	{
-		if (element.Typ.Bezeichnung != "Grabung")
+		if (element.Type.Bezeichnung != "Grabung")
 			kennung += "-";
 			
 		for (var i = 0; i < element.Children.length; i++)
@@ -151,9 +151,9 @@ TreeAblage.prototype.private_GetKennung = function(element){
 	return kennung;
 }
 
-TreeAblage.prototype.private_Contains = function(element, typ){
+TreeAblage.prototype.private_Contains = function(element, type){
 	
-	if (element.Typ.Bezeichnung == typ)
+	if (element.Type.Bezeichnung == type)
 		return true;
 		
 	if (element.Children != undefined &&
@@ -161,7 +161,7 @@ TreeAblage.prototype.private_Contains = function(element, typ){
 	{
 		for (var i = 0; i < element.Children.length; i++)
 		{
-			if (this.private_Contains(element.Children[i], typ))
+			if (this.private_Contains(element.Children[i], type))
 				return true;
 		}
 	}

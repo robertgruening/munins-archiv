@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
-require_once("../Factory/OrtTypFactory.php");
+require_once("../Factory/OrtTypeFactory.php");
 require_once("../UserStories/Ort/Type/LoadOrtType.php");
 require_once("../UserStories/Ort/Type/LoadOrtTypes.php");
 require_once("../UserStories/Ort/Type/SaveOrtType.php");
@@ -30,15 +30,15 @@ function Create()
     global $logger;
     $logger->info("Ortstyp-anlegen gestartet");
 
-    $ortTyp = new OrtTyp();
+    $ortType = new OrtType();
 
     if (isset($_POST["Bezeichnung"]))
     {
-        $ortTyp->setBezeichnung($_POST["Bezeichnung"]);
+        $ortType->setBezeichnung($_POST["Bezeichnung"]);
     }
     
     $saveOrtType = new SaveOrtType();
-    $saveOrtType->setOrtType($ortTyp);
+    $saveOrtType->setOrtType($ortType);
     
     if ($saveOrtType->run())
     {
@@ -60,20 +60,20 @@ function Update()
 
     parse_str(file_get_contents("php://input"),$_PUT);
 
-    $ortTyp = new OrtTyp();
+    $ortType = new OrtType();
 
     if (isset($_GET["Id"]))
     {
-        $ortTyp->setId(intval($_GET["Id"]));    
+        $ortType->setId(intval($_GET["Id"]));    
     }
 
     if (isset($_PUT["Bezeichnung"]))
     {
-        $ortTyp->setBezeichnung($_PUT["Bezeichnung"]);
+        $ortType->setBezeichnung($_PUT["Bezeichnung"]);
     }
     
     $saveOrtType = new SaveOrtType();
-    $saveOrtType->setOrtType($ortTyp);
+    $saveOrtType->setOrtType($ortType);
     
     if ($saveOrtType->run())
     {

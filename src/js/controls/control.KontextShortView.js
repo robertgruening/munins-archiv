@@ -22,7 +22,7 @@
     function writeName(options, htmlElement)
     {
         $(htmlElement).append(
-            $("<span/>").html(options.Element.Typ.Bezeichnung + ":").addClass("fieldName"),
+            $("<span/>").html(options.Element.Type.Bezeichnung + ":").addClass("fieldName"),
             $("<span/>").html(options.Element.Bezeichnung).addClass("fieldValue"),
             $("<br/>")
         );
@@ -65,9 +65,9 @@
 
 	function writeAblagen(options, htmlElement)
 	{
-    	if (options.Element.Typ.Bezeichnung != "Begehung" &&
-    	    options.Element.Typ.Bezeichnung != "Befund" &&
-    	    options.Element.Typ.Bezeichnung != "Laufende Nummer")
+    	if (options.Element.Type.Bezeichnung != "Begehung" &&
+    	    options.Element.Type.Bezeichnung != "Befund" &&
+    	    options.Element.Type.Bezeichnung != "Laufende Nummer")
 	    {
     	    return;
 	    }
@@ -98,8 +98,8 @@
 
 	function writeOrte(options, htmlElement)
 	{
-    	if (options.Element.Typ.Bezeichnung != "Begehungsfläche" &&
-    	    options.Element.Typ.Bezeichnung != "Fläche")
+    	if (options.Element.Type.Bezeichnung != "Begehungsfläche" &&
+    	    options.Element.Type.Bezeichnung != "Fläche")
 	    {
     	    return;
 	    }	    
@@ -130,9 +130,9 @@
 
 	function writeFunde(options, htmlElement)
 	{
-    	if (options.Element.Typ.Bezeichnung != "Begehung" &&
-    	    options.Element.Typ.Bezeichnung != "Befund" &&
-    	    options.Element.Typ.Bezeichnung != "Laufende Nummer")
+    	if (options.Element.Type.Bezeichnung != "Begehung" &&
+    	    options.Element.Type.Bezeichnung != "Befund" &&
+    	    options.Element.Type.Bezeichnung != "Laufende Nummer")
 	    {
     	    return;
 	    }

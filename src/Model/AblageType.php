@@ -1,7 +1,7 @@
 <?php
 include_once(__DIR__."/INode.php");
 
-class AblageTyp implements iNode
+class AblageType implements iNode
 {
     #region variables
     public $Id;

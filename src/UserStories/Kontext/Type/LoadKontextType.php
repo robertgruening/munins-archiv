@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__."/../../../UserStories/UserStory.php");
-require_once(__DIR__."/../../../Factory/KontextTypFactory.php");
+require_once(__DIR__."/../../../Factory/KontextTypeFactory.php");
 
 class LoadKontextType extends UserStory
 {
@@ -51,7 +51,7 @@ class LoadKontextType extends UserStory
 
     protected function execute()
     {
-        $kontextTypeFactory = new KontextTypFactory();
+        $kontextTypeFactory = new KontextTypeFactory();
         $kontextType = $kontextTypeFactory->loadById($this->getId());
         
         if ($kontextType == null)

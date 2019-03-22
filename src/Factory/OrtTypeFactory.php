@@ -2,9 +2,9 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
-include_once(__DIR__."/../Model/OrtTyp.php");
+include_once(__DIR__."/../Model/OrtType.php");
 
-class OrtTypFactory extends Factory implements iListFactory
+class OrtTypeFactory extends Factory implements iListFactory
 {
     #region variables
     private $_listFactory = null;
@@ -30,6 +30,7 @@ class OrtTypFactory extends Factory implements iListFactory
      */
     public function getTableName()
     {
+        // ToDo: Rename
         return "OrtTyp";
     }
 
@@ -63,12 +64,12 @@ class OrtTypFactory extends Factory implements iListFactory
             return null;
         }
 
-        $ortTyp = new OrtTyp();
-        $ortTyp->setId(intval($dataset["Id"]));
-        $ortTyp->setBezeichnung($dataset["Bezeichnung"]);
-        $ortTyp->setCountOfOrten(intval($dataset["CountOfOrten"]));
+        $ortType = new OrtType();
+        $ortType->setId(intval($dataset["Id"]));
+        $ortType->setBezeichnung($dataset["Bezeichnung"]);
+        $ortType->setCountOfOrten(intval($dataset["CountOfOrten"]));
         
-        return $ortTyp;
+        return $ortType;
     }
     #endregion
     
@@ -99,11 +100,11 @@ class OrtTypFactory extends Factory implements iListFactory
             return null;
         }
 
-        $ortTyp = new OrtTyp();
+        $ortType = new OrtType();
 
         if (isset($object["Id"]))
         {
-            $ortTyp->setId(intval($object["Id"]));
+            $ortType->setId(intval($object["Id"]));
         }
         else
         {
@@ -112,7 +113,7 @@ class OrtTypFactory extends Factory implements iListFactory
 
         if (isset($object["Bezeichnung"]))
         {
-            $ortTyp->setBezeichnung($object["Bezeichnung"]);
+            $ortType->setBezeichnung($object["Bezeichnung"]);
         }
         else
         {
@@ -120,7 +121,7 @@ class OrtTypFactory extends Factory implements iListFactory
         }
 
         
-        return $ortTyp;
+        return $ortType;
     }
     #endregion
     #endregion

@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
-require_once("../Factory/FundAttributTypFactory.php");
+require_once("../Factory/FundAttributTypeFactory.php");
 require_once("../UserStories/FundAttribut/Type/LoadFundAttributType.php");
 require_once("../UserStories/FundAttribut/Type/LoadFundAttributTypes.php");
 require_once("../UserStories/FundAttribut/Type/SaveFundAttributType.php");
@@ -30,15 +30,15 @@ function Create()
     global $logger;
     $logger->info("Fundattributtyp-anlegen gestartet");
 
-    $fundAttributTyp = new FundAttributTyp();
+    $fundAttributType = new FundAttributType();
 
     if (isset($_POST["Bezeichnung"]))
     {
-        $fundAttributTyp->setBezeichnung($_POST["Bezeichnung"]);
+        $fundAttributType->setBezeichnung($_POST["Bezeichnung"]);
     }
     
     $saveFundAttributType = new SaveFundAttributType();
-    $saveFundAttributType->setFundAttributType($fundAttributTyp);
+    $saveFundAttributType->setFundAttributType($fundAttributType);
     
     if ($saveFundAttributType->run())
     {
@@ -60,20 +60,20 @@ function Update()
 
     parse_str(file_get_contents("php://input"),$_PUT);
 
-    $fundAttributTyp = new FundAttributTyp();
+    $fundAttributType = new FundAttributType();
 
     if (isset($_GET["Id"]))
     {
-        $fundAttributTyp->setId(intval($_GET["Id"]));    
+        $fundAttributType->setId(intval($_GET["Id"]));    
     }
 
     if (isset($_PUT["Bezeichnung"]))
     {
-        $fundAttributTyp->setBezeichnung($_PUT["Bezeichnung"]);
+        $fundAttributType->setBezeichnung($_PUT["Bezeichnung"]);
     }
     
     $saveFundAttributType = new SaveFundAttributType();
-    $saveFundAttributType->setFundAttributType($fundAttributTyp);
+    $saveFundAttributType->setFundAttributType($fundAttributType);
     
     if ($saveFundAttributType->run())
     {

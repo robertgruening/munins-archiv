@@ -20,7 +20,7 @@
     function writeName(options, htmlElement)
     {
         $(htmlElement).append(
-            $("<span/>").html(options.Element.Typ.Bezeichnung + ":").addClass("fieldName"),
+            $("<span/>").html(options.Element.Type.Bezeichnung + ":").addClass("fieldName"),
             $("<span/>").html(options.Element.Bezeichnung).addClass("fieldValue"),
             $("<br/>")
         );

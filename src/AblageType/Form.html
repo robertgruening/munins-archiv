@@ -1,22 +1,33 @@
 <!doctype html>
 <html>
+
 <head>
 	<meta charset="utf-8">
+	<!-- javascript frameworks etc. -->
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
-    <script type="text/javascript" src="../js/controls/jsgrid/jsgrid.min.js"></script>
-    <script type="text/javascript" src="../js/controls/jsgrid/i18n/jsgrid-de.js"></script>
+	<script type="text/javascript" src="../js/ui/jquery-ui/jquery-ui.js"></script>
+	<!-- controls -->
+	<script type="text/javascript" src="../js/controls/jsgrid/jsgrid.min.js"></script>
+	<script type="text/javascript" src="../js/controls/jsgrid/i18n/jsgrid-de.js"></script>
 	<script type="text/javascript" src="../js/controls/control.Navigation.js"></script>
 	<script type="text/javascript" src="../js/controls/control.Breadcrumb.js"></script>
 	<script type="text/javascript" src="../js/controls/control.MessageBox.js"></script>
-	<script type="text/javascript" src="../js/ui/jquery-ui/jquery-ui.js"></script>
+	<!-- basic page functions -->
 	<script type="text/javascript" src="../js/page.js"></script>
-	<script type="text/javascript" src="../js/webServiceClients/WebServiceClientAblageType.js"></script>
+	<!-- observer pattern data structure -->
 	<script type="text/javascript" src="../js/ui/GuiClient.js"></script>
-    <script type="text/javascript" src="../js/viewModels/AblageType/Form.js"></script>
+	<!-- web service client -->
+	<script type="text/javascript" src="../js/webServiceClients/WebServiceClient.js"></script>
+	<script type="text/javascript" src="../js/webServiceClients/WebServiceClientAblageType.js"></script>
+	<script type="text/javascript" src="../js/factories/webServiceClientFactory.js"></script>
+	<!-- old view model -->
+	<script type="text/javascript" src="../js/viewModels/AblageType/Form.js"></script>
+	<!-- old view -->
 	<script type="text/javascript" src="../js/views/AblageType/Form.js"></script>
+
 	<link rel="stylesheet" type="text/css" href="../js/ui/jquery-ui/jquery-ui.css" />
-    <link rel="stylesheet" type="text/css" href="../js/controls/jsgrid/jsgrid.min.css" />
-    <link rel="stylesheet" type="text/css" href="../js/controls/jsgrid/jsgrid-theme.min.css" />
+	<link rel="stylesheet" type="text/css" href="../js/controls/jsgrid/jsgrid.min.css" />
+	<link rel="stylesheet" type="text/css" href="../js/controls/jsgrid/jsgrid-theme.min.css" />
 	<link rel="stylesheet" type="text/css" href="../css/page.css" />
 	<link rel="stylesheet" type="text/css" href="../css/form.css" />
 	<link rel="stylesheet" type="text/css" href="../css/navigation.css" />
@@ -26,16 +37,17 @@
 	<link rel=icon type="image/png" href="../images/system/IconMunin_001.png">
 	<title>Ablagetyp</title>
 </head>
-<body>		
+
+<body>
 	<div id=navigation class="notToPrint"></div>
 	<div id=breadcrumb class="notToPrint"></div>
 	<div id=content>
-	    <div class=form>
-		    <div class=formBlock>
-                <h2>Formular</h2>
-                <div id=gridContainer></div>
+		<div class=form>
+			<div class=formBlock>
+				<h2>Formular</h2>
+				<div id=gridContainer></div>
 			</div>
 			<div id="messageBox" title="Nachrichten"></div>
-        </div>
-    </div>
+		</div>
+	</div>
 </body>

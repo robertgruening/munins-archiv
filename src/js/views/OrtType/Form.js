@@ -1,13 +1,13 @@
 $(document).ready(function() {
     _webServiceClientOrtType.Register("loadAll", new GuiClient(ShowOrtTypes));
-    _webServiceClientOrtType.Register("create", new GuiClient(undefined, LoadAllOrtTypen));
-    _webServiceClientOrtType.Register("save", new GuiClient(undefined, LoadAllOrtTypen));
-    _webServiceClientOrtType.Register("delete", new GuiClient(undefined, LoadAllOrtTypen));
+    _webServiceClientOrtType.Register("create", new GuiClient(undefined, LoadAllOrtTypes));
+    _webServiceClientOrtType.Register("save", new GuiClient(undefined, LoadAllOrtTypes));
+    _webServiceClientOrtType.Register("delete", new GuiClient(undefined, LoadAllOrtTypes));
 
     InitBreadcrumb();
     InitGrid();
 
-    LoadAllOrtTypen();
+    LoadAllOrtTypes();
 });
 
 function InitBreadcrumb()

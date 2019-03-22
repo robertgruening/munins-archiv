@@ -1,8 +1,8 @@
-var _fundViewModel = null;
+var _viewModelFormFund = null;
 
 $(document).ready(function () {
 	var viewModelFactory = new ViewModelFactory();
-	_fundViewModel = viewModelFactory.getViewModelFormFund();
+	_viewModelFormFund = viewModelFactory.getViewModelFormFund();
 
 	InitStatusChanged();
 	InitDataChanged();
@@ -27,22 +27,22 @@ $(document).ready(function () {
 	InitFieldKontext();
 
 	if (getUrlParameterValue("Id")) {
-		_fundViewModel.load(getUrlParameterValue("Id"));
+		_viewModelFormFund.load(getUrlParameterValue("Id"));
 	}
 	else {
-		_fundViewModel.updateAllListeners();
+		_viewModelFormFund.updateAllListeners();
 	}
 });
 
 function InitStatusChanged() {
-	_fundViewModel.register("load", new GuiClient(showActionBannerLoaded, showMessages));
-	_fundViewModel.register("create", new GuiClient(showActionBannerCreated, showMessages));
-	_fundViewModel.register("save", new GuiClient(showActionBannerSaved, showMessages));
-	_fundViewModel.register("delete", new GuiClient(showActionBannerDeleted, showMessages));
+	_viewModelFormFund.register("load", new GuiClient(showActionBannerLoaded, showMessages));
+	_viewModelFormFund.register("create", new GuiClient(showActionBannerCreated, showMessages));
+	_viewModelFormFund.register("save", new GuiClient(showActionBannerSaved, showMessages));
+	_viewModelFormFund.register("delete", new GuiClient(showActionBannerDeleted, showMessages));
 }
 
 function InitDataChanged() {
-	_fundViewModel.register("dataChanged", new GuiClient(EnableButtonUndo, showMessages));
+	_viewModelFormFund.register("dataChanged", new GuiClient(EnableButtonUndo, showMessages));
 }
 
 function InitBreadcrumb() {
@@ -79,7 +79,7 @@ function DisableButtonNew() {
 //#region save
 function InitButtonSave() {
 	EnableButtonSave();
-	$("#buttonSave").click(function () { _fundViewModel.save(); });
+	$("#buttonSave").click(function () { _viewModelFormFund.save(); });
 }
 
 function EnableButtonSave() {
@@ -120,7 +120,7 @@ function ShowDialogDelete() {
 		modal: true,
 		buttons: {
 			"Löschen": function () {
-				_fundViewModel.delete();
+				_viewModelFormFund.delete();
 
 				$(this).dialog("close");
 			},
@@ -137,9 +137,9 @@ function ShowDialogDelete() {
 //#region undo
 function InitButtonUndo() {
 	DisableButtonUndo();
-	_fundViewModel.register("dataResetted", new GuiClient(DisableButtonUndo, showMessages));
-	_fundViewModel.register("dataResetted", new GuiClient(ResetPropertiesMessages, showMessages));
-	$("#buttonUndo").click(function () { _fundViewModel.undoAllChanges(); });
+	_viewModelFormFund.register("dataResetted", new GuiClient(DisableButtonUndo, showMessages));
+	_viewModelFormFund.register("dataResetted", new GuiClient(ResetPropertiesMessages, showMessages));
+	$("#buttonUndo").click(function () { _viewModelFormFund.undoAllChanges(); });
 }
 
 function EnableButtonUndo() {
@@ -164,7 +164,7 @@ function GetIcon(type, state) {
 
 //#region Id
 function InitFieldId() {
-	_fundViewModel.register("id", new GuiClient(setId, showMessages));
+	_viewModelFormFund.register("id", new GuiClient(setId, showMessages));
 }
 
 function setId(id) {
@@ -181,9 +181,9 @@ function setId(id) {
 
 //#region Bezeichnung
 function InitFieldBeschriftung() {
-	_fundViewModel.register("bezeichnung", new GuiClient(setBezeichnung, showMessagesBeschriftung));
+	_viewModelFormFund.register("bezeichnung", new GuiClient(setBezeichnung, showMessagesBeschriftung));
 	$("#textboxBeschriftung").change(function () {
-		_fundViewModel.setBezeichnung($("#textboxBeschriftung").val())
+		_viewModelFormFund.setBezeichnung($("#textboxBeschriftung").val())
 	});
 }
 
@@ -198,7 +198,7 @@ function showMessagesBeschriftung(messages) {
 
 //#region Fundattribute
 function InitFieldFundattribute() {
-	_fundViewModel.register("fundAttribute", new GuiClient(setFundAttribute, showMessagesFundAttribute));
+	_viewModelFormFund.register("fundAttribute", new GuiClient(setFundAttribute, showMessagesFundAttribute));
 }
 
 function InitButtonSelectFundAttribut() {
@@ -214,7 +214,7 @@ function ShowFormSelectFundAttribut() {
 		resizable: false,
 		buttons: {
 			"Speichern": function () {
-				_fundViewModel.addFundAttribut(GetSelectedFundAttribut());
+				_viewModelFormFund.addFundAttribut(GetSelectedFundAttribut());
 				$(this).dialog("close");
 			},
 			"Abbrechen": function () {
@@ -259,7 +259,7 @@ function removeFundAttribut(fundAttributId) {
 	var fundAttribut = new Object();
 	fundAttribut.Id = fundAttributId;
 
-	_fundViewModel.removeFundAttribut(fundAttribut);
+	_viewModelFormFund.removeFundAttribut(fundAttribut);
 }
 
 function showMessagesFundAttribute(messages) {
@@ -269,9 +269,9 @@ function showMessagesFundAttribute(messages) {
 
 //#region Anzahl
 function InitFieldAnzahl() {
-	_fundViewModel.register("anzahl", new GuiClient(setAnzahl, showMessagesAnzahl));
+	_viewModelFormFund.register("anzahl", new GuiClient(setAnzahl, showMessagesAnzahl));
 	$("#textboxAnzahl").change(function () {
-		_fundViewModel.setAnzahl($("#textboxAnzahl").val())
+		_viewModelFormFund.setAnzahl($("#textboxAnzahl").val())
 	});
 }
 
@@ -286,9 +286,9 @@ function showMessagesAnzahl(messages) {
 
 //#region Dimension1
 function InitFieldDimension1() {
-	_fundViewModel.register("dimension1", new GuiClient(setDimension1, showMessagesDimension1));
+	_viewModelFormFund.register("dimension1", new GuiClient(setDimension1, showMessagesDimension1));
 	$("#textboxDimension1").change(function () {
-		_fundViewModel.setDimension1($("#textboxDimension1").val())
+		_viewModelFormFund.setDimension1($("#textboxDimension1").val())
 	});
 }
 
@@ -303,9 +303,9 @@ function showMessagesDimension1(messages) {
 
 //#region Dimension2
 function InitFieldDimension2() {
-	_fundViewModel.register("dimension2", new GuiClient(setDimension2, showMessagesDimension2));
+	_viewModelFormFund.register("dimension2", new GuiClient(setDimension2, showMessagesDimension2));
 	$("#textboxDimension2").change(function () {
-		_fundViewModel.setDimension2($("#textboxDimension2").val())
+		_viewModelFormFund.setDimension2($("#textboxDimension2").val())
 	});
 }
 
@@ -320,9 +320,9 @@ function showMessagesDimension2(messages) {
 
 //#region Dimension3
 function InitFiledDimension3() {
-	_fundViewModel.register("dimension3", new GuiClient(setDimension3, showMessagesDimension3));
+	_viewModelFormFund.register("dimension3", new GuiClient(setDimension3, showMessagesDimension3));
 	$("#textboxDimension3").change(function () {
-		_fundViewModel.setDimension3($("#textboxDimension3").val())
+		_viewModelFormFund.setDimension3($("#textboxDimension3").val())
 	});
 }
 
@@ -337,9 +337,9 @@ function showMessagesDimension3(messages) {
 
 //#region Masse
 function InitFieldMasse() {
-	_fundViewModel.register("masse", new GuiClient(setMasse, showMessagesMasse));
+	_viewModelFormFund.register("masse", new GuiClient(setMasse, showMessagesMasse));
 	$("#textboxMasse").change(function () {
-		_fundViewModel.setMasse($("#textboxMasse").val())
+		_viewModelFormFund.setMasse($("#textboxMasse").val())
 	});
 }
 
@@ -354,7 +354,7 @@ function showMessagesMasse(messages) {
 
 //#region Ablage
 function InitFieldAblage() {
-	_fundViewModel.register("ablage", new GuiClient(setAblage, showMessagesAblage));
+	_viewModelFormFund.register("ablage", new GuiClient(setAblage, showMessagesAblage));
 }
 
 function InitButtonSelectAblage() {
@@ -381,8 +381,8 @@ function ShowFormSelectAblage() {
 		resizable: false,
 		buttons: {
 			"Speichern": function () {
-				_fundViewModel.setAblage(GetSelectedAblage());
-				setAblage(_fundViewModel.getAblage());
+				_viewModelFormFund.setAblage(GetSelectedAblage());
+				setAblage(_viewModelFormFund.getAblage());
 				$(this).dialog("close");
 			},
 			"Abbrechen": function () {
@@ -403,7 +403,7 @@ function showMessagesAblage(messages) {
 
 //#region Kontext
 function InitFieldKontext() {
-	_fundViewModel.register("kontext", new GuiClient(setKontext, showMessagesKontext));
+	_viewModelFormFund.register("kontext", new GuiClient(setKontext, showMessagesKontext));
 }
 
 function InitButtonSelectKontext() {
@@ -430,8 +430,8 @@ function ShowFormSelectKontext() {
 		resizable: false,
 		buttons: {
 			"Speichern": function () {
-				_fundViewModel.setKontext(GetSelectedKontext());
-				setKontext(_fundViewModel.getKontext());
+				_viewModelFormFund.setKontext(GetSelectedKontext());
+				setKontext(_viewModelFormFund.getKontext());
 				$(this).dialog("close");
 			},
 			"Abbrechen": function () {

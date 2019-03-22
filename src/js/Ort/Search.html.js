@@ -36,7 +36,7 @@ function LoadTree()
 					for (var i = 0; i < nodes.length; i++)
 					{
 						nodes[i].id = nodes[i].Id;
-						nodes[i].text = nodes[i].Typ.Bezeichnung + ": " + nodes[i].Bezeichnung;
+						nodes[i].text = nodes[i].Type.Bezeichnung + ": " + nodes[i].Bezeichnung;
 						nodes[i].children = true;
 						nodes[i].icon = false;
 					}					

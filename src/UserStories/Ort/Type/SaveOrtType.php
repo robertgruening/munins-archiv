@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__."/../../../UserStories/UserStory.php");
-require_once(__DIR__."/../../../Factory/OrtTypFactory.php");
+require_once(__DIR__."/../../../Factory/OrtTypeFactory.php");
 
 class SaveOrtType extends UserStory
 {
@@ -24,17 +24,17 @@ class SaveOrtType extends UserStory
 
     protected function areParametersValid()
     {
-        $ortTyp = $this->getOrtType();
-        $ortTypFactory = new OrtTypFactory();
-        $ortTypen = $ortTypFactory->loadAll();
+        $ortType = $this->getOrtType();
+        $ortTypeFactory = new OrtTypeFactory();
+        $ortTypes = $ortTypeFactory->loadAll();
 
-        for ($i = 0; $i < count($ortTypen); $i++)
+        for ($i = 0; $i < count($ortTypes); $i++)
         {
-            if ($ortTypen[$i]->getBezeichnung() == $ortTyp->getBezeichnung() &&
-                ($ortTyp->getId() == -1 ||
-                 $ortTyp->getId() != $ortTypen[$i]->getId()))
+            if ($ortTypes[$i]->getBezeichnung() == $ortType->getBezeichnung() &&
+                ($ortType->getId() == -1 ||
+                 $ortType->getId() != $ortTypes[$i]->getId()))
             {
-                $this->addMessage("Es existiert bereits ein Ortstyp mit der Bezeichnung \"".$ortTyp->getBezeichnung()."\"!");
+                $this->addMessage("Es existiert bereits ein Ortstyp mit der Bezeichnung \"".$ortType->getBezeichnung()."\"!");
                 return false;
             }
         }
@@ -44,7 +44,7 @@ class SaveOrtType extends UserStory
 
     protected function execute()
     {
-        $ortTypeFactory = new OrtTypFactory();
+        $ortTypeFactory = new OrtTypeFactory();
         $this->setOrtType($ortTypeFactory->save($this->getOrtType()));
 
         return true;

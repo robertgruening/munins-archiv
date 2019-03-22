@@ -1,13 +1,13 @@
 <?php
 include_once(__DIR__."/INode.php");
 
-class FundAttributTyp implements iNode
+class OrtType implements iNode
 {
     #region variables
     public $Id;
     public $Bezeichnung;
     public $OrderNumber;
-    public $CountOfFundAttributen;
+    public $CountOfOrten;
     #endregion
     
     #region properties
@@ -41,14 +41,14 @@ class FundAttributTyp implements iNode
         $this->OrderNumber = $orderNumber;
     }
     
-    public function getCountOfFundAttributen()
+    public function getCountOfOrten()
     {
-        return $this->CountOfFundAttributen;
+        return $this->CountOfOrten;
     }
     
-    public function setCountOfFundAttributen($countOfFundAttributen)
+    public function setCountOfOrten($countOfOrten)
     {
-        $this->CountOfFundAttributen = $countOfFundAttributen;
+        $this->CountOfOrten = $countOfOrten;
     }
     #endregion
 
@@ -58,7 +58,7 @@ class FundAttributTyp implements iNode
         $this->Id = -1;
         $this->Bezeichnung = null;
         $this->OrderNumber = null;
-        $this->CountOfFundAttributen = 0;
+        $this->CountOfOrten = 0;
     }
     #endegion
 }

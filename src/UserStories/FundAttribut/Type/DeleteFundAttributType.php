@@ -1,7 +1,7 @@
 <?php
-require_once(__DIR__."/../../../Model/FundAttributTyp.php");
+require_once(__DIR__."/../../../Model/FundAttributType.php");
 require_once(__DIR__."/../../../UserStories/UserStory.php");
-require_once(__DIR__."/../../../Factory/FundAttributTypFactory.php");
+require_once(__DIR__."/../../../Factory/FundAttributTypeFactory.php");
 
 class DeleteFundAttributType extends UserStory
 {
@@ -21,7 +21,7 @@ class DeleteFundAttributType extends UserStory
 
     /**
      * Sets the FundAttribut type, which is to delete.
-     * @param FundAttributTyp $fundAttributType FundAttribut type, which is to delete.
+     * @param FundAttributType $fundAttributType FundAttribut type, which is to delete.
      */
     public function setFundAttributType($fundAttributType)
     {
@@ -55,8 +55,8 @@ class DeleteFundAttributType extends UserStory
 
     protected function execute()
     {
-        $fundAttributTypFactory = new FundAttributTypFactory();
+        $fundAttributTypeFactory = new FundAttributTypeFactory();
         
-        return $fundAttributTypFactory->delete($this->getFundAttributType());
+        return $fundAttributTypeFactory->delete($this->getFundAttributType());
     }
 }

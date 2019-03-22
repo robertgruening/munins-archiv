@@ -1,6 +1,6 @@
 <?php
 include_once(__DIR__."/Factory.php");
-include_once(__DIR__."/FundAttributTypFactory.php");
+include_once(__DIR__."/FundAttributTypeFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/FundFactory.php");
@@ -10,7 +10,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
 {
     #region variables
     private $_treeFactory = null;
-    private $_fundAttributTypFactory = null;
+    private $_fundAttributTypeFactory = null;
     #endregion
 
     #region properties
@@ -19,9 +19,9 @@ class FundAttributFactory extends Factory implements iTreeFactory
         return $this->_treeFactory;
     }
 
-    protected function getFundAttributTypFactory()
+    protected function getFundAttributTypeFactory()
     {
-        return $this->_fundAttributTypFactory;
+        return $this->_fundAttributTypeFactory;
     }
     #endregion
 
@@ -29,7 +29,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
     function __construct()
     {
         $this->_treeFactory = new TreeFactory($this);
-        $this->_fundAttributTypFactory = new FundAttributTypFactory();
+        $this->_fundAttributTypeFactory = new FundAttributTypeFactory();
     }
     #endregion
 
@@ -74,7 +74,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
         $fundAttribut->setId(intval($dataSet["Id"]));
         $fundAttribut->setBezeichnung($dataSet["Bezeichnung"]);
         $fundAttribut->setPath($this->getPath($fundAttribut));
-        $fundAttribut->setType($this->getFundAttributTypFactory()->loadById(intval($dataSet["Typ_Id"])));
+        $fundAttribut->setType($this->getFundAttributTypeFactory()->loadById(intval($dataSet["Typ_Id"])));
         $fundAttribut->setCountOfFunde(intval($dataSet["CountOfFunde"]));
         
         return $fundAttribut;
@@ -176,7 +176,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
 
         if (isset($object["Type"]))
         {
-            $fundAttribut->setType($this->getFundAttributTypFactory()->convertToInstance($object["Type"]));
+            $fundAttribut->setType($this->getFundAttributTypeFactory()->convertToInstance($object["Type"]));
         }
         else
         {

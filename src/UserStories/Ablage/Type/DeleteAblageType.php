@@ -1,7 +1,7 @@
 <?php
-require_once(__DIR__."/../../../Model/AblageTyp.php");
+require_once(__DIR__."/../../../Model/AblageType.php");
 require_once(__DIR__."/../../../UserStories/UserStory.php");
-require_once(__DIR__."/../../../Factory/AblageTypFactory.php");
+require_once(__DIR__."/../../../Factory/AblageTypeFactory.php");
 
 class DeleteAblageType extends UserStory
 {
@@ -21,7 +21,7 @@ class DeleteAblageType extends UserStory
 
     /**
      * Sets the Ablage type, which is to delete.
-     * @param AblageTyp $ablageType Ablage type, which is to delete.
+     * @param AblageType $ablageType Ablage type, which is to delete.
      */
     public function setAblageType($ablageType)
     {
@@ -58,8 +58,8 @@ class DeleteAblageType extends UserStory
 
     protected function execute()
     {
-        $ablageTypFactory = new AblageTypFactory();
+        $ablageTypeFactory = new AblageTypeFactory();
         
-        return $ablageTypFactory->delete($this->getAblageType());
+        return $ablageTypeFactory->delete($this->getAblageType());
     }
 }

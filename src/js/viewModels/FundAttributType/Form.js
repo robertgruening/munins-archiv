@@ -1,7 +1,7 @@
 var _webServiceClientFundAttributType = new WebServiceClientFundAttributType();
 _webServiceClientFundAttributType.init();
 
-function LoadAllFundAttributTypen()
+function LoadAllFundAttributTypes()
 {
     _webServiceClientFundAttributType.LoadAll();
 }

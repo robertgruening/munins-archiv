@@ -1,7 +1,7 @@
 var _webServiceClientOrtType = new WebServiceClientOrtType();
 _webServiceClientOrtType.init();
 
-function LoadAllOrtTypen()
+function LoadAllOrtTypes()
 {
     _webServiceClientOrtType.LoadAll();
 }

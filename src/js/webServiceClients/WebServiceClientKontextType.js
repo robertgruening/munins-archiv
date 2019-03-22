@@ -1,6 +1,6 @@
 var WebServiceClientKontextType = function () {
 	this.init = function () {
-		this._modelName = "KontextTyp";
+		this._modelName = "KontextType";
 	};
 }
 

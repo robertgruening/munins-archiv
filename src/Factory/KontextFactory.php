@@ -1,6 +1,6 @@
 <?php
 include_once(__DIR__."/Factory.php");
-include_once(__DIR__."/KontextTypFactory.php");
+include_once(__DIR__."/KontextTypeFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/FundFactory.php");
@@ -16,7 +16,7 @@ class KontextFactory extends Factory implements iTreeFactory
 {
     #region variables
     private $_treeFactory = null;
-    private $_kontextTypFactory = null;
+    private $_kontextTypeFactory = null;
     private $_fundFactory = null;
     private $_ortFactory = null;
     private $_ablageFactory = null;
@@ -29,9 +29,9 @@ class KontextFactory extends Factory implements iTreeFactory
         return $this->_treeFactory;
     }
 
-    protected function getKontextTypFactory()
+    protected function getKontextTypeFactory()
     {
-        return $this->_kontextTypFactory;
+        return $this->_kontextTypeFactory;
     }
     
     protected function getFundFactory()
@@ -79,7 +79,7 @@ class KontextFactory extends Factory implements iTreeFactory
     function __construct()
     {
         $this->_treeFactory = new TreeFactory($this);
-        $this->_kontextTypFactory = new KontextTypFactory();
+        $this->_kontextTypeFactory = new KontextTypeFactory();
     }
     #endregion
 
@@ -95,16 +95,16 @@ class KontextFactory extends Factory implements iTreeFactory
     #region load
     protected function getSQLStatementToLoadById($id)
     {    
-        $kontextTyp = $this->getKontextTypFactory()->loadByNodeId($id);
+        $kontextType = $this->getKontextTypeFactory()->loadByNodeId($id);
 
-        if ($kontextTyp == null)
+        if ($kontextType == null)
         {        
             return "SELECT Id, Bezeichnung, Typ_Id
                 FROM ".$this->getTableName()."
                 WHERE Id = ".$id.";";
         }
         
-        switch ($kontextTyp->getBezeichnung())
+        switch ($kontextType->getBezeichnung())
         {
             case "Fundstelle":
             {
@@ -138,11 +138,11 @@ class KontextFactory extends Factory implements iTreeFactory
             return null;
         }
 
-        $kontextTyp = $this->getKontextTypFactory()->loadById(intval($dataSet["Typ_Id"]));
+        $kontextType = $this->getKontextTypeFactory()->loadById(intval($dataSet["Typ_Id"]));
                 
         $kontext = null;    
         
-        switch ($kontextTyp->getBezeichnung())
+        switch ($kontextType->getBezeichnung())
         {
             case "Fundstelle":
             {
@@ -164,7 +164,7 @@ class KontextFactory extends Factory implements iTreeFactory
         $kontext->setId(intval($dataSet["Id"]));
         $kontext->setBezeichnung($dataSet["Bezeichnung"]);
         $kontext->setPath($this->getPath($kontext));
-        $kontext->setType($kontextTyp);
+        $kontext->setType($kontextType);
         
         if ($kontext instanceof Begehung)        
         {
@@ -280,10 +280,10 @@ class KontextFactory extends Factory implements iTreeFactory
             return null;
         }
 
-        $kontextTyp = $this->getKontextTypFactory()->convertToInstance($object["Type"]);
+        $kontextType = $this->getKontextTypeFactory()->convertToInstance($object["Type"]);
         $kontext = null;        
 
-        switch ($kontextTyp->getBezeichnung())
+        switch ($kontextType->getBezeichnung())
         {
             case "Fundstelle" : 
             {
@@ -321,7 +321,7 @@ class KontextFactory extends Factory implements iTreeFactory
             $logger->debug("Bezeichnung ist nicht gesetzt!");
         }
         
-        $kontext->setType($kontextTyp);
+        $kontext->setType($kontextType);
 
         if (isset($object["Parent"]))
         {

@@ -2,9 +2,9 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
-include_once(__DIR__."/../Model/AblageTyp.php");
+include_once(__DIR__."/../Model/AblageType.php");
 
-class AblageTypFactory extends Factory implements iListFactory
+class AblageTypeFactory extends Factory implements iListFactory
 {
     #region variables
     private $_listFactory = null;
@@ -30,15 +30,16 @@ class AblageTypFactory extends Factory implements iListFactory
      */
     public function getTableName()
     {
+        // ToDo: Rename
         return "AblageTyp";
     }
 
     #region load
     /**
      * Returns the SQL statement to load ID and Bezeichnung
-     * by AblageTyp ID.
+     * by AblageType ID.
      * 
-     * @param $id ID of the AblageTyp to load.
+     * @param $id ID of the AblageType to load.
      */
     protected function getSQLStatementToLoadById($id)
     {
@@ -72,21 +73,21 @@ class AblageTypFactory extends Factory implements iListFactory
         global $logger;
         $logger->debug("Fülle Ablagetyp (".intval($dataset["Id"]).") mit Daten");
 
-        $ablageTyp = new AblageTyp();
-        $ablageTyp->setId(intval($dataset["Id"]));
-        $ablageTyp->setBezeichnung($dataset["Bezeichnung"]);
-        $ablageTyp->setCountOfAblagen(intval($dataset["CountOfAblagen"]));
+        $ablageType = new AblageType();
+        $ablageType->setId(intval($dataset["Id"]));
+        $ablageType->setBezeichnung($dataset["Bezeichnung"]);
+        $ablageType->setCountOfAblagen(intval($dataset["CountOfAblagen"]));
         
-        return $ablageTyp;
+        return $ablageType;
     }
     #endregion
     
     #region save
     /**
      * Returns the SQL statement to insert Bezeichnung
-     * of the given AblageTyp.
+     * of the given AblageType.
      * 
-     * @param iNode $element AblageTyp to insert.
+     * @param iNode $element AblageType to insert.
      */
     protected function getSQLStatementToInsert(iNode $element)
     {
@@ -96,9 +97,9 @@ class AblageTypFactory extends Factory implements iListFactory
     
     /**
      * Returns the SQL statement to update Bezeichnung
-     * of the given AblageTyp.
+     * of the given AblageType.
      * 
-     * @param iNode $element AblageTyp to update.
+     * @param iNode $element AblageType to update.
      */
     protected function getSQLStatementToUpdate(iNode $element)
     {
@@ -120,11 +121,11 @@ class AblageTypFactory extends Factory implements iListFactory
             return null;
         }
 
-        $ablageTyp = new AblageTyp();
+        $ablageType = new AblageType();
 
         if (isset($object["Id"]))
         {
-            $ablageTyp->setId(intval($object["Id"]));
+            $ablageType->setId(intval($object["Id"]));
         }
         else
         {
@@ -133,7 +134,7 @@ class AblageTypFactory extends Factory implements iListFactory
 
         if (isset($object["Bezeichnung"]))
         {
-            $ablageTyp->setBezeichnung($object["Bezeichnung"]);
+            $ablageType->setBezeichnung($object["Bezeichnung"]);
         }
         else
         {
@@ -141,7 +142,7 @@ class AblageTypFactory extends Factory implements iListFactory
         }
 
         
-        return $ablageTyp;
+        return $ablageType;
     }
     #endregion
     #endregion

@@ -9,7 +9,7 @@ final class DeleteAblageTypeTest extends TestCase
 {
     public function testDoNotDeleteAblageTypeWithId1()
     {
-        $ablageType = new AblageTyp();
+        $ablageType = new AblageType();
         $ablageType->setId(1);
         $ablageType->setCountOfAblagen(1);
 

@@ -1,26 +1,38 @@
 <!doctype html>
 <html>
+
 <head>
 	<meta charset="utf-8">
+	<!-- javascript frameworks etc. -->
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/ui/jquery-ui/jquery-ui.js"></script>
 	<script type="text/javascript" src="../js/solid.min.js"></script>
-    <script type="text/javascript" src="../js/controls/vakata-jstree/jstree.min.js"></script>
-    <script type="text/javascript" src="../js/controls/jsgrid/jsgrid.min.js"></script>
+	<!-- controls -->
+	<script type="text/javascript" src="../js/controls/vakata-jstree/jstree.min.js"></script>
+	<script type="text/javascript" src="../js/controls/jsgrid/jsgrid.min.js"></script>
 	<script type="text/javascript" src="../js/controls/control.Navigation.js"></script>
 	<script type="text/javascript" src="../js/controls/control.Breadcrumb.js"></script>
-    <script type="text/javascript" src="../js/controls/control.AblageShortView.js"></script>
+	<script type="text/javascript" src="../js/controls/control.AblageShortView.js"></script>
 	<script type="text/javascript" src="../js/controls/control.MessageBox.js"></script>
-	<script type="text/javascript" src="../js/ui/jquery-ui/jquery-ui.js"></script>
+	<!-- basic page functions -->
 	<script type="text/javascript" src="../js/page.js"></script>
+	<!-- observer pattern data structure -->
+	<script type="text/javascript" src="../js/ui/GuiClient.js"></script>
+	<!-- model -->
 	<script type="text/javascript" src="../js/models/Ablage.js"></script>
+	<!-- web service client -->
 	<script type="text/javascript" src="../js/webServiceClients/WebServiceClient.js"></script>
 	<script type="text/javascript" src="../js/webServiceClients/WebServiceClientAblage.js"></script>
 	<script type="text/javascript" src="../js/webServiceClients/WebServiceClientAblageType.js"></script>
-	<script type="text/javascript" src="../js/ui/GuiClient.js"></script>
-	<script type="text/javascript" src="../js/ui/IconConfig.js"></script>
+	<script type="text/javascript" src="../js/factories/webServiceClientFactory.js"></script>
+	<!-- view model -->
+	<script type="text/javascript" src="../js/factories/viewModelFactory.js"></script>
+	<!-- old view model -->
 	<script type="text/javascript" src="../js/viewModels/Ablage/Explorer.js"></script>
 	<script type="text/javascript" src="../js/viewModels/Ablage/FormEdit.js"></script>
 	<script type="text/javascript" src="../js/viewModels/Ablage/FormMove.js"></script>
+	<!-- old view -->
+	<script type="text/javascript" src="../js/ui/IconConfig.js"></script>
 	<script type="text/javascript" src="../js/views/Ablage/Explorer.js"></script>
 	<script type="text/javascript" src="../js/views/Ablage/FormEdit.js"></script>
 	<script type="text/javascript" src="../js/views/Ablage/FormMove.js"></script>
@@ -28,8 +40,8 @@
 
 	<link rel="stylesheet" type="text/css" href="../js/ui/jquery-ui/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="../js/controls/vakata-jstree/themes/default/style.min.css" />
-    <link rel="stylesheet" type="text/css" href="../js/controls/jsgrid/jsgrid.min.css" />
-    <link rel="stylesheet" type="text/css" href="../js/controls/jsgrid/jsgrid-theme.min.css" />
+	<link rel="stylesheet" type="text/css" href="../js/controls/jsgrid/jsgrid.min.css" />
+	<link rel="stylesheet" type="text/css" href="../js/controls/jsgrid/jsgrid-theme.min.css" />
 	<link rel="stylesheet" type="text/css" href="../css/page.css" />
 	<link rel="stylesheet" type="text/css" href="../css/solid.css" />
 	<link rel="stylesheet" type="text/css" href="../css/fontawesome.min.css" />
@@ -44,11 +56,12 @@
 	<link rel=icon type="image/png" href="../images/system/IconMunin_001.png">
 	<title>Ablage-Explorer</title>
 </head>
-<body>		
+
+<body>
 	<div id=navigation class="notToPrint"></div>
 	<div id=breadcrumb class="notToPrint"></div>
-    <div id=leftSidebar class="notToPrint">
-        <div id=shortView></div>
+	<div id=leftSidebar class="notToPrint">
+		<div id=shortView></div>
 	</div>
 	<div id=content>
 		<div id=explorer>
@@ -59,7 +72,7 @@
 				<li><a id=move title=verschieben class=linkButton><i class="fas fa-arrows-alt"></i></a></li>
 				<li><a id=delete title=löschen class="linkButton riskyAction"><i class="fas fa-trash-alt"></i></a></li>
 			</ul>
-			<div class=clear></div>		
+			<div class=clear></div>
 			<div id=tree></div>
 			<div id=grid></div>
 			<div class=clear></div>
@@ -71,7 +84,7 @@
 					<label>Typ: </label>
 				</div>
 				<div class=fieldValue>
-					<select id=selectTypen class=field></select>
+					<select id=selectTypes class=field></select>
 				</div>
 				<div class=clear></div>
 			</div>
@@ -81,9 +94,9 @@
 					<label>Bezeichnung: </label>
 				</div>
 				<div class=fieldValue>
-					<input id=textboxBezeichnung type=text class=field/>
+					<input id=textboxBezeichnung type=text class=field />
 				</div>
-				<div class=clear></div>	
+				<div class=clear></div>
 			</div>
 			<div id=divPath class=fieldBlock>
 				<div class=fieldDescription>
@@ -118,7 +131,8 @@
 		</div>
 		<div id=messageBox title=Nachrichten class=dialog></div>
 		<div id=dialogDelete title=Löschen class=dialog></div>
-    </div>
+	</div>
 	<div id=clipboard class="notToPrint"></div>
 </body>
+
 </html>

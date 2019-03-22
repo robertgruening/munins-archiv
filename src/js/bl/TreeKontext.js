@@ -33,25 +33,25 @@ TreeKontext.prototype.private_TransformiereElement = function(element){
 	transformiertesElement += ",";
 	transformiertesElement += "\"elementId\":\"" + element.Id + "\"";
 	
-	if (element.Typ == "Fundstelle" ||
-	element.Typ == "Begehungsfläche" ||
-	element.Typ == "Begehung" ||
-	element.Typ == "Grabung" ||
-	element.Typ == "Fläche" ||
-	element.Typ == "Befund")
+	if (element.Type == "Fundstelle" ||
+	element.Type == "Begehungsfläche" ||
+	element.Type == "Begehung" ||
+	element.Type == "Grabung" ||
+	element.Type == "Fläche" ||
+	element.Type == "Befund")
 	{
 		transformiertesElement += ",";
-		transformiertesElement += "\"icon\":\"images/system/Icon" + element.Typ.replace(" ", "_") + ".png\"";
+		transformiertesElement += "\"icon\":\"images/system/Icon" + element.Type.replace(" ", "_") + ".png\"";
 	}
 	
 	transformiertesElement += ",";
-	transformiertesElement += "\"text\":\"" + element.Typ + " : " + element.Bezeichnung + " (" + element.Id + ")\"";
+	transformiertesElement += "\"text\":\"" + element.Type + " : " + element.Bezeichnung + " (" + element.Id + ")\"";
 
 	transformiertesElement += ",";
 	transformiertesElement += "\"state\":{";
-	if (element.Typ == "Begehung" ||
-		element.Typ == "Laufende Nummer" ||
-		element.Typ == "Befund")
+	if (element.Type == "Begehung" ||
+		element.Type == "Laufende Nummer" ||
+		element.Type == "Befund")
 		transformiertesElement += 	"\"opened\":" + true + ",";
 	else
 		transformiertesElement += 	"\"opened\":" + this.Opened + ",";
@@ -157,9 +157,9 @@ TreeKontext.prototype.private_GetLastChildId = function(element){
 	return id;
 }
 
-TreeKontext.prototype.private_Contains = function(element, typ){
+TreeKontext.prototype.private_Contains = function(element, type){
 	
-	if (element.Typ == typ)
+	if (element.Type == type)
 		return true;
 		
 	if (element.Children != undefined &&
@@ -167,7 +167,7 @@ TreeKontext.prototype.private_Contains = function(element, typ){
 	{
 		for (var i = 0; i < element.Children.length; i++)
 		{
-			if (this.private_Contains(element.Children[i], typ))
+			if (this.private_Contains(element.Children[i], type))
 				return true;
 		}
 	}

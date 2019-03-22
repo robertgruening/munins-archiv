@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__."/../../../UserStories/UserStory.php");
-require_once(__DIR__."/../../../Factory/OrtTypFactory.php");
+require_once(__DIR__."/../../../Factory/OrtTypeFactory.php");
 
 class LoadOrtTypes extends UserStory
 {
@@ -42,7 +42,7 @@ class LoadOrtTypes extends UserStory
 
     protected function execute()
     {
-        $ortTypeFactory = new OrtTypFactory();
+        $ortTypeFactory = new OrtTypeFactory();
         $this->setOrtTypes($ortTypeFactory->loadAll());
         
         return true;

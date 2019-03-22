@@ -1,13 +1,16 @@
 $(document).ready(function() {
+    var webServiceClientFactory = new WebServiceClientFactory();
+    _webServiceClientFundAttributType = webServiceClientFactory.getWebServiceClientFundAttributType();
+
     _webServiceClientFundAttributType.Register("loadAll", new GuiClient(ShowFundAttributTypes));
-    _webServiceClientFundAttributType.Register("create", new GuiClient(undefined, LoadAllFundAttributTypen));
-    _webServiceClientFundAttributType.Register("save", new GuiClient(undefined, LoadAllFundAttributTypen));
-    _webServiceClientFundAttributType.Register("delete", new GuiClient(undefined, LoadAllFundAttributTypen));
+    _webServiceClientFundAttributType.Register("create", new GuiClient(undefined, LoadAllFundAttributTypes));
+    _webServiceClientFundAttributType.Register("save", new GuiClient(undefined, LoadAllFundAttributTypes));
+    _webServiceClientFundAttributType.Register("delete", new GuiClient(undefined, LoadAllFundAttributTypes));
 
     InitBreadcrumb();
     InitGrid();
 
-    LoadAllFundAttributTypen();
+    LoadAllFundAttributTypes();
 });
 
 function InitBreadcrumb()

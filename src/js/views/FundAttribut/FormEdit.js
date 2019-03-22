@@ -49,7 +49,7 @@ function FillSelectionFundAttributType(types)
 		}
 	}
 
-	$("#selectTypen").html(options);
+	$("#selectTypes").html(options);
 }
 
 function CreateOptionType(type, select)
@@ -70,15 +70,15 @@ function CreateOptionType(type, select)
 
 function SetFundAttributType(typeBezeichnung)
 {
-	var typeId = $("#selectTypen option").first().val();
+	var typeId = $("#selectTypes option").first().val();
 
 	if (typeBezeichnung != undefined &&
 		typeBezeichnung != null)
 	{
-		typeId = $("#selectTypen option").filter(function () { return $(this).html() == typeBezeichnung; }).val();
+		typeId = $("#selectTypes option").filter(function () { return $(this).html() == typeBezeichnung; }).val();
 	}
 	
-	$("#selectTypen").val(typeId);
+	$("#selectTypes").val(typeId);
 }
 
 function GetFundAttributBezeichnung()
@@ -93,7 +93,7 @@ function SetFundAttributBezeichnung(bezeichnung)
 
 function GetFundAttributTypeId()
 {
-	return $("#selectTypen option:selected").val();
+	return $("#selectTypes option:selected").val();
 }
 
 function GetFundAttributPath()

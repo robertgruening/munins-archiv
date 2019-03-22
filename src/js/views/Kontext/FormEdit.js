@@ -49,7 +49,7 @@ function FillSelectionKontextType(types)
 		}
 	}
 
-	$("#selectTypen").html(options);
+	$("#selectTypes").html(options);
 }
 
 function CreateOptionType(type, select)
@@ -70,15 +70,15 @@ function CreateOptionType(type, select)
 
 function SetKontextType(typeBezeichnung)
 {
-	var typeId = $("#selectTypen option").first().val();
+	var typeId = $("#selectTypes option").first().val();
 
 	if (typeBezeichnung != undefined &&
 		typeBezeichnung != null)
 	{
-		typeId = $("#selectTypen option").filter(function () { return $(this).html() == typeBezeichnung; }).val();
+		typeId = $("#selectTypes option").filter(function () { return $(this).html() == typeBezeichnung; }).val();
 	}
 	
-	$("#selectTypen").val(typeId);
+	$("#selectTypes").val(typeId);
 }
 
 function GetKontextBezeichnung()
@@ -93,7 +93,7 @@ function SetKontextBezeichnung(bezeichnung)
 
 function GetKontextTypeId()
 {
-	return $("#selectTypen option:selected").val();
+	return $("#selectTypes option:selected").val();
 }
 
 function GetKontextPath()

@@ -2,9 +2,9 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
-include_once(__DIR__."/../Model/FundAttributTyp.php");
+include_once(__DIR__."/../Model/FundAttributType.php");
 
-class FundAttributTypFactory extends Factory implements iListFactory
+class FundAttributTypeFactory extends Factory implements iListFactory
 {
     #region variables
     private $_listFactory = null;
@@ -30,6 +30,7 @@ class FundAttributTypFactory extends Factory implements iListFactory
      */
     public function getTableName()
     {
+        // ToDo: Rename
         return "FundAttributTyp";
     }
 
@@ -63,12 +64,12 @@ class FundAttributTypFactory extends Factory implements iListFactory
             return null;
         }
 
-        $fundAttributTyp = new FundAttributTyp();
-        $fundAttributTyp->setId(intval($dataset["Id"]));
-        $fundAttributTyp->setBezeichnung($dataset["Bezeichnung"]);
-        $fundAttributTyp->setCountOfFundAttributen(intval($dataset["CountOfFundAttributen"]));
+        $fundAttributType = new FundAttributType();
+        $fundAttributType->setId(intval($dataset["Id"]));
+        $fundAttributType->setBezeichnung($dataset["Bezeichnung"]);
+        $fundAttributType->setCountOfFundAttributen(intval($dataset["CountOfFundAttributen"]));
         
-        return $fundAttributTyp;
+        return $fundAttributType;
     }
     #endregion
     
@@ -99,11 +100,11 @@ class FundAttributTypFactory extends Factory implements iListFactory
             return null;
         }
 
-        $fundAttributTyp = new FundAttributTyp();
+        $fundAttributType = new FundAttributType();
 
         if (isset($object["Id"]))
         {
-            $fundAttributTyp->setId(intval($object["Id"]));
+            $fundAttributType->setId(intval($object["Id"]));
         }
         else
         {
@@ -112,7 +113,7 @@ class FundAttributTypFactory extends Factory implements iListFactory
 
         if (isset($object["Bezeichnung"]))
         {
-            $fundAttributTyp->setBezeichnung($object["Bezeichnung"]);
+            $fundAttributType->setBezeichnung($object["Bezeichnung"]);
         }
         else
         {
@@ -120,7 +121,7 @@ class FundAttributTypFactory extends Factory implements iListFactory
         }
 
         
-        return $fundAttributTyp;
+        return $fundAttributType;
     }
     #endregion
     #endregion

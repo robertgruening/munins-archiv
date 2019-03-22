@@ -1,6 +1,6 @@
 <?php
 include_once(__DIR__."/Factory.php");
-include_once(__DIR__."/OrtTypFactory.php");
+include_once(__DIR__."/OrtTypeFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/KontextFactory.php");
@@ -11,7 +11,7 @@ class OrtFactory extends Factory implements iTreeFactory
 {
     #region variables
     private $_treeFactory = null;
-    private $_ortsTypFactory = null;
+    private $_ortsTypeFactory = null;
     private $_kontextFactory = null;
     #endregion
 
@@ -21,9 +21,9 @@ class OrtFactory extends Factory implements iTreeFactory
         return $this->_treeFactory;
     }
 
-    protected function getOrtsTypFactory()
+    protected function getOrtsTypeFactory()
     {
-        return $this->_ortsTypFactory;
+        return $this->_ortsTypeFactory;
     }
     
     protected function getKontextFactory()
@@ -41,7 +41,7 @@ class OrtFactory extends Factory implements iTreeFactory
     function __construct()
     {
         $this->_treeFactory = new TreeFactory($this);
-        $this->_ortsTypFactory = new OrtTypFactory();
+        $this->_ortsTypeFactory = new OrtTypeFactory();
     }
     #endregion
 
@@ -76,7 +76,7 @@ class OrtFactory extends Factory implements iTreeFactory
         $ort->setId(intval($dataSet["Id"]));
         $ort->setBezeichnung($dataSet["Bezeichnung"]);
         $ort->setPath($this->getPath($ort));
-        $ort->setType($this->getOrtsTypFactory()->loadById(intval($dataSet["Typ_Id"])));
+        $ort->setType($this->getOrtsTypeFactory()->loadById(intval($dataSet["Typ_Id"])));
         $ort->setCountOfKontexte(intval($dataSet["CountOfKontexte"]));
         
         return $ort;
@@ -133,7 +133,7 @@ class OrtFactory extends Factory implements iTreeFactory
 
         if (isset($object["Type"]))
         {
-            $ort->setType($this->getOrtsTypFactory()->convertToInstance($object["Type"]));
+            $ort->setType($this->getOrtsTypeFactory()->convertToInstance($object["Type"]));
         }
         else
         {

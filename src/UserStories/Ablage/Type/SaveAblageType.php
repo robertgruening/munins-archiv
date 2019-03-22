@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__."/../../../UserStories/UserStory.php");
-require_once(__DIR__."/../../../Factory/AblageTypFactory.php");
+require_once(__DIR__."/../../../Factory/AblageTypeFactory.php");
 
 class SaveAblageType extends UserStory
 {
@@ -25,27 +25,27 @@ class SaveAblageType extends UserStory
     protected function areParametersValid()
     {
         global $logger;
-        $ablageTyp = $this->getAblageType();
+        $ablageType = $this->getAblageType();
 
-        if ($ablageTyp->getBezeichnung() == null ||
-            trim($ablageTyp->getBezeichnung()) == "")
+        if ($ablageType->getBezeichnung() == null ||
+            trim($ablageType->getBezeichnung()) == "")
         {
             $logger->warn("Bezeichnung ist nicht gesetzt!");
             $this->addMessage("Bezeichnung ist nicht gesetzt!");
             return false;
         }
 
-        $ablageTypFactory = new AblageTypFactory();
-        $ablageTypen = $ablageTypFactory->loadAll();
+        $ablageTypeFactory = new AblageTypeFactory();
+        $ablageTypes = $ablageTypeFactory->loadAll();
 
-        for ($i = 0; $i < count($ablageTypen); $i++)
+        for ($i = 0; $i < count($ablageTypes); $i++)
         {
-            if ($ablageTypen[$i]->getBezeichnung() == $ablageTyp->getBezeichnung() &&
-                ($ablageTyp->getId() == -1 ||
-                 $ablageTyp->getId() != $ablageTypen[$i]->getId()))
+            if ($ablageTypes[$i]->getBezeichnung() == $ablageType->getBezeichnung() &&
+                ($ablageType->getId() == -1 ||
+                 $ablageType->getId() != $ablageTypes[$i]->getId()))
             {
-                $logger->warn("Es existiert bereits ein Ablagetyp mit der Bezeichnung \"".$ablageTyp->getBezeichnung()."\"!");
-                $this->addMessage("Es existiert bereits ein Ablagetyp mit der Bezeichnung \"".$ablageTyp->getBezeichnung()."\"!");
+                $logger->warn("Es existiert bereits ein Ablagetyp mit der Bezeichnung \"".$ablageType->getBezeichnung()."\"!");
+                $this->addMessage("Es existiert bereits ein Ablagetyp mit der Bezeichnung \"".$ablageType->getBezeichnung()."\"!");
                 return false;
             }
         }
@@ -55,7 +55,7 @@ class SaveAblageType extends UserStory
 
     protected function execute()
     {
-        $ablageTypeFactory = new AblageTypFactory();
+        $ablageTypeFactory = new AblageTypeFactory();
         $this->setAblageType($ablageTypeFactory->save($this->getAblageType()));
 
         return true;

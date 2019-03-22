@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__."/../../../UserStories/UserStory.php");
-require_once(__DIR__."/../../../Factory/FundAttributTypFactory.php");
+require_once(__DIR__."/../../../Factory/FundAttributTypeFactory.php");
 
 class SaveFundAttributType extends UserStory
 {
@@ -24,17 +24,17 @@ class SaveFundAttributType extends UserStory
 
     protected function areParametersValid()
     {
-        $fundAttributTyp = $this->getFundAttributType();
-        $fundAttributTypFactory = new FundAttributTypFactory();
-        $fundAttributTypen = $fundAttributTypFactory->loadAll();
+        $fundAttributType = $this->getFundAttributType();
+        $fundAttributTypeFactory = new FundAttributTypeFactory();
+        $fundAttributTypes = $fundAttributTypeFactory->loadAll();
 
-        for ($i = 0; $i < count($fundAttributTypen); $i++)
+        for ($i = 0; $i < count($fundAttributTypes); $i++)
         {
-            if ($fundAttributTypen[$i]->getBezeichnung() == $fundAttributTyp->getBezeichnung() &&
-                ($fundAttributTyp->getId() == -1 ||
-                 $fundAttributTyp->getId() != $fundAttributTypen[$i]->getId()))
+            if ($fundAttributTypes[$i]->getBezeichnung() == $fundAttributType->getBezeichnung() &&
+                ($fundAttributType->getId() == -1 ||
+                 $fundAttributType->getId() != $fundAttributTypes[$i]->getId()))
             {
-                $this->addMessage("Es existiert bereits ein Fundattributtyp mit der Bezeichnung \"".$fundAttributTyp->getBezeichnung()."\"!");
+                $this->addMessage("Es existiert bereits ein Fundattributtyp mit der Bezeichnung \"".$fundAttributType->getBezeichnung()."\"!");
                 return false;
             }
         }
@@ -44,7 +44,7 @@ class SaveFundAttributType extends UserStory
 
     protected function execute()
     {
-        $fundAttributTypeFactory = new FundAttributTypFactory();
+        $fundAttributTypeFactory = new FundAttributTypeFactory();
         $this->setFundAttributType($fundAttributTypeFactory->save($this->getFundAttributType()));
 
         return true;

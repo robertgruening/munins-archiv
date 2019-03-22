@@ -2,9 +2,9 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
-include_once(__DIR__."/../Model/KontextTyp.php");
+include_once(__DIR__."/../Model/KontextType.php");
 
-class KontextTypFactory extends Factory implements iListFactory
+class KontextTypeFactory extends Factory implements iListFactory
 {
     #region variables
     private $_listFactory = null;
@@ -30,6 +30,7 @@ class KontextTypFactory extends Factory implements iListFactory
      */
     public function getTableName()
     {
+        // ToDo: Rename
         return "KontextTyp";
     }
 
@@ -81,11 +82,11 @@ class KontextTypFactory extends Factory implements iListFactory
             return null;
         }
 
-        $kontextTyp = new KontextTyp();
-        $kontextTyp->setId(intval($dataSet["Id"]));
-        $kontextTyp->setBezeichnung($dataSet["Bezeichnung"]);
+        $kontextType = new KontextType();
+        $kontextType->setId(intval($dataSet["Id"]));
+        $kontextType->setBezeichnung($dataSet["Bezeichnung"]);
         
-        return $kontextTyp;
+        return $kontextType;
     }
     #endregion
     
@@ -112,16 +113,16 @@ class KontextTypFactory extends Factory implements iListFactory
             return null;
         }
 
-        $kontextTyp = new KontextTyp();
+        $kontextType = new KontextType();
 
         if (isset($object["Id"]))
         {
-            $kontextTyp->setId(intval($object["Id"]));
+            $kontextType->setId(intval($object["Id"]));
         }
 
-        $kontextTyp->setBezeichnung($object["Bezeichnung"]);
+        $kontextType->setBezeichnung($object["Bezeichnung"]);
         
-        return $kontextTyp;
+        return $kontextType;
     }
     #endregion
     #endregion

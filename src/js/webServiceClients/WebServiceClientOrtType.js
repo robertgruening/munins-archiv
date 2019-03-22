@@ -1,6 +1,6 @@
 var WebServiceClientOrtType = function () {
 	this.init = function () {
-		this._modelName = "OrtTyp";
+		this._modelName = "OrtType";
 	};
 }
 

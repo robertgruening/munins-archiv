@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__."/../../../UserStories/UserStory.php");
-require_once(__DIR__."/../../../Factory/FundAttributTypFactory.php");
+require_once(__DIR__."/../../../Factory/FundAttributTypeFactory.php");
 
 class LoadFundAttributTypes extends UserStory
 {
@@ -42,7 +42,7 @@ class LoadFundAttributTypes extends UserStory
 
     protected function execute()
     {
-        $fundAttributTypeFactory = new FundAttributTypFactory();
+        $fundAttributTypeFactory = new FundAttributTypeFactory();
         $this->setFundAttributTypes($fundAttributTypeFactory->loadAll());
         
         return true;
