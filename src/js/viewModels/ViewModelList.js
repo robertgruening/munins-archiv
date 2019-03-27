@@ -3,7 +3,8 @@ var ViewModelList = function (webServiceClient) {
 	this._models = new Array();
 	this._webServiceClient = webServiceClient;
 	this._listeners = {
-		loadAll: new Array()
+		loadAll: new Array(),
+		delete: new Array()
 	};
 	//#endregion
 
@@ -12,11 +13,16 @@ var ViewModelList = function (webServiceClient) {
 	this.loadAll = function () {
 		this._webServiceClient.LoadAll("loadAll");
 	};
+
+	this.delete = function (elementToBeDeleted) {
+		this._webServiceClient.Delete(elementToBeDeleted, "delete");
+	};
 	//#endregion
 
 	//#region observer methods
 	this._registerToWebServiceClient = function () {
 		this._webServiceClient.Register("loadAll", this);
+		this._webServiceClient.Register("delete", this);
 	};
 
 	this.Update = function (data, sender) {
@@ -24,6 +30,11 @@ var ViewModelList = function (webServiceClient) {
 			case "loadAll": {
 				this._models = data;
 				this._update("loadAll", data);
+				break;
+			}
+			case "delete": {
+				this._update("delete", data);
+				this.loadAll();
 				break;
 			}
 		}
