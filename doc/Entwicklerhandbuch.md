@@ -6,9 +6,10 @@
     1. [Bestandteile](#11-bestandteile)
     1. [Einrichtung](#12-einrichtung)
 1. [Verzeichnisstruktur](#2-verzeichnisstruktur)
-1. [Verwendete Pakete](#3-verwendetepakete)
+1. [Verwendete Pakete](#3-verwendete-pakete)
 1. [Architektur](#4-architektur)
 1. [Logfunktion](#5-logfunktion)
+1. [Releasemanagement](#6-releasemanagement)
 
 ## 1. Entwicklungsumgebung
 
@@ -94,3 +95,9 @@ Ziel der sprachneutralen Web-Service-Architektur ist es, einen Austausch der ser
 ## 5. Logfunktion
 
 Eine wesentliche Neuerung auf der Serverseite ist das Protokollieren des Programmablaufes und der verarbeiteten Daten mittels log4php. Dies unterstützt sowohl den Entwicklungsprozess, als auch die Fehlersuche im Produktivsystem.
+
+## 6. Releasemanagement
+
+Jedes Jahr soll es eine Hauptversion geben. Dazwischen soll mindestens eine Zwischenversion erscheinen. Der Zweck der Zwischenversion ist, die "Must Have"-Anforderungen umzusetzen und Rückmeldungen der Anwender für die Hauptversion zu sammeln. Die nachfolgenden Zwischenversionen oder die Hauptversion setzen das Benutzer-Feedback um und ergänzen die Anwendung um Funktionen der Kategorie "Should Have" und "Nice To Have".
+
+Im Bereich Branching ist das Ziel "Continuous Integration" zu erreichen. Zu diesem Zweck ist der Branch "main" geschützt. Bei einem Merge muss die Funktionsfähigkeit der Anwendung beachtet werden, um jederzeit ein lauffähiges und idealerweise fehlerfreies Release zu erzeugen.
