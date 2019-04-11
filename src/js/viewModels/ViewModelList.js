@@ -4,6 +4,8 @@ var ViewModelList = function (webServiceClient) {
 	this._webServiceClient = webServiceClient;
 	this._listeners = {
 		loadAll: new Array(),
+		create: new Array(),
+		save: new Array(),
 		delete: new Array()
 	};
 	//#endregion
@@ -14,6 +16,14 @@ var ViewModelList = function (webServiceClient) {
 		this._webServiceClient.LoadAll("loadAll");
 	};
 
+	this.create = function (elementToBeCreated) {
+		this._webServiceClient.Create(elementToBeCreated, "create");
+	};
+
+	this.save = function (elementToBeSaved) {
+		this._webServiceClient.Save(elementToBeSaved, "save");
+	};
+
 	this.delete = function (elementToBeDeleted) {
 		this._webServiceClient.Delete(elementToBeDeleted, "delete");
 	};
@@ -22,6 +32,8 @@ var ViewModelList = function (webServiceClient) {
 	//#region observer methods
 	this._registerToWebServiceClient = function () {
 		this._webServiceClient.Register("loadAll", this);
+		this._webServiceClient.Register("create", this);
+		this._webServiceClient.Register("save", this);
 		this._webServiceClient.Register("delete", this);
 	};
 
@@ -30,6 +42,16 @@ var ViewModelList = function (webServiceClient) {
 			case "loadAll": {
 				this._models = data;
 				this._update("loadAll", data);
+				break;
+			}
+			case "create": {
+				this._update("create", data);
+				this.loadAll();
+				break;
+			}
+			case "save": {
+				this._update("save", data);
+				this.loadAll();
 				break;
 			}
 			case "delete": {

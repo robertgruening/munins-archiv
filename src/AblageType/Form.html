@@ -20,15 +20,18 @@
 	<script type="text/javascript" src="../js/webServiceClients/WebServiceClient.js"></script>
 	<script type="text/javascript" src="../js/webServiceClients/WebServiceClientAblageType.js"></script>
 	<script type="text/javascript" src="../js/factories/webServiceClientFactory.js"></script>
-	<!-- old view model -->
-	<script type="text/javascript" src="../js/viewModels/AblageType/Form.js"></script>
-	<!-- old view -->
+	<!-- view model -->
+	<script type="text/javascript" src="../js/viewModels/ViewModelList.js"></script>
+	<script type="text/javascript" src="../js/viewModels/ViewModelListAblageType.js"></script>
+	<script type="text/javascript" src="../js/factories/viewModelFactory.js"></script>
+	<!-- view -->
 	<script type="text/javascript" src="../js/views/AblageType/Form.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="../js/ui/jquery-ui/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="../js/controls/jsgrid/jsgrid.min.css" />
 	<link rel="stylesheet" type="text/css" href="../js/controls/jsgrid/jsgrid-theme.min.css" />
 	<link rel="stylesheet" type="text/css" href="../css/page.css" />
+	<link rel="stylesheet" type="text/css" href="../css/actionBanner.css" />
 	<link rel="stylesheet" type="text/css" href="../css/form.css" />
 	<link rel="stylesheet" type="text/css" href="../css/navigation.css" />
 	<link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
@@ -47,7 +50,8 @@
 				<h2>Formular</h2>
 				<div id=gridContainer></div>
 			</div>
-			<div id="messageBox" title="Nachrichten"></div>
+			<div id=messageBox title=Nachrichten></div>
+			<div id=actionBanner class=actionBanner></div>
 		</div>
 	</div>
 </body>
