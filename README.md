@@ -2,21 +2,14 @@
 
 Die deutschsprachige Anwendung, Munins Archiv, richtet sich in erster Linie an ehrenamtliche Arbeitsgruppen im Bereich der Archäologie. Ziel ist es, eine digitale und zentrale Datenverwaltung zu etablieren. Die Einsatzgebiete liegen gegenwärtig in der Erfassung von aus Begehungen geborgenen Funden. Hierbei werden nicht nur Eigenschaften der Funde und Bergungsumstände erfasst, sondern auch, wo die Funde geladert werden. Geplant sind Such- und Filterfunktionen, Fundanzeige auf Karten, Ausleihscheine, Datenaustauschschnittstellen mit den Landesämtern für Bodendenkmalpflege und einiges mehr.
 
-## Verzeichnisstruktur
-  
-* **/db** - Die Skripte zum Erstellen und Befüllen der Datenbank befinden sich im Verzeichnis "db" (database -> Datenbank).  
-* **/doc** - Die Dokumentation zum Projekt, inklusive der Handbücher, befindet sich im Verzeichnis "doc" (documents -> Dokumente).
-* **/pkg** - Programmbibliotheken und -erweiterungen von Drittanbietern sind in "pkg" (packages -> Pakete) gespeichert.
-* **/prototypes** - Prozess-, Architektur- und Designstudien befinden sich in "prototypes" (prototypes -> Prototypen).
-* **/src** - Der Quellcode befindet sich unter "src" (sources -> Quellcode). Als Sprachen kommen hier HTML, JavaScript und PHP zum Einsatz.
-* **/tst** - Die automatisierten Tests für die Schichten der Serverseite befinden sich im Verzeichnis "tst" (test -> Test).
-* **/upgr** - Die Skripte zum Aktualisieren der Anwendung auf die neueste Version befinden sich unter "upgr" (upgrade -> Auktualisierung).
+# Entwicklerhandbuch
 
-## Verwendete Pakete
+Das Entwicklerhandbuch richtet sich an alle Unterstützer der Anwendung, z. B. Softwareentwickler, Datenbankentwickler, UX-Designer, Systemadministratoren etc. Das Handbuch enthält Informationen zur Entwicklungsumgebung, Projektablagestruktur, Architektur sowie zu verwendeten Komponenten und Entwurfsmustern.
 
-* [Apache log4php](https://logging.apache.org/log4php/download.html) v2.3.0 von der **Apache Software Foundation** unter der *Apache-Lizenz 2.0*
-* [Font Awesome Icons](https://fontawesome.com/) v5.3.1 von **Fonticons, Inc.** unter der *CC BY 4.0 Lizenz*
-* [jQuery min](https://jquery.com/) v3.3.1 von der **jQuery Foundation** unter der *MIT-Lizenz*
-* [jQuery UI](https://jquery.com/) v1.12.1 von der **jQuery Foundation** unter der *MIT-Lizenz*
-* [jsGrid](http://js-grid.com/) v1.5.3 von **Artem Tabalin** unter der *MIT-Lizenz*
-* [jsTree](https://www.jstree.com/) v3.3.5 unter der *MIT-Lizenz*
+*/doc/Entwicklerhandbuch.md*
+
+# Benutzerhandbuch
+
+Das Benutzerhandbuch richtet sich an die Nutzer der Anwendung, z. B. Mitglieder ehrenamtlicher, archäologischer Arbeitsgruppen. Das Handbuch enthält die Installationsanleitung und beschreibt das Konzept der Anwendung.
+
+*/doc/Benutzerhandbuch.md*
