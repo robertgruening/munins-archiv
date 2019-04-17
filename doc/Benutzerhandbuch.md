@@ -58,7 +58,7 @@ Eine Annahme ist, dass in klassischen Programmen die Daten von Funden aus einem 
 ![Fundbeispiel: Graphittonwandscherbe mit Kammstrichverzierung](Fund.jpg)  
 *Abbildung 1 - Graphittonwandscherbe mit Kammstrichverzierung*
 
-Der Fund besteht in Munins Archiv aus einer Kombination von Merkmalsausprägungen, den sogenannten **Fundattributen**. Für weitere Details und Beispiele siehe [Kapitel 3.2.](#22-fundattribut).
+Der Fund besteht in Munins Archiv aus einer Kombination von Merkmalsausprägungen, den sogenannten **Fundattributen**. Für weitere Details und Beispiele siehe [Kapitel 2.2.](#22-fundattribut).
 
 Um einen Fund zu identifizieren, wird er beschriftet, siehe Abbildung 2. Für die **Beschriftung** ist in Munins Archiv ein Feld vorgesehen, in das ein beliebiger Text eingegeben werden kann. Damit ist die Anwendung sehr kompatibel mit unterschiedlichen Identifikationssystemen.
 
@@ -67,9 +67,9 @@ Um einen Fund zu identifizieren, wird er beschriftet, siehe Abbildung 2. Für di
 
 In der Praxis sind nicht nur besondere Einzelfunde zu erfassen, sondern auch Massenfunde, die zu Dutzenden oder Tausenden auftreten. Um den Aufwand bei der Verwaltung und der technischen Datenhaltung gering zu halten, gibt es für jeden Funddatensatz das Merkmal **Anzahl** mit dem Standardwert „1“. Ist das Ermitteln der exakten Anzahl zu aufwändig, kann eine Mindestangabe erfolgen, z. B. „>50“ (mindestens 50 Exemplare). Wichtig ist hierbei, dass tatsächlich bis zu der angegebenen Anzahl gezählt wird. Schließlich kann es im Fall einer exakten Zählung, bspw. bei einer Inventur, zur irrtümlichen Annahme kommen, dass Funde aphandengekommen sind.
 
-Jeder Fund hat eine Herkunft, sei es durch eine Feldbegehung oder eine Grabung. Die Zuordnung der Funde zu ihrem Herkunftskontext ist von großer Bedeutung für eine wissenschaftliche Auswertung. Eine detaillierte Auseinandersetzung mit dem **Kontext** findet in [Kapitel 3.3.](#23-kontext) statt.
+Jeder Fund hat eine Herkunft, sei es durch eine Feldbegehung oder eine Grabung. Die Zuordnung der Funde zu ihrem Herkunftskontext ist von großer Bedeutung für eine wissenschaftliche Auswertung. Eine detaillierte Auseinandersetzung mit dem **Kontext** findet in [Kapitel 2.3.](#23-kontext) statt.
 
-Neben der Herkunft verwaltet Munins Archiv auch den Verbleib des Fundes mittels sogenannter **Ablagen**, siehe [Kapitel 3.4.](#24-ablage).
+Neben der Herkunft verwaltet Munins Archiv auch den Verbleib des Fundes mittels sogenannter **Ablagen**, siehe [Kapitel 2.4.](#24-ablage).
 
 ### 2.2. Fundattribut
 
@@ -128,7 +128,7 @@ Der Kontexttyp Fundstelle dient der Registrierung von Grabungen und Begehungen. 
 
 #### 2.3.2. Begehungsfläche
 
-Eine Begehungsfläche ist eine definierte, geografische, abgegrenzte Fläche, zum Beispiel der Teil eines Ackers. Diese Fläche kann mit **Ortsangaben** (siehe [Kapitel 3.5.](#25-ort)) verknüpft werden, die der Anwender im System hinterlegt hat.
+Eine Begehungsfläche ist eine definierte, geografische, abgegrenzte Fläche, zum Beispiel der Teil eines Ackers. Diese Fläche kann mit **Ortsangaben** (siehe [Kapitel 2.5.](#25-ort)) verknüpft werden, die der Anwender im System hinterlegt hat.
 
 Wenn Begehungsflächen sehr nahe beieinander liegen, dann werden sie einer Fundstelle zugeordnet. Die Entscheidung über die Fundstellenzuordnung liegt jedoch im Ermessen des Anwenders. Begehungsflächen können nicht nur aneinander grenzen, sondern sie können einander schneiden oder einanderen umschließen. Für diese hohe Flexibilität gibt es mehrere Gründe. Zum einen kann somit eine Fundkonzentration hervorgehoben werden, zum anderen können auf diese Weise Zusatzbemerkungen in Protokollen abgebildet werden.
 
