@@ -85,7 +85,7 @@ Die folgenden Merkmale und Ausprägungen in Abbildung 3 orientieren sich am Beis
 @startuml
 rectangle {
 rectangle "**Material:** Graphitton"
-rectangle "**Erhaltung:** Gefäß"
+rectangle "**Gegenstand:** Gefäß"
 rectangle "**Erhaltung:** Wandfragment"
 rectangle "**Verzierung:** Kammstrich"
 }
