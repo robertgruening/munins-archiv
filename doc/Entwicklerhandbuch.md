@@ -8,6 +8,10 @@
 1. [Verzeichnisstruktur](#2-verzeichnisstruktur)
 1. [Verwendete Pakete](#3-verwendete-pakete)
 1. [Architektur](#4-architektur)
+    1. [Client-Server-Architektur](#41-client-server-architektur)
+    1. [Mehrschichtenarchitektur](#42-mehrschichtenarchitektur)
+    1. [Web-Service-Architektur](#43-web-service-architektur)
+    1. [Entwurfsmuster](#44-entwurfsmuster)
 1. [Logfunktion](#5-logfunktion)
 1. [Releasemanagement](#6-releasemanagement)
 
@@ -91,6 +95,10 @@ Die clientseitige Anwendungsschicht besteht aus dem HTML, CSS und JavaScript (jQ
 PHP bietet die Möglichkeit, HTML-Code zu generieren, zu manipulieren und an den Browser zu schicken. In der Architektur von _Munins Archiv_ ist dies nicht vorgesehen. Die serverseitige Anwendungsschicht ist ein Web-Service, um Daten zu erzeugen, zu suchen, zu bearbeiten, zu löschen und zu speichern. Die Ausgabe der Daten erfolgt im JSON-Format. Um den Aufruf des Webservices unabhängig von der eingesetzten Serversprache zu machen, findet der Einsatz von URL-Rewriting statt.
 
 Ziel der sprachneutralen Web-Service-Architektur ist es, einen Austausch der serverseitigen Applikationssprache zu vereinfachen. So kann PHP bspw. gegen Java oder ASP.NET ausgewechselt werden, ohne dass der Clientcode geändert werden muss.
+
+### 4.4. Entwurfsmuster
+
+
   
 ## 5. Logfunktion
 
