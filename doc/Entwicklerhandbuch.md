@@ -98,7 +98,50 @@ Ziel der sprachneutralen Web-Service-Architektur ist es, einen Austausch der ser
 
 ### 4.4. Entwurfsmuster
 
+#### 4.4.1. Schablonenmethode
 
+Auf der Serverseite wird das [Schablonenmethodenmuster](https://de.wikipedia.org/wiki/Schablonenmethode) (Template Method Pattern) bei den User Stories (Anwendererzählungen) angewandt. Sie bilden die Geschäftslogik des Webservices ab. Alle User Stories laufen gleich ab. Wenn sie über `run()` gestartet wird, werden in `areParametersValid()` die Parameter individuell geprüft. Falls ein keinen Fehler gab, führt die User Story mit `execute()` den eigentlichen Vorgang aus. Im Fehlerfall kann in den konkreten User Story-Klassen mit `addMessage()` zu jedem Verstoß der Akzeptanzbedingungen eine Meldung geschrieben werden. Der Verwender einer User Story kann über `getMessages()` die Fehlermeldungen auslesen, um sie zu loggen oder dem Benutzer anzuzeigen.
+
+Die konkreten User Stories unterscheiden sich anhand ihrer Ein- und Ausgabeparameter, der Akzeptanzbedingungen in der Prüfungsmethode und dem auszuführenden Geschäftsvorfall.
+
+@startuml
+
+abstract class UserStory {
++ getMessages()
++ run()
+# addMessage()
+# addMessages()
+# {abstract} areParametersValid()
+# clearMessages()
+# {abstract} exceute()
+}
+
+class DeleteAblage {
++ setAblage()
+- getAblage()
+}
+class LoadAblage {
++ getAblage()
++ setId()
+- getId()
+- setAblage()
+}
+class LoadRootAblagen {
++ getRootAblagen()
+- setRootAblagen()
+}
+class SaveAblage {
++ getAblage()
++ setAblage()
+}
+
+UserStory <|-- DeleteAblage
+UserStory <|-- LoadAblage
+UserStory <|-- LoadRootAblagen
+UserStory <|-- SaveAblage
+
+@enduml
+*Abbildung 1 - Schablonenmethodenmuster am Beispiel der Ablage-User Stories*
   
 ## 5. Logfunktion
 
