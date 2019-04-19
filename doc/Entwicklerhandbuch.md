@@ -104,9 +104,8 @@ Auf der Serverseite wird das [Schablonenmethodenmuster](https://de.wikipedia.org
 
 Die konkreten User Stories unterscheiden sich anhand ihrer Ein- und Ausgabeparameter, der Akzeptanzbedingungen in der Prüfungsmethode und dem auszuführenden Geschäftsvorfall.
 
-@startuml
+![Schablonenmethodenmuster - Ablage-User Stories](Schablonenmethodenmuster_AblageUserStories)
 
-![Schablonenmethodenmuster - Ablage-User Stories](Schablonenmethodenmuster - Ablage-User Stories.png)
 *Abbildung 1 - Schablonenmethodenmuster am Beispiel der Ablage-User Stories*
   
 ## 5. Logfunktion
