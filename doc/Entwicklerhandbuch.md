@@ -106,41 +106,7 @@ Die konkreten User Stories unterscheiden sich anhand ihrer Ein- und Ausgabeparam
 
 @startuml
 
-abstract class UserStory {
-+ getMessages()
-+ run()
-# addMessage()
-# addMessages()
-# {abstract} areParametersValid()
-# clearMessages()
-# {abstract} exceute()
-}
-
-class DeleteAblage {
-+ setAblage()
-- getAblage()
-}
-class LoadAblage {
-+ getAblage()
-+ setId()
-- getId()
-- setAblage()
-}
-class LoadRootAblagen {
-+ getRootAblagen()
-- setRootAblagen()
-}
-class SaveAblage {
-+ getAblage()
-+ setAblage()
-}
-
-UserStory <|-- DeleteAblage
-UserStory <|-- LoadAblage
-UserStory <|-- LoadRootAblagen
-UserStory <|-- SaveAblage
-
-@enduml
+![Schablonenmethodenmuster - Ablage-User Stories](Schablonenmethodenmuster - Ablage-User Stories.png)
 *Abbildung 1 - Schablonenmethodenmuster am Beispiel der Ablage-User Stories*
   
 ## 5. Logfunktion
