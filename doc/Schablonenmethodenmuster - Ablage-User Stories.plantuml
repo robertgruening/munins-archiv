@@ -1,0 +1,37 @@
+@startuml
+
+abstract class UserStory {
++ getMessages()
++ run()
+# addMessage()
+# addMessages()
+# {abstract} areParametersValid()
+# clearMessages()
+# {abstract} exceute()
+}
+
+class DeleteAblage {
++ setAblage()
+- getAblage()
+}
+class LoadAblage {
++ getAblage()
++ setId()
+- getId()
+- setAblage()
+}
+class LoadRootAblagen {
++ getRootAblagen()
+- setRootAblagen()
+}
+class SaveAblage {
++ getAblage()
++ setAblage()
+}
+
+UserStory <|-- DeleteAblage
+UserStory <|-- LoadAblage
+UserStory <|-- LoadRootAblagen
+UserStory <|-- SaveAblage
+
+@enduml
