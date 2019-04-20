@@ -74,7 +74,7 @@ Darüber hinaus können etablierte Web-Mechanismen übernommen werden, z. B. Cac
 
 ### 4.2. Mehrschichtenarchitektur  
 
-_Munins Archiv_ besteht aus mehreren Schicht, die sich auf verschiedenen Rechnern verteilen lassen. 
+_Munins Archiv_ besteht aus mehreren Schicht, die sich auf verschiedenen Rechnern verteilen lassen.
   
 Die **Datenschicht** befindet sich auf dem Datenbankserver und ist mit dem DBMS MySQL umgesetzt. Für _Munins Archiv_ ist eine Datenbank erforderlich.  
   
@@ -104,9 +104,15 @@ Auf der Serverseite wird das [Schablonenmethodenmuster](https://de.wikipedia.org
 
 Die konkreten User Stories unterscheiden sich anhand ihrer Ein- und Ausgabeparameter, der Akzeptanzbedingungen in der Prüfungsmethode und dem auszuführenden Geschäftsvorfall.
 
-![Schablonenmethodenmuster - Ablage-User Stories](Schablonenmethodenmuster_AblageUserStories.png)
-
+![Schablonenmethodenmuster am Beispiel der Ablage-User Stories](Schablonenmethode.png)  
 *Abbildung 1 - Schablonenmethodenmuster am Beispiel der Ablage-User Stories*
+
+#### 4.4.2. Fabrikmethode
+
+Auf der Clientseite wird das [Fabrikmethodenmuster](https://de.wikipedia.org/wiki/Fabrikmethode) (Factory Method Pattern) bei den WebServiceClients und ViewModels angewandt. Die WebServiceClient-Fabrikmethoden instanziieren eine WebServiceClient-Instanz und führen dessen init()-Methode aus. Im Fall der ViewModel-Fabrikmethoden wird zuerst mit Hilfe der WebServiceClient-Fabrik der passende WebServiceClient instanziiert und dem ViewModel-Konstruktor als Parameter übergeben. Abschließend ruft die Fabrikmethode die init()-Methode des ViewModel-Objekts auf.
+
+![abrikmethodenmuster am Beispiel der WebServiceClients und ViewModels des AblageTypes](Fabrikmethode.png)  
+*Abbildung 2 - Fabrikmethodenmuster am Beispiel der WebServiceClients und ViewModels des AblageTypes*
   
 ## 5. Logfunktion
 

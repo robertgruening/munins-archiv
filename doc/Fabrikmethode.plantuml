@@ -1,0 +1,23 @@
+@startuml Fabrikmethode
+
+class WebServiceClientFabrik {
++ getWebServiceClientAblageType()
+}
+
+class WebServiceClientAblageType {
++ init()
+}
+
+class ViewModelFactory {
++ getViewModelListAblageType()
+}
+
+class ViewModelListAblageType {
++ init()
+}
+
+ViewModelFactory --> WebServiceClientFabrik
+ViewModelFactory --> ViewModelListAblageType
+WebServiceClientFabrik --> WebServiceClientAblageType
+
+@enduml
