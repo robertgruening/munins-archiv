@@ -100,7 +100,7 @@ Ziel der sprachneutralen Web-Service-Architektur ist es, einen Austausch der ser
 
 #### 4.4.1. Schablonenmethode
 
-Auf der Serverseite wird das [Schablonenmethodenmuster](https://de.wikipedia.org/wiki/Schablonenmethode) (Template Method Pattern) bei den User Stories (Anwendererzählungen) angewandt. Sie bilden die Geschäftslogik des Webservices ab. Alle User Stories laufen gleich ab. Wenn sie über `run()` gestartet wird, werden in `areParametersValid()` die Parameter individuell geprüft. Falls ein keinen Fehler gab, führt die User Story mit `execute()` den eigentlichen Vorgang aus. Im Fehlerfall kann in den konkreten User Story-Klassen mit `addMessage()` zu jedem Verstoß der Akzeptanzbedingungen eine Meldung geschrieben werden. Der Verwender einer User Story kann über `getMessages()` die Fehlermeldungen auslesen, um sie zu loggen oder dem Benutzer anzuzeigen.
+Auf der Serverseite wird das [Schablonenmethodenmuster](https://de.wikipedia.org/wiki/Schablonenmethode) (Template Method Pattern) bei den User Stories (Anwendererzählungen) angewandt. Sie bilden die Geschäftslogik des Webservices ab. Alle User Stories laufen gleich ab. Wenn sie über `run()` gestartet wird, werden in `areParametersValid()` die Parameter individuell geprüft. Diese Methode ist in der abstrakten Klasse UserStory abstrakt und muss von den abgeleiteten Klassen implementiert werden. Falls es bei der Überprüfung keinen Fehler gab, führt die User Story mit `execute()` den eigentlichen Vorgang aus. Auch diese abstrakte Methode muss von den abgeleiteten Klassen implementiert werden. Im Fehlerfall kann in den konkreten User Story-Klassen mit `addMessage()` zu jedem Verstoß der Akzeptanzbedingungen eine Meldung geschrieben werden. Der Verwender einer User Story kann über `getMessages()` die Fehlermeldungen auslesen, um sie zu loggen oder dem Benutzer anzuzeigen.
 
 Die konkreten User Stories unterscheiden sich anhand ihrer Ein- und Ausgabeparameter, der Akzeptanzbedingungen in der Prüfungsmethode und dem auszuführenden Geschäftsvorfall.
 
@@ -109,9 +109,9 @@ Die konkreten User Stories unterscheiden sich anhand ihrer Ein- und Ausgabeparam
 
 #### 4.4.2. Fabrikmethode
 
-Auf der Clientseite wird das [Fabrikmethodenmuster](https://de.wikipedia.org/wiki/Fabrikmethode) (Factory Method Pattern) bei den WebServiceClients und ViewModels angewandt. Die WebServiceClient-Fabrikmethoden instanziieren eine WebServiceClient-Instanz und führen dessen init()-Methode aus. Im Fall der ViewModel-Fabrikmethoden wird zuerst mit Hilfe der WebServiceClient-Fabrik der passende WebServiceClient instanziiert und dem ViewModel-Konstruktor als Parameter übergeben. Abschließend ruft die Fabrikmethode die init()-Methode des ViewModel-Objekts auf.
+Auf der Clientseite wird das [Fabrikmethodenmuster](https://de.wikipedia.org/wiki/Fabrikmethode) (Factory Method Pattern) bei den WebServiceClients und ViewModels angewandt. Die WebServiceClient-Fabrikmethoden instanziieren eine WebServiceClient-Instanz und führen dessen `init()`-Methode aus. Im Fall der ViewModel-Fabrikmethoden wird zuerst mit Hilfe der WebServiceClient-Fabrik der passende WebServiceClient instanziiert und dem ViewModel-Konstruktor als Parameter übergeben. Abschließend ruft die Fabrikmethode die `init()`-Methode des ViewModel-Objekts auf.
 
-![abrikmethodenmuster am Beispiel der WebServiceClients und ViewModels des AblageTypes](Fabrikmethode.png)  
+![Fabrikmethodenmuster am Beispiel der WebServiceClients und ViewModels des AblageTypes](Fabrikmethode.png)  
 *Abbildung 2 - Fabrikmethodenmuster am Beispiel der WebServiceClients und ViewModels des AblageTypes*
   
 ## 5. Logfunktion
