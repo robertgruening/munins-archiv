@@ -113,6 +113,10 @@ Auf der Clientseite wird das [Fabrikmethodenmuster](https://de.wikipedia.org/wik
 
 ![Fabrikmethodenmuster am Beispiel der WebServiceClients und ViewModels des AblageTypes](Fabrikmethode.png)  
 *Abbildung 2 - Fabrikmethodenmuster am Beispiel der WebServiceClients und ViewModels des AblageTypes*
+
+#### 4.4.3. Beobachter
+
+Auf der Clientseite wird das [Beobachtermuster](https://de.wikipedia.org/wiki/Beobachter_(Entwurfsmuster)) (Observer Pattern) bei den WebServiceClients und ViewModels angewandt.
   
 ## 5. Logfunktion
 
