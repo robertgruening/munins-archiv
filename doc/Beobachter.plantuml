@@ -1,6 +1,6 @@
 @startuml
 
-class WebServiceClient {
+abstract class WebServiceClient {
 +Register()
 +Update(data, sender)
 +Fail(messages, sender)
@@ -9,13 +9,14 @@ class WebServiceClient {
 +Load(element, sender)
 +LoadAll(sender)
 +Delete(element, sender)
-#{abstract}init()
++{abstract}init()
 }
 class WebServiceClientAblageType {
-#init()
++init()
 }
 
-class ViewModelForm {
+abstract class ViewModelForm {
++ViewModelForm(webServiceClient)
 +Register()
 +Update(data, sender)
 +Fail(messages, sender)
@@ -24,7 +25,8 @@ class ViewModelForm {
 +load(element, sender)
 +delete(element, sender)
 +undoAllChanges()
-#{abstract}init()
++updateAllListeners()
++{abstract}init()
 #{abstract}_createModel()
 #{abstract}_createPropertyListeners()
 #{abstract}_updateAllPropertyListeners()
@@ -33,9 +35,10 @@ class ViewModelForm {
 -_initPropertyListeners()
 }
 class ViewModelFormAblageType {
++ViewModelFormAblageType(webServiceClient)
 +getBezeichnung()
 +setBezeichnung(bezeichnung)
-#init()
++init()
 #_createModel()
 #_createPropertyListeners()
 #_updateAllPropertyListeners()
