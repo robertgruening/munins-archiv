@@ -116,7 +116,12 @@ Auf der Clientseite wird das [Fabrikmethodenmuster](https://de.wikipedia.org/wik
 
 #### 4.4.3. Beobachter
 
-Auf der Clientseite wird das [Beobachtermuster](https://de.wikipedia.org/wiki/Beobachter_(Entwurfsmuster)) (Observer Pattern) bei den WebServiceClients und ViewModels angewandt.
+Auf der Clientseite wird das [Beobachtermuster](https://de.wikipedia.org/wiki/Beobachter_(Entwurfsmuster)) (Observer Pattern) bei den WebServiceClients und ViewModels angewandt. Die WebServiceClients (Subjekt) kommunizieren mit dem WebService und sind von daher für den Client - speziell für die ViewModels (Beobachter) - eine Datenquelle. Die ViewModels (Subjekt) stellen der View (Beobachter) einen Zustandsautomaten zur Verfügung.
+
+Ein oder mehrere *Beobachter* können sich bei einem *Subjekt* für ein oder mehrere Eregnisse registrieren. Der Vorteil des Beobachtermusters ist, dass es keines Beobachters bedarf, damit das Subjekt funktioniert. Die Konsequens ist, dass ein ViewModel ohne Oberfläche und ohne WebService automatisiert getestet werden kann. Des Weiteren kann ein View-Control ein ViewModel verwenden, auch wenn es nur einen Teil der Funktionalität benötigt. Das ViewModel arbeit dabei innerhalb seiner Zustände, um gültige Operationen zu ermöglichen.
+
+![Beobachtermuster am Beispiel der WebServiceClients und ViewModels des AblageTypes](Beobachter.png)  
+*Abbildung 3 - Beobachtermuster am Beispiel der WebServiceClients und ViewModels des AblageTypes*
   
 ## 5. Logfunktion
 
