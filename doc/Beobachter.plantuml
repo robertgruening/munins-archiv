@@ -1,0 +1,50 @@
+@startuml
+
+class WebServiceClient {
++Register()
++Update(data, sender)
++Fail(messages, sender)
++Create(element, sender)
++Save(element, sender)
++Load(element, sender)
++LoadAll(sender)
++Delete(element, sender)
+#{abstract}init()
+}
+class WebServiceClientAblageType {
+#init()
+}
+
+class ViewModelForm {
++Register()
++Update(data, sender)
++Fail(messages, sender)
++create(element, sender)
++save(element, sender)
++load(element, sender)
++delete(element, sender)
++undoAllChanges()
+#{abstract}init()
+#{abstract}_createModel()
+#{abstract}_createPropertyListeners()
+#{abstract}_updateAllPropertyListeners()
+#_registerToWebServiceClient()
+-_initModel()
+-_initPropertyListeners()
+}
+class ViewModelFormAblageType {
++getBezeichnung()
++setBezeichnung(bezeichnung)
+#init()
+#_createModel()
+#_createPropertyListeners()
+#_updateAllPropertyListeners()
+}
+
+WebServiceClient <|-- WebServiceClientAblageType
+ViewModelForm <|-- ViewModelFormAblageType
+
+WebServiceClient <. ViewModelForm
+WebServiceClientAblageType <- ViewModelFormAblageType
+
+@enduml
