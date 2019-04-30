@@ -30,12 +30,10 @@ function Create()
     global $logger;
     $logger->info("Ortstyp-anlegen gestartet");
 
-    $ortType = new OrtType();
+    parse_str(file_get_contents("php://input"), $ortTypeObject);
 
-    if (isset($_POST["Bezeichnung"]))
-    {
-        $ortType->setBezeichnung($_POST["Bezeichnung"]);
-    }
+    $ortTypeFactory = new OrtTypeFactory();
+    $ortType = $ortTypeFactory->convertToInstance($ortTypeObject);
     
     $saveOrtType = new SaveOrtType();
     $saveOrtType->setOrtType($ortType);
@@ -58,19 +56,15 @@ function Update()
     global $logger;
     $logger->info("Ortstyp-anhand-ID-aktualisieren gestartet");
 
-    parse_str(file_get_contents("php://input"),$_PUT);
-
-    $ortType = new OrtType();
+    parse_str(file_get_contents("php://input"), $ortTypeObject);
 
     if (isset($_GET["Id"]))
     {
-        $ortType->setId(intval($_GET["Id"]));    
+        $ortTypeObject["Id"] = $_GET["Id"];
     }
 
-    if (isset($_PUT["Bezeichnung"]))
-    {
-        $ortType->setBezeichnung($_PUT["Bezeichnung"]);
-    }
+    $ortTypeFactory = new OrtTypeFactory();
+    $ortType = $ortTypeFactory->convertToInstance($ortTypeObject);
     
     $saveOrtType = new SaveOrtType();
     $saveOrtType->setOrtType($ortType);
@@ -109,7 +103,7 @@ function Delete()
 
         if ($deleteOrtType->run())
         {
-            echo json_encode("Ortstyp (".$ortType->getId().") ist gelöscht.");
+            echo json_encode($ortType);
         }
         else
         {

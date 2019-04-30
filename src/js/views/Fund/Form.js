@@ -35,14 +35,14 @@ $(document).ready(function () {
 });
 
 function InitStatusChanged() {
-	_viewModelFormFund.register("load", new GuiClient(showActionBannerLoaded, showMessages));
-	_viewModelFormFund.register("create", new GuiClient(showActionBannerCreated, showMessages));
-	_viewModelFormFund.register("save", new GuiClient(showActionBannerSaved, showMessages));
-	_viewModelFormFund.register("delete", new GuiClient(showActionBannerDeleted, showMessages));
+	_viewModelFormFund.register("load", new GuiClient(showMessageLoaded, showErrorMessages));
+	_viewModelFormFund.register("create", new GuiClient(showMessageCreated, showErrorMessages));
+	_viewModelFormFund.register("save", new GuiClient(showMessageSaved, showErrorMessages));
+	_viewModelFormFund.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
 }
 
 function InitDataChanged() {
-	_viewModelFormFund.register("dataChanged", new GuiClient(EnableButtonUndo, showMessages));
+	_viewModelFormFund.register("dataChanged", new GuiClient(EnableButtonUndo, showErrorMessages));
 }
 
 function InitBreadcrumb() {
@@ -137,8 +137,8 @@ function ShowDialogDelete() {
 //#region undo
 function InitButtonUndo() {
 	DisableButtonUndo();
-	_viewModelFormFund.register("dataResetted", new GuiClient(DisableButtonUndo, showMessages));
-	_viewModelFormFund.register("dataResetted", new GuiClient(ResetPropertiesMessages, showMessages));
+	_viewModelFormFund.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
+	_viewModelFormFund.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
 	$("#buttonUndo").click(function () { _viewModelFormFund.undoAllChanges(); });
 }
 
@@ -164,7 +164,7 @@ function GetIcon(type, state) {
 
 //#region Id
 function InitFieldId() {
-	_viewModelFormFund.register("id", new GuiClient(setId, showMessages));
+	_viewModelFormFund.register("id", new GuiClient(setId, showErrorMessages));
 }
 
 function setId(id) {
@@ -450,49 +450,35 @@ function showMessagesKontext(messages) {
 }
 //#endregion
 
-//#region actionBanner
-function showActionBannerLoaded() {
-	$("#actionBanner").empty();
-	$("#actionBanner").click(function () {
-		$("#actionBanner").attr("clicked", "true");
-		$("#actionBanner").stop().hide();
-	});
-	$("#actionBanner").mouseenter(function () {
-		$("#actionBanner").stop();
-		$("#actionBanner").fadeTo(0, 1);
-	});
-	$("#actionBanner").mouseleave(function () {
-		if ($("#actionBanner").attr("clicked") == undefined ||
-			$("#actionBanner").attr("clicked") == "false") {
-			$("#actionBanner").stop();
-			$("#actionBanner").fadeTo(3000, 0, function () {
-				$("#actionBanner").stop().hide();
-			});
-		}
-	});
-	$("#actionBanner").append("<p>Fund geladen</p>");
-	$("#actionBanner").show("fade", {}, 500);
-	$("#actionBanner").hide("fade", {}, 3000);
+
+function showMessageLoaded(element) {
+    $.toast({
+        heading: "Information",
+        text: "Fund (" + element.Id + ") geladen",
+        icon: "info"
+    });
 }
 
-function showActionBannerCreated() {
-	$("#actionBanner").empty();
-	$("#actionBanner").append("<p>Fund erzeugt</p>");
-	$("#actionBanner").show("fade", {}, 500);
-	$("#actionBanner").hide("fade", {}, 3000);
+function showMessageCreated(element) {
+    $.toast({
+        heading: "Information",
+        text: "Fund (" + element.Id + ") erzeugt",
+        icon: "success"
+    });
 }
 
-function showActionBannerSaved() {
-	$("#actionBanner").empty();
-	$("#actionBanner").append("<p>Fund gespeichert</p>");
-	$("#actionBanner").show("fade", {}, 500);
-	$("#actionBanner").hide("fade", {}, 3000);
+function showMessageSaved(element) {
+    $.toast({
+        heading: "Information",
+        text: "Fund (" + element.Id + ") gespeichert",
+        icon: "success"
+    });
 }
 
-function showActionBannerDeleted() {
-	$("#actionBanner").empty();
-	$("#actionBanner").append("<p>Fund gelöscht</p>");
-	$("#actionBanner").show("fade", {}, 500);
-	$("#actionBanner").hide("fade", {}, 3000);
+function showMessageDeleted(element) {
+    $.toast({
+        heading: "Information",
+        text: "Fund (" + element.Id + ") gelöscht",
+        icon: "success"
+    });
 }
-//#endregion

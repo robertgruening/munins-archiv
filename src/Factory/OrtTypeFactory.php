@@ -120,6 +120,15 @@ class OrtTypeFactory extends Factory implements iListFactory
             $logger->debug("Bezeichnung ist nicht gesetzt!");
         }
 
+        if (isset($object["CountOfOrten"]))
+        {
+            $ortType->setCountOfOrten(intval($object["CountOfOrten"]));
+        }
+        else
+        {
+            $logger->debug("Anzahl der Ort zu diesem Typ ist nicht gesetzt!");
+        }
+
         
         return $ortType;
     }

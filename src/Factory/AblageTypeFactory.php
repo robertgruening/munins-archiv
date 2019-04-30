@@ -141,6 +141,15 @@ class AblageTypeFactory extends Factory implements iListFactory
             $logger->debug("Bezeichnung ist nicht gesetzt!");
         }
 
+        if (isset($object["CountOfAblagen"]))
+        {
+            $ablageType->setCountOfAblagen(intval($object["CountOfAblagen"]));
+        }
+        else
+        {
+            $logger->debug("Anzahl der Ablagen zu diesem Typ ist nicht gesetzt!");
+        }
+
         
         return $ablageType;
     }

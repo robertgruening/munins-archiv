@@ -30,12 +30,10 @@ function Create()
     global $logger;
     $logger->info("Fundattributtyp-anlegen gestartet");
 
-    $fundAttributType = new FundAttributType();
+    parse_str(file_get_contents("php://input"), $fundAttributTypeObject);
 
-    if (isset($_POST["Bezeichnung"]))
-    {
-        $fundAttributType->setBezeichnung($_POST["Bezeichnung"]);
-    }
+    $fundAttributTypeFactory = new FundAttributTypeFactory();
+    $fundAttributType = $fundAttributTypeFactory->convertToInstance($fundAttributTypeObject);
     
     $saveFundAttributType = new SaveFundAttributType();
     $saveFundAttributType->setFundAttributType($fundAttributType);
@@ -58,20 +56,16 @@ function Update()
     global $logger;
     $logger->info("Fundattributtyp-anhand-ID-aktualisieren gestartet");
 
-    parse_str(file_get_contents("php://input"),$_PUT);
-
-    $fundAttributType = new FundAttributType();
+    parse_str(file_get_contents("php://input"), $fundAttributTypeObject);
 
     if (isset($_GET["Id"]))
     {
-        $fundAttributType->setId(intval($_GET["Id"]));    
+        $fundAttributTypeObject->setId(intval($_GET["Id"]));    
     }
 
-    if (isset($_PUT["Bezeichnung"]))
-    {
-        $fundAttributType->setBezeichnung($_PUT["Bezeichnung"]);
-    }
-    
+    $fundAttributTypeFactory = new FundAttributTypeFactory();
+    $fundAttributType = $fundAttributTypeFactory->convertToInstance($fundAttributTypeObject);
+
     $saveFundAttributType = new SaveFundAttributType();
     $saveFundAttributType->setFundAttributType($fundAttributType);
     
@@ -109,7 +103,7 @@ function Delete()
 
         if ($deleteFundAttributType->run())
         {
-            echo json_encode("Fundattributtyp (".$fundAttributType->getId().") ist gelöscht.");
+            echo json_encode($fundAttributType);
         }
         else
         {
@@ -162,6 +156,7 @@ function Get()
             http_response_code(500);
             echo json_encode($loadFundAttributTypes->getMessages());
         }
+        
         $logger->info("Fundattributtypen-laden beendet");
     }    
 }

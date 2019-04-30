@@ -1,13 +1,14 @@
-$(document).ready(function() {
-    _webServiceClientOrtType.Register("loadAll", new GuiClient(ShowOrtTypes));
-    _webServiceClientOrtType.Register("create", new GuiClient(undefined, LoadAllOrtTypes));
-    _webServiceClientOrtType.Register("save", new GuiClient(undefined, LoadAllOrtTypes));
-    _webServiceClientOrtType.Register("delete", new GuiClient(undefined, LoadAllOrtTypes));
+var _viewModelListOrtType = null;
 
+$(document).ready(function () {
+	var viewModelFactory = new ViewModelFactory();
+	_viewModelListOrtType = viewModelFactory.getViewModelListOrtType();
+
+    RegisterToViewModel();
     InitBreadcrumb();
     InitGrid();
 
-    LoadAllOrtTypes();
+    _viewModelListOrtType.loadAll();
 });
 
 function InitBreadcrumb()
@@ -17,12 +18,28 @@ function InitBreadcrumb()
 	});
 }
 
-function InitGrid()
-{
-    jsGrid.locale("de");
+function RegisterToViewModel() {
+	_viewModelListOrtType.register("dataChanged", new GuiClient(UpdateGridData, UpdateGridData));
+	_viewModelListOrtType.register("loadAll", new GuiClient(showMessageAllLoaded, showErrorMessages));
+	_viewModelListOrtType.register("create", new GuiClient(showMessageCreated, showErrorMessages));
+	_viewModelListOrtType.register("save", new GuiClient(showMessageSaved, showErrorMessages));
+	_viewModelListOrtType.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
 }
 
-function ShowOrtTypes(ortTypes)
+function InitGrid()
+{
+	jsGrid.locale("de");
+    ShowOrtTypes();
+    UpdateGridData(new Array());
+}
+
+function UpdateGridData(ortTypes) {
+	$("#gridContainer").jsGrid({
+		data: JSON.parse(JSON.stringify(ortTypes))
+	});
+}
+
+function ShowOrtTypes()
 {
     $("#gridContainer").jsGrid({
         width: "100%",
@@ -34,18 +51,19 @@ function ShowOrtTypes(ortTypes)
         autoload: false,
 
         controller: {
-            insertItem: function(item) { 
-                _webServiceClientOrtType.Create(item);
+            insertItem: function(item) {
+                _viewModelListOrtType.create(item);
             },
-            updateItem: function(item) { 
-                _webServiceClientOrtType.Save(item);
+            insertModeButtonTooltip: "Neu",
+            updateItem: function(item) {
+                _viewModelListOrtType.save(item);
             },
-            deleteItem: function(item) { 
-                _webServiceClientOrtType.Delete(item);
-            }
+            editButtonTooltip: "Bearbeiten",
+            deleteItem: function(item) {
+                _viewModelListOrtType.delete(item);
+            },
+            deleteButtonTooltip: "Löschen"
         },
-
-        data: ortTypes,
 
         fields: [
             { 
@@ -64,5 +82,37 @@ function ShowOrtTypes(ortTypes)
                 type: "control" 
             }
         ]
+    });
+}
+
+function showMessageAllLoaded(elements) {
+    $.toast({
+        heading: "Information",
+        text: elements.length + " Ortstypen geladen",
+        icon: "info"
+    });
+}
+
+function showMessageCreated(element) {
+    $.toast({
+        heading: "Information",
+        text: "Ortstyp \"" + element.Bezeichnung + "\" erzeugt",
+        icon: "success"
+    });
+}
+
+function showMessageSaved(element) {
+    $.toast({
+        heading: "Information",
+        text: "Ortstyp \"" + element.Bezeichnung + "\" gespeichert",
+        icon: "success"
+    });
+}
+
+function showMessageDeleted(element) {
+    $.toast({
+        heading: "Information",
+        text: "Ortstyp \"" + element.Bezeichnung + "\" gelöscht",
+        icon: "success"
     });
 }

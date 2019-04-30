@@ -3,49 +3,62 @@
 
 <head>
 	<meta charset="utf-8">
+	<!-- javascript frameworks etc. -->
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/ui/jquery-ui/jquery-ui.js"></script>
 	<script type="text/javascript" src="../js/solid.min.js"></script>
+	<!-- controls -->
 	<script type="text/javascript" src="../js/controls/vakata-jstree/jstree.min.js"></script>
+	<script type="text/javascript" src="../js/controls/jquery.toast.min.js"></script>
 	<script type="text/javascript" src="../js/controls/control.Navigation.js"></script>
 	<script type="text/javascript" src="../js/controls/control.Breadcrumb.js"></script>
 	<script type="text/javascript" src="../js/controls/control.FundShortView.js"></script>
-	<script type="text/javascript" src="../js/controls/control.MessageBox.js"></script>
-	<script type="text/javascript" src="../js/ui/jquery-ui/jquery-ui.js"></script>
+	<script type="text/javascript" src="../js/controls/control.ErrorMessageBox.js"></script>
 	<script type="text/javascript" src="../js/ui/controls/control.List.js"></script>
+	<!-- basic page functions -->
 	<script type="text/javascript" src="../js/page.js"></script>
+	<script type="text/javascript" src="../js/ui/IconConfig.js"></script>
+	<!-- observer pattern data structure -->
+	<script type="text/javascript" src="../js/ui/GuiClient.js"></script>
+	<!-- model -->
 	<script type="text/javascript" src="../js/models/Fund.js"></script>
+	<script type="text/javascript" src="../js/Fund/Factory.js"></script>
+	<!-- web service client -->
 	<script type="text/javascript" src="../js/webServiceClients/WebServiceClient.js"></script>
 	<script type="text/javascript" src="../js/webServiceClients/WebServiceClientFund.js"></script>
 	<script type="text/javascript" src="../js/webServiceClients/WebServiceClientFundAttribut.js"></script>
 	<script type="text/javascript" src="../js/webServiceClients/WebServiceClientKontext.js"></script>
 	<script type="text/javascript" src="../js/webServiceClients/WebServiceClientAblage.js"></script>
-	<script type="text/javascript" src="../js/ui/GuiClient.js"></script>
-	<script type="text/javascript" src="../js/ui/IconConfig.js"></script>
+	<script type="text/javascript" src="../js/factories/webServiceClientFactory.js"></script>
+	<!-- view model -->
 	<script type="text/javascript" src="../js/viewModels/ViewModelForm.js"></script>
 	<script type="text/javascript" src="../js/viewModels/ViewModelFormFund.js"></script>
 	<script type="text/javascript" src="../js/viewModels/Fund/FormSelectFundAttribut.js"></script>
 	<script type="text/javascript" src="../js/viewModels/Fund/FormSelectKontext.js"></script>
 	<script type="text/javascript" src="../js/viewModels/Fund/FormSelectAblage.js"></script>
-	<script type="text/javascript" src="../js/factories/webServiceClientFactory.js"></script>
 	<script type="text/javascript" src="../js/factories/viewModelFactory.js"></script>
+	<!-- view -->
 	<script type="text/javascript" src="../js/views/Fund/Form.js"></script>
 	<script type="text/javascript" src="../js/views/Fund/FormSelectFundAttribut.js"></script>
 	<script type="text/javascript" src="../js/views/Fund/FormSelectKontext.js"></script>
 	<script type="text/javascript" src="../js/views/Fund/FormSelectAblage.js"></script>
-	<script type="text/javascript" src="../js/Fund/Factory.js"></script>
 
+	<!-- javascript frameworks etc. -->
 	<link rel="stylesheet" type="text/css" href="../js/ui/jquery-ui/jquery-ui.css" />
-	<link rel="stylesheet" type="text/css" href="../js/controls/vakata-jstree/themes/default/style.min.css" />
-	<link rel="stylesheet" type="text/css" href="../css/page.css" />
-	<link rel="stylesheet" type="text/css" href="../css/actionBanner.css" />
-	<link rel="stylesheet" type="text/css" href="../css/solid.css" />
 	<link rel="stylesheet" type="text/css" href="../css/fontawesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="../css/solid.css" />
+	<!-- page -->
+	<link rel="stylesheet" type="text/css" href="../css/page.css" />
+	<!-- controls -->
+	<link rel="stylesheet" type="text/css" href="../js/controls/vakata-jstree/themes/default/style.min.css" />
+	<link rel="stylesheet" type="text/css" href="../css/jquery.toast.min.css" />
 	<link rel="stylesheet" type="text/css" href="../css/form.css" />
 	<link rel="stylesheet" type="text/css" href="../css/navigation.css" />
 	<link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
 	<link rel="stylesheet" type="text/css" href="../css/leftSidebar.css" />
 	<link rel="stylesheet" type="text/css" href="../css/shortView.css" />
 	<link rel="stylesheet" type="text/css" href="../css/clipboard.css" />
+	<!-- print -->
 	<link rel="stylesheet" type="text/css" href="../css/print.css" media="print" />
 	<link rel=icon type="image/png" href="../images/system/IconMunin_001.png">
 	<title>Fund</title>
@@ -170,8 +183,6 @@
 		<div id=dialogSelectAblage class=dialog>
 			<div id=treeSelectAblage></div>
 		</div>
-		<div id=messageBox title=Nachrichten class=dialog></div>
-		<div id=actionBanner class=actionBanner></div>
 		<div id=dialogDelete title=Löschen class=dialog></div>
 	</div>
 	<div id=clipboard class="notToPrint"></div>

@@ -6,7 +6,8 @@ var ViewModelList = function (webServiceClient) {
 		loadAll: new Array(),
 		create: new Array(),
 		save: new Array(),
-		delete: new Array()
+		delete: new Array(),
+		dataChanged: new Array()
 	};
 	//#endregion
 
@@ -30,6 +31,10 @@ var ViewModelList = function (webServiceClient) {
 	//#endregion
 
 	//#region observer methods
+	/**
+	 * Registers this instance as listener to the events offered by the WebServiceClient.
+	 * @private
+	 */
 	this._registerToWebServiceClient = function () {
 		this._webServiceClient.Register("loadAll", this);
 		this._webServiceClient.Register("create", this);
@@ -37,41 +42,125 @@ var ViewModelList = function (webServiceClient) {
 		this._webServiceClient.Register("delete", this);
 	};
 
-	this.Update = function (data, sender) {
-		switch (sender) {
+	/**
+	 * Implements the Update() method of the observer interface.
+	 * @public
+	 * @param {Array<Object> | Object} data - Depending on the listener an array of elements or one element is expected. 
+	 * @param {string} listener - Name of the listener. 
+	 */
+	this.Update = function (data, listener) {
+		switch (listener) {
 			case "loadAll": {
-				this._models = data;
-				this._update("loadAll", data);
+				this._loadAllElements(data);
 				break;
 			}
 			case "create": {
-				this._update("create", data);
-				this.loadAll();
+				this._addElement(data);
 				break;
 			}
 			case "save": {
-				this._update("save", data);
-				this.loadAll();
+				this._saveElement(data);
 				break;
 			}
 			case "delete": {
-				this._update("delete", data);
-				this.loadAll();
+				this._deleteElement(data);
 				break;
 			}
 		}
 	};
 
-	this.Fail = function (messages, sender) {
-		switch (sender) {
+	this._loadAllElements = function(elements) {
+		this._models = elements;
+		this._update("dataChanged", this._models);
+		this._update("loadAll", this._models);
+	}
+
+	this._addElement = function(element) {
+
+		// #region workaround for jsGrid
+		var foundAndUpdated = false;
+
+		for (var i = 0; i < this._models.length; i++)
+		{
+			if (this._models[i].Bezeichnung == element.Bezeichnung)
+			{
+				this._models[i] = element;
+				foundAndUpdated = true;
+				break;
+			}
+		}
+		// #endregion
+
+		if (!foundAndUpdated) {
+			this._models.push(element);
+		}
+
+		this._update("dataChanged", this._models);
+		this._update("create", element);
+	};
+
+	this._saveElement = function(element) {
+		
+		for (var i = 0; i < this._models.length; i++)
+		{
+			if (this._models[i].Id == element.Id)
+			{
+				this._models[i] = element;
+				break;
+			}
+		}
+
+		this._update("dataChanged", this._models);
+		this._update("save", element);
+	};
+
+	this._deleteElement = function(element) {
+		
+		for (var i = 0; i < this._models.length; i++)
+		{
+			if (this._models[i].Id == element.Id)
+			{
+				this._models.splice(i, 1);
+				break;
+			}
+		}
+
+		this._update("dataChanged", this._models);
+		this._update("delete", element);
+	};
+
+	/**
+	 * Implements the Fail() method of the observer interface.
+	 * @public
+	 * @param {Array<string>} messages - Array of message strings. 
+	 * @param {string} listener - Name of the listener. 
+	 */
+	this.Fail = function (messages, listener) {
+		switch (listener) {
 			case "loadAll": {
 				this._failLoadAll(messages);
+				break;
+			}
+			case "create": {
+				this._update("dataChanged", this._models);
+				this._fail("create", messages);
+				break;
+			}
+			case "save": {
+				this._update("dataChanged", this._models);
+				this._fail("save", messages);
+				break;
+			}
+			case "delete": {
+				this._update("dataChanged", this._models);
+				this._fail("delete", messages);
 				break;
 			}
 		}
 	};
 
 	this._failLoadAll = function (messages) {
+		this._update("dataChanged", this._models);
 		this._fail("loadAll", messages);
 	};
 	//#endregion
@@ -102,7 +191,7 @@ var ViewModelList = function (webServiceClient) {
 			return;
 		}
 
-		this._listeners.actions[eventName].forEach(function (item) {
+		this._listeners[eventName].forEach(function (item) {
 			item.Fail(messages);
 		});
 	};

@@ -1,16 +1,14 @@
-$(document).ready(function() {
-    var webServiceClientFactory = new WebServiceClientFactory();
-    _webServiceClientFundAttributType = webServiceClientFactory.getWebServiceClientFundAttributType();
+var _viewModelListFundAttributType = null;
 
-    _webServiceClientFundAttributType.Register("loadAll", new GuiClient(ShowFundAttributTypes));
-    _webServiceClientFundAttributType.Register("create", new GuiClient(undefined, LoadAllFundAttributTypes));
-    _webServiceClientFundAttributType.Register("save", new GuiClient(undefined, LoadAllFundAttributTypes));
-    _webServiceClientFundAttributType.Register("delete", new GuiClient(undefined, LoadAllFundAttributTypes));
+$(document).ready(function () {
+	var viewModelFactory = new ViewModelFactory();
+	_viewModelListFundAttributType = viewModelFactory.getViewModelListFundAttributType();
 
+    RegisterToViewModel();
     InitBreadcrumb();
     InitGrid();
 
-    LoadAllFundAttributTypes();
+    _viewModelListFundAttributType.loadAll();
 });
 
 function InitBreadcrumb()
@@ -20,12 +18,28 @@ function InitBreadcrumb()
 	});
 }
 
-function InitGrid()
-{
-    jsGrid.locale("de");
+function RegisterToViewModel() {
+	_viewModelListFundAttributType.register("dataChanged", new GuiClient(UpdateGridData, UpdateGridData));
+	_viewModelListFundAttributType.register("loadAll", new GuiClient(showMessageAllLoaded, showErrorMessages));
+	_viewModelListFundAttributType.register("create", new GuiClient(showMessageCreated, showErrorMessages));
+	_viewModelListFundAttributType.register("save", new GuiClient(showMessageSaved, showErrorMessages));
+	_viewModelListFundAttributType.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
 }
 
-function ShowFundAttributTypes(fundAttributTypes)
+function InitGrid()
+{
+	jsGrid.locale("de");
+    ShowFundAttributTypes();
+    UpdateGridData(new Array());
+}
+
+function UpdateGridData(ortTypes) {
+	$("#gridContainer").jsGrid({
+		data: JSON.parse(JSON.stringify(ortTypes))
+	});
+}
+
+function ShowFundAttributTypes()
 {
     $("#gridContainer").jsGrid({
         width: "100%",
@@ -37,18 +51,19 @@ function ShowFundAttributTypes(fundAttributTypes)
         autoload: false,
 
         controller: {
-            insertItem: function(item) { 
-                _webServiceClientAblageType.Create(item);
+            insertItem: function(item) {
+                _viewModelListFundAttributType.create(item);
             },
-            updateItem: function(item) { 
-                _webServiceClientAblageType.Save(item);
+            insertModeButtonTooltip: "Neu",
+            updateItem: function(item) {
+                _viewModelListFundAttributType.save(item);
             },
-            deleteItem: function(item) { 
-                _webServiceClientAblageType.Delete(item);
-            }
+            editButtonTooltip: "Bearbeiten",
+            deleteItem: function(item) {
+                _viewModelListFundAttributType.delete(item);
+            },
+            deleteButtonTooltip: "Löschen"
         },
-
-        data: fundAttributTypes,
 
         fields: [
             { 
@@ -67,5 +82,37 @@ function ShowFundAttributTypes(fundAttributTypes)
                 type: "control" 
             }
         ]
+    });
+}
+
+function showMessageAllLoaded(elements) {
+    $.toast({
+        heading: "Information",
+        text: elements.length + " Fundattributtypen geladen",
+        icon: "info"
+    });
+}
+
+function showMessageCreated(element) {
+    $.toast({
+        heading: "Information",
+        text: "Fundattributtyp \"" + element.Bezeichnung + "\" erzeugt",
+        icon: "success"
+    });
+}
+
+function showMessageSaved(element) {
+    $.toast({
+        heading: "Information",
+        text: "Fundattributtyp \"" + element.Bezeichnung + "\" gespeichert",
+        icon: "success"
+    });
+}
+
+function showMessageDeleted(element) {
+    $.toast({
+        heading: "Information",
+        text: "Fundattributtyp \"" + element.Bezeichnung + "\" gelöscht",
+        icon: "success"
     });
 }

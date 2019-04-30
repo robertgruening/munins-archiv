@@ -120,6 +120,15 @@ class FundAttributTypeFactory extends Factory implements iListFactory
             $logger->debug("Bezeichnung ist nicht gesetzt!");
         }
 
+        if (isset($object["CountOfFundAttributen"]))
+        {
+            $fundAttributType->setCountOfFundAttributen(intval($object["CountOfFundAttributen"]));
+        }
+        else
+        {
+            $logger->debug("Anzahl der Fundattribute zu diesem Typ ist nicht gesetzt!");
+        }
+
         
         return $fundAttributType;
     }

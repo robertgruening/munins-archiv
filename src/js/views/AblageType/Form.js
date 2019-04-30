@@ -4,7 +4,7 @@ $(document).ready(function () {
 	var viewModelFactory = new ViewModelFactory();
 	_viewModelListAblageType = viewModelFactory.getViewModelListAblageType();
 
-    InitStatusChanged();
+    RegisterToViewModel();
     InitBreadcrumb();
     InitGrid();
 
@@ -18,20 +18,28 @@ function InitBreadcrumb()
 	});
 }
 
-function InitStatusChanged() {
-	_viewModelListAblageType.register("loadAll", new GuiClient(ShowAblageTypes, null));
-	_viewModelListAblageType.register("loadAll", new GuiClient(showActionBannerAllLoaded, showMessages));
-	_viewModelListAblageType.register("create", new GuiClient(showActionBannerCreated, showMessages));
-	_viewModelListAblageType.register("save", new GuiClient(showActionBannerSaved, showMessages));
-	_viewModelListAblageType.register("delete", new GuiClient(showActionBannerDeleted, showMessages));
+function RegisterToViewModel() {
+	_viewModelListAblageType.register("dataChanged", new GuiClient(UpdateGridData, UpdateGridData));
+	_viewModelListAblageType.register("loadAll", new GuiClient(showMessageAllLoaded, showErrorMessages));
+	_viewModelListAblageType.register("create", new GuiClient(showMessageCreated, showErrorMessages));
+	_viewModelListAblageType.register("save", new GuiClient(showMessageSaved, showErrorMessages));
+	_viewModelListAblageType.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
 }
 
 function InitGrid()
 {
-    jsGrid.locale("de");
+	jsGrid.locale("de");
+    ShowAblageTypes();
+    UpdateGridData(new Array());
 }
 
-function ShowAblageTypes(ablageTypes)
+function UpdateGridData(ablageTypes) {
+	$("#gridContainer").jsGrid({
+		data: JSON.parse(JSON.stringify(ablageTypes))
+	});
+}
+
+function ShowAblageTypes()
 {
     $("#gridContainer").jsGrid({
         width: "100%",
@@ -46,15 +54,16 @@ function ShowAblageTypes(ablageTypes)
             insertItem: function(item) {
                 _viewModelListAblageType.create(item);
             },
+            insertModeButtonTooltip: "Neu",
             updateItem: function(item) {
                 _viewModelListAblageType.save(item);
             },
+            editButtonTooltip: "Bearbeiten",
             deleteItem: function(item) {
                 _viewModelListAblageType.delete(item);
-            }
+            },
+            deleteButtonTooltip: "Löschen"
         },
-
-        data: ablageTypes,
 
         fields: [
             { 
@@ -70,106 +79,40 @@ function ShowAblageTypes(ablageTypes)
                 editing: false
             },
             { 
-                type: "control" 
+                type: "control"
             }
         ]
     });
 }
 
-//#region actionBanner
-function showActionBannerAllLoaded() {
-	$("#actionBanner").empty();
-	$("#actionBanner").click(function () {
-		$("#actionBanner").attr("clicked", "true");
-		$("#actionBanner").stop().hide();
-	});
-	$("#actionBanner").mouseenter(function () {
-		$("#actionBanner").stop();
-		$("#actionBanner").fadeTo(0, 1);
-	});
-	$("#actionBanner").mouseleave(function () {
-		if ($("#actionBanner").attr("clicked") == undefined ||
-			$("#actionBanner").attr("clicked") == "false") {
-			$("#actionBanner").stop();
-			$("#actionBanner").fadeTo(3000, 0, function () {
-				$("#actionBanner").stop().hide();
-			});
-		}
-	});
-	$("#actionBanner").append("<p>Alle Ablagetypen geladen</p>");
-	$("#actionBanner").show("fade", {}, 500);
-	$("#actionBanner").hide("fade", {}, 3000);
+function showMessageAllLoaded(elements) {
+    $.toast({
+        heading: "Information",
+        text: elements.length + " Ablagetypen geladen",
+        icon: "info"
+    });
 }
 
-function showActionBannerCreated() {
-	$("#actionBanner").empty();
-	$("#actionBanner").click(function () {
-		$("#actionBanner").attr("clicked", "true");
-		$("#actionBanner").stop().hide();
-	});
-	$("#actionBanner").mouseenter(function () {
-		$("#actionBanner").stop();
-		$("#actionBanner").fadeTo(0, 1);
-	});
-	$("#actionBanner").mouseleave(function () {
-		if ($("#actionBanner").attr("clicked") == undefined ||
-			$("#actionBanner").attr("clicked") == "false") {
-			$("#actionBanner").stop();
-			$("#actionBanner").fadeTo(3000, 0, function () {
-				$("#actionBanner").stop().hide();
-			});
-		}
-	});
-	$("#actionBanner").append("<p>Ablagetyp erzeugt</p>");
-	$("#actionBanner").show("fade", {}, 500);
-	$("#actionBanner").hide("fade", {}, 3000);
+function showMessageCreated(element) {
+    $.toast({
+        heading: "Information",
+        text: "Ablagetyp \"" + element.Bezeichnung + "\" erzeugt",
+        icon: "success"
+    });
 }
 
-function showActionBannerSaved() {
-	$("#actionBanner").empty();
-	$("#actionBanner").click(function () {
-		$("#actionBanner").attr("clicked", "true");
-		$("#actionBanner").stop().hide();
-	});
-	$("#actionBanner").mouseenter(function () {
-		$("#actionBanner").stop();
-		$("#actionBanner").fadeTo(0, 1);
-	});
-	$("#actionBanner").mouseleave(function () {
-		if ($("#actionBanner").attr("clicked") == undefined ||
-			$("#actionBanner").attr("clicked") == "false") {
-			$("#actionBanner").stop();
-			$("#actionBanner").fadeTo(3000, 0, function () {
-				$("#actionBanner").stop().hide();
-			});
-		}
-	});
-	$("#actionBanner").append("<p>Ablagetyp gespeichert</p>");
-	$("#actionBanner").show("fade", {}, 500);
-	$("#actionBanner").hide("fade", {}, 3000);
+function showMessageSaved(element) {
+    $.toast({
+        heading: "Information",
+        text: "Ablagetyp \"" + element.Bezeichnung + "\" gespeichert",
+        icon: "success"
+    });
 }
 
-function showActionBannerDeleted() {
-	$("#actionBanner").empty();
-	$("#actionBanner").click(function () {
-		$("#actionBanner").attr("clicked", "true");
-		$("#actionBanner").stop().hide();
-	});
-	$("#actionBanner").mouseenter(function () {
-		$("#actionBanner").stop();
-		$("#actionBanner").fadeTo(0, 1);
-	});
-	$("#actionBanner").mouseleave(function () {
-		if ($("#actionBanner").attr("clicked") == undefined ||
-			$("#actionBanner").attr("clicked") == "false") {
-			$("#actionBanner").stop();
-			$("#actionBanner").fadeTo(3000, 0, function () {
-				$("#actionBanner").stop().hide();
-			});
-		}
-	});
-	$("#actionBanner").append("<p>Ablagetyp gelöscht</p>");
-	$("#actionBanner").show("fade", {}, 500);
-	$("#actionBanner").hide("fade", {}, 3000);
+function showMessageDeleted(element) {
+    $.toast({
+        heading: "Information",
+        text: "Ablagetyp \"" + element.Bezeichnung + "\" gelöscht",
+        icon: "success"
+    });
 }
-//#endregion

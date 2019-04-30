@@ -103,7 +103,7 @@ function Delete()
 
         if ($deleteAblageType->run())
         {
-            echo json_encode("Ablagetyp (".$ablageType->getId().") ist gelöscht.");
+            echo json_encode($ablageType);
         }
         else
         {

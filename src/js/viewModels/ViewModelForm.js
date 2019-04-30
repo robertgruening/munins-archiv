@@ -76,29 +76,29 @@ var ViewModelForm = function (webServiceClient) {
 			case "load": {
 				this._model = data;
 				this._updateAllPropertyListeners();
-				this._update("dataResetted");
-				this._update("load");
+				this._update("dataResetted", this._model);
+				this._update("load", this._model);
 				break;
 			}
 			case "create": {
 				this._model = data;
 				this._updateAllPropertyListeners();
-				this._update("dataResetted");
-				this._update("create");
+				this._update("dataResetted", this._model);
+				this._update("create", this._model);
 				break;
 			}
 			case "save": {
 				this._model = data;
 				this._updateAllPropertyListeners();
-				this._update("dataResetted");
-				this._update("save");
+				this._update("dataResetted", this._model);
+				this._update("save", this._model);
 				break;
 			}
 			case "delete": {
 				this._model = this._createModel();
 				this._updateAllPropertyListeners();
-				this._update("dataResetted");
-				this._update("delete");
+				this._update("dataResetted", this._model);
+				this._update("delete", this._model);
 				break;
 			}
 		}

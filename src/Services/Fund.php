@@ -124,7 +124,7 @@ function Delete()
 
         if ($deleteFund->run())
         {
-            echo json_encode("Fund (".$fund->getId().") ist gelöscht.");
+            echo json_encode($fund);
         }
         else
         {
