@@ -142,18 +142,54 @@
 				[
 					{
 						"Title" : "Ablagetypen verwalten",
+						"URL" : "/Munins Archiv/src/AblageType/List.html",
+						"PageName" : "AblageTypeList"
+					},
+					{
+						"Title" : "Ablage neu anlegen",
 						"URL" : "/Munins Archiv/src/AblageType/Form.html",
-						"PageName" : "AblageTypeManagement"
+						"PageName" : "AblageTypeFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Ablage bearbeiten",
+						"URL" : "/Munins Archiv/src/AblageType/Form.html",
+						"PageName" : "AblageTypeFormEdit",
+						"Visible" : false
 					},
 					{
 						"Title" : "Ortstypen verwalten",
-						"URL" : "/Munins Archiv/src/OrtType/Form.html",
-						"PageName" : "OrtTypeManagement"
+						"URL" : "/Munins Archiv/src/OrtType/List.html",
+						"PageName" : "OrtTypeList"
 					},
 					{
-						"Title" : "Fundattributstypen verwalten",
+						"Title" : "Ort neu anlegen",
+						"URL" : "/Munins Archiv/src/OrtType/Form.html",
+						"PageName" : "OrtTypeFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Ort bearbeiten",
+						"URL" : "/Munins Archiv/src/OrtType/Form.html",
+						"PageName" : "OrtTypeFormEdit",
+						"Visible" : false
+					},
+					{
+						"Title" : "Fundattributtypen verwalten",
+						"URL" : "/Munins Archiv/src/FundAttributType/List.html",
+						"PageName" : "FundAttributTypeList"
+					},
+					{
+						"Title" : "Fundattributtyp neu anlegen",
 						"URL" : "/Munins Archiv/src/FundAttributType/Form.html",
-						"PageName" : "FundAttributTypeManagement"
+						"PageName" : "FundAttributTypeFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Fundattributtyp bearbeiten",
+						"URL" : "/Munins Archiv/src/FundAttributType/Form.html",
+						"PageName" : "FundAttributTypeFormEdit",
+						"Visible" : false
 					}
 				]
 			},

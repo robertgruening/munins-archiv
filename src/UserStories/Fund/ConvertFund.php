@@ -44,7 +44,7 @@ class ConvertFund extends UserStory
     }
 
     /**
-     * Sets the conbverted Fund.
+     * Sets the converted Fund.
      * @param Fund $fund Fund, which was converted.
      */
     private function setFund($fund)

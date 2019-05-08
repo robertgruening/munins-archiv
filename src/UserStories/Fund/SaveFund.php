@@ -35,6 +35,12 @@ class SaveFund extends UserStory
             $this->addMessage("Fund ist nicht gesetzt!");
             return false;
         }
+        
+        if (strlen($fund->getBezeichnung()) > 30)
+        {
+            $this->addMessage("Bezeichnung darf nicht länger als 30 Zeichen sein!");
+            return false;
+        }
 
         return true;
     }

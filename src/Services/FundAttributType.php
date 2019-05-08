@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
 require_once("../Factory/FundAttributTypeFactory.php");
+require_once("../UserStories/FundAttribut/Type/ConvertFundAttributType.php");
 require_once("../UserStories/FundAttribut/Type/LoadFundAttributType.php");
 require_once("../UserStories/FundAttribut/Type/LoadFundAttributTypes.php");
 require_once("../UserStories/FundAttribut/Type/SaveFundAttributType.php");
@@ -31,9 +32,20 @@ function Create()
     $logger->info("Fundattributtyp-anlegen gestartet");
 
     parse_str(file_get_contents("php://input"), $fundAttributTypeObject);
+    
+    $convertFundAttributType = new ConvertFundAttributType();
+    $convertFundAttributType->setMultidimensionalArray($fundAttributTypeObject);
 
-    $fundAttributTypeFactory = new FundAttributTypeFactory();
-    $fundAttributType = $fundAttributTypeFactory->convertToInstance($fundAttributTypeObject);
+    if ($convertFundAttributType->run())
+    {
+        $fundAttributType = $convertFundAttributType->getFundAttributType();
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($convertFundAttributType->getMessages());
+        return;
+    }
     
     $saveFundAttributType = new SaveFundAttributType();
     $saveFundAttributType->setFundAttributType($fundAttributType);
@@ -60,11 +72,22 @@ function Update()
 
     if (isset($_GET["Id"]))
     {
-        $fundAttributTypeObject->setId(intval($_GET["Id"]));    
+        $fundAttributTypeObject["Id"] = $_GET["Id"];
     }
+    
+    $convertFundAttributType = new ConvertFundAttributType();
+    $convertFundAttributType->setMultidimensionalArray($fundAttributTypeObject);
 
-    $fundAttributTypeFactory = new FundAttributTypeFactory();
-    $fundAttributType = $fundAttributTypeFactory->convertToInstance($fundAttributTypeObject);
+    if ($convertFundAttributType->run())
+    {
+        $fundAttributType = $convertFundAttributType->getFundAttributType();
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($convertFundAttributType->getMessages());
+        return;
+    }
 
     $saveFundAttributType = new SaveFundAttributType();
     $saveFundAttributType->setFundAttributType($fundAttributType);

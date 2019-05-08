@@ -25,6 +25,13 @@ class SaveOrtType extends UserStory
     protected function areParametersValid()
     {
         $ortType = $this->getOrtType();
+
+        if (strlen($ortType->getBezeichnung()) > 25)
+        {
+            $this->addMessage("Bezeichnung darf nicht länger als 25 Zeichen sein!");
+            return false;
+        }
+        
         $ortTypeFactory = new OrtTypeFactory();
         $ortTypes = $ortTypeFactory->loadAll();
 
@@ -45,7 +52,21 @@ class SaveOrtType extends UserStory
     protected function execute()
     {
         $ortTypeFactory = new OrtTypeFactory();
-        $this->setOrtType($ortTypeFactory->save($this->getOrtType()));
+
+        $savedOrtType = $ortTypeFactory->save($this->getOrtType());
+
+        $loadOrtType = new LoadOrtType();
+        $loadOrtType->setId($savedOrtType->getId());
+        
+        if (!$loadOrtType->run())
+        {
+            $this->addMessages($loadOrtType->getMessages());
+            return false;
+        }
+
+        $ortTypeFromDatabase = $loadOrtType->getOrtType();
+
+        $this->setOrtType($ortTypeFromDatabase);
 
         return true;
     }

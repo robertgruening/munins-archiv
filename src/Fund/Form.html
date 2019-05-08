@@ -73,6 +73,12 @@
 	<div id=content>
 		<div class=form>
 			<div class=formBlock>
+				<ul id=toolBar class=notToPrint>
+					<li><a id=buttonNew title=anlegen class=linkButton><i class="fas fa-plus"></i><label>Anlegen</label></a></li>
+					<li><a id=buttonSave title=speichern class=linkButton><i class="fas fa-save"></i><label>Speichern</label></a></li>
+					<li><a id=buttonUndo title="Änderungen verwerfen" class="linkButton"><i class="fas fa-undo-alt"></i><label>Änderungen verwerfen</label></a></li>
+					<li><a id=buttonDelete title=löschen class="linkButton riskyAction"><i class="fas fa-trash-alt"></i><label>Löschen</label></a></li>
+				</ul>
 				<div id=divFundAttribute class=fieldBlock>
 					<div class=fieldDescription>
 						<i class="help notToPrint fas fa-question-circle" title="Attribute, die den Fund beschreiben, z. B. Material, Zeitstellung oder Verzierung."></i>
@@ -165,12 +171,6 @@
 						<a id=linkSelectedAblage></a>
 						<a id=buttonSelectAblage title="auswählen" class="notToPrint linkButton"><i class="fas fa-edit"></i></a>
 					</div>
-				</div>
-				<div class="buttonBlock notToPrint">
-					<input type=button id=buttonNew value=Neu />
-					<input type=button id=buttonSave value=Speichern />
-					<input type=button id=buttonUndo value="Änderungen verwerfen" />
-					<input type=button id=buttonDelete value=Löschen />
 				</div>
 			</div>
 		</div>

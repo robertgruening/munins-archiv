@@ -34,6 +34,11 @@ class SaveAblageType extends UserStory
             $this->addMessage("Bezeichnung ist nicht gesetzt!");
             return false;
         }
+        else if (strlen($ablageType->getBezeichnung()) > 30)
+        {
+            $this->addMessage("Bezeichnung darf nicht länger als 30 Zeichen sein!");
+            return false;
+        }
 
         $ablageTypeFactory = new AblageTypeFactory();
         $ablageTypes = $ablageTypeFactory->loadAll();
@@ -56,7 +61,21 @@ class SaveAblageType extends UserStory
     protected function execute()
     {
         $ablageTypeFactory = new AblageTypeFactory();
-        $this->setAblageType($ablageTypeFactory->save($this->getAblageType()));
+
+        $savedAblageType = $ablageTypeFactory->save($this->getAblageType());
+
+        $loadAblageType = new LoadAblageType();
+        $loadAblageType->setId($savedAblageType->getId());
+        
+        if (!$loadAblageType->run())
+        {
+            $this->addMessages($loadAblageType->getMessages());
+            return false;
+        }
+
+        $ablageTypeFromDatabase = $loadAblageType->getAblageType();
+
+        $this->setAblageType($ablageTypeFromDatabase);
 
         return true;
     }

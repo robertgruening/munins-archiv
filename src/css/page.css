@@ -69,6 +69,10 @@ html, body {
     color:#333333;
 }
 
+.linkButton label {
+    padding-left: 5px;
+}
+
 .linkButton:hover {
     color:azure;
     background-color: SteelBlue;
@@ -93,7 +97,6 @@ html, body {
     color: #969696;
     background-color: inherit;
 }
-
 
 /**************/
 /* visibility */

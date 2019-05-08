@@ -1,22 +1,22 @@
-var ViewModelFormAblageType = function (webServiceClient) {
+var ViewModelFormFundAttributType = function (webServiceClient) {
 	this._webServiceClient = webServiceClient;
 
 	this._createModel = function () {
-		return new AblageType();
+		return new FundAttributType();
 	};
 
 	this._createPropertyListeners = function () {
 		return {
 			id: new Array(),
 			bezeichnung: new Array(),
-			countOfAblagen: new Array()
+			countOfFundAttributen: new Array()
 		};
 	};
 
 	this._updateAllPropertyListeners = function () {
 		this._update("id", this._model.Id);
 		this._update("bezeichnung", this._model.Bezeichnung);
-		this._update("countOfAblagen", this._model.CountOfAblagen);
+		this._update("countOfFundAttributen", this._model.CountOfFundAttributen);
 	};
 
 	//#region properties
@@ -32,9 +32,9 @@ var ViewModelFormAblageType = function (webServiceClient) {
 	};
 	//#endregion
 
-	//#region Anzahl von Ablagen
-	this.getCountOfAblagen = function () {
-		return this._model.CountOfAblagen;
+	//#region Anzahl von Fundattributen
+	this.getCountOfFundAttributen = function () {
+		return this._model.CountOfFundAttributen;
 	};
 	//#endregion
 	//#endregion
@@ -43,4 +43,4 @@ var ViewModelFormAblageType = function (webServiceClient) {
 	//#endregion
 };
 
-ViewModelFormAblageType.prototype = new ViewModelForm();
+ViewModelFormFundAttributType.prototype = new ViewModelForm();

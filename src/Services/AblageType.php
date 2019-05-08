@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
 require_once("../Factory/AblageTypeFactory.php");
+require_once("../UserStories/Ablage/Type/ConvertAblageType.php");
 require_once("../UserStories/Ablage/Type/LoadAblageType.php");
 require_once("../UserStories/Ablage/Type/LoadAblageTypes.php");
 require_once("../UserStories/Ablage/Type/SaveAblageType.php");
@@ -31,9 +32,20 @@ function Create()
     $logger->info("Ablagetyp-anlegen gestartet");
 
     parse_str(file_get_contents("php://input"), $ablageTypeObject);
+    
+    $convertAblageType = new ConvertAblageType();
+    $convertAblageType->setMultidimensionalArray($ablageTypeObject);
 
-    $ablageTypeFactory = new AblageTypeFactory();
-    $ablageType = $ablageTypeFactory->convertToInstance($ablageTypeObject);
+    if ($convertAblageType->run())
+    {
+        $ablageType = $convertAblageType->getAblageType();
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($convertAblageType->getMessages());
+        return;
+    }
     
     $saveAblageType = new SaveAblageType();
     $saveAblageType->setAblageType($ablageType);
@@ -62,9 +74,20 @@ function Update()
     {
         $ablageTypeObject["Id"] = $_GET["Id"];
     }
+    
+    $convertAblageType = new ConvertAblageType();
+    $convertAblageType->setMultidimensionalArray($ablageTypeObject);
 
-    $ablageTypeFactory = new AblageTypeFactory();
-    $ablageType = $ablageTypeFactory->convertToInstance($ablageTypeObject);
+    if ($convertAblageType->run())
+    {
+        $ablageType = $convertAblageType->getAblageType();
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($convertAblageType->getMessages());
+        return;
+    }
     
     $saveAblageType = new SaveAblageType();
     $saveAblageType->setAblageType($ablageType);

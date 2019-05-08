@@ -148,7 +148,7 @@ function EnableButtonUndo() {
 }
 
 function DisableButtonUndo() {
-	$("#buttonUndo").removeClass("disabled");
+	$("#buttonUndo").addClass("disabled");
 	$("#buttonUndo").prop("disabled", true);
 }
 

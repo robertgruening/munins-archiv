@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
 require_once("../Factory/OrtTypeFactory.php");
+require_once("../UserStories/Ort/Type/ConvertOrtType.php");
 require_once("../UserStories/Ort/Type/LoadOrtType.php");
 require_once("../UserStories/Ort/Type/LoadOrtTypes.php");
 require_once("../UserStories/Ort/Type/SaveOrtType.php");
@@ -31,9 +32,20 @@ function Create()
     $logger->info("Ortstyp-anlegen gestartet");
 
     parse_str(file_get_contents("php://input"), $ortTypeObject);
+    
+    $convertOrtType = new ConvertOrtType();
+    $convertOrtType->setMultidimensionalArray($ortTypeObject);
 
-    $ortTypeFactory = new OrtTypeFactory();
-    $ortType = $ortTypeFactory->convertToInstance($ortTypeObject);
+    if ($convertOrtType->run())
+    {
+        $ortType = $convertOrtType->getOrtType();
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($convertOrtType->getMessages());
+        return;
+    }
     
     $saveOrtType = new SaveOrtType();
     $saveOrtType->setOrtType($ortType);
@@ -62,9 +74,20 @@ function Update()
     {
         $ortTypeObject["Id"] = $_GET["Id"];
     }
+    
+    $convertOrtType = new ConvertOrtType();
+    $convertOrtType->setMultidimensionalArray($ortTypeObject);
 
-    $ortTypeFactory = new OrtTypeFactory();
-    $ortType = $ortTypeFactory->convertToInstance($ortTypeObject);
+    if ($convertOrtType->run())
+    {
+        $ortType = $convertOrtType->getOrtType();
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($convertOrtType->getMessages());
+        return;
+    }
     
     $saveOrtType = new SaveOrtType();
     $saveOrtType->setOrtType($ortType);

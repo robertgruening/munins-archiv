@@ -1,13 +1,16 @@
 var ViewModelList = function (webServiceClient) {
 	//#region variables
 	this._models = new Array();
+	this._selectedItem = null;
 	this._webServiceClient = webServiceClient;
 	this._listeners = {
 		loadAll: new Array(),
 		create: new Array(),
 		save: new Array(),
 		delete: new Array(),
-		dataChanged: new Array()
+		dataChanged: new Array(),
+		itemSelected : new Array(),
+		selectionCleared : new Array()
 	};
 	//#endregion
 
@@ -29,6 +32,58 @@ var ViewModelList = function (webServiceClient) {
 		this._webServiceClient.Delete(elementToBeDeleted, "delete");
 	};
 	//#endregion
+
+	/**
+	 * Gets the selected item.
+	 * @public
+	 */
+	this.getSelectedItem = function () {
+		return this._selectedItem;
+	};
+
+	/**
+	 * Clears the selection of an item.
+	 * @public
+	 */
+	this.clearSelection = function () {
+		this._selectedItem = null;
+		this._update("selectionCleared");
+	};
+
+	/**
+	 * Sets the given item as selected. If the item is already selected it becomes unselected.
+	 * @param {model} item The item that is to be set as selected.
+	 * @public
+	 */
+	this.selectItem = function (item) {
+		if (item == undefined ||
+			item == null) {
+			console.log("ERROR: Item to be set as selected is not set!");
+			this._update("selectionCleared");
+			return;
+		}
+
+		if (this._selectedItem != null &&
+			item.Id == this._selectedItem.Id)
+		{
+			console.log("DEBUG: The selected item is already selected. Selection will be cleared.");
+			this.clearSelection();
+			return;
+		}
+
+		for (var i = 0; i < this._models.length; i++) {
+			if (this._models[i].Id == item.Id) {
+				console.log("DEBUG: Item to be set as selected is in the list.");
+				this._selectedItem = this._models[i];
+				var args = {
+					SelectedItem : this._selectedItem,
+					Index : i
+				};
+				this._update("itemSelected", args);
+				break;
+			}
+		}
+	};
 
 	//#region observer methods
 	/**
@@ -72,6 +127,7 @@ var ViewModelList = function (webServiceClient) {
 	this._loadAllElements = function(elements) {
 		this._models = elements;
 		this._update("dataChanged", this._models);
+		this.clearSelection();
 		this._update("loadAll", this._models);
 	}
 
@@ -96,6 +152,7 @@ var ViewModelList = function (webServiceClient) {
 		}
 
 		this._update("dataChanged", this._models);
+		this.clearSelection();
 		this._update("create", element);
 	};
 
@@ -111,6 +168,7 @@ var ViewModelList = function (webServiceClient) {
 		}
 
 		this._update("dataChanged", this._models);
+		this.clearSelection();
 		this._update("save", element);
 	};
 
@@ -126,6 +184,7 @@ var ViewModelList = function (webServiceClient) {
 		}
 
 		this._update("dataChanged", this._models);
+		this.clearSelection();
 		this._update("delete", element);
 	};
 
@@ -138,30 +197,23 @@ var ViewModelList = function (webServiceClient) {
 	this.Fail = function (messages, listener) {
 		switch (listener) {
 			case "loadAll": {
-				this._failLoadAll(messages);
+				this._update("dataChanged", this._models);
+				this._fail("loadAll", messages);
 				break;
 			}
 			case "create": {
-				this._update("dataChanged", this._models);
 				this._fail("create", messages);
 				break;
 			}
 			case "save": {
-				this._update("dataChanged", this._models);
 				this._fail("save", messages);
 				break;
 			}
 			case "delete": {
-				this._update("dataChanged", this._models);
 				this._fail("delete", messages);
 				break;
 			}
 		}
-	};
-
-	this._failLoadAll = function (messages) {
-		this._update("dataChanged", this._models);
-		this._fail("loadAll", messages);
 	};
 	//#endregion
 

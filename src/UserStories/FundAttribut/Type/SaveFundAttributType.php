@@ -25,6 +25,13 @@ class SaveFundAttributType extends UserStory
     protected function areParametersValid()
     {
         $fundAttributType = $this->getFundAttributType();
+
+        if (strlen($fundAttributType->getBezeichnung()) > 25)
+        {
+            $this->addMessage("Bezeichnung darf nicht länger als 25 Zeichen sein!");
+            return false;
+        }
+
         $fundAttributTypeFactory = new FundAttributTypeFactory();
         $fundAttributTypes = $fundAttributTypeFactory->loadAll();
 
@@ -45,7 +52,21 @@ class SaveFundAttributType extends UserStory
     protected function execute()
     {
         $fundAttributTypeFactory = new FundAttributTypeFactory();
-        $this->setFundAttributType($fundAttributTypeFactory->save($this->getFundAttributType()));
+
+        $savedFundAttributType = $fundAttributTypeFactory->save($this->getFundAttributType());
+
+        $loadFundAttributType = new LoadFundAttributType();
+        $loadFundAttributType->setId($savedFundAttributType->getId());
+        
+        if (!$loadFundAttributType->run())
+        {
+            $this->addMessages($loadFundAttributType->getMessages());
+            return false;
+        }
+
+        $fundAttributTypeFromDatabase = $loadFundAttributType->getFundAttributType();
+
+        $this->setFundAttributType($fundAttributTypeFromDatabase);
 
         return true;
     }

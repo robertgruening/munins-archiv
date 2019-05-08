@@ -1,4 +1,31 @@
 var ViewModelFactory = function () {
+    this.getViewModelFormAblageType = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelFormAblageType(webServiceClientFactory.getWebServiceClientAblageType());
+        viewModel.init();
+
+        return viewModel;
+    };
+
+    this.getViewModelFormFundAttributType = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelFormFundAttributType(webServiceClientFactory.getWebServiceClientFundAttributType());
+        viewModel.init();
+
+        return viewModel;
+    };
+
+    this.getViewModelFormOrtType = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelFormOrtType(webServiceClientFactory.getWebServiceClientOrtType());
+        viewModel.init();
+
+        return viewModel;
+    };
+
     this.getViewModelFormFund = function()
     {
         var webServiceClientFactory = new WebServiceClientFactory();

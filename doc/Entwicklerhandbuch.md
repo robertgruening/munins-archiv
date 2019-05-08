@@ -12,8 +12,9 @@
     1. [Mehrschichtenarchitektur](#42-mehrschichtenarchitektur)
     1. [Web-Service-Architektur](#43-web-service-architektur)
     1. [Entwurfsmuster](#44-entwurfsmuster)
-1. [Logfunktion](#5-logfunktion)
-1. [Releasemanagement](#6-releasemanagement)
+1. [Benutzerführung](#5-benutzerfhrung)
+1. [Logfunktion](#6-logfunktion)
+1. [Releasemanagement](#7-releasemanagement)
 
 ## 1. Entwicklungsumgebung
 
@@ -123,12 +124,30 @@ Ein oder mehrere *Beobachter* können sich bei einem *Subjekt* für ein oder meh
 
 ![Beobachtermuster am Beispiel der WebServiceClients und ViewModels des AblageTypes](Beobachter.jpg)  
 *Abbildung 3 - Beobachtermuster am Beispiel der WebServiceClients und ViewModels des AblageTypes*
+
+## 5. Benutzerführung
+
+Das Konzept der Benutzerführung (User Experience - UX) gliedert sich in mehrere Aspekte. Zu den wichtigsten Themen gehört die Definition der Zielgruppen, die mit der Anwendung zu tun haben. An ihnen orientiert sich das im Folgenden beschriebene Benutzungskonzept.
+
+### 5.1. Zielgruppen
+
+Die Anwendung richtet sich an unterschiedliche Zielgruppen (Stakeholder), die unterschiedliche Ziele, Wünsche, Fertigkeiten und Erfahrungen haben. In diesem Kapitel werden die Zielgruppen durch [Personas](https://en.wikipedia.org/wiki/Persona_(user_experience)) wiedergegeben. Es sei darauf hingewiesen, dass die Vollständigkeit der Beschreibung und die Priorisierung einer Persona von der Entwicklung der Applikation abhängt. Weil aus praktischen und logischen Gründen Daten zuerst eingegeben werden müssen, bevor sie durchsucht oder analysiert werden können, werden Personas bevorzugt beschrieben, die überwiegend Daten eingeben. Dies kann beispielsweise im Rahmen einer Inventur geschehen.
+
+#### 5.1.1. Archivarin
+
+Die Persona *Archivarin* heißt Gabi, ist 55 Jahre alt, verheiratet und hat zwei Kinder, die bereits außer Haus sind. Sie ist schon seit zehn Jahren in der archäologischen Arbeitsgruppe des Ortes tätig und gehört zu den aktiven Mitgliedern. Gabi hat ein abgeschlossenes Studium der Völkerkunde und arbeitet für ein Museum, für das sie Schriften anferrtigt und Vorträge hält. Im Bereich von Text- und Tabellenprogrammen hat Gabi grundlegende Kenntnisse. Weil man bei Softwareprogrammen jedoch an sie viele Dinge mitdenken muss, z. B. Vorbereiten von Daten, wünscht sie sich ein System, das "mitdenkt", sie führt, sodass sie mit wenig Aufwand ihr Ziel erreicht.
+
+Als Archivarin empfielt Gabi Richtlinien für die Verwaltung des Archivs und sorgt für deren Einhaltung.
+
+### 5.1. Systembenachrichtigungen
+
+Das System erzeugt an mehreren Stellen der verschiedenen Anwendungsteile unterschiedliche Nachrichten. Diese richten sich an unterschiedliche Zielgruppen. 
   
-## 5. Logfunktion
+## 6. Logfunktion
 
 Eine wesentliche Neuerung auf der Serverseite ist das Protokollieren des Programmablaufes und der verarbeiteten Daten mittels log4php. Dies unterstützt sowohl den Entwicklungsprozess, als auch die Fehlersuche im Produktivsystem.
 
-## 6. Releasemanagement
+## 7. Releasemanagement
 
 Jedes Jahr soll es eine Hauptversion geben. Dazwischen soll mindestens eine Zwischenversion erscheinen. Der Zweck der Zwischenversion ist, die "Must Have"-Anforderungen umzusetzen und Rückmeldungen der Anwender für die Hauptversion zu sammeln. Die nachfolgenden Zwischenversionen oder die Hauptversion setzen das Benutzer-Feedback um und ergänzen die Anwendung um Funktionen der Kategorie "Should Have" und "Nice To Have".
 
