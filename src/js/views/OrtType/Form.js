@@ -14,6 +14,7 @@ $(document).ready(function () {
 	InitButtonToList();
 
 	InitFieldId();
+	InitFieldIcon();
 	InitFieldBezeichnung();
 	InitFieldCountOfOrten();
 
@@ -100,6 +101,17 @@ function setId(id) {
 		document.title = "Ortstyp: (" + id + ")";
 		EnableButtonDelete();
 	}
+}
+//#endregion
+
+//#region Icon
+function InitFieldIcon() {
+	_viewModelFormOrtType.register("bezeichnung", new GuiClient(setIcon, null));
+}
+
+function setIcon(bezeichnung) {
+	console.log("setting value of 'Icon' to " + IconConfig.getCssClasses("Ort"));
+	$("#icon").addClass(IconConfig.getCssClasses("Ort"));
 }
 //#endregion
 

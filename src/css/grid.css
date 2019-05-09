@@ -2,12 +2,12 @@
 
 .jsgrid-selected-row > .jsgrid-cell {
     background-color: #fdf5ce;
-    border-color: #fbcb09;
+    border-color: #fdf5ce;
     color: #c77405;
 }
 
 .selectedRow > .jsgrid-cell {
     background-color: #f6a828;
-    border-color: #e78f08;
+    border-color: #f6a828;
     color: #ffffff;
 }

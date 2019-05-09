@@ -66,21 +66,21 @@ function markSelectedItem(selectedItemArgs) {
     row.addClass("selectedRow");
 }
 
+var IconField = function(config) {
+	jsGrid.Field.call(this, config);
+}
+
+IconField.prototype = new jsGrid.Field({
+	itemTemplate: function(value) {
+		return $("<i>").addClass(value);
+	}
+});
+
 function InitGrid()
 {
-	jsGrid.locale("de");
-    ShowFundAttributTypes();
-    UpdateGridData(new Array());
-}
-
-function UpdateGridData(fundAttributTypes) {
-	$("#gridContainer").jsGrid({
-		data: JSON.parse(JSON.stringify(fundAttributTypes))
-	});
-}
-
-function ShowFundAttributTypes()
-{
+    jsGrid.locale("de");
+    jsGrid.fields.icon = IconField;
+    
     $("#gridContainer").jsGrid({
         width: "100%",
 
@@ -91,6 +91,11 @@ function ShowFundAttributTypes()
         autoload: false,
 
         fields: [
+			{ 
+				title: "Icon",
+				name: "Icon", 
+				type: "icon"
+			},
             { 
                 name: "Bezeichnung", 
                 type: "text", 
@@ -110,6 +115,24 @@ function ShowFundAttributTypes()
             console.log(args.item);
             _viewModelListFundAttributType.selectItem(args.item);
         }
+    });
+
+    UpdateGridData(new Array());
+}
+
+function UpdateGridData(fundAttributTypes) {
+    $("#grid").empty();
+    
+    var entries = new Array();
+    
+	fundAttributTypes.forEach(fundAttributType => {
+		var copy = JSON.parse(JSON.stringify(fundAttributType));
+		copy.Icon = IconConfig.getCssClasses("FundAttribut");
+		entries.push(copy);
+	});
+
+	$("#gridContainer").jsGrid({
+		data: entries
     });
 }
 

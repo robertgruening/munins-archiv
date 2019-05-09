@@ -14,6 +14,7 @@ $(document).ready(function () {
 	InitButtonToList();
 
 	InitFieldId();
+	InitFieldIcon();
 	InitFieldBezeichnung();
 	InitFieldCountOfAblagen();
 
@@ -100,6 +101,17 @@ function setId(id) {
 		document.title = "Ablagetyp: (" + id + ")";
 		EnableButtonDelete();
 	}
+}
+//#endregion
+
+//#region Icon
+function InitFieldIcon() {
+	_viewModelFormAblageType.register("bezeichnung", new GuiClient(setIcon, null));
+}
+
+function setIcon(bezeichnung) {
+	console.log("setting value of 'Icon' to " + IconConfig.getCssClasses("Ablage"));
+	$("#icon").addClass(IconConfig.getCssClasses("Ablage"));
 }
 //#endregion
 

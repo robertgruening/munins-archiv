@@ -66,21 +66,21 @@ function markSelectedItem(selectedItemArgs) {
     row.addClass("selectedRow");
 }
 
+var IconField = function(config) {
+	jsGrid.Field.call(this, config);
+}
+
+IconField.prototype = new jsGrid.Field({
+	itemTemplate: function(value) {
+		return $("<i>").addClass(value);
+	}
+});
+
 function InitGrid()
 {
-	jsGrid.locale("de");
-    ShowAblageTypes();
-    UpdateGridData(new Array());
-}
-
-function UpdateGridData(ablageTypes) {
-	$("#gridContainer").jsGrid({
-		data: JSON.parse(JSON.stringify(ablageTypes))
-	});
-}
-
-function ShowAblageTypes()
-{
+    jsGrid.locale("de");
+    jsGrid.fields.icon = IconField;
+    
     $("#gridContainer").jsGrid({
         width: "100%",
 
@@ -91,6 +91,11 @@ function ShowAblageTypes()
         autoload: false,
 
         fields: [
+			{ 
+				title: "Icon",
+				name: "Icon", 
+				type: "icon"
+			},
             { 
                 name: "Bezeichnung", 
                 type: "text", 
@@ -111,6 +116,24 @@ function ShowAblageTypes()
             _viewModelListAblageType.selectItem(args.item);
         }
     });
+
+    UpdateGridData(new Array());
+}
+
+function UpdateGridData(ablageTypes) {
+    $("#grid").empty();
+    
+    var entries = new Array();
+    
+	ablageTypes.forEach(ablageType => {
+		var copy = JSON.parse(JSON.stringify(ablageType));
+		copy.Icon = IconConfig.getCssClasses("Ablage");
+		entries.push(copy);
+	});
+
+	$("#gridContainer").jsGrid({
+		data: entries
+	});
 }
 
 function setIdToEditLink(id) {

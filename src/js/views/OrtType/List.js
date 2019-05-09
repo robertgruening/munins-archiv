@@ -66,21 +66,21 @@ function markSelectedItem(selectedItemArgs) {
     row.addClass("selectedRow");
 }
 
+var IconField = function(config) {
+	jsGrid.Field.call(this, config);
+}
+
+IconField.prototype = new jsGrid.Field({
+	itemTemplate: function(value) {
+		return $("<i>").addClass(value);
+	}
+});
+
 function InitGrid()
 {
-	jsGrid.locale("de");
-    ShowOrtTypes();
-    UpdateGridData(new Array());
-}
-
-function UpdateGridData(ortTypes) {
-	$("#gridContainer").jsGrid({
-		data: JSON.parse(JSON.stringify(ortTypes))
-	});
-}
-
-function ShowOrtTypes()
-{
+    jsGrid.locale("de");
+    jsGrid.fields.icon = IconField;
+    
     $("#gridContainer").jsGrid({
         width: "100%",
 
@@ -91,6 +91,11 @@ function ShowOrtTypes()
         autoload: false,
 
         fields: [
+			{ 
+				title: "Icon",
+				name: "Icon", 
+				type: "icon"
+			},
             { 
                 name: "Bezeichnung", 
                 type: "text", 
@@ -111,6 +116,24 @@ function ShowOrtTypes()
             _viewModelListOrtType.selectItem(args.item);
         }
     });
+
+    UpdateGridData(new Array());
+}
+
+function UpdateGridData(ortTypes) {
+    $("#grid").empty();
+    
+    var entries = new Array();
+    
+	ortTypes.forEach(ortType => {
+		var copy = JSON.parse(JSON.stringify(ortType));
+		copy.Icon = IconConfig.getCssClasses("Ort");
+		entries.push(copy);
+	});
+
+	$("#gridContainer").jsGrid({
+		data: entries
+	});
 }
 
 function setIdToEditLink(id) {

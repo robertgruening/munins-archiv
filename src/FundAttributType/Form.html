@@ -16,6 +16,7 @@
 	<script type="text/javascript" src="../js/controls/control.ErrorMessageBox.js"></script>
 	<!-- basic page functions -->
 	<script type="text/javascript" src="../js/page.js"></script>
+	<script type="text/javascript" src="../js/ui/IconConfig.js"></script>
 	<!-- observer pattern data structure -->
 	<script type="text/javascript" src="../js/ui/GuiClient.js"></script>
 	<!-- model -->
@@ -65,6 +66,16 @@
 					<li><a id=buttonDelete title=löschen class="linkButton riskyAction"><i class="fas fa-trash-alt"></i><label>Löschen</label></a></li>
 					<li><a id=buttonToList title="Liste öffnen" class=linkButton><i class="fas fa-list"></i><label>Liste öffnen</label></a></li>
 				</ul>
+				<div id=divIcon class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Icon, das für Elemente dieses Typs angezeigt wird."></i>
+						<label>Icon: </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
+						<i id=icon class=field ></i>
+					</div>
+				</div>
 				<div id=divBezeichnung class=fieldBlock>
 					<div class=fieldDescription>
 						<i class="help notToPrint fas fa-question-circle" title="Bezeichnung des Fundattributtypen. Dieser muss eindeutig sein."></i>

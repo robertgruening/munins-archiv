@@ -14,6 +14,7 @@ $(document).ready(function () {
 	InitButtonToList();
 
 	InitFieldId();
+	InitFieldIcon();
 	InitFieldBezeichnung();
 	InitFieldCountOfFundAttribute();
 
@@ -100,6 +101,17 @@ function setId(id) {
 		document.title = "Fundattributtyp: (" + id + ")";
 		EnableButtonDelete();
 	}
+}
+//#endregion
+
+//#region Icon
+function InitFieldIcon() {
+	_viewModelFormFundAttributType.register("bezeichnung", new GuiClient(setIcon, null));
+}
+
+function setIcon(bezeichnung) {
+	console.log("setting value of 'Icon' to " + IconConfig.getCssClasses("FundAttribut"));
+	$("#icon").addClass(IconConfig.getCssClasses("FundAttribut"));
 }
 //#endregion
 

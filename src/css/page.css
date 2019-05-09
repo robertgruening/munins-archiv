@@ -47,6 +47,13 @@ html, body {
     color: #e78f08;
 }
 
+.selectedRow .fa-box,
+.selectedRow .fa-box-open,
+.selectedRow .fa-calendar-alt,
+.selectedRow .fa-tag  {
+    color: white;
+}
+
 .fa-puzzle-piece,
 .fa-map-marker{
    color: SteelBlue;
