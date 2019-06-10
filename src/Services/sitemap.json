@@ -1,10 +1,12 @@
 [
 	{
 		"Title" : "Tagebuch",
+		"Icon" : "fas-book",
 		"Children" : 
 		[
 			{
 				"Title" : "Fundstellen",
+				"Icon" : "fas-flag",
 				"Children" : 
 				[
 					{
@@ -29,6 +31,7 @@
 			},
 			{
 				"Title" : "Orte",
+				"Icon" : "fas-map-marker",
 				"Children" :
 				[
 					{
@@ -55,6 +58,7 @@
 			},
 			{
 				"Title" : "Kontexte",
+				"Icon" : "",
 				"Children" :
 				[
 					{
@@ -68,10 +72,12 @@
 	},
 	{
 		"Title" : "Archiv",
+		"Icon" : "fas-archive",
 		"Children" :
 		[
 			{
 				"Title" : "Ablagen",
+				"Icon" : "fas-box",
 				"Children" :
 				[
 					{
@@ -95,6 +101,7 @@
 			},
 			{
 				"Title" : "Funde",
+				"Icon" : "fas-puzzle-piece",
 				"Children" :
 				[
 					{
@@ -117,6 +124,7 @@
 			},
 			{
 				"Title" : "Fundattribute",
+				"Icon" : "fas-tag",
 				"Children" :
 				[
 					{
@@ -130,10 +138,12 @@
 	},
 	{
 		"Title" : "Administration",
+		"Icon" : "fas-cogs",
 		"Children" :
 		[
 			{
 				"Title" : "Organisation",
+				"Icon" : "fas-users",
 				"Children" :
 				[
 					{
@@ -150,6 +160,7 @@
 			},
 			{
 				"Title" : "Typen",
+				"Icon" : "fas-cubes",
 				"Children" :
 				[
 					{
@@ -207,20 +218,24 @@
 			},
 			{
 				"Title" : "Anwendung",
+				"Icon" : "fas-cogs",
 				"Children" :
 				[
 					{
 						"Title" : "Sicherung erstellen",
+						"Icon" : "fas-hdd",
 						"Action" : "Backup();",
 						"Enabled" : false
 					},
 					{
 						"Title" : "Server herunterfahren",
+						"Icon" : "fas-power-off",
 						"Action" : "Shutdown();",
 						"Enabled" : false
 					},
 					{
 						"Title" : "Log einsehen",
+						"Icon" : "fas-file-alt",
 						"URL" : "/Munins Archiv/src/Logs/Log.html",
 						"Enabled" : true
 					},
@@ -234,6 +249,7 @@
 	},
 	{
 		"Title" : "Hilfe",
+		"Icon" : "fas-question-circle",
 		"Action" : "Help();",
 		"Enabled" : false
 	}
