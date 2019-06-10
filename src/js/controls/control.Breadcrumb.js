@@ -33,21 +33,10 @@
 
 	function LoadBreadcrumbItem(options, htmlElement, item)
 	{
-		if (item.URL == undefined)
+		$(htmlElement).append($("<span/>", 
 		{
-			$(htmlElement).append($("<span/>", 
-			{
-				text : item.Title
-			}));
-		}
-		else
-		{
-			$(htmlElement).append($("<a/>", 
-			{
-				href : item.URL,
-				text : item.Title
-			}));
-		}
+			text : item.Title
+		}));
 
 		if (item.Children != undefined &&
 			item.Children != null)

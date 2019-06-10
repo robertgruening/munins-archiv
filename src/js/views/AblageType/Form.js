@@ -250,10 +250,7 @@ function ResetPropertiesMessages() {
 //#region open list
 function InitButtonToList() {
 	EnableButtonToList();
-	$("#buttonToList").click( function() {
-        console.log("button 'to list' clicked");
-		window.open("/Munins Archiv/src/AblageType/List.html", "_self");
-	});
+	$("#buttonToList").attr("href", "/Munins Archiv/src/AblageType/List.html", "_self");
 }
 
 function EnableButtonToList() {

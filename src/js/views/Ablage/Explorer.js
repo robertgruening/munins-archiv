@@ -1,18 +1,86 @@
-$(document).ready(function() {	
-	_webServiceClientAblage.Register("delete", new GuiClient(LoadAblagen));
-	_webServiceClientAblage.Register("create", new GuiClient(LoadAblagen));
-	_webServiceClientAblage.Register("save", new GuiClient(LoadAblagen));
-	_webServiceClientAblage.Register("loadAll", new GuiClient(FillTreeWithRootAblagen));
-	_webServiceClientAblage.Register("loadAll", new GuiClient(FillGridWithRootAblagen));
-	_webServiceClientAblage.Register("load", new GuiClient(FillTreeWithAblageChildren));
-	_webServiceClientAblage.Register("load", new GuiClient(FillGridWithAblageChildren));
-	_webServiceClientAblage.Register("load", new GuiClient(SetSelectedElement));
+var _viewModelExplorerAblage = null;
 
+$(document).ready(function() {	
+	var viewModelFactory = new ViewModelFactory();
+	_viewModelExplorerAblage = viewModelFactory.getViewModelExplorerAblage();
+
+    RegisterToViewModel();
     InitBreadcrumb();
-	InitToolbar();	
-	InitTree();
+	InitButtonNew();
+	InitButtonOpen();
+    InitButtonEdit();
+    InitButtonDelete();
+	InitButtonOpenParent();
+	InitButtonOpenAbstractRoot();
+
+	InitFieldPath();
 	InitGrid();
+
+	if (getUrlParameterValue("Id")) {
+		_viewModelExplorerAblage.load(getUrlParameterValue("Id"));
+	}
+	else {
+		_viewModelExplorerAblage.load();
+	}
 });
+
+function RegisterToViewModel() {
+	_viewModelExplorerAblage.register("id", new GuiClient(EnableButtonNew, showErrorMessages));
+	_viewModelExplorerAblage.register("childItemSelected", new GuiClient(markSelectedChildItem, showErrorMessages));
+	_viewModelExplorerAblage.register("childItemSelected", new GuiClient(EnableButtonOpen, null));
+	_viewModelExplorerAblage.register("childItemSelected", new GuiClient(EnableButtonEdit, null));
+	_viewModelExplorerAblage.register("childItemSelected", new GuiClient(EnableButtonDelete, null));
+    _viewModelExplorerAblage.register("childSelectionCleared", new GuiClient(clearSelectedItemHighlighting, null));
+	_viewModelExplorerAblage.register("childSelectionCleared", new GuiClient(DisableButtonOpen, null));
+	_viewModelExplorerAblage.register("childSelectionCleared", new GuiClient(DisableButtonEdit, null));
+	_viewModelExplorerAblage.register("childSelectionCleared", new GuiClient(DisableButtonDelete, null));
+}
+
+function clearSelectedItemHighlighting() {
+    $(".jsgrid-row, .jsgrid-alt-row").each(function(index){
+        $(this).removeClass("selectedRow");
+    });
+}
+
+function markSelectedParentItem(selectedItemArgs) {
+    clearSelectedItemHighlighting();
+
+    if (selectedItemArgs == undefined ||
+        selectedItemArgs == null ||
+        selectedItemArgs.Index == undefined)
+    {
+        console.error("Setting selected parent item index is not set!")
+        return;
+    }
+
+    console.debug("Setting selected parent item:", selectedItemArgs);
+
+    var row = $(".jsgrid-row, .jsgrid-alt-row").eq(selectedItemArgs.Index)
+
+    console.debug("Selected row:", row);
+
+    row.addClass("selectedRow");
+}
+
+function markSelectedChildItem(selectedItemArgs) {
+    clearSelectedItemHighlighting();
+
+    if (selectedItemArgs == undefined ||
+        selectedItemArgs == null ||
+        selectedItemArgs.Index == undefined)
+    {
+        console.error("Setting selected child item index is not set!")
+        return;
+    }
+
+	console.debug("Setting selected child item:", selectedItemArgs);
+	
+    var row = $(".jsgrid-row, .jsgrid-alt-row").eq(selectedItemArgs.Index)
+
+    console.debug("Selected row:", row);
+
+    row.addClass("selectedRow");
+}
 
 function InitBreadcrumb()
 {
@@ -20,299 +88,200 @@ function InitBreadcrumb()
         PageName : "AblageExplorer"
 	});
 }
-
-function InitToolbar()
-{
-	DisableCreateButton();
-	$("#create").click(ShowFormCreate);
-
-	DisableEditButton();
-	$("#edit").click(ShowFormEdit);
-
-	DisableMoveButton();
-	$("#move").click(ShowFormMove);
-
-	DisableDeleteButton();
-	$("#delete").click(ShowDialogDelete);
+//#region form actions
+//#region new
+function InitButtonNew() {
+	EnableButtonNew();
+	$("#buttonNew").attr("href", "/Munins Archiv/src/Ablage/Form.html");
 }
 
-function EnableCreateButton()
-{
-	$("#create").removeClass("disabled");
-}
+function EnableButtonNew(id) {
+	if (id === undefined ||
+		id === null) {
 
-function DisableCreateButton()
-{
-	$("#create").addClass("disabled");
-}
-
-function EnableEditButton()
-{
-	$("#edit").removeClass("disabled");
-}
-
-function DisableEditButton()
-{
-	$("#edit").addClass("disabled");
-}
-
-function EnableMoveButton()
-{
-	$("#move").removeClass("disabled");
-}
-
-function DisableMoveButton()
-{
-	$("#move").addClass("disabled");
-}
-
-function EnableDeleteButton()
-{
-	$("#delete").removeClass("disabled");
-}
-
-function DisableDeleteButton()
-{
-	$("#delete").addClass("disabled");
-}
-
-/* BEGIN Path Textbox */
-
-function ResetPath()
-{
-	$("#path").val("/");
-}
-
-function SetPath(node)
-{
-	if (node == undefined ||
-		node == null ||
-		node.Path == undefined ||
-		node.Path == null)
-	{
-		ResetPath();
+		$("#buttonNew").attr("href", "/Munins Archiv/src/Ablage/Form.html");
 	}
-	else
-	{
-		$("#path").val("/" + node.Path);
+	else {
+		$("#buttonNew").attr("href", "/Munins Archiv/src/Ablage/Form.html?Parent_Id=" + id);
 	}
+
+	$("#buttonNew").removeClass("disabled");
+	$("#buttonNew").prop("disabled", false);
 }
 
-/* END Path Textbox */
+function DisableButtonNew() {
+	$("#buttonNew").addClass("disabled");
+	$("#buttonNew").prop("disabled", true);
+}
+//#endregion
 
-/* BEGIN Tree */
-
-function InitTree()
-{
-	$("#tree")
-	.on("open_node.jstree", function(event, data) {
-		if (data.node.id == GetAbstractAblageNode().id)
-		{
-			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Root", "open"));
-		}
-		else
-		{
-			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Ablage", "open"));
-		}
-	})
-	.on("close_node.jstree", function(event, data) {
-		if (data.node.id == GetAbstractAblageNode().id)
-		{
-			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Root"));
-		}
-		else
-		{
-			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Ablage"));
-		}
-	})
-	.on("select_node.jstree", function(event, data) {
-		ResetPath();
-
-		if ($("#tree").jstree(true).is_loaded(data.node))
-		{
-			if (data.node.original.id != undefined &&
-				data.node.original.id == GetAbstractAblageNode().id)
-			{
-				SetSelectedElement(GetAbstractAblageNode());
-				_webServiceClientAblage.LoadAll("tree.selected");
-			}
-			else
-			{
-				if (data.node.original.original == undefined)
-				{
-					SetSelectedElement(data.node.original);
-					SetPath(data.node.original);
-				}
-				else
-				{
-					SetSelectedElement(data.node.original.original);
-					SetPath(data.node.original.original);
-				}
-
-				_webServiceClientAblage.Load(GetSelectedElement(), "tree.selected");
-			}
-		}
-		else
-		{
-			$("#tree").jstree(true).load_node(data.node, function() {
-				var loadedSelectedNode = $("#tree").jstree(true).get_node(data.node);
-
-				if (data.node.original.id != undefined &&
-					data.node.original.id == GetAbstractAblageNode().id)
-				{
-					SetSelectedElement(GetAbstractAblageNode());
-					_webServiceClientAblage.LoadAll("tree.selected");
-				}
-				else
-				{
-					if (loadedSelectedNode.original.original == undefined)
-					{
-						SetSelectedElement(loadedSelectedNode.original);
-						SetPath(oadedSelectedNode.original);
-					}
-					else
-					{
-						SetSelectedElement(loadedSelectedNode.original.original);
-						SetPath(loadedSelectedNode.original.original);
-					}
-				}
-			});
-		}
-	})
-	.on("loaded.jstree", function(event, data) {
-		$("#tree").jstree(true).open_node(GetAbstractAblageNode().id, function() {
-			$("#tree").jstree(true).select_node(GetAbstractAblageNode().id);
-		});
-	})
-    .jstree({
-        "core": {
-			"multiple": false,
-			"check_callback" : true,
-			"data" : function (node, callbackFunction) {
-				if (node.id === "#")
-				{
-					callbackFunction(new Array(CreateAbstractAblageNode()));
-				}
-				else if (node.id == GetAbstractAblageNode().id)
-				{
-					_webServiceClientAblage.LoadAll("tree.loaded");
-					callbackFunction(new Array());
-				}
-				else
-				{
-					if (node.original.original == undefined)
-					{
-						_webServiceClientAblage.Load(node.original, "tree.loaded");
-					}
-					else
-					{
-						_webServiceClientAblage.Load(node.original.original, "tree.loaded");
-					}
-					callbackFunction(new Array());
-				}
-			}
-		}
-    });
+//#region open
+function InitButtonOpen() {
+	DisableButtonOpen();
+	$("#buttonOpen").click();
 }
 
-function FillTreeWithRootAblagen(rootAblagen, sender)
-{
-	if (sender == undefined ||
-		sender != "tree.loaded")
+function EnableButtonOpen(args) {
+	if (args.SelectedItem.Id === undefined) {
+		$("#buttonOpen").attr("href", "/Munins Archiv/src/Ablage/Explorer.html");
+	}
+	else {
+		$("#buttonOpen").attr("href", "/Munins Archiv/src/Ablage/Explorer.html?Id=" + args.SelectedItem.Id);
+	}
+
+	$("#buttonOpen").removeClass("disabled");
+	$("#buttonOpen").prop("disabled", false);
+}
+
+function DisableButtonOpen() {
+	$("#buttonOpen").addClass("disabled");
+	$("#buttonOpen").prop("disabled", true);
+}
+//#endregion
+
+//#region edit
+function InitButtonEdit() {
+	DisableButtonEdit();
+	$("#buttonEdit").click();
+}
+
+function EnableButtonEdit(args) {
+	if (args.SelectedItem.Id === undefined) {
+		$("#buttonEdit").attr("href", "/Munins Archiv/src/Ablage/Form.html");
+	}
+	else {
+		$("#buttonEdit").attr("href", "/Munins Archiv/src/Ablage/Form.html?Id=" + args.SelectedItem.Id);
+	}
+
+	$("#buttonEdit").removeClass("disabled");
+	$("#buttonEdit").prop("disabled", false);
+}
+
+function DisableButtonEdit() {
+	$("#buttonEdit").addClass("disabled");
+	$("#buttonEdit").prop("disabled", true);
+}
+//#endregion
+
+//#region delete
+function InitButtonDelete() {
+	DisableButtonDelete();
+	$("#buttonDelete").click(ShowDialogDelete);
+}
+
+function EnableButtonDelete() {
+	$("#buttonDelete").removeClass("disabled");
+	$("#buttonDelete").prop("disabled", false);
+}
+
+function DisableButtonDelete() {
+	$("#buttonDelete").addClass("disabled");
+	$("#buttonDelete").prop("disabled", true);
+}
+
+function ShowDialogDelete() {
+	$("#dialogDelete").empty();
+	$("#dialogDelete").append(
+		$("<p>").append("Möchten Sie diese Ablage löschen?")
+	);
+	$("#dialogDelete").dialog({
+		height: "auto",
+		width: 750,
+		modal: true,
+		buttons: {
+			"Löschen": function () {
+				_viewModelExplorerAblage.delete();
+
+				$(this).dialog("close");
+			},
+			"Abbrechen": function () {
+				$(this).dialog("close");
+			}
+		}
+	});
+
+	$("#DialogDelete").dialog("open");
+}
+//#endregion
+
+//#region open parent
+function InitButtonOpenParent() {
+	DisableButtonOpenParent();
+	_viewModelExplorerAblage.register("parent", new GuiClient(EnableButtonOpenParent, showErrorMessages));
+}
+
+function EnableButtonOpenParent(parent) {
+	if (parent === undefined ||
+		parent === null)
 	{
+		DisableButtonOpenParent();
 		return;
 	}
 
-	var children = $("#tree").jstree(true).get_node(GetAbstractAblageNode().id).children;
-	$("#tree").jstree(true).delete_node(children);
-
-	for (var i = 0; i < rootAblagen.length; i++)
-	{
-		var ablageNode = CreateAblageNode(rootAblagen[i]);
-		ablageNode.parent = GetAbstractAblageNode().id;
-		$("#tree").jstree(true).create_node(ablageNode.parent, ablageNode, "last");
+	if (parent.Id === undefined) {
+		$("#buttonOpenParent").attr("href", "/Munins Archiv/src/Ablage/Explorer.html");
 	}
-	
-	$("#tree").jstree(true).open_node(GetAbstractAblageNode().id);
+	else {
+		$("#buttonOpenParent").attr("href", "/Munins Archiv/src/Ablage/Explorer.html?Id=" + parent.Id);
+	}
+
+	$("#buttonOpenParent").removeClass("disabled");
+	$("#buttonOpenParent").prop("disabled", false);
 }
 
-function FillTreeWithAblageChildren(ablage, sender)
-{
-	if (sender == undefined ||
-		sender != "tree.loaded")
+function DisableButtonOpenParent() {
+	$("#buttonOpenParent").addClass("disabled");
+	$("#buttonOpenParent").prop("disabled", true);
+}
+//#endregion
+
+//#region open abstract root
+function InitButtonOpenAbstractRoot() {
+	DisableButtonOpenAbstractRoot();
+	_viewModelExplorerAblage.register("parent", new GuiClient(EnableButtonOpenAbstractRoot, showErrorMessages));
+	$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/src/Ablage/Explorer.html");
+}
+
+function EnableButtonOpenAbstractRoot(parent) {
+	if (parent === undefined ||
+		parent === null)
 	{
+		DisableButtonOpenAbstractRoot();
 		return;
 	}
 
-	var node = $("#tree").jstree(true).get_node(ablage.Id);
-	$("#tree").jstree(true).delete_node(node.children);
-	node.original = ablage;
+	$("#buttonOpenAbstractRoot").removeClass("disabled");
+	$("#buttonOpenAbstractRoot").prop("disabled", false);
+}
 
-	for (var i = 0; i < ablage.Children.length; i++)
-	{
-		var ablageNode = CreateAblageNode(ablage.Children[i]);
-		ablageNode.parent = ablage.Id;
-		
-		$("#tree").jstree(true).create_node(ablageNode.parent, ablageNode, "last");
+function DisableButtonOpenAbstractRoot() {
+	$("#buttonOpenAbstractRoot").addClass("disabled");
+	$("#buttonOpenAbstractRoot").prop("disabled", true);
+}
+//#endregion
+//#endregion
+
+//#region fields
+//#region path
+function InitFieldPath() {
+	_viewModelExplorerAblage.register("path", new GuiClient(setPath, showErrorMessages));
+}
+
+function setPath(path) {
+	console.info("setting value of 'Path'");
+	console.debug("'Path' is", path);
+
+	if (!path.startsWith("/")) {
+		console.warn("added '/' to path");
+		path = "/" + path;
 	}
 
-	$("#tree").jstree(true).open_node(ablage.Id);
+	$("#path").val(path);
 }
+//#endregion
+//#endre
 
-function GetAbstractAblageNode()
-{
-	return CreateAbstractAblageNode();
-}
-
-function CreateAbstractAblageNode()
-{
-	var node = new Object();
-	node.id = -1;
-	node.text = "Ablagen";
-	node.children = true;
-	node.icon = GetIcon("Root");
-	node.BaseType = "Root";
-
-	return node;
-}
-
-function CreateAblageNode(ablage)
-{
-	var node = new Object();
-	node.id = ablage.Id;
-	node.text = ablage.Type.Bezeichnung + ": " + ablage.Bezeichnung;
-	node.original = ablage;
-	node.children = true;
-	node.icon = GetIcon("Ablage");
-	node.BaseType = "Ablage";
-
-	return node;
-}
-
-function LoadAblagen(node, sender)
-{
-	if (sender == "saved" ||
-		sender == "deleted")
-	{
-		if (GetSelectedElement().Parent == null)
-		{
-			$("#tree").jstree(true).refresh_node(GetAbstractAblageNode().id);
-		}
-		else
-		{
-			$("#tree").jstree(true).refresh_node(GetSelectedElement().Parent.Id);
-		}
-	}
-	else
-	{
-		$("#tree").jstree(true).refresh_node(GetSelectedElement().Id);
-	}
-}
-
-/* END Tree */
-
-/* BEGIN Grid */
-
+//#region grid
 var IconField = function(config) {
 	jsGrid.Field.call(this, config);
 }
@@ -325,15 +294,16 @@ IconField.prototype = new jsGrid.Field({
 
 function InitGrid()
 {
-	_webServiceClientAblageType.LoadAll();
-	jsGrid.fields.icon = IconField;
-	$("#grid").jsGrid({
-        width: "70%",
+	_viewModelExplorerAblage.register("children", new GuiClient(UpdateGridDataChildren, showErrorMessages));
 
-		selecting: true,
+    jsGrid.fields.icon = IconField;
+    
+    $("#grid").jsGrid({
+        width: "100%",
+
         inserting: false,
         editing: false,
-        sorting: true,
+        sorting: false,
         paging: false,
 		autoload: false,
 		
@@ -345,7 +315,7 @@ function InitGrid()
 			},
 			{ 
 				title: "Typ",
-				name: "Type",
+				name: "Type.Bezeichnung",
 				type: "text"
 			},
 			{ 
@@ -355,282 +325,65 @@ function InitGrid()
 			}
 		],
 
-		rowClick: function(args) {
-			$("#grid tr").removeClass("selected-row");			
-
-			if (args.item.BaseType == "Ablage")
-			{
-				_webServiceClientAblage.Load(args.item.Original, "grid.selected");
-			}
-			else
-			{
-				SetSelectedElement(null);
-			}
+        rowClick: function(args) {
+			console.info("row clicked");
+			console.debug("selected grid item", args.item);
 			
-			$selectedRow = $(args.event.target).closest("tr");
-			$selectedRow.addClass("selected-row");
-		},
+			_viewModelExplorerAblage.selectChildItem(args.item);
+        },
 
-		rowDoubleClick: function(data) {
-			$("#tree").jstree(true).deselect_all();
+		rowDoubleClick: function(args) {
+			console.info("row double clicked");
+			console.debug("selected grid item", args.item);
+			
+			console.warn("view model will not be informed about double clicked grid item");
 
-			var selectedNode = $("#tree").jstree(true).get_node(data.item.Original.Id);
-
-			if (selectedNode == undefined)
-			{
-				$("#tree").jstree(true).select_node(GetAbstractAblageNode().id);
-				return;
+			if (args.item.Id === undefined) {
+				console.debug("selected grid item is abstract root");
+				window.open("/Munins Archiv/src/Ablage/Explorer.html", "_self");
+			}
+			else if (args.item.Parent === undefined) {
+				console.debug("selected grid item is root");
+				window.open("/Munins Archiv/src/Ablage/Explorer.html", "_self");
+			}
+			else {
+				console.debug("selected grid item is standard node");
+				window.open("/Munins Archiv/src/Ablage/Explorer.html?Id=" + args.item.Id, "_self");
 			}
 
-			if (data.item.Bezeichnung === "..")
-			{
-				$("#tree").jstree(true).select_node(selectedNode.parent);
-			}
-			else
-			{
-				$("#tree").jstree(true).open_node(data.item.Original.Id, function(){
-					$("#tree").jstree(true).select_node(data.item.Original.Id);
-				});
-			}
 		}
-	});
+    });
 }
 
-function FillGridWithRootAblagen(ablagen, sender)
-{
-	if (sender == undefined || 
-		(sender != "tree.loaded" &&
-		 sender != "tree.selected"))
+function UpdateGridDataChildren(children) {
+	console.info("updating children in grid");
+
+	if (!_viewModelExplorerAblage.hasParent())
 	{
-		return;
+		console.debug("children have no parent");
+		console.info("clearing grid");
+		$("#grid").empty();
 	}
-
-	$("#grid").empty();
-
+    
 	var entries = new Array();
 
-	ablagen.forEach(ablage => {
-		var entry = new Object();
-		entry.Bezeichnung = ablage.Bezeichnung;
-		entry.Type = ablage.Type.Bezeichnung;
-		entry.BaseType = "Ablage";
-		entry.Icon = GetIcon("Ablage");
-		entry.Original = ablage;
-		entries.push(entry);
+	if (_viewModelExplorerAblage.hasParent())
+	{
+		console.debug("children have a parent");
+		entries = entries.concat($("#grid").jsGrid("option", "data"));
+		console.debug("getting data from grid", entries);
+	}
+
+	console.info("adding " + children.length + " children to the grid");
+    
+	children.forEach(child => {
+		var copy = JSON.parse(JSON.stringify(child));
+		copy.Icon = IconConfig.getCssClasses("Ablage");
+		entries.push(copy);
 	});
 
 	$("#grid").jsGrid({
 		data: entries
 	});
 }
-
-function FillGridWithAblageChildren(ablage, sender)
-{
-	if (sender == undefined || 
-		(sender != "tree.loaded" &&
-		 sender != "tree.selected"))
-	{
-		return;
-	}
-
-	$("#grid").empty();
-
-	var entries = new Array();
-
-	var entry = new Object();
-	entry.Bezeichnung = "..";
-	entry.Type = ablage.Type.Bezeichnung;
-	entry.BaseType = "Ablage";
-	entry.Icon = GetIcon("Ablage", "open");
-	entry.Original = ablage;
-	entries.push(entry);
-
-	ablage.Children.forEach(child => {
-		var entry = new Object();
-		entry.Bezeichnung = child.Bezeichnung;
-		entry.Type = child.Type.Bezeichnung;
-		entry.BaseType = "Ablage";
-		entry.Icon = GetIcon("Ablage");
-		entry.Original = child;
-		entries.push(entry);
-	});
-
-	ablage.Funde.forEach(fund => {
-		var entry = new Object();
-		entry.Bezeichnung = getFundLabelText(fund);
-		entry.Type = "Fund";
-		entry.BaseType = "Fund";
-		entry.Icon = GetIcon("Fund");
-		entry.Original = fund;
-		entries.push(entry);
-	});
-
-	$("#grid").jsGrid({
-		data: entries
-	});
-}
-
-/* END Grid */
-
-function GetIcon(type, state)
-{
-	return IconConfig.getCssClasses(type, state);
-}
-
-/* BEGIN Toolbar */
-
-function ShowFormCreate()
-{
-	var selectedNode = GetSelectedElement();
-	var newNode = new Ablage();
-
-	if (selectedNode.Id != undefined)
-	{
-		newNode.Parent = selectedNode;
-		newNode.Path = selectedNode.Path + "/";
-	}
-
-	$("#form").dialog({
-		height: "auto",
-		width: 750,
-		title: "Anlegen",
-		modal: true,
-		resizable: false,
-		buttons: {
-			"Speichern": function()
-			{
-				newNode.Bezeichnung = GetAblageBezeichnung();
-				newNode.Type.Id = GetAblageTypeId();
-				
-				_webServiceClientAblage.Create(newNode, "saved");
-
-				$(this).dialog("close");
-			},
-			"Abbrechen": function()
-			{
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#form").dialog("open");
-	FillEditForm(newNode);
-}
-
-function ShowFormEdit()
-{
-	var selectedNode = GetSelectedElement();
-
-	if (selectedNode == null)
-	{
-		return;
-	}
-
-	$("#form").dialog({
-		height: "auto",
-		width: 750,
-		title: "Bearbeiten",
-		modal: true,
-		resizable: false,
-		buttons: {
-			"Speichern": function()
-			{
-				selectedNode.Bezeichnung = GetAblageBezeichnung();
-				selectedNode.Type = new Object();
-				selectedNode.Type.Id = GetAblageTypeId();
-				
-				_webServiceClientAblage.Save(selectedNode, "saved");
-
-				$(this).dialog("close");
-			},
-			"Abbrechen": function()
-			{
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#form").dialog("open");
-	FillEditForm(selectedNode);
-}
-
-function ShowFormMove()
-{
-	var selectedNode = GetSelectedElement();
-
-	if (selectedNode == null)
-	{
-		return;
-	}
-
-	$("#dialogMove").dialog({
-		height: "auto",
-		width: 750,
-		title: "Verschieben",
-		modal: true,
-		resizable: false,
-		buttons: {
-			"Speichern": function()
-			{
-				var selectedElement = GetSelectedElement();
-
-				if (GetSelectedParentElement() == null)
-				{	
-					$(this).dialog("close");				
-				}
-				else if (GetSelectedParentElement().Id == GetAbstractAblageNode().Id)
-				{
-					selectedElement.Parent = null;
-				}
-				else
-				{
-					selectedElement.Parent = GetSelectedParentElement();
-				}
-				
-				_webServiceClientAblage.Save(selectedNode, "saved");
-
-				$(this).dialog("close");
-				$("#tree").jstree(true).refresh();
-			},
-			"Abbrechen": function()
-			{
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#treeMove").jstree(true).refresh();
-
-	$("#dialogMove").dialog("open");
-}
-
-function ShowDialogDelete()
-{
-	var selectedNode = GetSelectedElement();
-
-	$("#dialogDelete").empty();
-	$("#dialogDelete").append(
-		$("<p>").append("Möchten Sie \"" + selectedNode.Type.Bezeichnung + ": " + selectedNode.Bezeichnung + "\" (/" + selectedNode.Path + ") löschen?")
-	);
-	$("#dialogDelete").dialog({
-		height: "auto",
-		width: 750,
-		modal: true,
-		buttons: {
-			"Löschen": function()
-			{
-				_webServiceClientAblage.Delete(selectedNode, "deleted");
-
-				$(this).dialog("close");
-			},
-			"Abbrechen": function()
-			{
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#DialogDelete").dialog("open");
-}
-
-/* BEGIN Toolbar */
+//#endregion

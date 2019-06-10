@@ -75,9 +75,21 @@
 				"Children" :
 				[
 					{
-						"Title" : "bearbeiten",
+						"Title" : "druchsuchen",
 						"URL" : "/Munins Archiv/src/Ablage/Explorer.html",
 						"PageName" : "AblageExplorer"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/Ablage/Form.html",
+						"PageName" : "AblageFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/Ablage/Form.html",
+						"PageName" : "AblageFormEdit",
+						"Visible" : false
 					}
 				]
 			},

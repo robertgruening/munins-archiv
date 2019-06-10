@@ -1,3 +1,5 @@
+php_value max_input_vars 10000
+
 RewriteEngine	On
 RewriteRule "^Services/(\w+)/?$"                                    "Services/$1.php"                           [NC,L]
 RewriteRule "^Services/(\w+)/([\d;]+)/?$"                           "Services/$1.php?Id=$2"                     [NC,L]

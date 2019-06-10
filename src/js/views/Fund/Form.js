@@ -368,7 +368,7 @@ function setAblage(ablage) {
 	}
 	else {
 		$("#linkSelectedAblage").text("/" + ablage.Path);
-		$("#linkSelectedAblage").attr("href", "../Ablage/Explorer.html?Id=" + ablage.Id);
+		$("#linkSelectedAblage").attr("href", "../Ablage/Form.html?Id=" + ablage.Id);
 	}
 }
 

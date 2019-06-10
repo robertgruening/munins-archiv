@@ -86,7 +86,7 @@ function InitGrid()
 
         inserting: false,
         editing: false,
-        sorting: true,
+        sorting: false,
         paging: false,
         autoload: false,
 

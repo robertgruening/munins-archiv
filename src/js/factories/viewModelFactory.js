@@ -1,4 +1,13 @@
 var ViewModelFactory = function () {
+    this.getViewModelFormAblage = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelFormAblage(webServiceClientFactory.getWebServiceClientAblage());
+        viewModel.init();
+
+        return viewModel;
+    };
+
     this.getViewModelFormAblageType = function()
     {
         var webServiceClientFactory = new WebServiceClientFactory();
@@ -57,6 +66,15 @@ var ViewModelFactory = function () {
     {
         var webServiceClientFactory = new WebServiceClientFactory();
         var viewModel = new ViewModelListOrtType(webServiceClientFactory.getWebServiceClientOrtType());
+        viewModel.init();
+
+        return viewModel;
+    };
+
+    this.getViewModelExplorerAblage = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelExplorerAblage(webServiceClientFactory.getWebServiceClientAblage());
         viewModel.init();
 
         return viewModel;

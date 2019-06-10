@@ -1,17 +1,16 @@
 #path {
-    float: left;
+    /*float: left;*/
     width: 85%;
 }
 
-#tree {
+/*#tree {
     width: 30%;
     float: left;
     overflow-x: scroll;
-}
+}*/
 
 #grid {
-    width: 70%;
-    float: left;
+    width: 100%;
 }
 
 .selected-row,

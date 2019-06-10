@@ -32,39 +32,11 @@ html, body {
 	color: #333333;
 }
 
-.fa-door,
-.fa-door-open,
-.fa-folder,
-.fa-folder-open,
-.fa-tags {
-   color: Black;   
-}
-
-.fa-box,
-.fa-box-open,
-.fa-calendar-alt,
-.fa-tag  {
-    color: #e78f08;
-}
-
 .selectedRow .fa-box,
 .selectedRow .fa-box-open,
 .selectedRow .fa-calendar-alt,
 .selectedRow .fa-tag  {
     color: white;
-}
-
-.fa-puzzle-piece,
-.fa-map-marker{
-   color: SteelBlue;
-}
-
-.fa-flag {
-    color: #b81900;
-}
-
-.fa-map {
-    color: #67b021;
 }
 
 .fa-question-circle {
@@ -74,6 +46,7 @@ html, body {
 .linkButton {
     padding: 5px;
     color:#333333;
+    text-decoration: none
 }
 
 .linkButton label {
