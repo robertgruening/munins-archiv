@@ -135,7 +135,7 @@ Die Anwendung richtet sich an unterschiedliche Zielgruppen (Stakeholder), die un
 
 #### 5.1.1. Archivarin
 
-Die Persona *Archivarin* heißt Gabi, ist 55 Jahre alt, verheiratet und hat zwei Kinder, die bereits außer Haus sind. Sie ist schon seit zehn Jahren in der archäologischen Arbeitsgruppe des Ortes tätig und gehört zu den aktiven Mitgliedern. Gabi hat ein abgeschlossenes Studium der Völkerkunde und arbeitet für ein Museum, für das sie Schriften anferrtigt und Vorträge hält. Im Bereich von Text- und Tabellenprogrammen hat Gabi grundlegende Kenntnisse. Weil man bei Softwareprogrammen jedoch an sie viele Dinge mitdenken muss, z. B. Vorbereiten von Daten, wünscht sie sich ein System, das "mitdenkt", sie führt, sodass sie mit wenig Aufwand ihr Ziel erreicht.
+Die Persona *Archivarin* heißt Gabi, ist 55 Jahre alt, verheiratet und hat zwei Kinder, die bereits außer Haus sind. Sie ist schon seit zehn Jahren in der archäologischen Arbeitsgruppe des Ortes tätig und gehört zu den aktiven Mitgliedern. Gabi hat ein abgeschlossenes Studium der Völkerkunde und arbeitet für ein Museum, für das sie Schriften anfertigt und Vorträge hält. Im Bereich von Text- und Tabellenprogrammen hat Gabi grundlegende Kenntnisse. Weil man bei Softwareprogrammen jedoch an viele Dinge denken muss, z. B. Vorbereiten von Daten, wünscht sie sich ein System, das "mitdenkt", sie führt, sodass sie mit wenig Aufwand ihr Ziel erreicht.
 
 Als Archivarin empfielt Gabi Richtlinien für die Verwaltung des Archivs und sorgt für deren Einhaltung.
 
