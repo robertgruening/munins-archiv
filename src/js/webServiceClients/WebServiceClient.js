@@ -53,7 +53,8 @@ var WebServiceClient = function () {
 				type: "POST",
 				url: "../Services/" + this.getModelName() + "/",
 				dataType: "json",
-				data: element,
+				contentType: "application/json",
+				data: JSON.stringify(element),
 				success: function (data, textStatus, jqXHR) {
 					controller.Update("create", data, sender);
 				},
@@ -76,7 +77,8 @@ var WebServiceClient = function () {
 				type: "PUT",
 				url: "../Services/" + this.getModelName() + "/" + element.Id,
 				dataType: "json",
-				data: element,
+				contentType: "application/json",
+				data: JSON.stringify(element),
 				success: function (data, textStatus, jqXHR) {
 					controller.Update("save", data, sender);
 				},

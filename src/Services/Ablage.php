@@ -29,7 +29,13 @@ function Create()
     global $logger;
     $logger->info("Ablage-erzeugen gestartet");
 
-    parse_str(file_get_contents("php://input"), $ablageObject);
+    $ablageObject = json_decode(file_get_contents('php://input'), true);
+
+    if (json_last_error() != JSON_ERROR_NONE)
+    {
+        $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
+        return;
+    }
     
     $ablageFactory = new AblageFactory();
     $ablage = $ablageFactory->convertToInstance($ablageObject);
@@ -55,7 +61,13 @@ function Update()
     global $logger;
     $logger->info("Ablage-anhand-ID-aktualisieren gestartet");
 
-    parse_str(file_get_contents("php://input"),$ablageObject);
+    $ablageObject = json_decode(file_get_contents('php://input'), true);
+
+    if (json_last_error() != JSON_ERROR_NONE)
+    {
+        $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
+        return;
+    }
 
     if (isset($_GET["Id"]))
     {
