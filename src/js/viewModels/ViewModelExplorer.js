@@ -26,9 +26,6 @@ var ViewModelExplorer = function (webServiceClient) {
 			create: new Array(),
 			save: new Array(),
 			delete: new Array(),
-			dataChanged: new Array(),
-			parentItemSelected : new Array(),
-			parentSelectionCleared : new Array(),
 			childItemSelected : new Array(),
 			childSelectionCleared : new Array(),
 		},
@@ -64,49 +61,6 @@ var ViewModelExplorer = function (webServiceClient) {
 		this._webServiceClient.Delete(elementToBeDeleted, "delete");
 	};
 	//#endregion
-
-	/**
-	 * Gets the selected parent item.
-	 * @public
-	 */
-	this.getSelectedParentItem = function () {
-		return this._selectedParentItem;
-	};
-
-	/**
-	 * Clears the selection of the parent item.
-	 * @public
-	 */
-	this.clearParentSelection = function () {
-		this._selectedParentItem = null;
-		this._update("parentSelectionCleared");
-	};
-
-	/**
-	 * Sets the given item as selected. If the item is already selected it becomes unselected.
-	 * @public
-	 */
-	this.selectParentItem = function () {
-		if (this._model.Parent === null) {
-			console.debug("Model has no parent item.");
-			return;
-		}
-
-		if (this._selectedParentItem !== null)
-		{
-			console.debug("The selected parent item is already selected. Selection will be cleared.");
-			this.clearParentSelection();
-			return;
-		}
-
-		console.debug("Parent item will be set as selected parent item.");
-		this._selectedParentItem = this._model.Parent;
-		var args = {
-			SelectedItem : this._selectedParentItem,
-			Index : 0
-		};
-		this._update("parentItemSelected", args);
-	};
 
 	/**
 	 * Gets the selected child item.
@@ -159,23 +113,6 @@ var ViewModelExplorer = function (webServiceClient) {
 				this._update("childItemSelected", args);
 				return;
 			}
-		}
-	};
-
-	this.getSelectedItem = function () {
-		console.info("returning selected item");
-
-		if (this._selectedParentItem !== null) {
-			console.debug("selected item is the parent");
-			return this._selectedParentItem;
-		}
-		else if (this._selectedChildItem !== null) {
-			console.debug("selected item is a child");
-			return this._selectedChildItem;
-		}
-		else {
-			console.debug("nothing is selected");
-			return null;
 		}
 	};
 
@@ -250,8 +187,6 @@ var ViewModelExplorer = function (webServiceClient) {
 		this._model.Children = elements;
 
 		this._updateAllPropertyListeners();
-		this._update("dataChanged", this._model);
-		this.clearParentSelection();
 		this.clearChildSelection();
 		this._update("load", this._model);
 	}
@@ -265,8 +200,6 @@ var ViewModelExplorer = function (webServiceClient) {
 		}
 
 		this._updateAllPropertyListeners();
-		this._update("dataChanged", this._model);
-		this.clearParentSelection();
 		this.clearChildSelection();
 		this._update("load", this._model);
 	}
@@ -291,8 +224,8 @@ var ViewModelExplorer = function (webServiceClient) {
 			this._models.push(element);
 		}
 
-		this._update("dataChanged", this._models);
-		this.clearSelection();
+		this._update("children", this._model.Children);
+		this.clearChildSelection();
 		this._update("create", element);
 	};
 
@@ -307,24 +240,24 @@ var ViewModelExplorer = function (webServiceClient) {
 			}
 		}
 
-		this._update("dataChanged", this._models);
+		this._update("children", this._model.Children);
 		this.clearSelection();
 		this._update("save", element);
 	};
 
 	this._deleteElement = function(element) {
 		
-		for (var i = 0; i < this._models.length; i++)
+		for (var i = 0; i < this._model.Children.length; i++)
 		{
-			if (this._models[i].Id == element.Id)
+			if (this._model.Children[i].Id == element.Id)
 			{
-				this._models.splice(i, 1);
+				this._model.Children.splice(i, 1);
 				break;
 			}
 		}
 
-		this._update("dataChanged", this._models);
-		this.clearSelection();
+		this._update("children", this._model.Children);
+		this.clearChildSelection();
 		this._update("delete", element);
 	};
 
@@ -337,7 +270,6 @@ var ViewModelExplorer = function (webServiceClient) {
 	this.Fail = function (messages, listener) {
 		switch (listener) {
 			case "loadAll": {
-				this._update("dataChanged", this._models);
 				this._fail("loadAll", messages);
 				break;
 			}

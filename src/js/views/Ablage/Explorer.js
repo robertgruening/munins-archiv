@@ -34,6 +34,7 @@ function RegisterToViewModel() {
 	_viewModelExplorerAblage.register("childSelectionCleared", new GuiClient(DisableButtonOpen, null));
 	_viewModelExplorerAblage.register("childSelectionCleared", new GuiClient(DisableButtonEdit, null));
 	_viewModelExplorerAblage.register("childSelectionCleared", new GuiClient(DisableButtonDelete, null));
+	_viewModelExplorerAblage.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
 }
 
 function clearSelectedItemHighlighting() {
@@ -190,7 +191,7 @@ function ShowDialogDelete() {
 		modal: true,
 		buttons: {
 			"Löschen": function () {
-				_viewModelExplorerAblage.delete();
+				_viewModelExplorerAblage.delete(_viewModelExplorerAblage.getSelectedChildItem());
 
 				$(this).dialog("close");
 			},
@@ -201,6 +202,14 @@ function ShowDialogDelete() {
 	});
 
 	$("#DialogDelete").dialog("open");
+}
+
+function showMessageDeleted(element) {
+    $.toast({
+        heading: "Information",
+        text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
+        icon: "success"
+    });
 }
 //#endregion
 
@@ -357,22 +366,9 @@ function InitGrid()
 
 function UpdateGridDataChildren(children) {
 	console.info("updating children in grid");
-
-	if (!_viewModelExplorerAblage.hasParent())
-	{
-		console.debug("children have no parent");
-		console.info("clearing grid");
-		$("#grid").empty();
-	}
+	console.debug("children", children);
     
 	var entries = new Array();
-
-	if (_viewModelExplorerAblage.hasParent())
-	{
-		console.debug("children have a parent");
-		entries = entries.concat($("#grid").jsGrid("option", "data"));
-		console.debug("getting data from grid", entries);
-	}
 
 	console.info("adding " + children.length + " children to the grid");
     

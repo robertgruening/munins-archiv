@@ -31,6 +31,15 @@ function loadForm() {
 		console.debug("Ablage is requested by ID", getUrlParameterValue("Id"));
 		_viewModelFormAblage.load(getUrlParameterValue("Id"));
 	}
+	else if (getUrlParameterValue("Parent_Id")) {
+		console.debug("creation of a new Ablage is requested with parent ID", getUrlParameterValue("Parent_Id"));
+		var parent = new Ablage();
+		parent.Id = getUrlParameterValue("Parent_Id");
+		
+		_viewModelFormAblage.setParent(parent);
+		showMessageParentSet();
+		_viewModelFormAblage.updateAllListeners();
+	}
 	else {
 		console.debug("there is no Ablage requested");
 		_viewModelFormAblage.updateAllListeners();
@@ -39,7 +48,7 @@ function loadForm() {
 
 function InitStatusChanged() {
 	_viewModelFormAblage.register("load", new GuiClient(showMessageLoaded, showErrorMessages));
-	_viewModelFormAblage.register("create", new GuiClient(showMessageCreated, showErrorMessages));
+	_viewModelFormAblage.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormAblage.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormAblage.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
 }
@@ -62,19 +71,23 @@ function InitBreadcrumb()
     }
 }
 
+function loadCreatedElement(element) {
+	window.open(window.location.href.replace(window.location.search, "") + "?Id=" + element.Id, "_self");
+}
+
 //#region messages
-function showMessageLoaded(element) {
-    $.toast({
+function showMessageParentSet() {
+	$.toast({
         heading: "Information",
-        text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
+        text: "übergeordnete Ablage gesetzt",
         icon: "info"
     });
 }
 
-function showMessageCreated(element) {
+function showMessageLoaded(element) {
     $.toast({
         heading: "Information",
-        text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") erzeugt",
+        text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
         icon: "success"
     });
 }
@@ -179,7 +192,14 @@ function InitFieldPath() {
 }
 
 function setPath(path) {
-	console.log("setting value of 'path' to " + path);
+	console.info("setting value of 'Path'");
+	console.debug("'Path' is", path);
+
+	if (!path.startsWith("/")) {
+		console.warn("added '/' to path");
+		path = "/" + path;
+	}
+
 	$("#labelPath").text(path);
 }
 //#endregion

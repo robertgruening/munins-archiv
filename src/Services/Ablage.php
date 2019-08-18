@@ -114,7 +114,7 @@ function Delete()
 
         if ($deleteAblage->run())
         {
-            echo json_encode("Ablage (".$ablage->getId().") ist gelöscht.");
+            echo json_encode($ablage);
         }
         else
         {

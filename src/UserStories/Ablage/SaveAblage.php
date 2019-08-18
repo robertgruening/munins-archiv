@@ -38,15 +38,34 @@ class SaveAblage extends UserStory
             return false;
         }
 
+        $areParametersValid = true;
+        
+        if ($ablage->getBezeichnung() == null ||
+            $ablage->getBezeichnung() == "")
+        {
+            global $logger;
+            $logger->warn("Bezeichnung ist nicht gesetzt!");
+            $this->addMessage("Bezeichnung ist nicht gesetzt!");
+            $areParametersValid = false;
+        }
+        
+        if ($ablage->getType() == null)
+        {
+            global $logger;
+            $logger->warn("Typ ist nicht gesetzt!");
+            $this->addMessage("Typ ist nicht gesetzt!");
+            $areParametersValid = false;
+        }
+
         if (AblageFactory::isNodeInCircleCondition($ablage))
         {
             global $logger;
             $logger->warn("Ablage darf sich nicht selbst zum über- oder untergeordneten Knoten haben!");
             $this->addMessage("Ablage darf sich nicht selbst zum über- oder untergeordneten Knoten haben!");
-            return false;
+            $areParametersValid = false;
         }
 
-        return true;
+        return $areParametersValid;
     }
 
     protected function execute()

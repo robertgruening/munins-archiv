@@ -50,7 +50,7 @@ var ViewModelFormAblage = function (webServiceClient) {
 		return this._model.Type;
 	};
 
-	this.setBezeichnung = function (type) {
+	this.setType = function (type) {
 		this._model.Type = type;
 		this._update("dataChanged");
 	};
