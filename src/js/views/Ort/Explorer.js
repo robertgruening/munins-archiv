@@ -1,18 +1,87 @@
-$(document).ready(function() {	
-	_webServiceClientOrt.Register("delete", new GuiClient(LoadOrte));
-	_webServiceClientOrt.Register("create", new GuiClient(LoadOrte));
-	_webServiceClientOrt.Register("save", new GuiClient(LoadOrte));
-	_webServiceClientOrt.Register("loadAll", new GuiClient(FillTreeWithRootOrte));
-	_webServiceClientOrt.Register("loadAll", new GuiClient(FillGridWithRootOrte));
-	_webServiceClientOrt.Register("load", new GuiClient(FillTreeWithOrtChildren));
-	_webServiceClientOrt.Register("load", new GuiClient(FillGridWithOrtChildren));
-	_webServiceClientOrt.Register("load", new GuiClient(SetSelectedElement));
+var _viewModelExplorerOrt = null;
 
+$(document).ready(function() {	
+	var viewModelFactory = new ViewModelFactory();
+	_viewModelExplorerOrt = viewModelFactory.getViewModelExplorerOrt();
+
+    RegisterToViewModel();
     InitBreadcrumb();
-	InitToolbar();	
-	InitTree();
+	InitButtonNew();
+	InitButtonOpen();
+    InitButtonEdit();
+    InitButtonDelete();
+	InitButtonOpenParent();
+	InitButtonOpenAbstractRoot();
+
+	InitFieldPath();
 	InitGrid();
+
+	if (getUrlParameterValue("Id")) {
+		_viewModelExplorerOrt.load(getUrlParameterValue("Id"));
+	}
+	else {
+		_viewModelExplorerOrt.load();
+	}
 });
+
+function RegisterToViewModel() {
+	_viewModelExplorerOrt.register("id", new GuiClient(EnableButtonNew, showErrorMessages));
+	_viewModelExplorerOrt.register("childItemSelected", new GuiClient(markSelectedChildItem, showErrorMessages));
+	_viewModelExplorerOrt.register("childItemSelected", new GuiClient(EnableButtonOpen, null));
+	_viewModelExplorerOrt.register("childItemSelected", new GuiClient(EnableButtonEdit, null));
+	_viewModelExplorerOrt.register("childItemSelected", new GuiClient(EnableButtonDelete, null));
+    _viewModelExplorerOrt.register("childSelectionCleared", new GuiClient(clearSelectedItemHighlighting, null));
+	_viewModelExplorerOrt.register("childSelectionCleared", new GuiClient(DisableButtonOpen, null));
+	_viewModelExplorerOrt.register("childSelectionCleared", new GuiClient(DisableButtonEdit, null));
+	_viewModelExplorerOrt.register("childSelectionCleared", new GuiClient(DisableButtonDelete, null));
+	_viewModelExplorerOrt.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
+}
+
+function clearSelectedItemHighlighting() {
+    $(".jsgrid-row, .jsgrid-alt-row").each(function(index){
+        $(this).removeClass("selectedRow");
+    });
+}
+
+function markSelectedParentItem(selectedItemArgs) {
+    clearSelectedItemHighlighting();
+
+    if (selectedItemArgs == undefined ||
+        selectedItemArgs == null ||
+        selectedItemArgs.Index == undefined)
+    {
+        console.error("Setting selected parent item index is not set!")
+        return;
+    }
+
+    console.debug("Setting selected parent item:", selectedItemArgs);
+
+    var row = $(".jsgrid-row, .jsgrid-alt-row").eq(selectedItemArgs.Index)
+
+    console.debug("Selected row:", row);
+
+    row.addClass("selectedRow");
+}
+
+function markSelectedChildItem(selectedItemArgs) {
+    clearSelectedItemHighlighting();
+
+    if (selectedItemArgs == undefined ||
+        selectedItemArgs == null ||
+        selectedItemArgs.Index == undefined)
+    {
+        console.error("Setting selected child item index is not set!")
+        return;
+    }
+
+	console.debug("Setting selected child item:", selectedItemArgs);
+	
+    var row = $(".jsgrid-row, .jsgrid-alt-row").eq(selectedItemArgs.Index)
+
+    console.debug("Selected row:", row);
+
+    row.addClass("selectedRow");
+}
 
 function InitBreadcrumb()
 {
@@ -20,299 +89,208 @@ function InitBreadcrumb()
         PageName : "OrtExplorer"
 	});
 }
-
-function InitToolbar()
-{
-	DisableCreateButton();
-	$("#create").click(ShowFormCreate);
-
-	DisableEditButton();
-	$("#edit").click(ShowFormEdit);
-
-	DisableMoveButton();
-	$("#move").click(ShowFormMove);
-
-	DisableDeleteButton();
-	$("#delete").click(ShowDialogDelete);
+//#region form actions
+//#region new
+function InitButtonNew() {
+	EnableButtonNew();
+	$("#buttonNew").attr("href", "/Munins Archiv/src/Ort/Form.html");
 }
 
-function EnableCreateButton()
-{
-	$("#create").removeClass("disabled");
-}
+function EnableButtonNew(id) {
+	if (id === undefined ||
+		id === null) {
 
-function DisableCreateButton()
-{
-	$("#create").addClass("disabled");
-}
-
-function EnableEditButton()
-{
-	$("#edit").removeClass("disabled");
-}
-
-function DisableEditButton()
-{
-	$("#edit").addClass("disabled");
-}
-
-function EnableMoveButton()
-{
-	$("#move").removeClass("disabled");
-}
-
-function DisableMoveButton()
-{
-	$("#move").addClass("disabled");
-}
-
-function EnableDeleteButton()
-{
-	$("#delete").removeClass("disabled");
-}
-
-function DisableDeleteButton()
-{
-	$("#delete").addClass("disabled");
-}
-
-/* BEGIN Path Textbox */
-
-function ResetPath()
-{
-	$("#path").val("/");
-}
-
-function SetPath(node)
-{
-	if (node == undefined ||
-		node == null ||
-		node.Path == undefined ||
-		node.Path == null)
-	{
-		ResetPath();
+		$("#buttonNew").attr("href", "/Munins Archiv/src/Ort/Form.html");
 	}
-	else
-	{
-		$("#path").val("/" + node.Path);
+	else {
+		$("#buttonNew").attr("href", "/Munins Archiv/src/Ort/Form.html?Parent_Id=" + id);
 	}
+
+	$("#buttonNew").removeClass("disabled");
+	$("#buttonNew").prop("disabled", false);
 }
 
-/* END Path Textbox */
+function DisableButtonNew() {
+	$("#buttonNew").addClass("disabled");
+	$("#buttonNew").prop("disabled", true);
+}
+//#endregion
 
-/* BEGIN Tree */
+//#region open
+function InitButtonOpen() {
+	DisableButtonOpen();
+	$("#buttonOpen").click();
+}
 
-function InitTree()
-{
-	$("#tree")
-	.on("open_node.jstree", function(event, data) {
-		if (data.node.id == GetAbstractOrtNode().id)
-		{
-			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Root", "open"));
-		}
-		else
-		{
-			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Ort", "open"));
-		}
-	})
-	.on("close_node.jstree", function(event, data) {
-		if (data.node.id == GetAbstractOrtNode().id)
-		{
-			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Root"));
-		}
-		else
-		{
-			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Ort"));
-		}
-	})
-	.on("select_node.jstree", function(event, data) {
-		ResetPath();
+function EnableButtonOpen(args) {
+	if (args.SelectedItem.Id === undefined) {
+		$("#buttonOpen").attr("href", "/Munins Archiv/src/Ort/Explorer.html");
+	}
+	else {
+		$("#buttonOpen").attr("href", "/Munins Archiv/src/Ort/Explorer.html?Id=" + args.SelectedItem.Id);
+	}
 
-		if ($("#tree").jstree(true).is_loaded(data.node))
-		{
-			if (data.node.original.id != undefined &&
-				data.node.original.id == GetAbstractOrtNode().id)
-			{
-				SetSelectedElement(GetAbstractOrtNode());
-				_webServiceClientOrt.LoadAll("tree.selected");
-			}
-			else
-			{
-				if (data.node.original.original == undefined)
-				{
-					SetSelectedElement(data.node.original);
-					SetPath(data.node.original);
-				}
-				else
-				{
-					SetSelectedElement(data.node.original.original);
-					SetPath(data.node.original.original);
-				}
+	$("#buttonOpen").removeClass("disabled");
+	$("#buttonOpen").prop("disabled", false);
+}
 
-				_webServiceClientOrt.Load(GetSelectedElement(), "tree.selected");
-			}
-		}
-		else
-		{
-			$("#tree").jstree(true).load_node(data.node, function() {
-				var loadedSelectedNode = $("#tree").jstree(true).get_node(data.node);
+function DisableButtonOpen() {
+	$("#buttonOpen").addClass("disabled");
+	$("#buttonOpen").prop("disabled", true);
+}
+//#endregion
 
-				if (data.node.original.id != undefined &&
-					data.node.original.id == GetAbstractOrtNode().id)
-				{
-					SetSelectedElement(GetAbstractOrtNode());
-					_webServiceClientOrt.LoadAll("tree.selected");
-				}
-				else
-				{
-					if (loadedSelectedNode.original.original == undefined)
-					{
-						SetSelectedElement(loadedSelectedNode.original);
-						SetPath(oadedSelectedNode.original);
-					}
-					else
-					{
-						SetSelectedElement(loadedSelectedNode.original.original);
-						SetPath(loadedSelectedNode.original.original);
-					}
-				}
-			});
-		}
-	})
-	.on("loaded.jstree", function(event, data) {
-		$("#tree").jstree(true).open_node(GetAbstractOrtNode().id, function() {
-			$("#tree").jstree(true).select_node(GetAbstractOrtNode().id);
-		});
-	})
-    .jstree({
-        "core": {
-			"multiple": false,
-			"check_callback" : true,
-			"data" : function (node, callbackFunction) {
-				if (node.id === "#")
-				{
-					callbackFunction(new Array(CreateAbstractOrtNode()));
-				}
-				else if (node.id == GetAbstractOrtNode().id)
-				{
-					_webServiceClientOrt.LoadAll("tree.loaded");
-					callbackFunction(new Array());
-				}
-				else
-				{
-					if (node.original.original == undefined)
-					{
-						_webServiceClientOrt.Load(node.original, "tree.loaded");
-					}
-					else
-					{
-						_webServiceClientOrt.Load(node.original.original, "tree.loaded");
-					}
-					callbackFunction(new Array());
-				}
+//#region edit
+function InitButtonEdit() {
+	DisableButtonEdit();
+	$("#buttonEdit").click();
+}
+
+function EnableButtonEdit(args) {
+	if (args.SelectedItem.Id === undefined) {
+		$("#buttonEdit").attr("href", "/Munins Archiv/src/Ort/Form.html");
+	}
+	else {
+		$("#buttonEdit").attr("href", "/Munins Archiv/src/Ort/Form.html?Id=" + args.SelectedItem.Id);
+	}
+
+	$("#buttonEdit").removeClass("disabled");
+	$("#buttonEdit").prop("disabled", false);
+}
+
+function DisableButtonEdit() {
+	$("#buttonEdit").addClass("disabled");
+	$("#buttonEdit").prop("disabled", true);
+}
+//#endregion
+
+//#region delete
+function InitButtonDelete() {
+	DisableButtonDelete();
+	$("#buttonDelete").click(ShowDialogDelete);
+}
+
+function EnableButtonDelete() {
+	$("#buttonDelete").removeClass("disabled");
+	$("#buttonDelete").prop("disabled", false);
+}
+
+function DisableButtonDelete() {
+	$("#buttonDelete").addClass("disabled");
+	$("#buttonDelete").prop("disabled", true);
+}
+
+function ShowDialogDelete() {
+	$("#dialogDelete").empty();
+	$("#dialogDelete").append(
+		$("<p>").append("Möchten Sie diesen Ort löschen?")
+	);
+	$("#dialogDelete").dialog({
+		height: "auto",
+		width: 750,
+		modal: true,
+		buttons: {
+			"Löschen": function () {
+				_viewModelExplorerOrt.delete(_viewModelExplorerOrt.getSelectedChildItem());
+
+				$(this).dialog("close");
+			},
+			"Abbrechen": function () {
+				$(this).dialog("close");
 			}
 		}
+	});
+
+	$("#DialogDelete").dialog("open");
+}
+
+function showMessageDeleted(element) {
+    $.toast({
+        heading: "Information",
+        text: "Ort \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
+        icon: "success"
     });
 }
+//#endregion
 
-function FillTreeWithRootOrte(rootOrte, sender)
-{
-	if (sender == undefined ||
-		sender != "tree.loaded")
+//#region open parent
+function InitButtonOpenParent() {
+	DisableButtonOpenParent();
+	_viewModelExplorerOrt.register("parent", new GuiClient(EnableButtonOpenParent, showErrorMessages));
+}
+
+function EnableButtonOpenParent(parent) {
+	if (parent === undefined ||
+		parent === null)
 	{
+		DisableButtonOpenParent();
 		return;
 	}
 
-	var children = $("#tree").jstree(true).get_node(GetAbstractOrtNode().id).children;
-	$("#tree").jstree(true).delete_node(children);
-
-	for (var i = 0; i < rootOrte.length; i++)
-	{
-		var ortNode = CreateOrtNode(rootOrte[i]);
-		ortNode.parent = GetAbstractOrtNode().id;
-		$("#tree").jstree(true).create_node(ortNode.parent, ortNode, "last");
+	if (parent.Id === undefined) {
+		$("#buttonOpenParent").attr("href", "/Munins Archiv/src/Ort/Explorer.html");
 	}
-	
-	$("#tree").jstree(true).open_node(GetAbstractOrtNode().id);
+	else {
+		$("#buttonOpenParent").attr("href", "/Munins Archiv/src/Ort/Explorer.html?Id=" + parent.Id);
+	}
+
+	$("#buttonOpenParent").removeClass("disabled");
+	$("#buttonOpenParent").prop("disabled", false);
 }
 
-function FillTreeWithOrtChildren(ort, sender)
-{
-	if (sender == undefined ||
-		sender != "tree.loaded")
+function DisableButtonOpenParent() {
+	$("#buttonOpenParent").addClass("disabled");
+	$("#buttonOpenParent").prop("disabled", true);
+}
+//#endregion
+
+//#region open abstract root
+function InitButtonOpenAbstractRoot() {
+	DisableButtonOpenAbstractRoot();
+	_viewModelExplorerOrt.register("parent", new GuiClient(EnableButtonOpenAbstractRoot, showErrorMessages));
+	$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/src/Ort/Explorer.html");
+}
+
+function EnableButtonOpenAbstractRoot(parent) {
+	if (parent === undefined ||
+		parent === null)
 	{
+		DisableButtonOpenAbstractRoot();
 		return;
 	}
 
-	var node = $("#tree").jstree(true).get_node(ort.Id);
-	$("#tree").jstree(true).delete_node(node.children);
-	node.original = ort;
+	$("#buttonOpenAbstractRoot").removeClass("disabled");
+	$("#buttonOpenAbstractRoot").prop("disabled", false);
+}
 
-	for (var i = 0; i < ort.Children.length; i++)
-	{
-		var ortNode = CreateOrtNode(ort.Children[i]);
-		ortNode.parent = ort.Id;
-		
-		$("#tree").jstree(true).create_node(ortNode.parent, ortNode, "last");
+function DisableButtonOpenAbstractRoot() {
+	$("#buttonOpenAbstractRoot").addClass("disabled");
+	$("#buttonOpenAbstractRoot").prop("disabled", true);
+}
+//#endregion
+//#endregion
+
+//#region fields
+//#region path
+function InitFieldPath() {
+	_viewModelExplorerOrt.register("path", new GuiClient(setPath, showErrorMessages));
+}
+
+function setPath(path) {
+	console.info("setting value of 'Path'");
+	console.debug("'Path' is", path);
+
+	if (!path.startsWith("/")) {
+		console.warn("added '/' to path");
+		path = "/" + path;
 	}
 
-	$("#tree").jstree(true).open_node(ort.Id);
+	$("#path").val(path);
 }
+//#endregion
+//#endre
 
-function GetAbstractOrtNode()
-{
-	return CreateAbstractOrtNode();
-}
-
-function CreateAbstractOrtNode()
-{
-	var node = new Object();
-	node.id = -1;
-	node.text = "Orte";
-	node.children = true;
-	node.icon = GetIcon("Root");
-	node.BaseType = "Root";
-
-	return node;
-}
-
-function CreateOrtNode(ort)
-{
-	var node = new Object();
-	node.id = ort.Id;
-	node.text = ort.Type.Bezeichnung + ": " + ort.Bezeichnung;
-	node.original = ort;
-	node.children = true;
-	node.icon = GetIcon("Ort");
-	node.BaseType = "Ort";
-
-	return node;
-}
-
-function LoadOrte(node, sender)
-{
-	if (sender == "saved" ||
-		sender == "deleted")
-	{
-		if (GetSelectedElement().Parent == null)
-		{
-			$("#tree").jstree(true).refresh_node(GetAbstractOrtNode().id);
-		}
-		else
-		{
-			$("#tree").jstree(true).refresh_node(GetSelectedElement().Parent.Id);
-		}
-	}
-	else
-	{
-		$("#tree").jstree(true).refresh_node(GetSelectedElement().Id);
-	}
-}
-
-/* END Tree */
-
-/* BEGIN Grid */
-
+//#region grid
 var IconField = function(config) {
 	jsGrid.Field.call(this, config);
 }
@@ -325,15 +303,16 @@ IconField.prototype = new jsGrid.Field({
 
 function InitGrid()
 {
-	_webServiceClientOrtType.LoadAll();
-	jsGrid.fields.icon = IconField;
-	$("#grid").jsGrid({
-        width: "70%",
+	_viewModelExplorerOrt.register("children", new GuiClient(UpdateGridDataChildren, showErrorMessages));
 
-		selecting: true,
+    jsGrid.fields.icon = IconField;
+    
+    $("#grid").jsGrid({
+        width: "100%",
+
         inserting: false,
         editing: false,
-        sorting: true,
+        sorting: false,
         paging: false,
 		autoload: false,
 		
@@ -345,291 +324,62 @@ function InitGrid()
 			},
 			{ 
 				title: "Typ",
-				name: "Type",
+				name: "Type.Bezeichnung",
 				type: "text"
 			},
 			{ 
 				name: "Bezeichnung", 
 				type: "text", 
 				validate: "required"
-			},
-			{ 
-				title: "Anzahl Kontexte",
-				name: "CountOfKontexte", 
-				type: "text", 
-				validate: "required"
 			}
 		],
 
-		rowClick: function(args) {
-			$("#grid tr").removeClass("selected-row");			
-
-			if (args.item.BaseType == "Ort")
-			{
-				_webServiceClientOrt.Load(args.item.Original, "grid.selected");
-			}
-			else
-			{
-				SetSelectedElement(null);
-			}
+        rowClick: function(args) {
+			console.info("row clicked");
+			console.debug("selected grid item", args.item);
 			
-			$selectedRow = $(args.event.target).closest("tr");
-			$selectedRow.addClass("selected-row");
-		},
+			_viewModelExplorerOrt.selectChildItem(args.item);
+        },
 
-		rowDoubleClick: function(data) {
-			$("#tree").jstree(true).deselect_all();
+		rowDoubleClick: function(args) {
+			console.info("row double clicked");
+			console.debug("selected grid item", args.item);
+			
+			console.warn("view model will not be informed about double clicked grid item");
 
-			var selectedNode = $("#tree").jstree(true).get_node(data.item.Original.Id);
-
-			if (selectedNode == undefined)
-			{
-				$("#tree").jstree(true).select_node(GetAbstractOrtNode().id);
-				return;
+			if (args.item.Id === undefined) {
+				console.debug("selected grid item is abstract root");
+				window.open("/Munins Archiv/src/Ort/Explorer.html", "_self");
+			}
+			else if (args.item.Parent === undefined) {
+				console.debug("selected grid item is root");
+				window.open("/Munins Archiv/src/Ort/Explorer.html", "_self");
+			}
+			else {
+				console.debug("selected grid item is standard node");
+				window.open("/Munins Archiv/src/Ort/Explorer.html?Id=" + args.item.Id, "_self");
 			}
 
-			if (data.item.Bezeichnung === "..")
-			{
-				$("#tree").jstree(true).select_node(selectedNode.parent);
-			}
-			else
-			{
-				$("#tree").jstree(true).open_node(data.item.Original.Id, function(){
-					$("#tree").jstree(true).select_node(data.item.Original.Id);
-				});
-			}
 		}
-	});
+    });
 }
 
-function FillGridWithRootOrte(orte, sender)
-{
-	if (sender == undefined || 
-		(sender != "tree.loaded" &&
-		 sender != "tree.selected"))
-	{
-		return;
-	}
-
-	$("#grid").empty();
-
+function UpdateGridDataChildren(children) {
+	console.info("updating children in grid");
+	console.debug("children", children);
+    
 	var entries = new Array();
 
-	orte.forEach(ort => {
-		var entry = new Object();
-		entry.Bezeichnung = ort.Bezeichnung;
-		entry.Type = ort.Type.Bezeichnung;
-		entry.CountOfKontexte = ort.CountOfKontexte;
-		entry.BaseType = "Ort";
-		entry.Icon = GetIcon("Ort");
-		entry.Original = ort;
-		entries.push(entry);
+	console.info("adding " + children.length + " children to the grid");
+    
+	children.forEach(child => {
+		var copy = JSON.parse(JSON.stringify(child));
+		copy.Icon = IconConfig.getCssClasses("Ort");
+		entries.push(copy);
 	});
 
 	$("#grid").jsGrid({
 		data: entries
 	});
 }
-
-function FillGridWithOrtChildren(ort, sender)
-{
-	if (sender == undefined || 
-		(sender != "tree.loaded" &&
-		 sender != "tree.selected"))
-	{
-		return;
-	}
-
-	$("#grid").empty();
-
-	var entries = new Array();
-
-	var entry = new Object();
-	entry.Bezeichnung = "..";
-	entry.Type = ort.Type.Bezeichnung;
-	entry.CountOfKontexte = ort.CountOfKontexte;
-	entry.BaseType = "Ort";
-	entry.Icon = GetIcon("Ort", "open");
-	entry.Original = ort;
-	entries.push(entry);
-
-	ort.Children.forEach(child => {
-		var entry = new Object();
-		entry.Bezeichnung = child.Bezeichnung;
-		entry.Type = child.Type.Bezeichnung;
-		entry.CountOfKontexte = child.CountOfKontexte;
-		entry.BaseType = "Ort";
-		entry.Icon = GetIcon("Ort");
-		entry.Original = child;
-		entries.push(entry);
-	});
-
-	$("#grid").jsGrid({
-		data: entries
-	});
-}
-
-/* END Grid */
-
-function GetIcon(type, state)
-{
-	return IconConfig.getCssClasses(type, state);
-}
-
-/* BEGIN Toolbar */
-
-function ShowFormCreate()
-{
-	var selectedNode = GetSelectedElement();
-	var newNode = new Ort();
-
-	if (selectedNode.Id != undefined)
-	{
-		newNode.Parent = selectedNode;
-		newNode.Path = selectedNode.Path + "/";
-	}
-
-	$("#form").dialog({
-		height: "auto",
-		width: 750,
-		title: "Anlegen",
-		modal: true,
-		resizable: false,
-		buttons: {
-			"Speichern": function()
-			{
-				newNode.Bezeichnung = GetOrtBezeichnung();
-				newNode.Type.Id = GetOrtTypeId();
-				
-				_webServiceClientOrt.Create(newNode, "saved");
-
-				$(this).dialog("close");
-			},
-			"Abbrechen": function()
-			{
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#form").dialog("open");
-	FillEditForm(newNode);
-}
-
-function ShowFormEdit()
-{
-	var selectedNode = GetSelectedElement();
-
-	if (selectedNode == null)
-	{
-		return;
-	}
-
-	$("#form").dialog({
-		height: "auto",
-		width: 750,
-		title: "Bearbeiten",
-		modal: true,
-		resizable: false,
-		buttons: {
-			"Speichern": function()
-			{
-				selectedNode.Bezeichnung = GetOrtBezeichnung();
-				selectedNode.Type = new Object();
-				selectedNode.Type.Id = GetOrtTypeId();
-				
-				_webServiceClientOrt.Save(selectedNode, "saved");
-
-				$(this).dialog("close");
-			},
-			"Abbrechen": function()
-			{
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#form").dialog("open");
-	FillEditForm(selectedNode);
-}
-
-function ShowFormMove()
-{
-	var selectedNode = GetSelectedElement();
-
-	if (selectedNode == null)
-	{
-		return;
-	}
-
-	$("#dialogMove").dialog({
-		height: "auto",
-		width: 750,
-		title: "Verschieben",
-		modal: true,
-		resizable: false,
-		buttons: {
-			"Speichern": function()
-			{
-				var selectedElement = GetSelectedElement();
-
-				if (GetSelectedParentElement() == null)
-				{	
-					$(this).dialog("close");				
-				}
-				else if (GetSelectedParentElement().Id == GetAbstractOrtNode().Id)
-				{
-					selectedElement.Parent = null;
-				}
-				else
-				{
-					selectedElement.Parent = GetSelectedParentElement();
-				}
-				
-				_webServiceClientOrt.Save(selectedNode, "saved");
-
-				$(this).dialog("close");
-				$("#tree").jstree(true).refresh();
-			},
-			"Abbrechen": function()
-			{
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#treeMove").jstree(true).refresh();
-
-	$("#dialogMove").dialog("open");
-}
-
-function ShowDialogDelete()
-{
-	var selectedNode = GetSelectedElement();
-
-	$("#dialogDelete").empty();
-	$("#dialogDelete").append(
-		$("<p>").append("Möchten Sie \"" + selectedNode.Type.Bezeichnung + ": " + selectedNode.Bezeichnung + "\" (/" + selectedNode.Path + ") löschen?")
-	);
-	$("#dialogDelete").dialog({
-		height: "auto",
-		width: 750,
-		modal: true,
-		buttons: {
-			"Löschen": function()
-			{
-				_webServiceClientOrt.Delete(selectedNode, "deleted");
-
-				$(this).dialog("close");
-			},
-			"Abbrechen": function()
-			{
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#DialogDelete").dialog("open");
-}
-
-/* BEGIN Toolbar */
+//#endregion

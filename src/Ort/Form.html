@@ -21,21 +21,21 @@
 	<!-- observer pattern data structure -->
 	<script type="text/javascript" src="../js/ui/GuiClient.js"></script>
 	<!-- model -->
-	<script type="text/javascript" src="../js/models/Ablage.js"></script>
-	<script type="text/javascript" src="../js/models/AblageType.js"></script>
+	<script type="text/javascript" src="../js/models/Ort.js"></script>
+	<script type="text/javascript" src="../js/models/OrtType.js"></script>
 	<!-- web service client -->
 	<script type="text/javascript" src="../js/webServiceClients/WebServiceClient.js"></script>
-	<script type="text/javascript" src="../js/webServiceClients/WebServiceClientAblage.js"></script>
-	<script type="text/javascript" src="../js/webServiceClients/WebServiceClientAblageType.js"></script>
+	<script type="text/javascript" src="../js/webServiceClients/WebServiceClientOrt.js"></script>
+	<script type="text/javascript" src="../js/webServiceClients/WebServiceClientOrtType.js"></script>
 	<script type="text/javascript" src="../js/factories/webServiceClientFactory.js"></script>
 	<!-- view model -->
 	<script type="text/javascript" src="../js/viewModels/ViewModelForm.js"></script>
-	<script type="text/javascript" src="../js/viewModels/ViewModelFormAblage.js"></script>
+	<script type="text/javascript" src="../js/viewModels/ViewModelFormOrt.js"></script>
 	<script type="text/javascript" src="../js/viewModels/ViewModelList.js"></script>
-	<script type="text/javascript" src="../js/viewModels/ViewModelListAblageType.js"></script>
+	<script type="text/javascript" src="../js/viewModels/ViewModelListOrtType.js"></script>
 	<script type="text/javascript" src="../js/factories/viewModelFactory.js"></script>
 	<!-- view -->
-	<script type="text/javascript" src="../js/views/Ablage/Form.js"></script>
+	<script type="text/javascript" src="../js/views/Ort/Form.js"></script>
 
 	<!-- javascript frameworks etc. -->
 	<link rel="stylesheet" type="text/css" href="../js/ui/jquery-ui/jquery-ui.css" />
@@ -54,7 +54,7 @@
 	<!-- print -->
 	<link rel="stylesheet" type="text/css" href="../css/print.css" media="print" />
 	<link rel=icon type="image/png" href="../images/system/IconMunin_001.png">
-	<title>Ablage</title>
+	<title>Ort</title>
 </head>
 
 <body>
@@ -73,7 +73,7 @@
 				</ul>
 				<div id=divType class=fieldBlock>
 					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Typ der Ablage."></i>
+						<i class="help notToPrint fas fa-question-circle" title="Typ des Ortes."></i>
 						<label>Typ: </label>
 					</div>
 					<div class=fieldValue>
@@ -83,7 +83,7 @@
 				</div>
 				<div id=divBezeichnung class=fieldBlock>
 					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Bezeichnung der Ablage. Diese muss eindeutig sein."></i>
+						<i class="help notToPrint fas fa-question-circle" title="Bezeichnung des Ortes. Diese muss eindeutig sein."></i>
 						<label>Bezeichnung: </label>
 					</div>
 					<div class=fieldValue>
@@ -93,7 +93,7 @@
 				</div>
 				<div id=divPath class=fieldBlock>
 					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Pfad der Ablage."></i>
+						<i class="help notToPrint fas fa-question-circle" title="Pfad des Ortes."></i>
 						<label>Pfad: </label>
 					</div>
 					<div class=fieldValue>
@@ -103,32 +103,22 @@
 				</div>
 				<div id=divCountOfChildren class=fieldBlock>
 					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Anzahl der Ablagen, die sich in dieser Ablage befinden."></i>
-						<label>Anzahl von untergeordneten Ablagen: </label>
+						<i class="help notToPrint fas fa-question-circle" title="Anzahl der Orte, die sich in diesem Ort befinden."></i>
+						<label>Anzahl von untergeordneten Orte: </label>
 					</div>
 					<div class=fieldValue>
 						<div name="messages"></div>
 						<label id=labelCountOfChildren class=field></label>
 					</div>
 				</div>
-				<div id=divCountOfFunde class=fieldBlock>
+				<div id=divCountOfKontexte class=fieldBlock>
 					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Anzahl der Funde, die sich in dieser Ablage befinden."></i>
-						<label>Anzahl von Funden: </label>
+						<i class="help notToPrint fas fa-question-circle" title="Anzahl der Kontexte, die sich in diesem Ort befinden."></i>
+						<label>Anzahl von Kontexte: </label>
 					</div>
 					<div class=fieldValue>
 						<div name="messages"></div>
-						<label id=labelCountOfFunde class=field></label>
-					</div>
-				</div>
-				<div id=divFunde class=fieldBlock>
-					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Funde, die sich in dieser Ablage befinden."></i>
-						<label>Funde: </label>
-					</div>
-					<div class=fieldValue>
-						<div name="messages"></div>
-						<div id=gridFunde></div>
+						<label id=labelCountOfKontexte class=field></label>
 					</div>
 				</div>
 			</div>

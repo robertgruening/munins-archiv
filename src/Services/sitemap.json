@@ -34,10 +34,23 @@
 				"Icon" : "fas-map-marker",
 				"Children" :
 				[
+					
 					{
-						"Title" : "bearbeiten",
+						"Title" : "druchsuchen",
 						"URL" : "/Munins Archiv/src/Ort/Explorer.html",
 						"PageName" : "OrtExplorer"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/Ort/Form.html",
+						"PageName" : "OrtFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/Ort/Form.html",
+						"PageName" : "OrtFormEdit",
+						"Visible" : false
 					},
 					{
 						"Title" : "Gebietskörperschaften verwalten",

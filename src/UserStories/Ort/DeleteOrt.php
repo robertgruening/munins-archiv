@@ -54,6 +54,13 @@ class DeleteOrt extends UserStory
             $this->addMessage("Ort hat Unterelemente!");
             $areParametersValid = false;
         }
+    
+        if ($ort->getCountOfKontexte() > 0)
+        {
+            $logger->warn("Ort enthält Kontexte!");
+            $this->addMessage("Ort enthält Kontexte!");
+            $areParametersValid = false;
+        }
 
         return $areParametersValid;
     }
