@@ -29,7 +29,13 @@ function Create()
     global $logger;
     $logger->info("Fundattribut-erzeugen gestartet");
 
-    parse_str(file_get_contents("php://input"), $fundAttributObject);
+    $fundAttributObject = json_decode(file_get_contents('php://input'), true);
+
+    if (json_last_error() != JSON_ERROR_NONE)
+    {
+        $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
+        return;
+    }
     
     $fundAttributFactory = new FundAttributFactory();
     $fundAttribut = $fundAttributFactory->convertToInstance($fundAttributObject);
@@ -55,7 +61,13 @@ function Update()
     global $logger;
     $logger->info("Fundattribut-anhand-ID-aktualisieren gestartet");
 
-    parse_str(file_get_contents("php://input"),$fundAttributObject);
+    $fundAttributObject = json_decode(file_get_contents('php://input'), true);
+
+    if (json_last_error() != JSON_ERROR_NONE)
+    {
+        $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
+        return;
+    }
 
     if (isset($_GET["Id"]))
     {
@@ -102,7 +114,7 @@ function Delete()
 
         if ($deleteFundAttribut->run())
         {
-            echo json_encode("Fundattribut (".$fundAttribut->getId().") ist gelöscht.");
+            echo json_encode($fundAttribut);
         }
         else
         {

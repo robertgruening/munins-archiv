@@ -34,7 +34,6 @@
 				"Icon" : "fas-map-marker",
 				"Children" :
 				[
-					
 					{
 						"Title" : "druchsuchen",
 						"URL" : "/Munins Archiv/src/Ort/Explorer.html",
@@ -141,9 +140,21 @@
 				"Children" :
 				[
 					{
-						"Title" : "bearbeiten",
+						"Title" : "druchsuchen",
 						"URL" : "/Munins Archiv/src/FundAttribut/Explorer.html",
 						"PageName" : "FundAttributExplorer"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/FundAttribut/Form.html",
+						"PageName" : "FundAttributFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/FundAttribut/Form.html",
+						"PageName" : "FundAttributFormEdit",
+						"Visible" : false
 					}
 				]
 			}

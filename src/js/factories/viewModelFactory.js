@@ -8,6 +8,15 @@ var ViewModelFactory = function () {
         return viewModel;
     };
 
+    this.getViewModelFormFundAttribut = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelFormFundAttribut(webServiceClientFactory.getWebServiceClientFundAttribut());
+        viewModel.init();
+
+        return viewModel;
+    };
+
     this.getViewModelFormOrt = function()
     {
         var webServiceClientFactory = new WebServiceClientFactory();
@@ -84,6 +93,15 @@ var ViewModelFactory = function () {
     {
         var webServiceClientFactory = new WebServiceClientFactory();
         var viewModel = new ViewModelExplorerAblage(webServiceClientFactory.getWebServiceClientAblage());
+        viewModel.init();
+
+        return viewModel;
+    };
+
+    this.getViewModelExplorerFundAttribut = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelExplorerFundAttribut(webServiceClientFactory.getWebServiceClientFundAttribut());
         viewModel.init();
 
         return viewModel;
