@@ -74,7 +74,7 @@
 				"Children" :
 				[
 					{
-						"Title" : "bearbeiten",
+						"Title" : "durchsuchen",
 						"URL" : "/Munins Archiv/src/Kontext/Explorer.html",
 						"PageName" : "KontextExplorer"
 					}

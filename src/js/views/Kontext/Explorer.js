@@ -1,18 +1,87 @@
-$(document).ready(function() {	
-	_webServiceClientKontext.Register("delete", new GuiClient(LoadKontexte));
-	_webServiceClientKontext.Register("create", new GuiClient(LoadKontexte));
-	_webServiceClientKontext.Register("save", new GuiClient(LoadKontexte));
-	_webServiceClientKontext.Register("loadAll", new GuiClient(FillTreeWithRootKontexte));
-	_webServiceClientKontext.Register("loadAll", new GuiClient(FillGridWithRootKontexte));
-	_webServiceClientKontext.Register("load", new GuiClient(FillTreeWithKontextChildren));
-	_webServiceClientKontext.Register("load", new GuiClient(FillGridWithKontextChildren));
-	_webServiceClientKontext.Register("load", new GuiClient(SetSelectedElement));
+var _viewModelExplorerKontext = null;
 
+$(document).ready(function() {	
+	var viewModelFactory = new ViewModelFactory();
+	_viewModelExplorerKontext = viewModelFactory.getViewModelExplorerKontext();
+
+    RegisterToViewModel();
     InitBreadcrumb();
-	InitToolbar();	
-	InitTree();
+	InitButtonNew();
+	InitButtonOpen();
+    InitButtonEdit();
+    InitButtonDelete();
+	InitButtonOpenParent();
+	InitButtonOpenAbstractRoot();
+
+	InitFieldPath();
 	InitGrid();
+
+	if (getUrlParameterValue("Id")) {
+		_viewModelExplorerKontext.load(getUrlParameterValue("Id"));
+	}
+	else {
+		_viewModelExplorerKontext.load();
+	}
 });
+
+function RegisterToViewModel() {
+	_viewModelExplorerKontext.register("id", new GuiClient(EnableButtonNew, showErrorMessages));
+	_viewModelExplorerKontext.register("childItemSelected", new GuiClient(markSelectedChildItem, showErrorMessages));
+	_viewModelExplorerKontext.register("childItemSelected", new GuiClient(EnableButtonOpen, null));
+	_viewModelExplorerKontext.register("childItemSelected", new GuiClient(EnableButtonEdit, null));
+	_viewModelExplorerKontext.register("childItemSelected", new GuiClient(EnableButtonDelete, null));
+    _viewModelExplorerKontext.register("childSelectionCleared", new GuiClient(clearSelectedItemHighlighting, null));
+	_viewModelExplorerKontext.register("childSelectionCleared", new GuiClient(DisableButtonOpen, null));
+	_viewModelExplorerKontext.register("childSelectionCleared", new GuiClient(DisableButtonEdit, null));
+	_viewModelExplorerKontext.register("childSelectionCleared", new GuiClient(DisableButtonDelete, null));
+	_viewModelExplorerKontext.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
+}
+
+function clearSelectedItemHighlighting() {
+    $(".jsgrid-row, .jsgrid-alt-row").each(function(index){
+        $(this).removeClass("selectedRow");
+    });
+}
+
+function markSelectedParentItem(selectedItemArgs) {
+    clearSelectedItemHighlighting();
+
+    if (selectedItemArgs == undefined ||
+        selectedItemArgs == null ||
+        selectedItemArgs.Index == undefined)
+    {
+        console.error("Setting selected parent item index is not set!")
+        return;
+    }
+
+    console.debug("Setting selected parent item:", selectedItemArgs);
+
+    var row = $(".jsgrid-row, .jsgrid-alt-row").eq(selectedItemArgs.Index)
+
+    console.debug("Selected row:", row);
+
+    row.addClass("selectedRow");
+}
+
+function markSelectedChildItem(selectedItemArgs) {
+    clearSelectedItemHighlighting();
+
+    if (selectedItemArgs == undefined ||
+        selectedItemArgs == null ||
+        selectedItemArgs.Index == undefined)
+    {
+        console.error("Setting selected child item index is not set!")
+        return;
+    }
+
+	console.debug("Setting selected child item:", selectedItemArgs);
+	
+    var row = $(".jsgrid-row, .jsgrid-alt-row").eq(selectedItemArgs.Index)
+
+    console.debug("Selected row:", row);
+
+    row.addClass("selectedRow");
+}
 
 function InitBreadcrumb()
 {
@@ -20,313 +89,208 @@ function InitBreadcrumb()
         PageName : "KontextExplorer"
 	});
 }
-
-function InitToolbar()
-{
-	DisableCreateButton();
-	$("#create").click(ShowFormCreate);
-
-	DisableEditButton();
-	$("#edit").click(ShowFormEdit);
-
-	DisableMoveButton();
-	$("#move").click(ShowFormMove);
-
-	DisableDeleteButton();
-	$("#delete").click(ShowDialogDelete);
+//#region form actions
+//#region new
+function InitButtonNew() {
+	EnableButtonNew();
+	$("#buttonNew").attr("href", "/Munins Archiv/src/Kontext/Form.html");
 }
 
-function EnableCreateButton()
-{
-	$("#create").removeClass("disabled");
-}
+function EnableButtonNew(id) {
+	if (id === undefined ||
+		id === null) {
 
-function DisableCreateButton()
-{
-	$("#create").addClass("disabled");
-}
-
-function EnableEditButton()
-{
-	$("#edit").removeClass("disabled");
-}
-
-function DisableEditButton()
-{
-	$("#edit").addClass("disabled");
-}
-
-function EnableMoveButton()
-{
-	$("#move").removeClass("disabled");
-}
-
-function DisableMoveButton()
-{
-	$("#move").addClass("disabled");
-}
-
-function EnableDeleteButton()
-{
-	$("#delete").removeClass("disabled");
-}
-
-function DisableDeleteButton()
-{
-	$("#delete").addClass("disabled");
-}
-
-/* BEGIN Path Textbox */
-
-function ResetPath()
-{
-	$("#path").val("/");
-}
-
-function SetPath(node)
-{
-	if (node == undefined ||
-		node == null ||
-		node.Path == undefined ||
-		node.Path == null)
-	{
-		ResetPath();
+		$("#buttonNew").attr("href", "/Munins Archiv/src/Kontext/Form.html");
 	}
-	else
-	{
-		$("#path").val("/" + node.Path);
+	else {
+		$("#buttonNew").attr("href", "/Munins Archiv/src/Kontext/Form.html?Parent_Id=" + id);
 	}
+
+	$("#buttonNew").removeClass("disabled");
+	$("#buttonNew").prop("disabled", false);
 }
 
-/* END Path Textbox */
+function DisableButtonNew() {
+	$("#buttonNew").addClass("disabled");
+	$("#buttonNew").prop("disabled", true);
+}
+//#endregion
 
-/* BEGIN Tree */
+//#region open
+function InitButtonOpen() {
+	DisableButtonOpen();
+	$("#buttonOpen").click();
+}
 
-function InitTree()
-{
-	$("#tree")
-	.on("open_node.jstree", function(event, data) {
-		if (data.node.id == GetAbstractKontextNode().id)
-		{
-			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Root", "open"));
-		}
-		else
-		{
-			if (data.node.original.original == undefined)
-			{
-				$("#tree").jstree(true).set_icon(data.node.id, GetIcon(data.node.original.Type.Bezeichnung, "open"));
-			}
-			else
-			{
-				$("#tree").jstree(true).set_icon(data.node.id, GetIcon(data.node.original.original.Type.Bezeichnung, "open"));
-			}
-		}
-	})
-	.on("close_node.jstree", function(event, data) {
-		if (data.node.id == GetAbstractKontextNode().id)
-		{
-			$("#tree").jstree(true).set_icon(data.node.id, GetIcon("Root"));
-		}
-		else
-		{
-			if (data.node.original.original == undefined)
-			{
-				$("#tree").jstree(true).set_icon(data.node.id, GetIcon(data.node.original.Type.Bezeichnung));
-			}
-			else
-			{
-				$("#tree").jstree(true).set_icon(data.node.id, GetIcon(data.node.original.original.Type.Bezeichnung));
-			}
-		}
-	})
-	.on("select_node.jstree", function(event, data) {
-		ResetPath();
+function EnableButtonOpen(args) {
+	if (args.SelectedItem.Id === undefined) {
+		$("#buttonOpen").attr("href", "/Munins Archiv/src/Kontext/Explorer.html");
+	}
+	else {
+		$("#buttonOpen").attr("href", "/Munins Archiv/src/Kontext/Explorer.html?Id=" + args.SelectedItem.Id);
+	}
 
-		if ($("#tree").jstree(true).is_loaded(data.node))
-		{
-			if (data.node.original.id != undefined &&
-				data.node.original.id == GetAbstractKontextNode().id)
-			{
-				SetSelectedElement(GetAbstractKontextNode());
-				_webServiceClientKontext.LoadAll("tree.selected");
-			}
-			else
-			{
-				if (data.node.original.original == undefined)
-				{
-					SetSelectedElement(data.node.original);
-					SetPath(data.node.original);
-				}
-				else
-				{
-					SetSelectedElement(data.node.original.original);
-					SetPath(data.node.original.original);
-				}
+	$("#buttonOpen").removeClass("disabled");
+	$("#buttonOpen").prop("disabled", false);
+}
 
-				_webServiceClientKontext.Load(GetSelectedElement(), "tree.selected");
-			}
-		}
-		else
-		{
-			$("#tree").jstree(true).load_node(data.node, function() {
-				var loadedSelectedNode = $("#tree").jstree(true).get_node(data.node);
+function DisableButtonOpen() {
+	$("#buttonOpen").addClass("disabled");
+	$("#buttonOpen").prop("disabled", true);
+}
+//#endregion
 
-				if (data.node.original.id != undefined &&
-					data.node.original.id == GetAbstractKontextNode().id)
-				{
-					SetSelectedElement(GetAbstractKontextNode());
-					_webServiceClientKontext.LoadAll("tree.selected");
-				}
-				else
-				{
-					if (loadedSelectedNode.original.original == undefined)
-					{
-						SetSelectedElement(loadedSelectedNode.original);
-						SetPath(oadedSelectedNode.original);
-					}
-					else
-					{
-						SetSelectedElement(loadedSelectedNode.original.original);
-						SetPath(loadedSelectedNode.original.original);
-					}
-				}
-			});
-		}
-	})
-	.on("loaded.jstree", function(event, data) {
-		$("#tree").jstree(true).open_node(GetAbstractKontextNode().id, function() {
-			$("#tree").jstree(true).select_node(GetAbstractKontextNode().id);
-		});
-	})
-    .jstree({
-        "core": {
-			"multiple": false,
-			"check_callback" : true,
-			"data" : function (node, callbackFunction) {
-				if (node.id === "#")
-				{
-					callbackFunction(new Array(CreateAbstractKontextNode()));
-				}
-				else if (node.id == GetAbstractKontextNode().id)
-				{
-					_webServiceClientKontext.LoadAll("tree.loaded");
-					callbackFunction(new Array());
-				}
-				else
-				{
-					if (node.original.original == undefined)
-					{
-						_webServiceClientKontext.Load(node.original, "tree.loaded");
-					}
-					else
-					{
-						_webServiceClientKontext.Load(node.original.original, "tree.loaded");
-					}
-					callbackFunction(new Array());
-				}
+//#region edit
+function InitButtonEdit() {
+	DisableButtonEdit();
+	$("#buttonEdit").click();
+}
+
+function EnableButtonEdit(args) {
+	if (args.SelectedItem.Id === undefined) {
+		$("#buttonEdit").attr("href", "/Munins Archiv/src/Kontext/Form.html");
+	}
+	else {
+		$("#buttonEdit").attr("href", "/Munins Archiv/src/Kontext/Form.html?Id=" + args.SelectedItem.Id);
+	}
+
+	$("#buttonEdit").removeClass("disabled");
+	$("#buttonEdit").prop("disabled", false);
+}
+
+function DisableButtonEdit() {
+	$("#buttonEdit").addClass("disabled");
+	$("#buttonEdit").prop("disabled", true);
+}
+//#endregion
+
+//#region delete
+function InitButtonDelete() {
+	DisableButtonDelete();
+	$("#buttonDelete").click(ShowDialogDelete);
+}
+
+function EnableButtonDelete() {
+	$("#buttonDelete").removeClass("disabled");
+	$("#buttonDelete").prop("disabled", false);
+}
+
+function DisableButtonDelete() {
+	$("#buttonDelete").addClass("disabled");
+	$("#buttonDelete").prop("disabled", true);
+}
+
+function ShowDialogDelete() {
+	$("#dialogDelete").empty();
+	$("#dialogDelete").append(
+		$("<p>").append("Möchten Sie diesen Kontext löschen?")
+	);
+	$("#dialogDelete").dialog({
+		height: "auto",
+		width: 750,
+		modal: true,
+		buttons: {
+			"Löschen": function () {
+				_viewModelExplorerKontext.delete(_viewModelExplorerKontext.getSelectedChildItem());
+
+				$(this).dialog("close");
+			},
+			"Abbrechen": function () {
+				$(this).dialog("close");
 			}
 		}
+	});
+
+	$("#DialogDelete").dialog("open");
+}
+
+function showMessageDeleted(element) {
+    $.toast({
+        heading: "Information",
+        text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
+        icon: "success"
     });
 }
+//#endregion
 
-function FillTreeWithRootKontexte(rootKontexte, sender)
-{
-	if (sender == undefined ||
-		sender != "tree.loaded")
+//#region open parent
+function InitButtonOpenParent() {
+	DisableButtonOpenParent();
+	_viewModelExplorerKontext.register("parent", new GuiClient(EnableButtonOpenParent, showErrorMessages));
+}
+
+function EnableButtonOpenParent(parent) {
+	if (parent === undefined ||
+		parent === null)
 	{
+		DisableButtonOpenParent();
 		return;
 	}
 
-	var children = $("#tree").jstree(true).get_node(GetAbstractKontextNode().id).children;
-	$("#tree").jstree(true).delete_node(children);
-
-	for (var i = 0; i < rootKontexte.length; i++)
-	{
-		var kontextNode = CreateKontextNode(rootKontexte[i]);
-		kontextNode.parent = GetAbstractKontextNode().id;
-		$("#tree").jstree(true).create_node(kontextNode.parent, kontextNode, "last");
+	if (parent.Id === undefined) {
+		$("#buttonOpenParent").attr("href", "/Munins Archiv/src/Kontext/Explorer.html");
 	}
-	
-	$("#tree").jstree(true).open_node(GetAbstractKontextNode().id);
+	else {
+		$("#buttonOpenParent").attr("href", "/Munins Archiv/src/Kontext/Explorer.html?Id=" + parent.Id);
+	}
+
+	$("#buttonOpenParent").removeClass("disabled");
+	$("#buttonOpenParent").prop("disabled", false);
 }
 
-function FillTreeWithKontextChildren(kontext, sender)
-{
-	if (sender == undefined ||
-		sender != "tree.loaded")
+function DisableButtonOpenParent() {
+	$("#buttonOpenParent").addClass("disabled");
+	$("#buttonOpenParent").prop("disabled", true);
+}
+//#endregion
+
+//#region open abstract root
+function InitButtonOpenAbstractRoot() {
+	DisableButtonOpenAbstractRoot();
+	_viewModelExplorerKontext.register("parent", new GuiClient(EnableButtonOpenAbstractRoot, showErrorMessages));
+	$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/src/Kontext/Explorer.html");
+}
+
+function EnableButtonOpenAbstractRoot(parent) {
+	if (parent === undefined ||
+		parent === null)
 	{
+		DisableButtonOpenAbstractRoot();
 		return;
 	}
 
-	var node = $("#tree").jstree(true).get_node(kontext.Id);
-	$("#tree").jstree(true).delete_node(node.children);
-	node.original = kontext;
+	$("#buttonOpenAbstractRoot").removeClass("disabled");
+	$("#buttonOpenAbstractRoot").prop("disabled", false);
+}
 
-	for (var i = 0; i < kontext.Children.length; i++)
-	{
-		var kontextNode = CreateKontextNode(kontext.Children[i]);
-		kontextNode.parent = kontext.Id;
-		
-		$("#tree").jstree(true).create_node(kontextNode.parent, kontextNode, "last");
+function DisableButtonOpenAbstractRoot() {
+	$("#buttonOpenAbstractRoot").addClass("disabled");
+	$("#buttonOpenAbstractRoot").prop("disabled", true);
+}
+//#endregion
+//#endregion
+
+//#region fields
+//#region path
+function InitFieldPath() {
+	_viewModelExplorerKontext.register("path", new GuiClient(setPath, showErrorMessages));
+}
+
+function setPath(path) {
+	console.info("setting value of 'Path'");
+	console.debug("'Path' is", path);
+
+	if (!path.startsWith("/")) {
+		console.warn("added '/' to path");
+		path = "/" + path;
 	}
 
-	$("#tree").jstree(true).open_node(kontext.Id);
+	$("#path").val(path);
 }
+//#endregion
+//#endre
 
-function GetAbstractKontextNode()
-{
-	return CreateAbstractKontextNode();
-}
-
-function CreateAbstractKontextNode()
-{
-	var node = new Object();
-	node.id = -1;
-	node.text = "Kontexte";
-	node.children = true;
-	node.icon = GetIcon("Root");
-	node.BaseType = "Root";
-
-	return node;
-}
-
-function CreateKontextNode(kontext)
-{
-	var node = new Object();
-	node.id = kontext.Id;
-	node.text = kontext.Type.Bezeichnung + ": " + kontext.Bezeichnung;
-	node.original = kontext;
-	node.children = true;
-	node.icon = GetIcon(kontext.Type.Bezeichnung);
-	node.BaseType = "Kontext";
-
-	return node;
-}
-
-function LoadKontexte(node, sender)
-{
-	if (sender == "saved" ||
-		sender == "deleted")
-	{
-		if (GetSelectedElement().Parent == null)
-		{
-			$("#tree").jstree(true).refresh_node(GetAbstractKontextNode().id);
-		}
-		else
-		{
-			$("#tree").jstree(true).refresh_node(GetSelectedElement().Parent.Id);
-		}
-	}
-	else
-	{
-		$("#tree").jstree(true).refresh_node(GetSelectedElement().Id);
-	}
-}
-
-/* END Tree */
-
-/* BEGIN Grid */
-
+//#region grid
 var IconField = function(config) {
 	jsGrid.Field.call(this, config);
 }
@@ -339,15 +303,16 @@ IconField.prototype = new jsGrid.Field({
 
 function InitGrid()
 {
-	_webServiceClientKontextType.LoadAll();
-	jsGrid.fields.icon = IconField;
-	$("#grid").jsGrid({
-        width: "70%",
+	_viewModelExplorerKontext.register("children", new GuiClient(UpdateGridDataChildren, showErrorMessages));
 
-		selecting: true,
+    jsGrid.fields.icon = IconField;
+    
+    $("#grid").jsGrid({
+        width: "100%",
+
         inserting: false,
         editing: false,
-        sorting: true,
+        sorting: false,
         paging: false,
 		autoload: false,
 		
@@ -359,7 +324,7 @@ function InitGrid()
 			},
 			{ 
 				title: "Typ",
-				name: "Type",
+				name: "Type.Bezeichnung",
 				type: "text"
 			},
 			{ 
@@ -369,311 +334,52 @@ function InitGrid()
 			}
 		],
 
-		rowClick: function(args) {
-			$("#grid tr").removeClass("selected-row");			
-
-			if (args.item.BaseType == "Kontext")
-			{
-				_webServiceClientKontext.Load(args.item.Original, "grid.selected");
-			}
-			else
-			{
-				SetSelectedElement(null);
-			}
+        rowClick: function(args) {
+			console.info("row clicked");
+			console.debug("selected grid item", args.item);
 			
-			$selectedRow = $(args.event.target).closest("tr");
-			$selectedRow.addClass("selected-row");
-		},
+			_viewModelExplorerKontext.selectChildItem(args.item);
+        },
 
-		rowDoubleClick: function(data) {
-			$("#tree").jstree(true).deselect_all();
+		rowDoubleClick: function(args) {
+			console.info("row double clicked");
+			console.debug("selected grid item", args.item);
+			
+			console.warn("view model will not be informed about double clicked grid item");
 
-			var selectedNode = $("#tree").jstree(true).get_node(data.item.Original.Id);
-
-			if (selectedNode == undefined)
-			{
-				$("#tree").jstree(true).select_node(GetAbstractKontextNode().id);
-				return;
+			if (args.item.Id === undefined) {
+				console.debug("selected grid item is abstract root");
+				window.open("/Munins Archiv/src/Kontext/Explorer.html", "_self");
+			}
+			else if (args.item.Parent === undefined) {
+				console.debug("selected grid item is root");
+				window.open("/Munins Archiv/src/Kontext/Explorer.html", "_self");
+			}
+			else {
+				console.debug("selected grid item is standard node");
+				window.open("/Munins Archiv/src/Kontext/Explorer.html?Id=" + args.item.Id, "_self");
 			}
 
-			if (data.item.Bezeichnung === "..")
-			{
-				$("#tree").jstree(true).select_node(selectedNode.parent);
-			}
-			else
-			{
-				$("#tree").jstree(true).open_node(data.item.Original.Id, function(){
-					$("#tree").jstree(true).select_node(data.item.Original.Id);
-				});
-			}
 		}
-	});
+    });
 }
 
-function FillGridWithRootKontexte(kontexte, sender)
-{
-	if (sender == undefined || 
-		(sender != "tree.loaded" &&
-		 sender != "tree.selected"))
-	{
-		return;
-	}
-
-	$("#grid").empty();
-
+function UpdateGridDataChildren(children) {
+	console.info("updating children in grid");
+	console.debug("children", children);
+    
 	var entries = new Array();
 
-	kontexte.forEach(kontext => {
-		var entry = new Object();
-		entry.Bezeichnung = kontext.Bezeichnung;
-		entry.Type = kontext.Type.Bezeichnung;
-		entry.BaseType = "Kontext";
-		entry.Icon = GetIcon(kontext.Type.Bezeichnung);
-		entry.Original = kontext;
-		entries.push(entry);
+	console.info("adding " + children.length + " children to the grid");
+    
+	children.forEach(child => {
+		var copy = JSON.parse(JSON.stringify(child));
+		copy.Icon = IconConfig.getCssClasses(child.Type.Bezeichnung);
+		entries.push(copy);
 	});
 
 	$("#grid").jsGrid({
 		data: entries
 	});
 }
-
-function FillGridWithKontextChildren(kontext, sender)
-{
-	if (sender == undefined || 
-		(sender != "tree.loaded" &&
-		 sender != "tree.selected"))
-	{
-		return;
-	}
-
-	$("#grid").empty();
-
-	var entries = new Array();
-
-	var entry = new Object();
-	entry.Bezeichnung = "..";
-	entry.Type = kontext.Type.Bezeichnung;
-	entry.BaseType = "Kontext";
-	entry.Icon = GetIcon(kontext.Type.Bezeichnung, "open");
-	entry.Original = kontext;
-	entries.push(entry);
-
-	kontext.Children.forEach(child => {
-		var entry = new Object();
-		entry.Bezeichnung = child.Bezeichnung;
-		entry.Type = child.Type.Bezeichnung;
-		entry.BaseType = "Kontext";
-		entry.Icon = GetIcon(child.Type.Bezeichnung);
-		entry.Original = child;
-		entries.push(entry);
-	});
-
-	if (kontext.Funde != undefined)
-	{
-		kontext.Funde.forEach(fund => {
-			var entry = new Object();
-			entry.Bezeichnung = getFundLabelText(fund);
-			entry.Type = "Fund";
-			entry.BaseType = "Fund";
-			entry.Icon = GetIcon("Fund");
-			entry.Original = fund;
-			entries.push(entry);
-		});
-	}
-
-	if (kontext.Orte != undefined)
-	{
-		kontext.Orte.forEach(ort => {
-			var entry = new Object();
-			entry.Bezeichnung = ort.Bezeichnung;
-			entry.Type = ort.Type.Bezeichnung;
-			entry.BaseType = "Ort";
-			entry.Icon = GetIcon("Ort");
-			entry.Original = ort;
-			entries.push(entry);
-		});
-	}
-
-	if (kontext.LfdNummern != undefined)
-	{
-		kontext.LfdNummern.forEach(lfdNummer => {
-			var entry = new Object();
-			entry.Bezeichnung = lfdNummer.Bezeichnung;
-			entry.Type = "LfD-Nummer";
-			entry.BaseType = "LfD-Nummer";
-			entry.Icon = GetIcon("LfD-Nummer");
-			entry.Original = lfdNummer;
-			entries.push(entry);
-		});
-	}
-
-	$("#grid").jsGrid({
-		data: entries
-	});
-}
-
-/* END Grid */
-
-function GetIcon(type, state)
-{
-	return IconConfig.getCssClasses(type, state);
-}
-
-/* BEGIN Toolbar */
-
-function ShowFormCreate()
-{
-	var selectedNode = GetSelectedElement();
-	var newNode = new Kontext();
-
-	if (selectedNode.Id != undefined)
-	{
-		newNode.Parent = selectedNode;
-		newNode.Path = selectedNode.Path + "/";
-	}
-
-	$("#form").dialog({
-		height: "auto",
-		width: 750,
-		title: "Anlegen",
-		modal: true,
-		resizable: false,
-		buttons: {
-			"Speichern": function()
-			{
-				newNode.Bezeichnung = GetKontextBezeichnung();
-				newNode.Type.Id = GetKontextTypeId();
-				
-				_webServiceClientKontext.Create(newNode, "saved");
-
-				$(this).dialog("close");
-			},
-			"Abbrechen": function()
-			{
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#form").dialog("open");
-	FillEditForm(newNode);
-}
-
-function ShowFormEdit()
-{
-	var selectedNode = GetSelectedElement();
-
-	if (selectedNode == null)
-	{
-		return;
-	}
-
-	$("#form").dialog({
-		height: "auto",
-		width: 750,
-		title: "Bearbeiten",
-		modal: true,
-		resizable: false,
-		buttons: {
-			"Speichern": function()
-			{
-				selectedNode.Bezeichnung = GetKontextBezeichnung();
-				selectedNode.Type = new Object();
-				selectedNode.Type.Id = GetKontextTypeId();
-				
-				_webServiceClientKontext.Save(selectedNode, "saved");
-
-				$(this).dialog("close");
-			},
-			"Abbrechen": function()
-			{
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#form").dialog("open");
-	FillEditForm(selectedNode);
-}
-
-function ShowFormMove()
-{
-	var selectedNode = GetSelectedElement();
-
-	if (selectedNode == null)
-	{
-		return;
-	}
-
-	$("#dialogMove").dialog({
-		height: "auto",
-		width: 750,
-		title: "Verschieben",
-		modal: true,
-		resizable: false,
-		buttons: {
-			"Speichern": function()
-			{
-				var selectedElement = GetSelectedElement();
-
-				if (GetSelectedParentElement() == null)
-				{	
-					$(this).dialog("close");				
-				}
-				else if (GetSelectedParentElement().Id == GetAbstractKontextNode().Id)
-				{
-					selectedElement.Parent = null;
-				}
-				else
-				{
-					selectedElement.Parent = GetSelectedParentElement();
-				}
-				
-				_webServiceClientKontext.Save(selectedNode, "saved");
-
-				$(this).dialog("close");
-				$("#tree").jstree(true).refresh();
-			},
-			"Abbrechen": function()
-			{
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#treeMove").jstree(true).refresh();
-
-	$("#dialogMove").dialog("open");
-}
-
-function ShowDialogDelete()
-{
-	var selectedNode = GetSelectedElement();
-
-	$("#dialogDelete").empty();
-	$("#dialogDelete").append(
-		$("<p>").append("Möchten Sie \"" + selectedNode.Type.Bezeichnung + ": " + selectedNode.Bezeichnung + "\" (/" + selectedNode.Path + ") löschen?")
-	);
-	$("#dialogDelete").dialog({
-		height: "auto",
-		width: 750,
-		modal: true,
-		buttons: {
-			"Löschen": function()
-			{
-				_webServiceClientKontext.Delete(selectedNode, "deleted");
-
-				$(this).dialog("close");
-			},
-			"Abbrechen": function()
-			{
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	$("#DialogDelete").dialog("open");
-}
-
-/* BEGIN Toolbar */
+//#endregion

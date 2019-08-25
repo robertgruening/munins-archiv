@@ -60,7 +60,7 @@ function Delete()
 
         if ($deleteKontext->run())
         {
-            echo json_encode("Kontext (".$kontext->getId().") ist gelöscht.");
+            echo json_encode($kontext);
         }
         else
         {

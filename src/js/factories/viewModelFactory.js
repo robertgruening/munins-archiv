@@ -107,6 +107,15 @@ var ViewModelFactory = function () {
         return viewModel;
     };
 
+    this.getViewModelExplorerKontext = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelExplorerKontext(webServiceClientFactory.getWebServiceClientKontext());
+        viewModel.init();
+
+        return viewModel;
+    };
+
     this.getViewModelExplorerOrt = function()
     {
         var webServiceClientFactory = new WebServiceClientFactory();
