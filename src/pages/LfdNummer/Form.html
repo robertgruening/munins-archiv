@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<!-- javascript frameworks etc. -->
+	<script type="text/javascript" src="../../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../js/ui/jquery-ui/jquery-ui.js"></script>
+	<script type="text/javascript" src="../../js/solid.min.js"></script>
+	<!-- controls -->
+	<script type="text/javascript" src="../../js/controls/jsgrid/jsgrid.min.js"></script>
+	<script type="text/javascript" src="../../js/controls/jsgrid/i18n/jsgrid-de.js"></script>
+	<script type="text/javascript" src="../../js/controls/jquery.toast.min.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.Navigation.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.Breadcrumb.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.ErrorMessageBox.js"></script>
+	<!-- basic page functions -->
+	<script type="text/javascript" src="../../js/page.js"></script>
+	<script type="text/javascript" src="../../js/ui/IconConfig.js"></script>
+	<!-- observer pattern data structure -->
+	<script type="text/javascript" src="../../js/ui/GuiClient.js"></script>
+	<!-- model -->
+	<script type="text/javascript" src="../../js/models/LfdNummer.js"></script>
+	<!-- web service client -->
+	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClient.js"></script>
+	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientLfdNummer.js"></script>
+	<script type="text/javascript" src="../../js/factories/webServiceClientFactory.js"></script>
+	<!-- view model -->
+	<script type="text/javascript" src="../../js/viewModels/ViewModelForm.js"></script>
+	<script type="text/javascript" src="../../js/viewModels/ViewModelFormLfdNummer.js"></script>
+	<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
+	<!-- view -->
+	<script type="text/javascript" src="../../js/views/LfdNummer/Form.js"></script>
+
+	<!-- javascript frameworks etc. -->
+	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/solid.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/fontawesome.min.css" />
+	<!-- page -->
+	<link rel="stylesheet" type="text/css" href="../../css/page.css" />
+	<!-- controls -->
+	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid-theme.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/jquery.toast.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/form.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/navigation.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/breadcrumb.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/clipboard.css" />
+	<!-- print -->
+	<link rel="stylesheet" type="text/css" href="../../css/print.css" media="print" />
+	<link rel=icon type="image/png" href="../../images/system/IconMunin_001.png">
+	<title>LfD-Nummer</title>
+</head>
+
+<body>
+	<div id=navigation class="notToPrint"></div>
+	<div id=breadcrumb class="notToPrint"></div>
+	<div id=content>
+		<div id=form class=form>
+			<div class=formBlock>
+				<h2>Formular</h2>
+				<ul id=toolBar class=notToPrint>
+					<li><a id=buttonNew title=anlegen class=linkButton><i class="fas fa-plus"></i><label>Anlegen</label></a></li>
+					<li><a id=buttonSave title=speichern class=linkButton><i class="fas fa-save"></i><label>Speichern</label></a></li>
+					<li><a id=buttonUndo title="Änderungen verwerfen" class=linkButton><i class="fas fa-undo-alt"></i><label>Änderungen verwerfen</label></a></li>
+					<li><a id=buttonDelete title=löschen class="linkButton riskyAction"><i class="fas fa-trash-alt"></i><label>Löschen</label></a></li>
+					<li><a id=buttonToList title="Liste öffnen" class=linkButton><i class="fas fa-list"></i><label>Liste öffnen</label></a></li>
+				</ul>
+				<div id=divIcon class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Icon, das für Elemente dieses Typs angezeigt wird."></i>
+						<label>Icon: </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
+						<i id=icon class=field ></i>
+					</div>
+				</div>
+				<div id=divBezeichnung class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Bezeichnung der LfD-Nummer. Dieser muss eindeutig sein."></i>
+						<label>Bezeichnung: </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
+						<input id=textboxBezeichnung type=text class=field />
+					</div>
+				</div>
+				<div id=divCountOfKontexte class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Anzahl der Kontexte, die diese LfD-Nummer hat."></i>
+						<label>Anzahl von Kontexten: </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
+						<label id=labelCountOfKontexte class=field></label>
+					</div>
+				</div>
+			</div>
+			<div id=dialogDelete title=Löschen class=dialog></div>
+		</div>
+	</div>
+</body>

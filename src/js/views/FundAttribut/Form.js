@@ -334,7 +334,7 @@ function ResetPropertiesMessages() {
 function InitButtonToOverview() {
 	EnableButtonToOverview();
 	_viewModelFormFundAttribut.register("parent", new GuiClient(EnableButtonToOverview, showErrorMessages));
-	$("#buttonToOverview").attr("href", "/Munins Archiv/src/FundAttribut/Explorer.html", "_self");
+	$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/FundAttribut/Explorer.html", "_self");
 }
 
 function EnableButtonToOverview(parent) {
@@ -342,10 +342,10 @@ function EnableButtonToOverview(parent) {
 		parent === null || 
 		parent.Id === undefined) {
 
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/FundAttribut/Explorer.html", "_self");
+		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/FundAttribut/Explorer.html", "_self");
 	}
 	else {
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/FundAttribut/Explorer.html?Id=" + parent.Id, "_self");
+		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/FundAttribut/Explorer.html?Id=" + parent.Id, "_self");
 	}
 
 	$("#buttonToOverview").removeClass("disabled");

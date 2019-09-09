@@ -461,7 +461,7 @@ function LoadMultiDropdownParent()
 		//Blacklist : [],
 		SetOptionBackgroundImage : function(element)
 		{		
-			return "../images/system/Icon"+element.Type.Bezeichnung.replace(" ","_")+"_16px.png";
+			return "../../images/system/Icon"+element.Type.Bezeichnung.replace(" ","_")+"_16px.png";
 		},
 		SetOptionText : function(element)
 		{
@@ -557,7 +557,7 @@ function CreateOptionType(type, select)
 	var option = "<option value=" + type.Id + " ";
 	if (select == true)
 		option += "selected=selected ";
-	option += "style=\"background-image:url(../images/system/Icon"+type.Bezeichnung.replace(" ","_")+"_16px.png);background-repeat: no-repeat; padding-left: 20px;\" ";
+	option += "style=\"background-image:url(../../images/system/Icon"+type.Bezeichnung.replace(" ","_")+"_16px.png);background-repeat: no-repeat; padding-left: 20px;\" ";
 	option += ">";
 	option += type.Bezeichnung;
 	option += "</option>";
@@ -661,7 +661,7 @@ function LoadMultiDropdownAblage()
 		//SelectedElementId : null,
 		SetOptionBackgroundImage : function(element)
 		{		
-			return "../images/system/Icon"+element.Type.Bezeichnung.replace(" ","_")+"_16px.png";
+			return "../../images/system/Icon"+element.Type.Bezeichnung.replace(" ","_")+"_16px.png";
 		},
 		SetOptionText : function(element)
 		{

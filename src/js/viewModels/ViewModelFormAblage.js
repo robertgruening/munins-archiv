@@ -93,13 +93,13 @@ var ViewModelFormAblage = function (webServiceClient) {
 	//#endregion
 
 	//#region Funde
-	this.addChild = function (fund) {
+	this.addFund = function (fund) {
 		this._model.Funde.push(fund);
 		this._update("dataChanged");
 		this._update("funde", this._model.Funde);
 	};
 
-	this.removeChild = function (fund) {
+	this.removeFund = function (fund) {
 		for (i = 0; i < this._model.Funde.length; i++) {
 			if (this._model.Funde[i].Id == fund.Id) {
 				this._model.Funde.splice(i, 1);

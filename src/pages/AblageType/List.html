@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<!-- javascript frameworks etc. -->
+	<script type="text/javascript" src="../../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../js/ui/jquery-ui/jquery-ui.js"></script>
+	<script type="text/javascript" src="../../js/solid.min.js"></script>
+	<!-- controls -->
+	<script type="text/javascript" src="../../js/controls/jsgrid/jsgrid.min.js"></script>
+	<script type="text/javascript" src="../../js/controls/jsgrid/i18n/jsgrid-de.js"></script>
+	<script type="text/javascript" src="../../js/controls/jquery.toast.min.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.Navigation.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.Breadcrumb.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.ErrorMessageBox.js"></script>
+	<!-- basic page functions -->
+	<script type="text/javascript" src="../../js/page.js"></script>
+	<script type="text/javascript" src="../../js/ui/IconConfig.js"></script>
+	<!-- observer pattern data structure -->
+	<script type="text/javascript" src="../../js/ui/GuiClient.js"></script>
+	<!-- web service client -->
+	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClient.js"></script>
+	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientAblageType.js"></script>
+	<script type="text/javascript" src="../../js/factories/webServiceClientFactory.js"></script>
+	<!-- view model -->
+	<script type="text/javascript" src="../../js/viewModels/ViewModelList.js"></script>
+	<script type="text/javascript" src="../../js/viewModels/ViewModelListAblageType.js"></script>
+	<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
+	<!-- view -->
+	<script type="text/javascript" src="../../js/views/AblageType/List.js"></script>
+
+	<!-- javascript frameworks etc. -->
+	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/solid.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/fontawesome.min.css" />
+	<!-- page -->
+	<link rel="stylesheet" type="text/css" href="../../css/page.css" />
+	<!-- controls -->
+	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid-theme.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/grid.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/jquery.toast.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/form.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/navigation.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/breadcrumb.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/clipboard.css" />
+	<!-- print -->
+	<link rel="stylesheet" type="text/css" href="../../css/print.css" media="print" />
+	<link rel=icon type="image/png" href="../../images/system/IconMunin_001.png">
+	<title>Ablagetyp</title>
+</head>
+
+<body>
+	<div id=navigation class="notToPrint"></div>
+	<div id=breadcrumb class="notToPrint"></div>
+	<div id=content>
+		<div class=form>
+			<div class=formBlock>
+				<h2>Liste</h2>
+				<ul id=toolBar>
+					<li><a id=buttonNew title=anlegen class=linkButton><i class="fas fa-plus"></i><label>Anlegen</label></a></li>
+					<li><a id=buttonEdit title=bearbeiten class=linkButton><i class="fas fa-edit"></i><label>Bearbeiten</label></a></li>
+					<li><a id=buttonDelete title=löschen class="linkButton riskyAction"><i class="fas fa-trash-alt"></i><label>Löschen</label></a></li>
+					<li><a id=buttonReload title="neu laden" class="linkButton"><i class="fas fa-sync-alt"></i><label>neu laden</label></a></li>
+				</ul>
+				<div id=gridContainer></div>
+			</div>
+			<div id=dialogDelete title=Löschen class=dialog></div>
+		</div>
+	</div>
+</body>

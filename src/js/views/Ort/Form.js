@@ -215,7 +215,7 @@ function setCountOfChildren(children) {
 }
 //#endregion
 
-//#region Anzahl von Kontexte
+//#region Anzahl von Kontexten
 function InitFieldCountOfKontexte() {
 	_viewModelFormOrt.register("countOfKontexte", new GuiClient(setCountOfKontexte, null));
 }
@@ -334,7 +334,7 @@ function ResetPropertiesMessages() {
 function InitButtonToOverview() {
 	EnableButtonToOverview();
 	_viewModelFormOrt.register("parent", new GuiClient(EnableButtonToOverview, showErrorMessages));
-	$("#buttonToOverview").attr("href", "/Munins Archiv/src/Ort/Explorer.html", "_self");
+	$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Ort/Explorer.html", "_self");
 }
 
 function EnableButtonToOverview(parent) {
@@ -342,10 +342,10 @@ function EnableButtonToOverview(parent) {
 		parent === null || 
 		parent.Id === undefined) {
 
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/Ort/Explorer.html", "_self");
+		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Ort/Explorer.html", "_self");
 	}
 	else {
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/Ort/Explorer.html?Id=" + parent.Id, "_self");
+		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Ort/Explorer.html?Id=" + parent.Id, "_self");
 	}
 
 	$("#buttonToOverview").removeClass("disabled");

@@ -252,7 +252,7 @@ function InitButtonToList() {
 	EnableButtonToList();
 	$("#buttonToList").click( function() {
         console.log("button 'to list' clicked");
-		window.open("/Munins Archiv/src/FundAttributType/List.html", "_self");
+		window.open("/Munins Archiv/src/pages/FundAttributType/List.html", "_self");
 	});
 }
 

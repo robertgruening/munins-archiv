@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<!-- javascript frameworks etc. -->
+	<script type="text/javascript" src="../../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../js/ui/jquery-ui/jquery-ui.js"></script>
+	<script type="text/javascript" src="../../js/solid.min.js"></script>
+	<!-- controls -->
+	<script type="text/javascript" src="../../js/controls/vakata-jstree/jstree.min.js"></script>
+	<script type="text/javascript" src="../../js/controls/jsgrid/jsgrid.min.js"></script>
+	<script type="text/javascript" src="../../js/controls/jquery.toast.min.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.Navigation.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.Breadcrumb.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.ErrorMessageBox.js"></script>
+	<!-- basic page functions -->
+	<script type="text/javascript" src="../../js/page.js"></script>
+	<!-- observer pattern data structure -->
+	<script type="text/javascript" src="../../js/ui/GuiClient.js"></script>
+	<!-- model -->
+	<script type="text/javascript" src="../../js/models/Ablage.js"></script>
+	<!-- web service client -->
+	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClient.js"></script>
+	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientAblage.js"></script>
+	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientAblageType.js"></script>
+	<script type="text/javascript" src="../../js/factories/webServiceClientFactory.js"></script>
+	<!-- view model -->
+	<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
+	<!-- old view model -->
+	<script type="text/javascript" src="../../js/viewModels/ViewModelExplorer.js"></script>
+	<script type="text/javascript" src="../../js/viewModels/ViewModelExplorerAblage.js"></script>
+	<!--<script type="text/javascript" src="../../js/viewModels/Ablage/FormEdit.js"></script>-->
+	<!--<script type="text/javascript" src="../../js/viewModels/Ablage/FormMove.js"></script>-->
+	<!-- old view -->
+	<script type="text/javascript" src="../../js/ui/IconConfig.js"></script>
+	<script type="text/javascript" src="../../js/views/Ablage/Explorer.js"></script>
+	<!--<script type="text/javascript" src="../../js/views/Ablage/FormEdit.js"></script>-->
+	<!--<script type="text/javascript" src="../../js/views/Ablage/FormMove.js"></script>-->
+	<script type="text/javascript" src="../../js/Fund/Factory.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="../../js/controls/vakata-jstree/themes/default/style.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid-theme.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/page.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/solid.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/fontawesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/grid.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/explorer.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/jquery.toast.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/form.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/navigation.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/breadcrumb.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/print.css" media="print" />
+	<link rel=icon type="image/png" href="../../images/system/IconMunin_001.png">
+	<title>Ablage-Explorer</title>
+</head>
+
+<body>
+	<div id=navigation class="notToPrint"></div>
+	<div id=breadcrumb class="notToPrint"></div>
+	<div id=content>
+		<div id=explorer>
+			<h2>Explorer</h2>
+			<ul id=toolBar>
+				<li><a id=buttonNew title=anlegen class=linkButton><i class="fas fa-plus"></i><label>Anlegen</label></a></li>
+				<li><a id=buttonOpen title=öffnen class=linkButton><i class="fas fa-external-link-alt"></i><label>Öffnen</label></a></li>
+				<li><a id=buttonEdit title=bearbeiten class=linkButton><i class="fas fa-edit"></i><label>Bearbeiten</label></a></li>
+				<li><a id=buttonDelete title=löschen class="linkButton riskyAction"><i class="fas fa-trash-alt"></i><label>Löschen</label></a></li>
+			</ul>
+			<ul id=toolBar style="float:left;">
+				<li><a id=buttonOpenParent title="Übergeordneten Knoten öffnen" class="linkButton"><i class="fas fa-arrow-alt-circle-up"></i></a></li>
+				<li><a id=buttonOpenAbstractRoot title="Wurzelknoten öffnen" class="linkButton"><i class="fas fa-home"></i></a></li>
+			</ul>
+			<input id=path type=text />
+			<div class=clear></div>
+			<div id=grid></div>
+		</div>
+		<div id=dialogDelete title=Löschen class=dialog></div>
+	</div>
+</body>
+
+</html>

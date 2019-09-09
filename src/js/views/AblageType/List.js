@@ -137,7 +137,7 @@ function UpdateGridData(ablageTypes) {
 }
 
 function setIdToEditLink(id) {
-    $("#buttonEdit").attr("href", "/Munins Archiv/src/AblageType/Form.html?Id=" + id);
+    $("#buttonEdit").attr("href", "/Munins Archiv/src/pages/AblageType/Form.html?Id=" + id);
 }
 
 function showMessageAllLoaded(elements) {
@@ -178,7 +178,7 @@ function InitButtonNew() {
 	EnableButtonNew();
     $("#buttonNew").click(function () { 
         console.log("button 'new' clicked");
-        window.open("/Munins Archiv/src/AblageType/Form.html", "_self");
+        window.open("/Munins Archiv/src/pages/AblageType/Form.html", "_self");
     });
 }
 
@@ -198,7 +198,7 @@ function InitButtonEdit() {
 	DisableButtonEdit();
 	$("#buttonEdit").click(function () { 
         console.log("button 'edit' clicked");
-        window.open("/Munins Archiv/src/AblageType/Form.html?Id=" + _viewModelListAblageType.getSelectedItem().Id, "_self");
+        window.open("/Munins Archiv/src/pages/AblageType/Form.html?Id=" + _viewModelListAblageType.getSelectedItem().Id, "_self");
     });
 }
 

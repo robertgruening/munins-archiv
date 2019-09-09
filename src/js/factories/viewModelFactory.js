@@ -1,8 +1,18 @@
 var ViewModelFactory = function () {
+    //#region forms
     this.getViewModelFormAblage = function()
     {
         var webServiceClientFactory = new WebServiceClientFactory();
         var viewModel = new ViewModelFormAblage(webServiceClientFactory.getWebServiceClientAblage());
+        viewModel.init();
+
+        return viewModel;
+    };
+
+    this.getViewModelFormFundstelle = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelFormFundstelle(webServiceClientFactory.getWebServiceClientKontext());
         viewModel.init();
 
         return viewModel;
@@ -62,10 +72,30 @@ var ViewModelFactory = function () {
         return viewModel;
     };
 
+    this.getViewModelFormLfdNummer = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelFormLfdNummer(webServiceClientFactory.getWebServiceClientLfdNummer());
+        viewModel.init();
+
+        return viewModel;
+    };
+    //#endregion
+
+    //#region lists
     this.getViewModelListAblageType = function()
     {
         var webServiceClientFactory = new WebServiceClientFactory();
         var viewModel = new ViewModelListAblageType(webServiceClientFactory.getWebServiceClientAblageType());
+        viewModel.init();
+
+        return viewModel;
+    };
+
+    this.getViewModelListKontextType = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelListKontextType(webServiceClientFactory.getWebServiceClientKontextType());
         viewModel.init();
 
         return viewModel;
@@ -89,6 +119,17 @@ var ViewModelFactory = function () {
         return viewModel;
     };
 
+    this.getViewModelListLfdNummer = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelListLfdNummer(webServiceClientFactory.getWebServiceClientLfdNummer());
+        viewModel.init();
+
+        return viewModel;
+    };
+    //#endregion
+
+    //#region explorer
     this.getViewModelExplorerAblage = function()
     {
         var webServiceClientFactory = new WebServiceClientFactory();
@@ -124,4 +165,5 @@ var ViewModelFactory = function () {
 
         return viewModel;
     };
+    //#endregion
 };

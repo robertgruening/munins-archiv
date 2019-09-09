@@ -137,7 +137,7 @@ function UpdateGridData(fundAttributTypes) {
 }
 
 function setIdToEditLink(id) {
-    $("#buttonEdit").attr("href", "/Munins Archiv/src/FundAttributType/Form.html?Id=" + id);
+    $("#buttonEdit").attr("href", "/Munins Archiv/src/pages/FundAttributType/Form.html?Id=" + id);
 }
 
 function showMessageAllLoaded(elements) {
@@ -178,7 +178,7 @@ function InitButtonNew() {
 	EnableButtonNew();
     $("#buttonNew").click(function () { 
         console.log("button 'new' clicked");
-        window.open("/Munins Archiv/src/FundAttributType/Form.html", "_self");
+        window.open("/Munins Archiv/src/pages/FundAttributType/Form.html", "_self");
     });
 }
 
@@ -198,7 +198,7 @@ function InitButtonEdit() {
 	DisableButtonEdit();
 	$("#buttonEdit").click(function () { 
         console.log("button 'edit' clicked");
-        window.open("/Munins Archiv/src/FundAttributType/Form.html?Id=" + _viewModelListFundAttributType.getSelectedItem().Id, "_self");
+        window.open("/Munins Archiv/src/pages/FundAttributType/Form.html?Id=" + _viewModelListFundAttributType.getSelectedItem().Id, "_self");
     });
 }
 

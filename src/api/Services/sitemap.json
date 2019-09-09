@@ -1,0 +1,309 @@
+[
+	{
+		"Title" : "Tagebuch",
+		"Icon" : "fas-book",
+		"Children" : 
+		[
+			{
+				"Title" : "Fundstellen",
+				"Icon" : "fas-flag",
+				"Children" : 
+				[
+					{
+						"Title" : "neu anlegen",
+						"URL" : "/Munins Archiv/src/pages/Fundstelle/Form.html",
+						"PageName" : "FundstelleFormNew"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/Fundstelle/Form.html",
+						"PageName" : "FundstelleFormEdit",
+						"Visible": false
+					},
+					{
+						"Title" : "suchen und bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/Fundstelle/Search.html",
+						"PageName" : "FundstelleSearch",
+						"Enabled" : false
+					},
+					{
+						"Title" : "in Karte anzeigen",
+						"URL" : "/Munins Archiv/src/pages/Fundstelle/Map.html",
+						"PageName" : "FundstelleMap",
+						"Enabled" : false
+					}
+				]
+			},
+			{
+				"Title" : "Orte",
+				"Icon" : "fas-map-marker",
+				"Children" :
+				[
+					{
+						"Title" : "durchsuchen",
+						"URL" : "/Munins Archiv/src/pages/Ort/Explorer.html",
+						"PageName" : "OrtExplorer"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/Ort/Form.html",
+						"PageName" : "OrtFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/Ort/Form.html",
+						"PageName" : "OrtFormEdit",
+						"Visible" : false
+					},
+					{
+						"Title" : "Gebietskörperschaften verwalten",
+						"URL" : "/Munins Archiv/src/pages/Ort/Gebietskoerperschaft/Form.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Kartasterdaten verwalten",
+						"URL" : "/Munins Archiv/src/pages/Ort/Fundstelle/Form.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Flurnamen verwalten",
+						"URL" : "/Munins Archiv/src/pages/Ort/Flurname/Form.html",
+						"Enabled" : false
+					}
+				]
+			},
+			{
+				"Title" : "Kontexte",
+				"Icon" : "",
+				"Children" :
+				[
+					{
+						"Title" : "durchsuchen",
+						"URL" : "/Munins Archiv/src/pages/Kontext/Explorer.html",
+						"PageName" : "KontextExplorer"
+					}
+				]
+			},
+			{
+				"Title" : "LfD-Nummern",
+				"Icon" : "",
+				"Children" :
+				[
+					{
+						"Title" : "durchsuchen",
+						"URL" : "/Munins Archiv/src/pages/LfdNummer/List.html",
+						"PageName" : "LfdNummerList"
+					},
+					{
+						"Title" : "neu anlegen",
+						"URL" : "/Munins Archiv/src/pages/LfdNummer/Form.html",
+						"PageName" : "LfdNummerFormNew"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/LfdNummer/Form.html",
+						"PageName" : "LfdNummerFormEdit",
+						"Visible" : false
+					}
+				]
+			}
+		]
+	},
+	{
+		"Title" : "Archiv",
+		"Icon" : "fas-archive",
+		"Children" :
+		[
+			{
+				"Title" : "Ablagen",
+				"Icon" : "fas-box",
+				"Children" :
+				[
+					{
+						"Title" : "durchsuchen",
+						"URL" : "/Munins Archiv/src/pages/Ablage/Explorer.html",
+						"PageName" : "AblageExplorer"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/Ablage/Form.html",
+						"PageName" : "AblageFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/Ablage/Form.html",
+						"PageName" : "AblageFormEdit",
+						"Visible" : false
+					}
+				]
+			},
+			{
+				"Title" : "Funde",
+				"Icon" : "fas-puzzle-piece",
+				"Children" :
+				[
+					{
+						"Title" : "neu anlegen",
+						"URL" : "/Munins Archiv/src/pages/Fund/Form.html",
+						"PageName" : "FundFormNew"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/Fund/Form.html",
+						"PageName" : "FundFormEdit",
+						"Visible" : false
+					},
+					{
+						"Title" : "suchen",
+						"URL" : "/Munins Archiv/src/pages/Fund/Search.html",
+						"PageName" : "FundSearch",
+						"Enabled" : false
+					}
+				]
+			},
+			{
+				"Title" : "Fundattribute",
+				"Icon" : "fas-tag",
+				"Children" :
+				[
+					{
+						"Title" : "durchsuchen",
+						"URL" : "/Munins Archiv/src/pages/FundAttribut/Explorer.html",
+						"PageName" : "FundAttributExplorer"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/FundAttribut/Form.html",
+						"PageName" : "FundAttributFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/FundAttribut/Form.html",
+						"PageName" : "FundAttributFormEdit",
+						"Visible" : false
+					}
+				]
+			}
+		]
+	},
+	{
+		"Title" : "Administration",
+		"Icon" : "fas-cogs",
+		"Children" :
+		[
+			{
+				"Title" : "Organisation",
+				"Icon" : "fas-users",
+				"Children" :
+				[
+					{
+						"Title" : "Organisationsprofil bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/Organisation/Profile.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Mitglieder verwalten",
+						"URL" : "/Munins Archiv/src/pages/Member/Form.html",
+						"Enabled" : false
+					}
+				]
+			},
+			{
+				"Title" : "Typen",
+				"Icon" : "fas-cubes",
+				"Children" :
+				[
+					{
+						"Title" : "Ablagetypen verwalten",
+						"URL" : "/Munins Archiv/src/pages/AblageType/List.html",
+						"PageName" : "AblageTypeList"
+					},
+					{
+						"Title" : "Ablage neu anlegen",
+						"URL" : "/Munins Archiv/src/pages/AblageType/Form.html",
+						"PageName" : "AblageTypeFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Ablage bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/AblageType/Form.html",
+						"PageName" : "AblageTypeFormEdit",
+						"Visible" : false
+					},
+					{
+						"Title" : "Ortstypen verwalten",
+						"URL" : "/Munins Archiv/src/pages/OrtType/List.html",
+						"PageName" : "OrtTypeList"
+					},
+					{
+						"Title" : "Ort neu anlegen",
+						"URL" : "/Munins Archiv/src/pages/OrtType/Form.html",
+						"PageName" : "OrtTypeFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Ort bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/OrtType/Form.html",
+						"PageName" : "OrtTypeFormEdit",
+						"Visible" : false
+					},
+					{
+						"Title" : "Fundattributtypen verwalten",
+						"URL" : "/Munins Archiv/src/pages/FundAttributType/List.html",
+						"PageName" : "FundAttributTypeList"
+					},
+					{
+						"Title" : "Fundattributtyp neu anlegen",
+						"URL" : "/Munins Archiv/src/pages/FundAttributType/Form.html",
+						"PageName" : "FundAttributTypeFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Fundattributtyp bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/FundAttributType/Form.html",
+						"PageName" : "FundAttributTypeFormEdit",
+						"Visible" : false
+					}
+				]
+			},
+			{
+				"Title" : "Anwendung",
+				"Icon" : "fas-cogs",
+				"Children" :
+				[
+					{
+						"Title" : "Sicherung erstellen",
+						"Icon" : "fas-hdd",
+						"Action" : "Backup();",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Server herunterfahren",
+						"Icon" : "fas-power-off",
+						"Action" : "Shutdown();",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Log einsehen",
+						"Icon" : "fas-file-alt",
+						"URL" : "/Munins Archiv/src/api/Logs/Log.html",
+						"Enabled" : true
+					},
+					{
+						"Title" : "Version 1.1",
+						"Enabled" : false
+					}
+				]
+			}
+		]
+	},
+	{
+		"Title" : "Hilfe",
+		"Icon" : "fas-question-circle",
+		"Action" : "Help();",
+		"Enabled" : false
+	}
+]

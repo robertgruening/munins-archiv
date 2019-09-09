@@ -51,7 +51,7 @@ var WebServiceClient = function () {
 		$.ajax(
 			{
 				type: "POST",
-				url: "../Services/" + this.getModelName() + "/",
+				url: "../../api/Services/" + this.getModelName() + "/",
 				dataType: "json",
 				contentType: "application/json",
 				data: JSON.stringify(element),
@@ -75,7 +75,7 @@ var WebServiceClient = function () {
 		$.ajax(
 			{
 				type: "PUT",
-				url: "../Services/" + this.getModelName() + "/" + element.Id,
+				url: "../../api/Services/" + this.getModelName() + "/" + element.Id,
 				dataType: "json",
 				contentType: "application/json",
 				data: JSON.stringify(element),
@@ -99,7 +99,7 @@ var WebServiceClient = function () {
 		$.ajax(
 			{
 				type: "GET",
-				url: "../Services/" + this.getModelName() + "/" + element.Id,
+				url: "../../api/Services/" + this.getModelName() + "/" + element.Id,
 				dataType: "json",
 				success: function (data, textStatus, jqXHR) {
 					controller.Update("load", data, sender);
@@ -121,7 +121,7 @@ var WebServiceClient = function () {
 		$.ajax(
 			{
 				type: "GET",
-				url: "../Services/" + this.getModelName() + "/",
+				url: "../../api/Services/" + this.getModelName() + "/",
 				dataType: "json",
 				success: function (data, textStatus, jqXHR) {
 					controller.Update("loadAll", data, sender);
@@ -143,7 +143,7 @@ var WebServiceClient = function () {
 		$.ajax(
 			{
 				type: "DELETE",
-				url: "../Services/" + this.getModelName() + "/" + element.Id,
+				url: "../../api/Services/" + this.getModelName() + "/" + element.Id,
 				dataType: "json",
 				success: function (data, textStatus, jqXHR) {
 					controller.Update("delete", data, sender);

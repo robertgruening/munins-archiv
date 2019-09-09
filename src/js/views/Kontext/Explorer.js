@@ -93,17 +93,17 @@ function InitBreadcrumb()
 //#region new
 function InitButtonNew() {
 	EnableButtonNew();
-	$("#buttonNew").attr("href", "/Munins Archiv/src/Kontext/Form.html");
+	$("#buttonNew").attr("href", "/Munins Archiv/src/pages/Fundstelle/Form.html");
 }
 
 function EnableButtonNew(id) {
 	if (id === undefined ||
 		id === null) {
 
-		$("#buttonNew").attr("href", "/Munins Archiv/src/Kontext/Form.html");
+		$("#buttonNew").attr("href", "/Munins Archiv/src/pages/Fundstelle/Form.html");
 	}
 	else {
-		$("#buttonNew").attr("href", "/Munins Archiv/src/Kontext/Form.html?Parent_Id=" + id);
+		$("#buttonNew").attr("href", "/Munins Archiv/src/pages/Fundstelle/Form.html?Parent_Id=" + id);
 	}
 
 	$("#buttonNew").removeClass("disabled");
@@ -124,10 +124,10 @@ function InitButtonOpen() {
 
 function EnableButtonOpen(args) {
 	if (args.SelectedItem.Id === undefined) {
-		$("#buttonOpen").attr("href", "/Munins Archiv/src/Kontext/Explorer.html");
+		$("#buttonOpen").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html");
 	}
 	else {
-		$("#buttonOpen").attr("href", "/Munins Archiv/src/Kontext/Explorer.html?Id=" + args.SelectedItem.Id);
+		$("#buttonOpen").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html?Id=" + args.SelectedItem.Id);
 	}
 
 	$("#buttonOpen").removeClass("disabled");
@@ -148,10 +148,10 @@ function InitButtonEdit() {
 
 function EnableButtonEdit(args) {
 	if (args.SelectedItem.Id === undefined) {
-		$("#buttonEdit").attr("href", "/Munins Archiv/src/Kontext/Form.html");
+		$("#buttonEdit").attr("href", "/Munins Archiv/src/pages/Fundstelle/Form.html");
 	}
 	else {
-		$("#buttonEdit").attr("href", "/Munins Archiv/src/Kontext/Form.html?Id=" + args.SelectedItem.Id);
+		$("#buttonEdit").attr("href", "/Munins Archiv/src/pages/Fundstelle/Form.html?Id=" + args.SelectedItem.Id);
 	}
 
 	$("#buttonEdit").removeClass("disabled");
@@ -228,10 +228,10 @@ function EnableButtonOpenParent(parent) {
 	}
 
 	if (parent.Id === undefined) {
-		$("#buttonOpenParent").attr("href", "/Munins Archiv/src/Kontext/Explorer.html");
+		$("#buttonOpenParent").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html");
 	}
 	else {
-		$("#buttonOpenParent").attr("href", "/Munins Archiv/src/Kontext/Explorer.html?Id=" + parent.Id);
+		$("#buttonOpenParent").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html?Id=" + parent.Id);
 	}
 
 	$("#buttonOpenParent").removeClass("disabled");
@@ -248,7 +248,7 @@ function DisableButtonOpenParent() {
 function InitButtonOpenAbstractRoot() {
 	DisableButtonOpenAbstractRoot();
 	_viewModelExplorerKontext.register("parent", new GuiClient(EnableButtonOpenAbstractRoot, showErrorMessages));
-	$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/src/Kontext/Explorer.html");
+	$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html");
 }
 
 function EnableButtonOpenAbstractRoot(parent) {
@@ -288,7 +288,7 @@ function setPath(path) {
 	$("#path").val(path);
 }
 //#endregion
-//#endre
+//#endregion
 
 //#region grid
 var IconField = function(config) {
@@ -349,15 +349,15 @@ function InitGrid()
 
 			if (args.item.Id === undefined) {
 				console.debug("selected grid item is abstract root");
-				window.open("/Munins Archiv/src/Kontext/Explorer.html", "_self");
+				window.open("/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
 			}
 			else if (args.item.Parent === undefined) {
 				console.debug("selected grid item is root");
-				window.open("/Munins Archiv/src/Kontext/Explorer.html", "_self");
+				window.open("/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
 			}
 			else {
 				console.debug("selected grid item is standard node");
-				window.open("/Munins Archiv/src/Kontext/Explorer.html?Id=" + args.item.Id, "_self");
+				window.open("/Munins Archiv/src/pages/Kontext/Explorer.html?Id=" + args.item.Id, "_self");
 			}
 
 		}

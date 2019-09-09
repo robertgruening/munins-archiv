@@ -282,7 +282,7 @@ function InitGridFunde()
 			console.info("row double clicked");
 			console.debug("selected grid item", args.item);
 
-			window.open("/Munins Archiv/src/Fund/Form.html?Id=" + args.item.Id, "_self");
+			window.open("/Munins Archiv/src/pages/Fund/Form.html?Id=" + args.item.Id, "_self");
         }
     });
 }
@@ -421,7 +421,7 @@ function ResetPropertiesMessages() {
 function InitButtonToOverview() {
 	EnableButtonToOverview();
 	_viewModelFormAblage.register("parent", new GuiClient(EnableButtonToOverview, showErrorMessages));
-	$("#buttonToOverview").attr("href", "/Munins Archiv/src/Ablage/Explorer.html", "_self");
+	$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Ablage/Explorer.html", "_self");
 }
 
 function EnableButtonToOverview(parent) {
@@ -429,10 +429,10 @@ function EnableButtonToOverview(parent) {
 		parent === null || 
 		parent.Id === undefined) {
 
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/Ablage/Explorer.html", "_self");
+		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Ablage/Explorer.html", "_self");
 	}
 	else {
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/Ablage/Explorer.html?Id=" + parent.Id, "_self");
+		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Ablage/Explorer.html?Id=" + parent.Id, "_self");
 	}
 
 	$("#buttonToOverview").removeClass("disabled");

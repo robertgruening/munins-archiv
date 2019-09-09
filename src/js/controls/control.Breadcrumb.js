@@ -15,7 +15,7 @@
 		$.ajax(
 		{
 			type:"GET",
-			url: "../Services/Sitemap/" + options.PageName + "/WithPath",
+			url: "../../api/Services/Sitemap/" + options.PageName + "/WithPath",
 			dataType: "JSON",
 			success:function(data, textStatus, jqXHR)
 			{
@@ -26,7 +26,7 @@
 			},
 			error:function(jqXHR, textStatus, errorThrown)
 			{
-				console.log("FEHLER: \"../Services/Sitemap/" + options.PageName + "/WithPath\" konnte nicht geladen werden!");
+				console.log("FEHLER: \"../../api/Services/Sitemap/" + options.PageName + "/WithPath\" konnte nicht geladen werden!");
 			}
 		});	
 	}
