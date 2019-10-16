@@ -5,5 +5,5 @@ function Kontext()
     this.Parent = null;
     this.Path = "";
 	this.Children = new Array();
-	this.Funde = new Array();
+	this.LfdNummern = new Array();
 }

@@ -13,7 +13,6 @@ var ViewModelFormFundstelle = function (webServiceClient) {
 			parent: new Array(),
 			children: new Array(),
 			path: new Array(),
-			funde: new Array(),
 			lfdNummern: new Array()
 		};
 	};
@@ -25,7 +24,6 @@ var ViewModelFormFundstelle = function (webServiceClient) {
 		this._update("parent", this._model.Parent);
 		this._update("children", this._model.Children);
 		this._update("path", this._model.Path);
-		this._update("funde", this._model.Funde);
 		this._update("lfdNummern", this._model.LfdNummern);
 	};
 
@@ -91,25 +89,6 @@ var ViewModelFormFundstelle = function (webServiceClient) {
 	//#region Path
 	this.getPath = function () {
 		return this._model.Path;
-	};
-	//#endregion
-
-	//#region Funde
-	this.addFund = function (fund) {
-		this._model.Funde.push(fund);
-		this._update("dataChanged");
-		this._update("funde", this._model.Funde);
-	};
-
-	this.removeFund = function (fund) {
-		for (i = 0; i < this._model.Funde.length; i++) {
-			if (this._model.Funde[i].Id == fund.Id) {
-				this._model.Funde.splice(i, 1);
-				break;
-			}
-		}
-		this._update("dataChanged");
-		this._update("funde", this._model.Funde);
 	};
 	//#endregion
 

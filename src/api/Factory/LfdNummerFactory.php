@@ -48,8 +48,8 @@ class LfdNummerFactory extends Factory implements iListFactory
     #region load
     protected function getSQLStatementToLoadById($id)
     {
-        return "SELECT Id, Bezeichnung
-                FROM ".$this->getTableName()."
+        return "SELECT Id, Bezeichnung, COUNT(*) AS CountOfKontexte
+                FROM ".$this->getTableName()." RIGHT JOIN Kontext_LfdNummer ON ".$this->getTableName().".Id = Kontext_LfdNummer.LfdNummer_Id
                 WHERE Id = ".$id.";";
     }
 
@@ -68,6 +68,7 @@ class LfdNummerFactory extends Factory implements iListFactory
         $lfdNummer = new LfdNummer();
         $lfdNummer->setId(intval($dataSet["Id"]));
         $lfdNummer->setBezeichnung($dataSet["Bezeichnung"]);
+        $lfdNummer->setCountOfKontexte(intval($dataSet["CountOfKontexte"]));
         
         return $lfdNummer;
     }
@@ -91,8 +92,12 @@ class LfdNummerFactory extends Factory implements iListFactory
     #region convert
     public function convertToInstance($object)
     {
+        global $logger;
+        $logger->debug("Konvertiere Daten zu LfD-Nummer");
+
         if ($object == null)
         {
+            $logger->error("LfD-Nummer ist nicht gesetzt!");
             return null;
         }
 
@@ -102,10 +107,24 @@ class LfdNummerFactory extends Factory implements iListFactory
         {
             $lfdNummer->setId(intval($object["Id"]));
         }
+        else
+        {
+            $logger->debug("Id ist nicht gesetzt!");
+        }
 
-        $lfdNummer->setBezeichnung($object["Bezeichnung"]);
+        if (isset($object["Bezeichnung"]))
+        {
+            $lfdNummer->setBezeichnung($object["Bezeichnung"]);
+        }
+        else
+        {
+            $logger->debug("Bezeichnung ist nicht gesetzt!");
+        }
 
-        // Review: convert Kontexte
+        if (isset($object["CountOfKontexte"]))
+        {
+            $lfdNummer->setCountOfKontexte(intval($object["CountOfKontexte"]));
+        }
         
         return $lfdNummer;
     }
@@ -114,7 +133,7 @@ class LfdNummerFactory extends Factory implements iListFactory
     #region Kontext
     public function loadByKontext($kontext)
     {
-        $lfdNummern = array();
+        $elemente = array();
         $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
 		if (!$mysqli->connect_errno)
@@ -126,14 +145,14 @@ class LfdNummerFactory extends Factory implements iListFactory
 			{
 				while ($datensatz = $ergebnis->fetch_assoc())
 				{
-					array_push($lfdNummern, $this->loadById(intval($datensatz["Id"])));
+					array_push($elemente, $this->loadById(intval($datensatz["Id"])));
 				}
 			}
 		}
 		
 		$mysqli->close();
 		
-		return $lfdNummern;
+		return $elemente;
     }
     
     protected function getSQLStatementToLoadIdsByKontext($kontext)
@@ -141,14 +160,6 @@ class LfdNummerFactory extends Factory implements iListFactory
         return "SELECT LfdNummer_Id AS Id
                 FROM Kontext_".$this->getTableName()."
                 WHERE Kontext_Id = ".$kontext->getId().";";
-    }
-    
-    public function loadKontexte(LfdNummer $element)
-    {        
-        $kontexte = $this->getKontextFactory()->loadByLfdNummer($element);
-        $element->setKontexte($kontexte);
-        
-        return $element;
     }
     #endregion
     #endregion

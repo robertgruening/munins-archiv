@@ -136,7 +136,7 @@ class FundFactory extends Factory
 
         if (isset($object["Anzahl"]))
         {
-                $fund->setAnzahl(intval($object["Anzahl"]));
+            $fund->setAnzahl(intval($object["Anzahl"]));
         }
         else
         {

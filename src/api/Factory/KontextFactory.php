@@ -4,7 +4,6 @@ include_once(__DIR__."/KontextTypeFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/FundFactory.php");
-include_once(__DIR__."/AblageFactory.php");
 include_once(__DIR__."/OrtFactory.php");
 include_once(__DIR__."/LfdNummerFactory.php");
 include_once(__DIR__."/../Model/Kontext.php");
@@ -19,7 +18,6 @@ class KontextFactory extends Factory implements iTreeFactory
     private $_kontextTypeFactory = null;
     private $_fundFactory = null;
     private $_ortFactory = null;
-    private $_ablageFactory = null;
     private $_lfdNummerFactory = null;
     #endregion
 
@@ -54,16 +52,6 @@ class KontextFactory extends Factory implements iTreeFactory
         return $this->_ortFactory;
     }
     
-    protected function getAblageFactory()
-    {
-        if ($this->_ablageFactory == null)
-        {
-            $this->_ablageFactory = new AblageFactory();
-        }
-
-        return $this->_ablageFactory;
-    }
-    
     protected function getLfdNummerFactory()
     {
         if ($this->_lfdNummerFactory == null)
@@ -94,14 +82,12 @@ class KontextFactory extends Factory implements iTreeFactory
 
     #region load
     protected function getSQLStatementToLoadById($id)
-    {    
+    {
         $kontextType = $this->getKontextTypeFactory()->loadByNodeId($id);
 
         if ($kontextType == null)
-        {        
-            return "SELECT Id, Bezeichnung, Typ_Id
-                FROM ".$this->getTableName()."
-                WHERE Id = ".$id.";";
+        {
+            throw new Exception("Der Kontexttyp ist nicht gesetzt!");
         }
         
         switch ($kontextType->getBezeichnung())
@@ -125,10 +111,8 @@ class KontextFactory extends Factory implements iTreeFactory
                         WHERE Kontext.Id = ".$id.";";
             }
         }
-        
-        return "SELECT Id, Bezeichnung, Typ_Id
-                FROM ".$this->getTableName()."
-                WHERE Id = ".$id.";";
+
+        throw new Exception("Der Kontexttyp ist nicht implementiert!");
     }
     
     protected function fill($dataSet)
@@ -217,23 +201,73 @@ class KontextFactory extends Factory implements iTreeFactory
     #region save
     protected function getSQLStatementToInsert(iNode $kontext)
     {
-        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
-                VALUES ('".$kontext->getBezeichnung()."', ".$kontext->getType()->getId().");";
+        switch ($kontext->getType()->getBezeichnung())
+        {
+            case "Fundstelle":
+            {
+                return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
+                        VALUES ('".$kontext->getBezeichnung()."', ".$kontext->getType()->getId().");";
+            }
+            case "Begehungsfläche":
+            {
+                return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
+                        VALUES ('".$kontext->getBezeichnung()."', ".$kontext->getType()->getId().");";
+            }
+            case "Begehung":
+            {
+                return "BEGIN;
+                        INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
+                        VALUES ('".$kontext->getBezeichnung()."', ".$kontext->getType()->getId().");
+                        INSERT INTO Begehung (Id, Datum, Kommentar)
+                        VALUES (LAST_INSERT_ID(), '".$kontext->getDatum()."', ".$kontext->getKommentar().");
+                        COMMIT;";
+            }
+        }
+        
+        throw new Exception("Der Kontexttyp ist nicht implementiert!");
     }
 
     protected function getSQLStatementToUpdate(iNode $kontext)
     {
-        return "UPDATE ".$this->getTableName()."
-                SET Bezeichnung = '".$kontext->getBezeichnung()."',
-                    Typ_Id = ".$kontext->getType()->getId()."
-                WHERE Id = ".$kontext->getId().";";
+        switch ($kontext->getType()->getBezeichnung())
+        {
+            case "Fundstelle":
+            {
+                return "UPDATE ".$this->getTableName()."
+                        SET Bezeichnung = '".$kontext->getBezeichnung()."',
+                            Typ_Id = ".$kontext->getType()->getId()."
+                        WHERE Id = ".$kontext->getId().";";
+            }
+            case "Begehungsfläche":
+            {
+                return "UPDATE ".$this->getTableName()."
+                        SET Bezeichnung = '".$kontext->getBezeichnung()."',
+                            Typ_Id = ".$kontext->getType()->getId()."
+                        WHERE Id = ".$kontext->getId().";";
+            }
+            case "Begehung":
+            {
+                return "BEGIN;
+                        UPDATE ".$this->getTableName()."
+                        SET Bezeichnung = '".$kontext->getBezeichnung()."',
+                            Typ_Id = ".$kontext->getType()->getId()."
+                        WHERE Id = ".$kontext->getId().";
+                        UPDATE Begehung
+                        SET Datum = '".$kontext->getDatum()."',
+                            Kommentar = '".$kontext->getKommentar()."'
+                        WHERE Id = ".$kontext->getId().";
+                        COMMIT;";
+            }
+        }
+        
+        throw new Exception("Der Kontexttyp ist nicht implementiert!");
     }
     #endregion
 
     #region delete
 	protected function getSQLStatementToDelete($element)
 	{  
-        $statement = "";
+        $statement = "BEGIN;";
 
         switch ($element->getType()->getBezeichnung())
         {
@@ -256,7 +290,8 @@ class KontextFactory extends Factory implements iTreeFactory
 
 		$statement .= "DELETE
 				FROM ".$this->getTableName()."
-                WHERE Id = ".$element->getId().";";
+                WHERE Id = ".$element->getId().";
+                COMMIT;";
                 
         return $statement;
 	}
@@ -336,12 +371,42 @@ class KontextFactory extends Factory implements iTreeFactory
             }
         }
 
-        if (isset($object["Funde"]))
+        if (isset($object["LfdNummern"]))
+        {
+            for ($i = 0; $i < count($object["LfdNummern"]); $i++)
+            {
+                $kontext->addLfdNummer($this->getLfdNummerFactory()->convertToInstance($object["LfdNummern"][$i]));
+            }
+        }
+
+        if ($kontext instanceof iFundContainer &&
+            isset($object["Funde"]))
         {
             for ($i = 0; $i < count($object["Funde"]); $i++)
             {
                 $kontext->addFund($this->getFundFactory()->convertToInstance($object["Funde"][$i]));
             }
+        }
+
+        if ($kontext instanceof iOrtContainer &&
+            isset($object["Orte"]))
+        {
+            for ($i = 0; $i < count($object["Orte"]); $i++)
+            {
+                $kontext->addOrt($this->getOrtFactory()->convertToInstance($object["Orte"][$i]));
+            }
+        }
+
+        if ($kontext instanceof Begehung &&
+            isset($object["Datum"]))
+        {
+            $kontext->setDatum($object["Datum"]);
+        }
+
+        if ($kontext instanceof Begehung &&
+            isset($object["Kommentar"]))
+        {
+            $kontext->setKommentar($object["Kommentar"]);
         }
         
         return $kontext;
@@ -350,103 +415,194 @@ class KontextFactory extends Factory implements iTreeFactory
 
     #region hierarchy
     #region parent
-    public function loadParent(iTreeNode $ablage)
+    public function loadParent(iTreeNode $kontext)
     {
-        return $this->getTreeFactory()->loadParent($ablage);
+        return $this->getTreeFactory()->loadParent($kontext);
     }
 
-    public function linkParent(iTreeNode $ablage, iTreeNode $parent)
+    public function linkParent(iTreeNode $kontext, iTreeNode $parent)
     {
-        return $this->getTreeFactory()->linkParent($ablage, $parent);
+        return $this->getTreeFactory()->linkParent($kontext, $parent);
     }
     
-    public function unlinkParent(iTreeNode $ablage)
+    public function unlinkParent(iTreeNode $kontext)
     {
-        return $this->getTreeFactory()->unlinkParent($ablage);
+        return $this->getTreeFactory()->unlinkParent($kontext);
     }
 
-    public function updateParent(iTreeNode $ablage, iTreeNode $parent = null)
+    public function updateParent(iTreeNode $kontext, iTreeNode $parent = null)
     {
-        return $this->getTreeFactory()->updateParent($ablage, $parent);
+        return $this->getTreeFactory()->updateParent($kontext, $parent);
     }
     #endregion
 
     #region children
-    public function loadChildren(iTreeNode $ablage)
+    public function loadChildren(iTreeNode $kontext)
     {
-        return $this->getTreeFactory()->loadChildren($ablage);
+        return $this->getTreeFactory()->loadChildren($kontext);
     }
 
-    public function linkChild(iTreeNode $ablage, iTreeNode $child)
+    public function linkChild(iTreeNode $kontext, iTreeNode $child)
     {
-        return $this->getTreeFactory()->linkChild($ablage, $child);
+        return $this->getTreeFactory()->linkChild($kontext, $child);
     }
 
-    public function unlinkChild(iTreeNode $ablage, iTreeNode $child)
+    public function unlinkChild(iTreeNode $kontext, iTreeNode $child)
     {
-        return $this->getTreeFactory()->unlinkChild($ablage, $child);
+        return $this->getTreeFactory()->unlinkChild($kontext, $child);
     }
 
-    public function linkChildren(iTreeNode $ablage, array $children)
+    public function linkChildren(iTreeNode $kontext, array $children)
     {
-        return $this->getTreeFactory()->linkChildren($ablage, $children);
+        return $this->getTreeFactory()->linkChildren($kontext, $children);
     }
 
-    public function unlinkChildren(iTreeNode $ablage, array $children)
+    public function unlinkChildren(iTreeNode $kontext, array $children)
     {
-        return $this->getTreeFactory()->unlinkChildren($ablage, $children);
+        return $this->getTreeFactory()->unlinkChildren($kontext, $children);
     }
 
-    public function unlinkAllChildren(iTreeNode $ablage)
+    public function unlinkAllChildren(iTreeNode $kontext)
     {
-        return $this->getTreeFactory()->unlinkAllChildren($ablage);
+        return $this->getTreeFactory()->unlinkAllChildren($kontext);
     }
 
-    public function synchroniseChildren(iTreeNode $ablage, array $children)
+    public function synchroniseChildren(iTreeNode $kontext, array $children)
     {
-        return $this->getTreeFactory()->synchroniseChildren($ablage, $children);
+        return $this->getTreeFactory()->synchroniseChildren($kontext, $children);
     }
     #endregion
 
-    public function getPath(iTreeNode $ablage)
+    public function getPath(iTreeNode $kontext)
     {
-        return $this->getTreeFactory()->getPath($ablage);
+        return $this->getTreeFactory()->getPath($kontext);
     }
     
     public function loadRoots()
     {
         return $this->getTreeFactory()->loadRoots();
     }
+
+	public static function isNodeInCircleCondition(iTreeNode $node)
+	{
+        return TreeFactory::isNodeInCircleCondition($node);
+	}
     #endregion
 
     #region Fund
-    public function loadFunde($element)
+    public function linkFund(iFundContainer $kontext, iNode $fund)
     {
-        if (!($element instanceof iFundContainer))
+        $kontext->addFund($this->getFundFactory()->linkKontext($fund, $kontext));
+        
+        return $kontext;
+    }
+    
+    public function linkFunde(iFundContainer $kontext, array $funde)
+    {
+        for ($i = 0; $i < count($funde); $i++)
         {
-            return $element;
+            $kontext = $this->linkFund($kontext, $funde[$i]);
         }
         
+        return $kontext;
+    }
+    
+    public function unlinkFund(iFundContainer $kontext, iNode $fund)
+    {
+        $kontext->removeFund($this->getFundFactory()->unlinkKontext($fund, $kontext));
+        
+        return $kontext;
+    }
+    
+    public function unlinkFunde(iFundContainer $kontext, array $funde)
+    {
+        for ($i = 0; $i < count($funde); $i++)
+        {
+            $this->unlinkFund($kontext, $funde[$i]);
+        }
+        
+        return $kontext;
+    }
+
+    public function loadFunde(iFundContainer $element)
+    {
         $funde = $this->getFundFactory()->loadByKontext($element);
         $element->setFunde($funde);
         
         return $element;
     }
-    #endregion
-
-    #region Ablage
-    public function loadAblagen($element)
+    
+    /**
+     * Synchronises the Kontext's Funde with the given
+     * Funden.
+     * Returns the updated Kontext.
+     * 
+     * @param iFundContainer $kontext Kontext to synchronise.
+	 * @param array $funde Funde to be used as new Funde.
+     */
+    public function synchroniseFunde(iFundContainer $kontext, array $funde)
     {
-        if (!($element instanceof iAblageContainer))
-        {
-            return $element;
-        }
-        
-        $ablagen = $this->getAblageFactory()->loadByKontext($element);
-        $element->setAblagen($ablagen);
-        
-        return $element;
+		$kontext = $this->linkNewFunde($kontext, $funde);
+		$kontext = $this->unlinkObsoleteFunde($kontext, $funde);
+
+		return $kontext;
     }
+	
+	/**
+	 * Links Funde that are not in the Kontext's
+	 * Fund list.
+     * Returns the updated Kontext.
+	 * 
+	 * @param iFundContainer $kontext Kontext to be updated with new Funden.
+	 * @param iNode $funde Funde to be used as new Funde.
+	 */
+	protected function linkNewFunde(iFundContainer $kontext, array $funde)
+	{
+		for ($i = 0; $i < count($funde); $i++)
+		{
+			if (!$kontext->containsFund($funde[$i]))
+			{
+				$kontext = $this->linkFund($kontext, $funde[$i]);
+			}
+		}
+
+		return $kontext;
+	}		
+	
+	/**
+	 * Unlinks Funde that are in the Kontext's
+	 * Fund list, but not in the given Funden.
+	 * Returns the updated Kontext.
+	 * 
+	 * @param iFundContainer $kontext Kontext to be cleaned up from obsolete Funden.
+	 * @param array $funde Funde to be used as new Funde.
+	 */
+	protected function unlinkObsoleteFunde(iFundContainer $kontext, array $funde)
+	{
+		for ($i = 0; $i < count($kontext->getFunde());)
+		{
+			$contains = false;
+
+			for ($j = 0; $j < count($funde); $j++)
+			{
+				if ($funde[$j]->getId() == $kontext->getFunde()[$i]->getId())
+				{
+					$contains = true;
+					break;
+				}
+			}
+
+            if ($contains)
+            {
+                $i++;                
+            }
+            else
+			{
+				$kontext = $this->unlinkFund($kontext, $kontext->getFunde()[$i]);
+			}
+		}
+    }
+		
     #endregion
 
     #region Ort
@@ -476,22 +632,77 @@ class KontextFactory extends Factory implements iTreeFactory
     
     protected function getSQLStatementToLoadIdsByOrt($ort)
     {
-        return "SELECT Kontext_Id AS Id
-                FROM ".$this->getFundFactory()->getTableName()."_Ort
-                WHERE Ort_Id = ".$ort->getId().";";
+        return "SELECT ".$this->getTableName()."_Id AS Id
+                FROM ".$this->getTableName()."_".$this->getOrtFactory()->getTableName()."
+                WHERE ".$this->getOrtFactory()->getTableName()."_Id = ".$ort->getId().";";
     }
 
-    public function loadOrte($element)
-    {
-        if (!($element instanceof iOrtContainer))
-        {
-            return $element;
-        }
-        
+    public function loadOrte(iOrtContainer $element)
+    {        
         $orte = $this->getOrtFactory()->loadByKontext($element);
         $element->setOrte($orte);
         
         return $element;
+    }
+    
+    /**
+     * Synchronises the Kontext's Orte with the given
+     * Orten.
+     * Returns the updated Kontext.
+     * 
+     * @param iOrtContainer $element Kontext to synchronise.
+	 * @param array $orte Orte to be used as new Orte.
+     */
+    public function synchroniseOrte(iOrtContainer $element, array $orte)
+    {
+        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+        
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
+            $ergebnis = $mysqli->query($this->getSQLStatementToSynchroniseOrte($element, $orte));	
+            
+            if (!$mysqli->errno)
+            {
+                $element->setOrte($orte);
+            }
+        }
+        
+        $mysqli->close();
+
+        return $element;
+    }
+
+    public function getSQLStatementToSynchroniseOrte($element, $orte)
+    {
+        $statement = "BEGIN;";
+        $statement .= "DELETE FROM ".$this->getTableName()."_".$this->getOrtFactory()->getTableName()."
+                        WHERE ".$this->getTableName()."_Id = ".$element->getId().";";
+
+        for ($i = 0; $i < count($orte); $i++)
+        {
+            if ($i == 0)
+            {
+                $statement .= "INSERT (".$this->getTableName()."_Id,".$this->getOrtFactory()->getTableName()."_Id)
+                                VALUES ";
+            }
+            else
+            {
+                $statement .= ",";
+            }
+
+            $statement .= "(".$element->getId().",".$orte[$i]->getId().")";
+
+            if ($i + 1 == count($orte))
+            {
+                $statement .= ";";
+            }
+        }
+
+        $statement .= "COMMIT;";
+
+
+        return $statement;
     }
     #endregion
     
@@ -522,17 +733,76 @@ class KontextFactory extends Factory implements iTreeFactory
     
     protected function getSQLStatementToLoadIdsByLfdNummer($lfdNummer)
     {
-        return "SELECT Kontext_Id AS Id
-                FROM ".$this->getTableName()."_LfdNummer
-                WHERE LfdNummer_Id = ".$lfdNummer->getId().";";
+        return "SELECT ".$this->getTableName()."_Id AS Id
+                FROM ".$this->getTableName()."_".$this->getLfdNummerFactory()->getTableName()."
+                WHERE ".$this->getLfdNummerFactory()->getTableName()."_Id = ".$lfdNummer->getId().";";
     }
 
     public function loadLfdNummern($element)
     {        
-        $lfdNummern = $this->getLfdNummerFactory()->loadByKontext($element);
-        $element->setLfdNummern($lfdNummern);
+        $element->setLfdNummern($this->getLfdNummerFactory()->loadByKontext($element));
         
         return $element;
+    }
+    
+    /**
+     * Synchronises the Kontext's LfdNummern with the given
+     * LfdNummern.
+     * Returns the updated Kontext.
+     * 
+     * @param Kontext $element Kontext to synchronise.
+	 * @param array $lfdNummern LfdNummern to be used as new LfdNummern.
+     */
+    public function synchroniseLfdNummern(Kontext $element, array $lfdNummern)
+    {
+        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+        
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
+            $ergebnis = $mysqli->query($this->getSQLStatementToSynchroniseLfdNummern($element, $lfdNummern));	
+            
+            if (!$mysqli->errno)
+            {
+                $element->setLfdNummern($lfdNummern);
+            }
+        }
+        
+        $mysqli->close();
+
+        return $element;
+    }
+
+    public function getSQLStatementToSynchroniseLfdNummern($element, $lfdNummern)
+    {
+        $statement = "BEGIN;";
+        $statement .= "DELETE FROM ".$this->getTableName()."_".$this->getLfdNummerFactory()->getTableName()."
+                        WHERE ".$this->getTableName()."_Id = ".$element->getId().";";
+
+        for ($i = 0; $i < count($lfdNummern); $i++)
+        {
+            if ($i == 0)
+            {
+                $statement .= "INSERT (".$this->getTableName()."_Id,".$this->getLfdNummerFactory()->getTableName()."_Id)
+                                VALUES ";
+            }
+            else
+            {
+                $statement .= ",";
+            }
+
+            $statement .= "(".$element->getId().",".$lfdNummern[$i]->getId().")";
+
+            if ($i + 1 == count($lfdNummern))
+            {
+                $statement .= ";";
+            }
+        }
+
+        $statement .= "COMMIT;";
+
+
+        return $statement;
     }
     #endregion
     #endregion

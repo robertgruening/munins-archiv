@@ -26,17 +26,70 @@ else
 function Create()
 {
     global $logger;
-    $logger->error("PUT wird nicht unterstützt!");
-    http_response_code(500);
-    echo json_encode(array("PUT wird nicht unterstützt!"));
+    $logger->info("Kontext-erzeugen gestartet");
+
+    $kontextObject = json_decode(file_get_contents('php://input'), true);
+
+    if (json_last_error() != JSON_ERROR_NONE)
+    {
+        $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
+        return;
+    }
+    
+    $kontextFactory = new KontextFactory();
+    $kontext = $kontextFactory->convertToInstance($kontextObject);
+    
+    $saveKontext = new SaveKontext();
+    $saveKontext->setKontext($kontext);
+    
+    if ($saveKontext->run())
+    {
+        echo json_encode($saveKontext->getKontext());    
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($saveKontext->getMessages());
+    }
+
+    $logger->info("Kontext-erzeugen beendet");
 }
 
 function Update()
 {
     global $logger;
-    $logger->error("POST wird nicht unterstützt!");
-    http_response_code(500);
-    echo json_encode(array("POST wird nicht unterstützt!"));
+    $logger->info("Kontext-anhand-ID-aktualisieren gestartet");
+
+    $kontextObject = json_decode(file_get_contents('php://input'), true);
+
+    if (json_last_error() != JSON_ERROR_NONE)
+    {
+        $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
+        return;
+    }
+
+    if (isset($_GET["Id"]))
+    {
+        $kontextObject["Id"] = $_GET["Id"];
+    }
+    
+    $kontextFactory = new KontextFactory();
+    $kontext = $kontextFactory->convertToInstance($kontextObject);
+    
+    $saveKontext = new SaveKontext();
+    $saveKontext->setKontext($kontext);
+    
+    if ($saveKontext->run())
+    {
+        echo json_encode($saveKontext->getKontext());
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($saveKontext->getMessages());
+    }
+
+    $logger->info("Kontext-anhand-ID-aktualisieren beendet");
 }
 
 function Delete()

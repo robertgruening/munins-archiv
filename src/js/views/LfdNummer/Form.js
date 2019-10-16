@@ -135,12 +135,12 @@ function showMessagesBezeichnung(messages) {
 
 //#region Anzahl von Kontexten
 function InitFieldCountOfKontexte() {
-	_viewModelFormLfdNummer.register("kontexte", new GuiClient(setCountOfKontexte, null));
+	_viewModelFormLfdNummer.register("countOfKontexte", new GuiClient(setCountOfKontexte, null));
 }
 
-function setCountOfKontexte(kontexte) {
-	console.log("setting value of 'count of Kontexte' to ", kontexte.length);
-	$("#labelCountOfKontexte").text(kontexte.length);
+function setCountOfKontexte(countOfKontexte) {
+	console.log("setting value of 'count of Kontexte' to ", countOfKontexte);
+	$("#labelCountOfKontexte").text(countOfKontexte);
 }
 //#endregion
 //#endregion

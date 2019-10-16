@@ -7,7 +7,7 @@ class LfdNummer implements iNode, iListNode
     public $Id;
     public $Bezeichnung;
     public $OrderNumber;
-    public $Kontexte;
+    public $CountOfKontexte;
     
     
     public function getId()
@@ -40,31 +40,14 @@ class LfdNummer implements iNode, iListNode
         $this->OrderNumber = $orderNumber;
     }
     
-    public function getKontexte()
+    public function getCountOfKontexte()
     {
-        return $this->Kontexte;
+        return $this->CountOfKontexte;
     }
     
-    public function setKontexte($kontexte)
+    public function setCountOfKontexte($countOfKontexte)
     {
-        $this->Kontexte = $kontexte;
-    }
-    
-    public function addKontext($kontext)
-    {
-        array_push($this->Kontexte, $kontext);
-    }
-    
-    public function removeKontext($kontext)
-    {
-        for ($i = 0; $i < count($this->Kontexte); $i++)
-        {
-            if ($this->Kontexte[$i]->getId() == $kontext->getId())
-            {
-                array_splice($this->Kontexte, $i, 1);
-                break;
-            }
-        }
+        $this->CountOfKontexte = $countOfKontexte;
     }
     
     function __construct()
@@ -72,5 +55,6 @@ class LfdNummer implements iNode, iListNode
         $this->Id = -1;
         $this->Bezeichnung = null;
         $this->OrderNumber = null;
+        $this->CountOfKontexte = 0;
     }
 }

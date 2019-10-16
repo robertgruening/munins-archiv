@@ -1,17 +1,13 @@
 <?php
 include_once(__DIR__."/IFundContainer.php");
-include_once(__DIR__."/IAblageContainer.php");
 include_once(__DIR__."/Kontext.php");
 include_once(__DIR__."/Begehungsflaeche.php");
 include_once(__DIR__."/Ablage.php");
 
-class Begehung extends Kontext implements iFundContainer, iAblageContainer
-{
-    public $Ablagen;  
+class Begehung extends Kontext implements iFundContainer
+{ 
     public $Datum;
     public $Kommentar;
-    public $LfDErfassungsJahr;
-    public $LfDErfassungsNr;
     public $Funde;
     
     
@@ -35,33 +31,6 @@ class Begehung extends Kontext implements iFundContainer, iAblageContainer
     {
         return;
         //throw new Exception("Begehung can not have a child!");
-    }
-    
-    public function getAblagen()
-    {
-        return $this->Ablagen;
-    }
-    
-    public function setAblagen($ablagen)
-    {
-        $this->Ablagen = $ablagen;
-    }
-    
-    public function addAblage($ablage)
-    {
-        array_push($this->Ablagen, $ablage);
-    }
-    
-    public function removeAblage($ablage)
-    {
-        for ($i = 0; $i < count($this->Ablagen); $i++)
-        {
-            if ($this->Ablagen[$i]->getId() == $ablage->getId())
-            {
-                array_splice($this->Ablagen, $i, 1);
-                break;
-            }
-        }
     }
     
     public function getDatum()

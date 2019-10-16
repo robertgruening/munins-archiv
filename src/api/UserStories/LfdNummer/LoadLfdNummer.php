@@ -57,8 +57,7 @@ class LoadLfdNummer extends UserStory
             $this->addMessage("Es gibt keine LfD-Nummer mit der Id ".$this->getId()."!");
             return false;
         }
-
-        $lfdNummer = $lfdNummerFactory->loadKontexte($lfdNummer);
+        
         $this->setLfdNummer($lfdNummer);
 
         return true;

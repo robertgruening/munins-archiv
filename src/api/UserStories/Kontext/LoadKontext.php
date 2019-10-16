@@ -60,9 +60,18 @@ class LoadKontext extends UserStory
 
         $kontext = $kontextFactory->loadParent($kontext);
         $kontext = $kontextFactory->loadChildren($kontext);
-        $kontext = $kontextFactory->loadFunde($kontext);
-        $kontext = $kontextFactory->loadOrte($kontext);
         $kontext = $kontextFactory->loadLfdNummern($kontext);
+
+        if ($kontext instanceof iFundContainer)
+        {
+            $kontext = $kontextFactory->loadFunde($kontext);
+        }
+
+        if ($kontext instanceof iOrtContainer)
+        {
+            $kontext = $kontextFactory->loadOrte($kontext);
+        }
+
         $this->setKontext($kontext);
 
         return true;

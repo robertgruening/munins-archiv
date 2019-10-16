@@ -1,5 +1,5 @@
 function LfdNummer()
 {
     this.Bezeichnung = "";
-    this.Kontexte = 0;
+    this.CountOfKontexte = 0;
 }

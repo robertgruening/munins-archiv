@@ -9,14 +9,14 @@ var ViewModelFormLfdNummer = function (webServiceClient) {
 		return {
 			id: new Array(),
 			bezeichnung: new Array(),
-			kontexte: new Array()
+			countOfKontexte: new Array()
 		};
 	};
 
 	this._updateAllPropertyListeners = function () {
 		this._update("id", this._model.Id);
 		this._update("bezeichnung", this._model.Bezeichnung);
-		this._update("kontexte", this._model.Kontexte);
+		this._update("countOfKontexte", this._model.CountOfKontexte);
 	};
 
 	//#region properties
@@ -32,9 +32,9 @@ var ViewModelFormLfdNummer = function (webServiceClient) {
 	};
 	//#endregion
 
-	//#region Kontexte
-	this.getKontexte = function () {
-		return this._model.Kontexte;
+	//#region Anzahl an Kontexten
+	this.getCountOfKontexte = function () {
+		return this._model.CountOfKontexte;
 	};
 	//#endregion
 	//#endregion

@@ -234,7 +234,7 @@ function ShowFormSelectLfdNummer() {
 		resizable: false,
 		buttons: {
 			"Speichern": function () {
-				_viewModelFormFundstelle.addLfdNummer(GetSelectedFundAttribut());
+				_viewModelFormFundstelle.addLfdNummer(GetSelectedLfdNummerNode());
 				$(this).dialog("close");
 			},
 			"Abbrechen": function () {
@@ -242,9 +242,7 @@ function ShowFormSelectLfdNummer() {
 			}
 		}
 	});
-
-	$("#listSelectFundAttribut").jstree(true).refresh();
-
+	_webServiceClientLfdNummer.LoadAll("listSelect.loaded");
 	$("#dialogSelectLfdNummer").dialog("open");
 }
 
@@ -253,6 +251,11 @@ function setLfdNummern(lfdNummern) {
 	console.debug("LfdNummern are ", lfdNummern);
 
 	$("#divLfdNummern div #divList").empty();
+
+	if (lfdNummern.length == 0) {
+		return;
+	}
+
 	$("#divLfdNummern div #divList").append($("<ul>"));
 
 	lfdNummern.forEach(lfdNummer => {

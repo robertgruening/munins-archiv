@@ -33,7 +33,7 @@ class DeleteKontext extends UserStory
      * Checks if a Kontext is set,
      * the Kontext has to be a leaf
      * in the tree structure and
-     * must not have Funde, Orte or Ablagen.
+     * must not have Funde or Orte.
      */
     protected function areParametersValid()
     {
@@ -55,20 +55,19 @@ class DeleteKontext extends UserStory
             $this->addMessage("Kontext hat Unterelemente!");
             $areParametersValid = false;
         }
+        
+        if (count($kontext->getLfdNummern()) > 0)
+        {
+            $logger->warn("Kontext hat LfD-Nummern!");
+            $this->addMessage("Kontext hat LfD-Nummern!");
+            $areParametersValid = false;
+        }
     
         if ($kontext instanceof iFundContainer &&
             count($kontext->getFunde()) > 0)
         {
             $logger->warn("Kontext enthält Funde!");
             $this->addMessage("Kontext enthält Funde!");
-            $areParametersValid = false;
-        }
-    
-        if ($kontext instanceof iAblageContainer &&
-            count($kontext->getAblagen()) > 0)
-        {
-            $logger->warn("Kontext enthält Ablagen!");
-            $this->addMessage("Kontext enthält Ablagen!");
             $areParametersValid = false;
         }
             
