@@ -141,7 +141,7 @@ Als Archivarin empfielt Gabi Richtlinien für die Verwaltung des Archivs und sor
 
 ### 5.1. Systembenachrichtigungen
 
-Das System erzeugt an mehreren Stellen der verschiedenen Anwendungsteile unterschiedliche Nachrichten. Diese richten sich an unterschiedliche Zielgruppen. 
+Das System erzeugt an mehreren Stellen der verschiedenen Anwendungsteile unterschiedliche Nachrichten. Diese richten sich an unterschiedliche Zielgruppen.  
   
 ## 6. Logfunktion
 
