@@ -136,19 +136,7 @@ Ablagen können hierarchisch angelegt werden. So kann beispielsweise die Ablage 
 
 Sinnvollerweise werden die Ablagen so angelegt, dass sie sich auch tatsächlich in der angegebenen Ablage befinden. So sollte das „Regal A“ auch wirklich im „Raum Archiv“ stehen und ein „Regalbrett 2“ mit dem „Karton 10-I-2-1“ und all seinen Funden enthalten.
 
-@startuml
-rectangle "**Raum:** Archiv" as raumArchiv
-rectangle "**Regal:** A" as regalA
-rectangle "**Regalbrett:** 2" as regalbrett2
-rectangle "**Karton:** 10-I-2-1" as karton10I21
-rectangle "**Regal:** B" as regal1B
-rectangle "**Regal:** C" as regalC
-raumArchiv --> regalA
-regalA --> regalbrett2
-regalbrett2 --> karton10I21
-raumArchiv --> regal1B
-raumArchiv --> regalC
-@enduml
+![Beispiel für hierarchische Ablagestruktur](Ablagestruktur.jpg)  
 *Abbildung 8 - Beispiel für hierarchische Ablagestruktur*
 
 ### 2.5. Ort
