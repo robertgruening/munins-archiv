@@ -96,22 +96,7 @@ Aufgrund der Fülle von Ausprägungen sowie Synonymen sind die Fundattribute **h
 
 Beim Beispiel der Graphittonscherbe ist „Graphitton“ eine Spezialisierung von „Ton“ vgl. Abbildung 4.
 
-@startuml
-rectangle **Material** {
-    rectangle Metall
-    rectangle Legierung
-    rectangle Bronze
-    rectangle Kupfer
-    rectangle Eisen
-    rectangle Ton
-    rectangle Graphitton
-    Metall --> Legierung
-    Metall --> Kupfer
-    Metall --> Eisen
-    Legierung --> Bronze
-    Ton --> Graphitton
-}
-@enduml
+![Hierarchische Struktur von Fundattributen](Fundattribute.jpg)  
 *Abbildung 4 - Hierarchische Struktur von Fundattributen*
 
 Für die Erfassung von Funden ergibt sich mit der hierarchischen Schlagworttechnik der Fundattribute der Vorteil, dass flexibel auf den Grad der Spezifizierung eingegangen werden kann. Wenn zum Beispiel der Erfasser das Material des Fundes als Metall bestimmen kann, aber nicht mehr, um welches Metall bzw. um welche Legierung es sich handelt, dann verknüpft er nur das Attribut „Metall“. Falls bei der Restaurierung des Fundes festgestellt wird, dass es sich um eine Bronzelegierung handelt, dann kann der Restaurator die Merkmalsbestimmung entsprechend der Hierarchie verfeinern.
