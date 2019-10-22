@@ -82,14 +82,7 @@ Die folgenden Merkmale und Ausprägungen in Abbildung 3 orientieren sich am Beis
 ![Fundbeispiel: Graphittonwandscherbe mit Kammstrichverzierung](Fund.jpg)  
 *Abbildung 1 - Graphittonwandscherbe mit Kammstrichverzierung*
 
-@startuml
-rectangle {
-rectangle "**Material:** Graphitton"
-rectangle "**Gegenstand:** Gefäß"
-rectangle "**Erhaltung:** Wandfragment"
-rectangle "**Verzierung:** Kammstrich"
-}
-@enduml
+![Fundattribute als Karteikarten](Fundattribute_als_Karteikarten.jpg)  
 *Abbildung 3 - Fundbeschreibung mittels Fundattributen als Karteikarten*
 
 Aufgrund der Fülle von Ausprägungen sowie Synonymen sind die Fundattribute **hierarchisch** strukturiert. Das heißt, dass der Anwender in der obersten Ebene allgemeine Ausprägungen vorfindet und darunter Spezifizierungen. Beispiel: Im Typ „Material“ befinden sich u.a. die Ausprägungen „Metall“, „Gestein“ und „Knochen“. Unter „Metall“ könnten Untergruppen, wie bspw. „Legierung“, „Edelmetall“ oder „Nichtedelmetall“ aufgeführt sein, bevor „Eisen“, „Kupfer“, „Bronze“ etc. zu finden sind.
