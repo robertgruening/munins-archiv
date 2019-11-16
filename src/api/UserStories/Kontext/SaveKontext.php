@@ -30,7 +30,7 @@ class SaveKontext extends UserStory
     {
         global $logger;
         $kontext = $this->getKontext();
-        
+
         if ($kontext == null)
         {
             $logger->warn("Kontext ist nicht gesetzt!");
@@ -39,7 +39,7 @@ class SaveKontext extends UserStory
         }
 
         $areParametersValid = true;
-        
+
         if ($kontext->getBezeichnung() == null ||
             $kontext->getBezeichnung() == "")
         {
@@ -47,7 +47,7 @@ class SaveKontext extends UserStory
             $this->addMessage("Bezeichnung ist nicht gesetzt!");
             $areParametersValid = false;
         }
-        
+
         if ($kontext->getType() == null)
         {
             $logger->warn("Typ ist nicht gesetzt!");
@@ -81,7 +81,7 @@ class SaveKontext extends UserStory
 
         $loadKontext = new LoadKontext();
         $loadKontext->setId($savedKontext->getId());
-        
+
         if (!$loadKontext->run())
         {
             $this->addMessages($loadKontext->getMessages());
@@ -97,7 +97,7 @@ class SaveKontext extends UserStory
         {
             $kontextFromDatabase = $kontextFactory->synchroniseOrte($kontextFromDatabase, $this->getKontext()->getOrte());
         }
-        
+
         if ($kontextFromDatabase instanceof iFundContainer)
         {
             $kontextFromDatabase = $kontextFactory->synchroniseFunde($kontextFromDatabase, $this->getKontext()->getFunde());

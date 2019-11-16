@@ -1,9 +1,10 @@
 <?php
 error_reporting(E_ALL);
-ini_set("display_errors", 1); 
+ini_set("display_errors", 1);
 
 require_once("../UserStories/Kontext/LoadKontext.php");
 require_once("../UserStories/Kontext/LoadRootKontexte.php");
+require_once("../UserStories/Kontext/SaveKontext.php");
 require_once("../UserStories/Kontext/DeleteKontext.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
@@ -35,16 +36,16 @@ function Create()
         $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
         return;
     }
-    
+
     $kontextFactory = new KontextFactory();
     $kontext = $kontextFactory->convertToInstance($kontextObject);
-    
+
     $saveKontext = new SaveKontext();
     $saveKontext->setKontext($kontext);
-    
+
     if ($saveKontext->run())
     {
-        echo json_encode($saveKontext->getKontext());    
+        echo json_encode($saveKontext->getKontext());
     }
     else
     {
@@ -72,13 +73,13 @@ function Update()
     {
         $kontextObject["Id"] = $_GET["Id"];
     }
-    
+
     $kontextFactory = new KontextFactory();
     $kontext = $kontextFactory->convertToInstance($kontextObject);
-    
+
     $saveKontext = new SaveKontext();
     $saveKontext->setKontext($kontext);
-    
+
     if ($saveKontext->run())
     {
         echo json_encode($saveKontext->getKontext());
@@ -107,7 +108,7 @@ function Delete()
     if ($loadKontext->run())
     {
         $kontext = $loadKontext->getKontext();
-        
+
         $deleteKontext = new DeleteKontext();
         $deleteKontext->setKontext($kontext);
 
@@ -136,7 +137,7 @@ function Get()
 
 	if (isset($_GET["Id"]))
 	{
-		$logger->info("Kontext-anhand-ID-laden gestartet");		
+		$logger->info("Kontext-anhand-ID-laden gestartet");
 		$loadKontext = new LoadKontext();
 		$loadKontext->setId(intval($_GET["Id"]));
 
