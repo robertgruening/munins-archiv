@@ -39,6 +39,14 @@ var ViewModelExplorerKontext = function (webServiceClient) {
 
 		return abstractRoot;
 	};
+
+	this.getType = function () {
+		if (this._model === null) {
+			return undefined;
+		}
+
+		return this._model.Type;
+	};
 };
 
 ViewModelExplorerKontext.prototype = new ViewModelExplorer();
