@@ -21,7 +21,7 @@
 	<!-- observer pattern data structure -->
 	<script type="text/javascript" src="../../js/ui/GuiClient.js"></script>
 	<!-- model -->
-	<script type="text/javascript" src="../../js/models/Begehung.js"></script>
+	<script type="text/javascript" src="../../js/models/Begehungsfläche.js"></script>
 	<script type="text/javascript" src="../../js/models/KontextType.js"></script>
 	<!-- web service client -->
 	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClient.js"></script>
@@ -31,14 +31,14 @@
 	<script type="text/javascript" src="../../js/factories/webServiceClientFactory.js"></script>
 	<!-- view model -->
 	<script type="text/javascript" src="../../js/viewModels/ViewModelForm.js"></script>
-	<script type="text/javascript" src="../../js/viewModels/ViewModelFormBegehung.js"></script>
+	<script type="text/javascript" src="../../js/viewModels/ViewModelFormBegehungsflaeche.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelList.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelListKontextType.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelListLfdNummer.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/LfdNummer/FormSelectLfdNummer.js"></script>
 	<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
 	<!-- view -->
-	<script type="text/javascript" src="../../js/views/Begehung/Form.js"></script>
+	<script type="text/javascript" src="../../js/views/Begehungsflaeche/Form.js"></script>
 	<script type="text/javascript" src="../../js/views/Kontext/FormSelectLfdNummer.js"></script>
 
 	<!-- javascript frameworks etc. -->
@@ -51,7 +51,6 @@
 	<link rel="stylesheet" type="text/css" href="../../js/controls/vakata-jstree/themes/default/style.min.css" />
 	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid.min.css" />
 	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid-theme.min.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/grid.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/jquery.toast.min.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/form.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/navigation.css" />
@@ -79,7 +78,7 @@
 				</ul>
 				<div id=divType class=fieldBlock>
 					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Typ der Begehung."></i>
+						<i class="help notToPrint fas fa-question-circle" title="Typ der Begehungsfläche."></i>
 						<label>Typ: </label>
 					</div>
 					<div class=fieldValue>
@@ -89,7 +88,7 @@
 				</div>
 				<div id=divBezeichnung class=fieldBlock>
 					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Bezeichnung der Begehung. Diese muss eindeutig sein."></i>
+						<i class="help notToPrint fas fa-question-circle" title="Bezeichnung der Begehungsfläche. Diese muss eindeutig sein."></i>
 						<label>Bezeichnung: </label>
 					</div>
 					<div class=fieldValue>
@@ -99,7 +98,7 @@
 				</div>
 				<div id=divPath class=fieldBlock>
 					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Pfad der Begehung."></i>
+						<i class="help notToPrint fas fa-question-circle" title="Pfad der Begehungsfläche."></i>
 						<label>Pfad: </label>
 					</div>
 					<div class=fieldValue>
@@ -109,7 +108,7 @@
 				</div>
 				<div id=divCountOfChildren class=fieldBlock>
 					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Anzahl der Kontexte, die sich in dieser Begehung befinden."></i>
+						<i class="help notToPrint fas fa-question-circle" title="Anzahl der Kontexte, die sich in dieser Begehungsfläche befinden."></i>
 						<label>Anzahl von untergeordneten Kontexten: </label>
 					</div>
 					<div class=fieldValue>
@@ -119,53 +118,13 @@
 				</div>
 				<div id=divLfdNummern class=fieldBlock>
 					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="LfD-Nummern, die dieser Begehung zugeordnet sind. Die Nummern werden vom jeweiligen Landesamt für Denkmalpflege (LfD) vergeben."></i>
+						<i class="help notToPrint fas fa-question-circle" title="LfD-Nummern, die dieser Begehungsfläche zugeordnet sind. Die Nummern werden vom jeweiligen Landesamt für Denkmalpflege (LfD) vergeben."></i>
 						<label>LfD-Nummern: </label>
 					</div>
 					<div class=fieldValue>
 						<div name="messages"></div>
 						<div id=divList class=field></div>
 						<a id=buttonSelectLfdNummer title="auswählen" class="notToPrint linkButton"><i class="fas fa-plus"></i></a>
-					</div>
-				</div>
-				<div id=divDatum class=fieldBlock>
-					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Datum der Begehung."></i>
-						<label>Datum: </label>
-					</div>
-					<div class=fieldValue>
-						<div name="messages"></div>
-						<input id=textboxDatum type=text class=field />
-					</div>
-				</div>
-				<div id=divKommentar class=fieldBlock>
-					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Kommentar zur Begehung."></i>
-						<label>Kommentar: </label>
-					</div>
-					<div class=fieldValue>
-						<div name="messages"></div>
-						<textarea id=textareaKommentar class=field rows="5" cols="15"></textarea>
-					</div>
-				</div>
-				<div id=divCountOfFunde class=fieldBlock>
-					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Anzahl der Funde, die bei dieser Begehung gefunden wurden."></i>
-						<label>Anzahl von Funden: </label>
-					</div>
-					<div class=fieldValue>
-						<div name="messages"></div>
-						<label id=labelCountOfFunde class=field></label>
-					</div>
-				</div>
-				<div id=divFunde class=fieldBlock>
-					<div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Funde, die bei dieser Begehung gefunden wurden."></i>
-						<label>Funde: </label>
-					</div>
-					<div class=fieldValue>
-						<div name="messages"></div>
-						<div id=gridFunde></div>
 					</div>
 				</div>
 			</div>

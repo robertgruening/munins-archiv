@@ -18,6 +18,24 @@ var ViewModelFactory = function () {
         return viewModel;
     };
 
+    this.getViewModelFormBegehung = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelFormBegehung(webServiceClientFactory.getWebServiceClientKontext());
+        viewModel.init();
+
+        return viewModel;
+    };
+
+    this.getViewModelFormBegehungsflaeche = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelFormBegehungsflaeche(webServiceClientFactory.getWebServiceClientKontext());
+        viewModel.init();
+
+        return viewModel;
+    };
+
     this.getViewModelFormFundAttribut = function()
     {
         var webServiceClientFactory = new WebServiceClientFactory();

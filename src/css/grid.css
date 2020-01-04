@@ -1,5 +1,9 @@
 /* Overwriting styles of the jsGrid */
 
+.jsgrid-cell {
+  vertical-align: top;
+}
+
 .jsgrid-selected-row > .jsgrid-cell {
     background-color: #fdf5ce;
     border-color: #fdf5ce;

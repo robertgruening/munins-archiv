@@ -18,7 +18,7 @@ html, body {
 }
 
 .dialog {
-	width: 80%;	
+	width: 80%;
 }
 
 
@@ -30,6 +30,10 @@ html, body {
 	font-family: Verdana, Arial;
 	background-color: #eeeeee;
 	color: #333333;
+}
+
+a {
+	color: SteelBlue;
 }
 
 .selectedRow .fa-box,

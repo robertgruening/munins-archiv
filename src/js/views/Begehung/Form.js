@@ -1,25 +1,29 @@
-// var _viewModelFormAblage = null;
-var _viewModelListAblageType = null;
+var _viewModelFormBegehung = null;
+var _viewModelListKontextType = null;
 
 $(document).ready(function () {
 	var viewModelFactory = new ViewModelFactory();
-	_viewModelFormAblage = viewModelFactory.getViewModelFormAblage();
-	_viewModelListAblageType = viewModelFactory.getViewModelListAblageType();
+	_viewModelFormBegehung = viewModelFactory.getViewModelFormBegehung();
+	_viewModelListKontextType = viewModelFactory.getViewModelListKontextType();
 
 	InitStatusChanged();
 	InitDataChanged();
-    InitBreadcrumb();
-    InitButtonNew();
-    InitButtonSave();
+	InitBreadcrumb();
+	InitButtonNew();
+	InitButtonSave();
 	InitButtonDelete();
 	InitButtonUndo();
 	InitButtonToOverview();
+	InitButtonSelectLfdNummer();
 
 	InitFieldId();
 	InitFieldType();
 	InitFieldBezeichnung();
 	InitFieldPath();
 	InitFieldCountOfChildren();
+	InitFieldLfdNummern();
+	InitFieldDatum();
+	InitFieldKommentar();
 	InitFieldCountOfFunde();
 	InitGridFunde();
 });
@@ -28,45 +32,45 @@ function loadForm() {
 	console.info("loading form");
 
 	if (getUrlParameterValue("Id")) {
-		console.debug("Ablage is requested by ID", getUrlParameterValue("Id"));
-		_viewModelFormAblage.load(getUrlParameterValue("Id"));
+		console.debug("Kontext is requested by ID", getUrlParameterValue("Id"));
+		_viewModelFormBegehung.load(getUrlParameterValue("Id"));
 	}
 	else if (getUrlParameterValue("Parent_Id")) {
-		console.debug("creation of a new Ablage is requested with parent ID", getUrlParameterValue("Parent_Id"));
-		var parent = new Ablage();
+		console.debug("creation of a new Kontext is requested with parent ID", getUrlParameterValue("Parent_Id"));
+		var parent = new Kontext();
 		parent.Id = getUrlParameterValue("Parent_Id");
 
-		_viewModelFormAblage.setParent(parent);
+		_viewModelFormBegehung.setParent(parent);
 		showMessageParentSet();
-		_viewModelFormAblage.updateAllListeners();
+		_viewModelFormBegehung.updateAllListeners();
 	}
 	else {
-		console.debug("there is no Ablage requested");
-		_viewModelFormAblage.updateAllListeners();
+		console.debug("there is no Kontext requested");
+		_viewModelFormBegehung.updateAllListeners();
 	}
 }
 
 function InitStatusChanged() {
-	_viewModelFormAblage.register("load", new GuiClient(showMessageLoaded, showErrorMessages));
-	_viewModelFormAblage.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
-	_viewModelFormAblage.register("save", new GuiClient(showMessageSaved, showErrorMessages));
-	_viewModelFormAblage.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
+	_viewModelFormBegehung.register("load", new GuiClient(showMessageLoaded, showErrorMessages));
+	_viewModelFormBegehung.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
+	_viewModelFormBegehung.register("save", new GuiClient(showMessageSaved, showErrorMessages));
+	_viewModelFormBegehung.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
 }
 
 function InitDataChanged() {
-	_viewModelFormAblage.register("dataChanged", new GuiClient(EnableButtonUndo, showErrorMessages));
+	_viewModelFormBegehung.register("dataChanged", new GuiClient(EnableButtonUndo, showErrorMessages));
 }
 
 function InitBreadcrumb()
 {
 	if (getFormMode() == "create") {
 		$("#breadcrumb").Breadcrumb({
-			PageName: "AblageFormNew"
+			PageName: "BegehungFormNew"
 		});
 	}
 	else if (getFormMode() == "edit") {
 		$("#breadcrumb").Breadcrumb({
-			PageName: "AblageFormEdit"
+			PageName: "BegehungFormEdit"
 		});
     }
 }
@@ -79,7 +83,7 @@ function loadCreatedElement(element) {
 function showMessageParentSet() {
 	$.toast({
         heading: "Information",
-        text: "übergeordnete Ablage gesetzt",
+        text: "übergeordnete Kontext gesetzt",
         icon: "info"
     });
 }
@@ -87,7 +91,7 @@ function showMessageParentSet() {
 function showMessageLoaded(element) {
     $.toast({
         heading: "Information",
-        text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
+        text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
         icon: "success"
     });
 }
@@ -95,7 +99,7 @@ function showMessageLoaded(element) {
 function showMessageSaved(element) {
     $.toast({
         heading: "Information",
-        text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert",
+        text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert",
         icon: "success"
     });
 }
@@ -103,7 +107,7 @@ function showMessageSaved(element) {
 function showMessageDeleted(element) {
     $.toast({
         heading: "Information",
-        text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
+        text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
         icon: "success"
     });
 }
@@ -113,16 +117,16 @@ function showMessageDeleted(element) {
 
 //#region Id
 function InitFieldId() {
-	_viewModelFormAblage.register("id", new GuiClient(setId, showErrorMessages));
+	_viewModelFormBegehung.register("id", new GuiClient(setId, showErrorMessages));
 }
 
 function setId(id) {
 	if (id == null) {
-		document.title = "Ablage";
+		document.title = "Kontext";
 		DisableButtonDelete();
 	}
 	else {
-		document.title = "Ablage: (" + id + ")";
+		document.title = "Kontext: (" + id + ")";
 		EnableButtonDelete();
 	}
 }
@@ -130,28 +134,28 @@ function setId(id) {
 
 //#region Type
 function InitFieldType() {
-	console.info("initialising field 'Ablage type'");
+	console.info("initialising field 'Kontext type'");
 
-	_viewModelFormAblage.register("type", new GuiClient(setType, showMessagesType));
+	_viewModelFormBegehung.register("type", new GuiClient(setType, showMessagesType));
 
-	_viewModelListAblageType.register("loadAll", new GuiClient(fillSelectionAblageType, showMessagesType));
-	_viewModelListAblageType.loadAll();
+	_viewModelListKontextType.register("loadAll", new GuiClient(fillSelectionKontextType, showMessagesType));
+	_viewModelListKontextType.loadAll();
 
 	$("#selectType").change(function () {
-		var ablageType = new AblageType();
-		ablageType.Id = $("#selectType").val();
+		var kontextType = new KontextType();
+		kontextType.Id = $("#selectType").val();
 
-		_viewModelFormAblage.setType(ablageType);
+		_viewModelFormBegehung.setType(kontextType);
 	});
 }
 
-function fillSelectionAblageType(ablageTypes) {
-	console.info("setting values of field 'Ablage type'");
-	console.debug("values of 'Ablage type'", ablageTypes);
+function fillSelectionKontextType(kontextTypes) {
+	console.info("setting values of field 'Kontext type'");
+	console.debug("values of 'Kontext type'", kontextTypes);
 	$("#selectType").empty();
 
-	ablageTypes.forEach(ablageType => {
-		$("#selectType").append("<option value=" + ablageType.Id + ">" + ablageType.Bezeichnung + "</option>");
+	kontextTypes.forEach(kontextType => {
+		$("#selectType").append("<option value=" + kontextType.Id + ">" + kontextType.Bezeichnung + "</option>");
 	});
 
 	loadForm();
@@ -170,9 +174,9 @@ function showMessagesType(messages) {
 
 //#region Bezeichnung
 function InitFieldBezeichnung() {
-	_viewModelFormAblage.register("bezeichnung", new GuiClient(setBezeichnung, showMessagesBezeichnung));
+	_viewModelFormBegehung.register("bezeichnung", new GuiClient(setBezeichnung, showMessagesBezeichnung));
 	$("#textboxBezeichnung").change(function () {
-		_viewModelFormAblage.setBezeichnung($("#textboxBezeichnung").val())
+		_viewModelFormBegehung.setBezeichnung($("#textboxBezeichnung").val())
 	});
 }
 
@@ -188,7 +192,7 @@ function showMessagesBezeichnung(messages) {
 
 //#region Path
 function InitFieldPath() {
-	_viewModelFormAblage.register("path", new GuiClient(setPath, null));
+	_viewModelFormBegehung.register("path", new GuiClient(setPath, null));
 }
 
 function setPath(path) {
@@ -206,7 +210,7 @@ function setPath(path) {
 
 //#region Anzahl von Children
 function InitFieldCountOfChildren() {
-	_viewModelFormAblage.register("children", new GuiClient(setCountOfChildren, null));
+	_viewModelFormBegehung.register("children", new GuiClient(setCountOfChildren, null));
 }
 
 function setCountOfChildren(children) {
@@ -216,9 +220,120 @@ function setCountOfChildren(children) {
 }
 //#endregion
 
+//#region LfD-Nummern
+function InitFieldLfdNummern() {
+	_viewModelFormBegehung.register("lfdNummern", new GuiClient(setLfdNummern, showMessagesLfdNummern));
+}
+
+function InitButtonSelectLfdNummer() {
+	$("#buttonSelectLfdNummer").click(ShowFormSelectLfdNummer);
+}
+
+function ShowFormSelectLfdNummer() {
+	$("#dialogSelectLfdNummer").dialog({
+		height: "auto",
+		width: 750,
+		title: "Lfd-Nummer auswählen",
+		modal: true,
+		resizable: false,
+		buttons: {
+			"Speichern": function () {
+				_viewModelFormBegehung.addLfdNummer(GetSelectedLfdNummerNode());
+				$(this).dialog("close");
+			},
+			"Abbrechen": function () {
+				$(this).dialog("close");
+			}
+		}
+	});
+	_webServiceClientLfdNummer.LoadAll("listSelect.loaded");
+	$("#dialogSelectLfdNummer").dialog("open");
+}
+
+function setLfdNummern(lfdNummern) {
+	console.info("setting value of 'LfdNummern'");
+	console.debug("LfdNummern are ", lfdNummern);
+
+	$("#divLfdNummern div #divList").empty();
+
+	if (lfdNummern.length == 0) {
+		return;
+	}
+
+	$("#divLfdNummern div #divList").append($("<ul>"));
+
+	lfdNummern.forEach(lfdNummer => {
+		var li = $("<li>");
+		var labelLfdNummer = $("<label>");
+		labelLfdNummer.text(lfdNummer.Bezeichnung);
+		li.append(labelLfdNummer);
+
+		var linkButtonDelete = $("<a>");
+		linkButtonDelete.attr("title", "löschen");
+		linkButtonDelete.attr("class", "linkButton riskyAction");
+		linkButtonDelete.attr("href", "javascript:removeLfdNummer(" + lfdNummer.Id + ");");
+
+		var icon = $("<i>");
+		icon.attr("class", "fas fa-trash-alt");
+		linkButtonDelete.append(icon);
+		li.append(linkButtonDelete);
+
+
+		$("#divLfdNummern div #divList ul").append(li);
+	});
+}
+
+function removeLfdNummer(lfdNummerId) {
+	var lfdNummer = new Object();
+	lfdNummer.Id = lfdNummerId;
+
+	_viewModelFormBegehung.removeLfdNummer(lfdNummer);
+}
+
+function showMessagesLfdNummern(messages) {
+	$("#divLfdNummern .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
+//#region Datum
+function InitFieldDatum() {
+	_viewModelFormBegehung.register("datum", new GuiClient(setDatum, showMessagesDatum));
+	$("#textboxDatum").change(function () {
+		_viewModelFormBegehung.setDatum($("#textboxDatum").val())
+	});
+}
+
+function setDatum(datum) {
+	console.log("setting value of 'Datum' to " + datum);
+	$("#textboxDatum").val(datum);
+}
+
+function showMessagesDatum(messages) {
+	$("#divDatum .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
+//#region Kommentar
+function InitFieldKommentar() {
+	_viewModelFormBegehung.register("kommentar", new GuiClient(setKommentar, showMessagesKommentar));
+	$("#textareaKommentar").change(function () {
+		_viewModelFormBegehung.setKommentar($("#textareaKommentar").val())
+	});
+}
+
+function setKommentar(kommentar) {
+	console.log("setting value of 'Kommentar' to " + kommentar);
+	$("#textareaKommentar").val(kommentar);
+}
+
+function showMessagesKommentar(messages) {
+	$("#divKommentar .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
 //#region Anzahl von Funde
 function InitFieldCountOfFunde() {
-	_viewModelFormAblage.register("funde", new GuiClient(setCountOfFunde, null));
+	_viewModelFormBegehung.register("funde", new GuiClient(setCountOfFunde, null));
 }
 
 function setCountOfFunde(funde) {
@@ -257,7 +372,7 @@ LinkToFundFormField.prototype = new jsGrid.Field({
 function InitGridFunde()
 {
 	console.info("initializing grid of 'funde'");
-	_viewModelFormAblage.register("funde", new GuiClient(UpdateGridData, showErrorMessages));
+	_viewModelFormBegehung.register("funde", new GuiClient(UpdateGridData, showErrorMessages));
 
     jsGrid.locale("de");
     jsGrid.fields.icon = IconField;
@@ -358,7 +473,7 @@ function DisableButtonNew() {
 //#region save
 function InitButtonSave() {
 	EnableButtonSave();
-	$("#buttonSave").click(function () { _viewModelFormAblage.save(); });
+	$("#buttonSave").click(function () { _viewModelFormBegehung.save(); });
 }
 
 function EnableButtonSave() {
@@ -391,7 +506,7 @@ function DisableButtonDelete() {
 function ShowDialogDelete() {
 	$("#dialogDelete").empty();
 	$("#dialogDelete").append(
-		$("<p>").append("Möchten Sie diese Ablage löschen?")
+		$("<p>").append("Möchten Sie diese Kontext löschen?")
 	);
 	$("#dialogDelete").dialog({
 		height: "auto",
@@ -399,7 +514,7 @@ function ShowDialogDelete() {
 		modal: true,
 		buttons: {
 			"Löschen": function () {
-				_viewModelFormAblage.delete();
+				_viewModelFormBegehung.delete();
 
 				$(this).dialog("close");
 			},
@@ -416,11 +531,11 @@ function ShowDialogDelete() {
 //#region undo
 function InitButtonUndo() {
 	DisableButtonUndo();
-	_viewModelFormAblage.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
-	_viewModelFormAblage.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
+	_viewModelFormBegehung.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
+	_viewModelFormBegehung.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
 	$("#buttonUndo").click(function () {
         console.log("button 'undo' clicked");
-		_viewModelFormAblage.undoAllChanges();
+		_viewModelFormBegehung.undoAllChanges();
 	});
 }
 
@@ -442,8 +557,8 @@ function ResetPropertiesMessages() {
 //#region open overview
 function InitButtonToOverview() {
 	EnableButtonToOverview();
-	_viewModelFormAblage.register("parent", new GuiClient(EnableButtonToOverview, showErrorMessages));
-	$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Ablage/Explorer.html", "_self");
+	_viewModelFormBegehung.register("parent", new GuiClient(EnableButtonToOverview, showErrorMessages));
+	$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
 }
 
 function EnableButtonToOverview(parent) {
@@ -451,10 +566,10 @@ function EnableButtonToOverview(parent) {
 		parent === null ||
 		parent.Id === undefined) {
 
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Ablage/Explorer.html", "_self");
+		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
 	}
 	else {
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Ablage/Explorer.html?Id=" + parent.Id, "_self");
+		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html?Id=" + parent.Id, "_self");
 	}
 
 	$("#buttonToOverview").removeClass("disabled");

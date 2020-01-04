@@ -2,12 +2,12 @@
 	{
 		"Title" : "Tagebuch",
 		"Icon" : "fas-book",
-		"Children" : 
+		"Children" :
 		[
 			{
 				"Title" : "Fundstellen",
 				"Icon" : "fas-flag",
-				"Children" : 
+				"Children" :
 				[
 					{
 						"Title" : "neu anlegen",
@@ -82,6 +82,30 @@
 						"Title" : "durchsuchen",
 						"URL" : "/Munins Archiv/src/pages/Kontext/Explorer.html",
 						"PageName" : "KontextExplorer"
+					},
+					{
+						"Title" : "Begehungsfläche anlegen",
+						"URL" : "/Munins Archiv/src/pages/Begehungsflaeche/Form.html",
+						"PageName" : "BegehungsflaecheFormNew",
+						"Visible": false
+					},
+					{
+						"Title" : "Begehungsfläche bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/Begehungsflaeche/Form.html",
+						"PageName" : "BegehungsflaecheFormEdit",
+						"Visible": false
+					},
+					{
+						"Title" : "Begehung anlegen",
+						"URL" : "/Munins Archiv/src/pages/Begehung/Form.html",
+						"PageName" : "BegehungFormNew",
+						"Visible": false
+					},
+					{
+						"Title" : "Begehung bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/Begehung/Form.html",
+						"PageName" : "BegehungFormEdit",
+						"Visible": false
 					}
 				]
 			},

@@ -1,8 +1,8 @@
-var ViewModelFormBegehung = function (webServiceClient) {
+var ViewModelFormBegehungsflaeche = function (webServiceClient) {
 	this._webServiceClient = webServiceClient;
 
 	this._createModel = function () {
-		return new Begehung();
+		return new Begehungsfläche();
 	};
 
 	this._createPropertyListeners = function () {
@@ -14,9 +14,7 @@ var ViewModelFormBegehung = function (webServiceClient) {
 			children: new Array(),
 			path: new Array(),
 			lfdNummern: new Array(),
-			datum: new Array(),
-			kommentar: new Array(),
-			funde: new Array()
+			orte: new Array()
 		};
 	};
 
@@ -28,9 +26,7 @@ var ViewModelFormBegehung = function (webServiceClient) {
 		this._update("children", this._model.Children);
 		this._update("path", this._model.Path);
 		this._update("lfdNummern", this._model.LfdNummern);
-		this._update("datum", this._model.Datum);
-		this._update("kommentar", this._model.Kommentar);
-		this._update("funde", this._model.Funde);
+		this._update("orte", this._model.Orte);
 	};
 
 	//#region properties
@@ -117,44 +113,22 @@ var ViewModelFormBegehung = function (webServiceClient) {
 	};
 	//#endregion
 
-	//#region Datum
-	this.getDatum = function () {
-		return this._model.Datum;
-	};
-
-	this.setDatum = function (datum) {
-		this._model.Datum = datum;
+	//#region Orte
+	this.addOrt = function (ort) {
+		this._model.Orte.push(ort);
 		this._update("dataChanged");
-	};
-	//#endregion
-
-	//#region Kommentar
-	this.getKommentar = function () {
-		return this._model.Kommentar;
+		this._update("orte", this._model.Orte);
 	};
 
-	this.setKommentar = function (kommentar) {
-		this._model.Kommentar = kommentar;
-		this._update("dataChanged");
-	};
-	//#endregion
-
-	//#region Funde
-	this.addFund = function (fund) {
-		this._model.Funde.push(fund);
-		this._update("dataChanged");
-		this._update("funde", this._model.Funde);
-	};
-
-	this.removeFund = function (fund) {
-		for (i = 0; i < this._model.Funde.length; i++) {
-			if (this._model.Funde[i].Id == fund.Id) {
-				this._model.Funde.splice(i, 1);
+	this.removeOrt = function (ort) {
+		for (i = 0; i < this._model.Orte.length; i++) {
+			if (this._model.Orte[i].Id == ort.Id) {
+				this._model.Orte.splice(i, 1);
 				break;
 			}
 		}
 		this._update("dataChanged");
-		this._update("funde", this._model.Funde);
+		this._update("orte", this._model.Orte);
 	};
 	//#endregion
 	//#endregion
@@ -163,4 +137,4 @@ var ViewModelFormBegehung = function (webServiceClient) {
 	//#endregion
 };
 
-ViewModelFormBegehung.prototype = new ViewModelForm();
+ViewModelFormBegehungsflaeche.prototype = new ViewModelForm();
