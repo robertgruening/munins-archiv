@@ -55,7 +55,7 @@ class SaveKontext extends UserStory
             $areParametersValid = false;
         }
         else if ($kontext->getType()->getBezeichnung() != "Fundstelle" &&
-            $kontext->getType()->getBezeichnung() != "Begehungsflaeche" &&
+            $kontext->getType()->getBezeichnung() != "Begehungsfläche" &&
             $kontext->getType()->getBezeichnung() != "Begehung")
         {
             $logger->warn("Typ (".$kontext->getType()->getBezeichnung().") wird nicht unterstützt!");

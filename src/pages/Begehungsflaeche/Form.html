@@ -28,6 +28,7 @@
 	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientKontext.js"></script>
 	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientKontextType.js"></script>
 	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientLfdNummer.js"></script>
+	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientOrt.js"></script>
 	<script type="text/javascript" src="../../js/factories/webServiceClientFactory.js"></script>
 	<!-- view model -->
 	<script type="text/javascript" src="../../js/viewModels/ViewModelForm.js"></script>
@@ -36,10 +37,12 @@
 	<script type="text/javascript" src="../../js/viewModels/ViewModelListKontextType.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelListLfdNummer.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/LfdNummer/FormSelectLfdNummer.js"></script>
+	<script type="text/javascript" src="../../js/viewModels/Ort/FormSelectOrt.js"></script>
 	<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
 	<!-- view -->
 	<script type="text/javascript" src="../../js/views/Begehungsflaeche/Form.js"></script>
 	<script type="text/javascript" src="../../js/views/Kontext/FormSelectLfdNummer.js"></script>
+	<script type="text/javascript" src="../../js/views/Begehungsflaeche/FormSelectOrt.js"></script>
 
 	<!-- javascript frameworks etc. -->
 	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
@@ -127,6 +130,16 @@
 						<a id=buttonSelectLfdNummer title="auswählen" class="notToPrint linkButton"><i class="fas fa-plus"></i></a>
 					</div>
 				</div>
+				<div id=divOrte class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Ortsangaben, die diese Begehungsfläche verorten."></i>
+						<label>Orte: </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
+						<div id=divList class=field></div>
+						<a id=buttonAddOrt title="hinzufügen" class="notToPrint linkButton"><i class="fas fa-plus"></i></a>
+					</div>
 			</div>
 			<style>
 				.ui-autocomplete {
@@ -138,6 +151,9 @@
 			</style>
 			<div id=dialogSelectLfdNummer title="Lfd-Nummer auswählen" class=dialog>
 				<input id=selectLfdNummer type=text />
+			</div>
+			<div id=dialogSelectOrt title="Ort auswählen" class=dialog>
+				<div id=treeSelectOrt></div>
 			</div>
 			<div id=dialogDelete title=Löschen class=dialog></div>
 		</div>

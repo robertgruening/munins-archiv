@@ -15,6 +15,7 @@ $(document).ready(function () {
 	InitButtonUndo();
 	InitButtonToOverview();
 	InitButtonSelectLfdNummer();
+	InitButtonSelectOrt();
 
 	InitFieldId();
 	InitFieldType();
@@ -22,6 +23,7 @@ $(document).ready(function () {
 	InitFieldPath();
 	InitFieldCountOfChildren();
 	InitFieldLfdNummern();
+	InitFieldOrte();
 });
 
 function loadForm() {
@@ -288,6 +290,77 @@ function removeLfdNummer(lfdNummerId) {
 
 function showMessagesLfdNummern(messages) {
 	$("#divLfdNummern .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
+//#region Orte
+function InitFieldOrte() {
+	_viewModelFormBegehungsflaeche.register("orte", new GuiClient(setOrte, showMessagesOrte));
+}
+
+function InitButtonSelectOrt() {
+	$("#buttonAddOrt").click(ShowFormSelectOrt);
+}
+
+function ShowFormSelectOrt() {
+	$("#dialogSelectOrt").dialog({
+		height: "auto",
+		width: 750,
+		title: "Ort auswählen",
+		modal: true,
+		resizable: false,
+		buttons: {
+			"Speichern": function () {
+				_viewModelFormBegehungsflaeche.addOrt(GetSelectedOrt());
+				$(this).dialog("close");
+			},
+			"Abbrechen": function () {
+				$(this).dialog("close");
+			}
+		}
+	});
+
+	$("#treeSelectOrt").jstree(true).refresh();
+
+	$("#dialogSelectOrt").dialog("open");
+}
+
+function setOrte(orte) {
+	$("#divOrte div #divList").empty();
+	$("#divOrte div #divList").append($("<ul>"));
+
+	orte.forEach(ort => {
+		var li = $("<li>");
+		var linkOrt = $("<a>");
+		linkOrt.attr("title", "gehe zu");
+		linkOrt.attr("href", "../../pages/Ort/Explorer.html?Id=" + ort.Id);
+		linkOrt.text("/" + ort.Path);
+		li.append(linkOrt);
+
+		var linkButtonDelete = $("<a>");
+		linkButtonDelete.attr("title", "löschen");
+		linkButtonDelete.attr("class", "linkButton riskyAction");
+		linkButtonDelete.attr("href", "javascript:removeOrt(" + ort.Id + ");");
+
+		var icon = $("<i>");
+		icon.attr("class", "fas fa-trash-alt");
+		linkButtonDelete.append(icon);
+		li.append(linkButtonDelete);
+
+
+		$("#divOrte div #divList ul").append(li);
+	});
+}
+
+function removeOrt(ortId) {
+	var ort = new Object();
+	ort.Id = ortId;
+
+	_viewModelFormBegehungsflaeche.removeOrt(ort);
+}
+
+function showMessagesOrte(messages) {
+	$("#divOrte .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 //#endregion

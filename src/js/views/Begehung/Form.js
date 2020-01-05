@@ -362,7 +362,7 @@ LinkToFundFormField.prototype = new jsGrid.Field({
 	itemTemplate: function(value) {
 		var icon = $("<i>").addClass("fas fa-external-link-alt");
 		var link = $("<a>").append(icon);
-		$(link).attr("href", "/pages/Fund/Form.html?Id=" + value);
+		$(link).attr("href", "/Munins Archiv/src/pages/Fund/Form.html?Id=" + value);
 		$(link).attr("target", "_blank");
 		$(link).attr("title", "Fundformular öffnen");
 		return link;
