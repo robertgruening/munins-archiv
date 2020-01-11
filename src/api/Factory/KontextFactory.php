@@ -662,11 +662,25 @@ class KontextFactory extends Factory implements iTreeFactory
     if (!$mysqli->connect_errno)
     {
       $mysqli->set_charset("utf8");
-      $ergebnis = $mysqli->query($this->getSQLStatementToSynchroniseOrte($element, $orte));
+      $mysqli->autocommit(false);
+      $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
-      if (!$mysqli->errno)
+      $passed = true;
+      $passed = $mysqli->query($this->getSQLStatementToUnlinkOrte($element)) && $passed;
+
+      if (count($orte) > 0)
       {
+        $passed = $mysqli->query($this->getSQLStatementToLinkOrte($element, $orte)) && $passed;
+      }
+
+      if ($passed)
+      {
+        $mysqli->commit();
         $element->setOrte($orte);
+      }
+      else
+      {
+        $mysqli->rollback();
       }
     }
 
@@ -675,34 +689,35 @@ class KontextFactory extends Factory implements iTreeFactory
     return $element;
   }
 
-  public function getSQLStatementToSynchroniseOrte($element, $orte)
+  public function getSQLStatementToUnlinkOrte($element)
   {
-    $statement = "START TRANSACTION;";
-    $statement .= "DELETE FROM ".$this->getTableName()."_".$this->getOrtFactory()->getTableName()."
+    $statement = "DELETE FROM ".$this->getTableName()."_".$this->getOrtFactory()->getTableName()."
     WHERE ".$this->getTableName()."_Id = ".$element->getId().";";
+
+    return $statement;
+  }
+
+  public function getSQLStatementToLinkOrte($element, $orte)
+  {
+    if (count($orte) == 0)
+    {
+      return "";
+    }
+
+    $statement = "INSERT INTO ".$this->getTableName()."_".$this->getOrtFactory()->getTableName()."(".$this->getTableName()."_Id,".$this->getOrtFactory()->getTableName()."_Id)
+    VALUES ";
 
     for ($i = 0; $i < count($orte); $i++)
     {
-      if ($i == 0)
-      {
-        $statement .= "INSERT (".$this->getTableName()."_Id,".$this->getOrtFactory()->getTableName()."_Id)
-        VALUES ";
-      }
-      else
+      $statement .= "(".$element->getId().",".$orte[$i]->getId().")";
+
+      if ($i + 1 < count($orte))
       {
         $statement .= ",";
       }
-
-      $statement .= "(".$element->getId().",".$orte[$i]->getId().")";
-
-      if ($i + 1 == count($orte))
-      {
-        $statement .= ";";
-      }
     }
 
-    $statement .= "COMMIT;";
-
+    $statement .= ";";
 
     return $statement;
   }
@@ -762,11 +777,25 @@ class KontextFactory extends Factory implements iTreeFactory
     if (!$mysqli->connect_errno)
     {
       $mysqli->set_charset("utf8");
-      $ergebnis = $mysqli->query($this->getSQLStatementToSynchroniseLfdNummern($element, $lfdNummern));
+      $mysqli->autocommit(false);
+      $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
-      if (!$mysqli->errno)
+      $passed = true;
+      $passed = $mysqli->query($this->getSQLStatementToUnlinkLfdNummern($element)) && $passed;
+
+      if (count($orte) > 0)
       {
+        $passed = $mysqli->query($this->getSQLStatementToLinkLfdNummern($element, $lfdNummern)) && $passed;
+      }
+
+      if ($passed)
+      {
+        $mysqli->commit();
         $element->setLfdNummern($lfdNummern);
+      }
+      else
+      {
+        $mysqli->rollback();
       }
     }
 
@@ -775,34 +804,35 @@ class KontextFactory extends Factory implements iTreeFactory
     return $element;
   }
 
-  public function getSQLStatementToSynchroniseLfdNummern($element, $lfdNummern)
+  public function getSQLStatementToUnlinkLfdNummern($element)
   {
-    $statement = "START TRANSACTION;";
-    $statement .= "DELETE FROM ".$this->getTableName()."_".$this->getLfdNummerFactory()->getTableName()."
+    $statement = "DELETE FROM ".$this->getTableName()."_".$this->getLfdNummerFactory()->getTableName()."
     WHERE ".$this->getTableName()."_Id = ".$element->getId().";";
+
+    return $statement;
+  }
+
+  public function getSQLStatementToLinkLfdNummern($element, $lfdNummern)
+  {
+    if (count($lfdNummern) == 0)
+    {
+      return "";
+    }
+
+    $statement = "INSERT INTO ".$this->getTableName()."_".$this->getLfdNummerFactory()->getTableName()."(".$this->getTableName()."_Id,".$this->getLfdNummerFactory()->getTableName()."_Id)
+    VALUES ";
 
     for ($i = 0; $i < count($lfdNummern); $i++)
     {
-      if ($i == 0)
-      {
-        $statement .= "INSERT (".$this->getTableName()."_Id,".$this->getLfdNummerFactory()->getTableName()."_Id)
-        VALUES ";
-      }
-      else
+      $statement .= "(".$element->getId().",".$lfdNummern[$i]->getId().")";
+
+      if ($i + 1 < count($lfdNummern))
       {
         $statement .= ",";
       }
-
-      $statement .= "(".$element->getId().",".$lfdNummern[$i]->getId().")";
-
-      if ($i + 1 == count($lfdNummern))
-      {
-        $statement .= ";";
-      }
     }
 
-    $statement .= "COMMIT;";
-
+    $statement .= ";";
 
     return $statement;
   }
