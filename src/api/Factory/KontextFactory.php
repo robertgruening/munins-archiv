@@ -783,7 +783,7 @@ class KontextFactory extends Factory implements iTreeFactory
       $passed = true;
       $passed = $mysqli->query($this->getSQLStatementToUnlinkLfdNummern($element)) && $passed;
 
-      if (count($orte) > 0)
+      if (count($lfdNummern) > 0)
       {
         $passed = $mysqli->query($this->getSQLStatementToLinkLfdNummern($element, $lfdNummern)) && $passed;
       }
