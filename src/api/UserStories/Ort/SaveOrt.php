@@ -29,7 +29,7 @@ class SaveOrt extends UserStory
     protected function areParametersValid()
     {
         $ort = $this->getOrt();
-        
+
         if ($ort == null)
         {
             global $logger;
@@ -38,7 +38,34 @@ class SaveOrt extends UserStory
             return false;
         }
 
-        return true;
+        $areParametersValid = true;
+
+        if ($ort->getBezeichnung() == null ||
+        $ort->getBezeichnung() == "")
+        {
+            global $logger;
+            $logger->warn("Bezeichnung ist nicht gesetzt!");
+            $this->addMessage("Bezeichnung ist nicht gesetzt!");
+            $areParametersValid = false;
+        }
+
+        if ($ort->getType() == null)
+        {
+            global $logger;
+            $logger->warn("Typ ist nicht gesetzt!");
+            $this->addMessage("Typ ist nicht gesetzt!");
+            $areParametersValid = false;
+        }
+
+        if (OrtFactory::isNodeInCircleCondition($ort))
+        {
+            global $logger;
+            $logger->warn("Ort darf sich nicht selbst zum über- oder untergeordneten Knoten haben!");
+            $this->addMessage("Ort darf sich nicht selbst zum über- oder untergeordneten Knoten haben!");
+            $areParametersValid = false;
+        }
+
+        return $areParametersValid;
     }
 
     protected function execute()
@@ -49,7 +76,7 @@ class SaveOrt extends UserStory
 
         $loadOrt = new LoadOrt();
         $loadOrt->setId($savedOrt->getId());
-        
+
         if (!$loadOrt->run())
         {
             $this->addMessages($loadOrt->getMessages());

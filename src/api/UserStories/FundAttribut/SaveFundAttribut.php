@@ -29,7 +29,7 @@ class SaveFundAttribut extends UserStory
     protected function areParametersValid()
     {
         $fundAttribut = $this->getFundAttribut();
-        
+
         if ($fundAttribut == null)
         {
             global $logger;
@@ -38,15 +38,34 @@ class SaveFundAttribut extends UserStory
             return false;
         }
 
+        $areParametersValid = true;
+
+        if ($fundAttribut->getBezeichnung() == null ||
+        $fundAttribut->getBezeichnung() == "")
+        {
+            global $logger;
+            $logger->warn("Bezeichnung ist nicht gesetzt!");
+            $this->addMessage("Bezeichnung ist nicht gesetzt!");
+            $areParametersValid = false;
+        }
+
+        if ($fundAttribut->getType() == null)
+        {
+            global $logger;
+            $logger->warn("Typ ist nicht gesetzt!");
+            $this->addMessage("Typ ist nicht gesetzt!");
+            $areParametersValid = false;
+        }
+
         if (FundAttributFactory::isNodeInCircleCondition($fundAttribut))
         {
             global $logger;
             $logger->warn("Fundattribut darf sich nicht selbst zum über- oder untergeordneten Knoten haben!");
             $this->addMessage("Fundattribut darf sich nicht selbst zum über- oder untergeordneten Knoten haben!");
-            return false;
+            $areParametersValid = false;
         }
 
-        return true;
+        return $areParametersValid;
     }
 
     protected function execute()
@@ -57,7 +76,7 @@ class SaveFundAttribut extends UserStory
 
         $loadFundAttribut = new LoadFundAttribut();
         $loadFundAttribut->setId($savedFundAttribut->getId());
-        
+
         if (!$loadFundAttribut->run())
         {
             $this->addMessages($loadFundAttribut->getMessages());

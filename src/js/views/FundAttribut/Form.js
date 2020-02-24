@@ -8,9 +8,9 @@ $(document).ready(function () {
 
 	InitStatusChanged();
 	InitDataChanged();
-    InitBreadcrumb();
-    InitButtonNew();
-    InitButtonSave();
+	InitBreadcrumb();
+	InitButtonNew();
+	InitButtonSave();
 	InitButtonDelete();
 	InitButtonUndo();
 	InitButtonToOverview();
@@ -34,7 +34,7 @@ function loadForm() {
 		console.debug("creation of a new Fundattribut is requested with parent ID", getUrlParameterValue("Parent_Id"));
 		var parent = new FundAttribut();
 		parent.Id = getUrlParameterValue("Parent_Id");
-		
+
 		_viewModelFormFundAttribut.setParent(parent);
 		showMessageParentSet();
 		_viewModelFormFundAttribut.updateAllListeners();
@@ -67,7 +67,7 @@ function InitBreadcrumb()
 		$("#breadcrumb").Breadcrumb({
 			PageName: "FundAttributFormEdit"
 		});
-    }
+	}
 }
 
 function loadCreatedElement(element) {
@@ -77,34 +77,34 @@ function loadCreatedElement(element) {
 //#region messages
 function showMessageParentSet() {
 	$.toast({
-        heading: "Information",
-        text: "übergeordnetes Fundattribut gesetzt",
-        icon: "info"
-    });
+		heading: "Information",
+		text: "übergeordnetes Fundattribut gesetzt",
+		icon: "info"
+	});
 }
 
 function showMessageLoaded(element) {
-    $.toast({
-        heading: "Information",
-        text: "Fundattribut \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
-        icon: "success"
-    });
+	$.toast({
+		heading: "Information",
+		text: "Fundattribut \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
+		icon: "success"
+	});
 }
 
 function showMessageSaved(element) {
-    $.toast({
-        heading: "Information",
-        text: "Fundattribut \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert",
-        icon: "success"
-    });
+	$.toast({
+		heading: "Information",
+		text: "Fundattribut \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert",
+		icon: "success"
+	});
 }
 
 function showMessageDeleted(element) {
-    $.toast({
-        heading: "Information",
-        text: "Fundattribut \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
-        icon: "success"
-    });
+	$.toast({
+		heading: "Information",
+		text: "Fundattribut \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
+		icon: "success"
+	});
 }
 //#endregion
 
@@ -148,6 +148,7 @@ function fillSelectionFundAttributType(fundAttributTypes) {
 	console.info("setting values of field 'Fundattribut type'");
 	console.debug("values of 'Fundattribut type'", fundAttributTypes);
 	$("#selectType").empty();
+	$("#selectType").append("<option value='' >Bitte wählen</option>");
 
 	fundAttributTypes.forEach(fundAttributType => {
 		$("#selectType").append("<option value=" + fundAttributType.Id + ">" + fundAttributType.Bezeichnung + "</option>");
@@ -309,9 +310,9 @@ function InitButtonUndo() {
 	DisableButtonUndo();
 	_viewModelFormFundAttribut.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
 	_viewModelFormFundAttribut.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
-	$("#buttonUndo").click(function () { 
-        console.log("button 'undo' clicked");
-		_viewModelFormFundAttribut.undoAllChanges(); 
+	$("#buttonUndo").click(function () {
+		console.log("button 'undo' clicked");
+		_viewModelFormFundAttribut.undoAllChanges();
 	});
 }
 
@@ -339,22 +340,22 @@ function InitButtonToOverview() {
 
 function EnableButtonToOverview(parent) {
 	if (parent === undefined ||
-		parent === null || 
+		parent === null ||
 		parent.Id === undefined) {
 
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/FundAttribut/Explorer.html", "_self");
-	}
-	else {
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/FundAttribut/Explorer.html?Id=" + parent.Id, "_self");
+			$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/FundAttribut/Explorer.html", "_self");
+		}
+		else {
+			$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/FundAttribut/Explorer.html?Id=" + parent.Id, "_self");
+		}
+
+		$("#buttonToOverview").removeClass("disabled");
+		$("#buttonToOverview").prop("disabled", false);
 	}
 
-	$("#buttonToOverview").removeClass("disabled");
-	$("#buttonToOverview").prop("disabled", false);
-}
-
-function DisableButtonToOverview() {
-	$("#buttonToOverview").addClass("disabled");
-	$("#buttonToOverview").prop("disabled", true);
-}
-//#endregion
-//#endregion
+	function DisableButtonToOverview() {
+		$("#buttonToOverview").addClass("disabled");
+		$("#buttonToOverview").prop("disabled", true);
+	}
+	//#endregion
+	//#endregion

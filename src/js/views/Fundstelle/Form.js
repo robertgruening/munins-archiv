@@ -8,9 +8,9 @@ $(document).ready(function () {
 
 	InitStatusChanged();
 	InitDataChanged();
-    InitBreadcrumb();
-    InitButtonNew();
-    InitButtonSave();
+	InitBreadcrumb();
+	InitButtonNew();
+	InitButtonSave();
 	InitButtonDelete();
 	InitButtonUndo();
 	InitButtonToOverview();
@@ -35,7 +35,7 @@ function loadForm() {
 		console.debug("creation of a new Kontext is requested with parent ID", getUrlParameterValue("Parent_Id"));
 		var parent = new Kontext();
 		parent.Id = getUrlParameterValue("Parent_Id");
-		
+
 		_viewModelFormFundstelle.setParent(parent);
 		showMessageParentSet();
 		_viewModelFormFundstelle.updateAllListeners();
@@ -68,7 +68,7 @@ function InitBreadcrumb()
 		$("#breadcrumb").Breadcrumb({
 			PageName: "FundstelleFormEdit"
 		});
-    }
+	}
 }
 
 function loadCreatedElement(element) {
@@ -78,34 +78,34 @@ function loadCreatedElement(element) {
 //#region messages
 function showMessageParentSet() {
 	$.toast({
-        heading: "Information",
-        text: "übergeordnete Kontext gesetzt",
-        icon: "info"
-    });
+		heading: "Information",
+		text: "übergeordnete Kontext gesetzt",
+		icon: "info"
+	});
 }
 
 function showMessageLoaded(element) {
-    $.toast({
-        heading: "Information",
-        text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
-        icon: "success"
-    });
+	$.toast({
+		heading: "Information",
+		text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
+		icon: "success"
+	});
 }
 
 function showMessageSaved(element) {
-    $.toast({
-        heading: "Information",
-        text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert",
-        icon: "success"
-    });
+	$.toast({
+		heading: "Information",
+		text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert",
+		icon: "success"
+	});
 }
 
 function showMessageDeleted(element) {
-    $.toast({
-        heading: "Information",
-        text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
-        icon: "success"
-    });
+	$.toast({
+		heading: "Information",
+		text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
+		icon: "success"
+	});
 }
 //#endregion
 
@@ -149,6 +149,7 @@ function fillSelectionKontextType(kontextTypes) {
 	console.info("setting values of field 'Kontext type'");
 	console.debug("values of 'Kontext type'", kontextTypes);
 	$("#selectType").empty();
+	$("#selectType").append("<option value='' >Bitte wählen</option>");
 
 	kontextTypes.forEach(kontextType => {
 		$("#selectType").append("<option value=" + kontextType.Id + ">" + kontextType.Bezeichnung + "</option>");
@@ -373,9 +374,9 @@ function InitButtonUndo() {
 	DisableButtonUndo();
 	_viewModelFormFundstelle.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
 	_viewModelFormFundstelle.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
-	$("#buttonUndo").click(function () { 
-        console.log("button 'undo' clicked");
-		_viewModelFormFundstelle.undoAllChanges(); 
+	$("#buttonUndo").click(function () {
+		console.log("button 'undo' clicked");
+		_viewModelFormFundstelle.undoAllChanges();
 	});
 }
 
@@ -403,22 +404,22 @@ function InitButtonToOverview() {
 
 function EnableButtonToOverview(parent) {
 	if (parent === undefined ||
-		parent === null || 
+		parent === null ||
 		parent.Id === undefined) {
 
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
-	}
-	else {
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html?Id=" + parent.Id, "_self");
+			$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
+		}
+		else {
+			$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html?Id=" + parent.Id, "_self");
+		}
+
+		$("#buttonToOverview").removeClass("disabled");
+		$("#buttonToOverview").prop("disabled", false);
 	}
 
-	$("#buttonToOverview").removeClass("disabled");
-	$("#buttonToOverview").prop("disabled", false);
-}
-
-function DisableButtonToOverview() {
-	$("#buttonToOverview").addClass("disabled");
-	$("#buttonToOverview").prop("disabled", true);
-}
-//#endregion
-//#endregion
+	function DisableButtonToOverview() {
+		$("#buttonToOverview").addClass("disabled");
+		$("#buttonToOverview").prop("disabled", true);
+	}
+	//#endregion
+	//#endregion

@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set("display_errors", 1); 
+ini_set("display_errors", 1);
 
 require_once("../Factory/LfdNummerFactory.php");
 require_once("../UserStories/LfdNummer/LoadLfdNummer.php");
@@ -28,15 +28,32 @@ function Create()
 {
     global $logger;
     $logger->info("LfdNummer-anlegen gestartet");
-    $lfdNummer = new LfdNummer();
 
-    if (isset($_PUT["Bezeichnung"]))
+    parse_str(file_get_contents("php://input"), $lfdNummerObject);
+
+    $lfdNummer = new LfdNummer();
+    $messages = new Array();
+
+    if (isset($lfdNummerObject["Bezeichnung"]))
     {
-        $lfdNummer->setBezeichnung($_POST["Bezeichnung"]);
+        $lfdNummer->setBezeichnung($lfdNummerObject["Bezeichnung"]);
     }
-    
+    else
+    {
+        $logger->error("Bezeichnung ist nicht gesetzt!");
+        array_push($messages, "Bezeichnung ist nicht gesetzt!");
+    }
+
+    if (count($messages) >= 1)
+    {
+        http_response_code(500);
+        echo json_encode($messages);
+        $logger->info("LfdNummer-anlegen beendet");
+        return;
+    }
+
     $lfdNummerFactory = new LfdNummerFactory();
-    $lfdNummer = $lfdNummerFactory->create($lfdNummer);
+    $lfdNummer = $lfdNummerFactory->save($lfdNummer);
     echo json_encode($lfdNummer);
     $logger->info("LfdNummer-anlegen beendet");
 }
@@ -46,22 +63,41 @@ function Update()
     global $logger;
     $logger->info("LfdNummer-anhand-ID-aktualisieren gestartet");
 
-    parse_str(file_get_contents("php://input"),$_PUT);
+    parse_str(file_get_contents("php://input"), $lfdNummerObject);
 
     $lfdNummer = new LfdNummer();
+    $messages = new Array();
 
     if (isset($_GET["Id"]))
     {
-        $lfdNummer->setId(intval($_GET["Id"]));    
+        $lfdNummer->setId(intval($_GET["Id"]));
+    }
+    else
+    {
+        $logger->error("ID ist nicht gesetzt!");
+        array_push($messages, "ID ist nicht gesetzt!");
     }
 
-    if (isset($_PUT["Bezeichnung"]))
+    if (isset($lfdNummerObject["Bezeichnung"]))
     {
-        $lfdNummer->setBezeichnung($_PUT["Bezeichnung"]);
+        $lfdNummer->setBezeichnung($lfdNummerObject["Bezeichnung"]);
     }
-        
+    else
+    {
+        $logger->error("Bezeichnung ist nicht gesetzt!");
+        array_push($messages, "Bezeichnung ist nicht gesetzt!");
+    }
+
+    if (count($messages) >= 1)
+    {
+        http_response_code(500);
+        echo json_encode($messages);
+        $logger->info("LfdNummer-anhand-ID-aktualisieren beendet");
+        return;
+    }
+
     $lfdNummerFactory = new LfdNummerFactory();
-    $lfdNummer = $lfdNummerFactory->create($lfdNummer);
+    $lfdNummer = $lfdNummerFactory->save($lfdNummer);
     echo json_encode($lfdNummer);
     $logger->info("LfdNummer-anhand-ID-aktualisieren beendet");
 }
@@ -72,16 +108,16 @@ function Delete()
     $logger->info("LfdNummer-anhand-ID-löschen gestartet");
 
     $loadLfdNummer = new LoadLfdNummer();
-    
+
     if (isset($_GET["Id"]))
     {
-        $loadLfdNummer->setId(intval($_GET["Id"])); 
+        $loadLfdNummer->setId(intval($_GET["Id"]));
     }
-    
+
     if ($loadLfdNummer->run())
     {
         $lfdNummer = $loadLfdNummer->getLfdNummer();
-        
+
         $deleteLfdNummer = new DeleteLfdNummer();
         $deleteLfdNummer->setLfdNummer($lfdNummer);
 

@@ -26,8 +26,8 @@ class AblageTypeFactory extends Factory implements iListFactory
 
     #region methods
     /**
-     * Returns the name of the database table.
-     */
+    * Returns the name of the database table.
+    */
     public function getTableName()
     {
         // ToDo: Rename
@@ -36,33 +36,33 @@ class AblageTypeFactory extends Factory implements iListFactory
 
     #region load
     /**
-     * Returns the SQL statement to load ID and Bezeichnung
-     * by AblageType ID.
-     * 
-     * @param $id ID of the AblageType to load.
-     */
+    * Returns the SQL statement to load ID and Bezeichnung
+    * by AblageType ID.
+    *
+    * @param $id ID of the AblageType to load.
+    */
     protected function getSQLStatementToLoadById($id)
     {
         return "SELECT
-                    Id, Bezeichnung, (
-                        SELECT
-                            COUNT(*)
-                        FROM
-                            Ablage
-                        WHERE
-                            Typ_Id = ".$id."
-                    ) AS CountOfAblagen
-                FROM
-                    ".$this->getTableName()."
-                WHERE
-                    Id = ".$id.";";
+        Id, Bezeichnung, (
+            SELECT
+            COUNT(*)
+            FROM
+            Ablage
+            WHERE
+            Typ_Id = ".$id."
+        ) AS CountOfAblagen
+        FROM
+        ".$this->getTableName()."
+        WHERE
+        Id = ".$id.";";
     }
 
     public function loadAll()
     {
         return $this->getListFactory()->loadAll();
     }
-    
+
     protected function fill($dataset)
     {
         if ($dataset == null)
@@ -77,38 +77,38 @@ class AblageTypeFactory extends Factory implements iListFactory
         $ablageType->setId(intval($dataset["Id"]));
         $ablageType->setBezeichnung($dataset["Bezeichnung"]);
         $ablageType->setCountOfAblagen(intval($dataset["CountOfAblagen"]));
-        
+
         return $ablageType;
     }
     #endregion
-    
+
     #region save
     /**
-     * Returns the SQL statement to insert Bezeichnung
-     * of the given AblageType.
-     * 
-     * @param iNode $element AblageType to insert.
-     */
+    * Returns the SQL statement to insert Bezeichnung
+    * of the given AblageType.
+    *
+    * @param iNode $element AblageType to insert.
+    */
     protected function getSQLStatementToInsert(iNode $element)
     {
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung)
-                VALUES ('".$element->getBezeichnung()."');";
+        VALUES ('".$element->getBezeichnung()."');";
     }
-    
+
     /**
-     * Returns the SQL statement to update Bezeichnung
-     * of the given AblageType.
-     * 
-     * @param iNode $element AblageType to update.
-     */
+    * Returns the SQL statement to update Bezeichnung
+    * of the given AblageType.
+    *
+    * @param iNode $element AblageType to update.
+    */
     protected function getSQLStatementToUpdate(iNode $element)
     {
         return "UPDATE ".$this->getTableName()."
-                SET Bezeichnung = '".$element->getBezeichnung()."'
-                WHERE Id = ".$element->getId().";";
+        SET Bezeichnung = '".$element->getBezeichnung()."'
+        WHERE Id = ".$element->getId().";";
     }
     #endregion
-    
+
     #region convert
     public function convertToInstance($object)
     {
@@ -150,7 +150,7 @@ class AblageTypeFactory extends Factory implements iListFactory
             $logger->debug("Anzahl der Ablagen zu diesem Typ ist nicht gesetzt!");
         }
 
-        
+
         return $ablageType;
     }
     #endregion

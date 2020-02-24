@@ -26,8 +26,8 @@ class FundAttributTypeFactory extends Factory implements iListFactory
 
     #region methods
     /**
-     * Returns the name of the database table.
-     */
+    * Returns the name of the database table.
+    */
     public function getTableName()
     {
         // ToDo: Rename
@@ -38,18 +38,18 @@ class FundAttributTypeFactory extends Factory implements iListFactory
     protected function getSQLStatementToLoadById($id)
     {
         return "SELECT
-                    Id, Bezeichnung, (
-                        SELECT
-                            COUNT(*)
-                        FROM
-                            FundAttribut
-                        WHERE
-                            Typ_Id = ".$id."
-                    ) AS CountOfFundAttributen
-                FROM
-                    ".$this->getTableName()."
-                WHERE
-                    Id = ".$id.";";
+        Id, Bezeichnung, (
+            SELECT
+            COUNT(*)
+            FROM
+            FundAttribut
+            WHERE
+            Typ_Id = ".$id."
+        ) AS CountOfFundAttributen
+        FROM
+        ".$this->getTableName()."
+        WHERE
+        Id = ".$id.";";
     }
 
     public function loadAll()
@@ -68,26 +68,26 @@ class FundAttributTypeFactory extends Factory implements iListFactory
         $fundAttributType->setId(intval($dataset["Id"]));
         $fundAttributType->setBezeichnung($dataset["Bezeichnung"]);
         $fundAttributType->setCountOfFundAttributen(intval($dataset["CountOfFundAttributen"]));
-        
+
         return $fundAttributType;
     }
     #endregion
-    
+
     #region save
     protected function getSQLStatementToInsert(iNode $element)
     {
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung)
-                VALUES ('".$element->getBezeichnung()."');";
+        VALUES ('".$element->getBezeichnung()."');";
     }
-    
+
     protected function getSQLStatementToUpdate(iNode $element)
     {
         return "UPDATE ".$this->getTableName()."
-                SET Bezeichnung = '".$element->getBezeichnung()."'
-                WHERE Id = ".$element->getId().";";
+        SET Bezeichnung = '".$element->getBezeichnung()."'
+        WHERE Id = ".$element->getId().";";
     }
     #endregion
-    
+
     #region convert
     public function convertToInstance($object)
     {
@@ -129,7 +129,6 @@ class FundAttributTypeFactory extends Factory implements iListFactory
             $logger->debug("Anzahl der Fundattribute zu diesem Typ ist nicht gesetzt!");
         }
 
-        
         return $fundAttributType;
     }
     #endregion

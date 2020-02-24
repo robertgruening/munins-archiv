@@ -70,7 +70,7 @@ function InitBreadcrumb()
 		$("#breadcrumb").Breadcrumb({
 			PageName: "BegehungsflaecheFormEdit"
 		});
-    }
+	}
 }
 
 function loadCreatedElement(element) {
@@ -80,34 +80,34 @@ function loadCreatedElement(element) {
 //#region messages
 function showMessageParentSet() {
 	$.toast({
-        heading: "Information",
-        text: "übergeordnete Kontext gesetzt",
-        icon: "info"
-    });
+		heading: "Information",
+		text: "übergeordnete Kontext gesetzt",
+		icon: "info"
+	});
 }
 
 function showMessageLoaded(element) {
-    $.toast({
-        heading: "Information",
-        text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
-        icon: "success"
-    });
+	$.toast({
+		heading: "Information",
+		text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
+		icon: "success"
+	});
 }
 
 function showMessageSaved(element) {
-    $.toast({
-        heading: "Information",
-        text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert",
-        icon: "success"
-    });
+	$.toast({
+		heading: "Information",
+		text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert",
+		icon: "success"
+	});
 }
 
 function showMessageDeleted(element) {
-    $.toast({
-        heading: "Information",
-        text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
-        icon: "success"
-    });
+	$.toast({
+		heading: "Information",
+		text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
+		icon: "success"
+	});
 }
 //#endregion
 
@@ -151,6 +151,7 @@ function fillSelectionKontextType(kontextTypes) {
 	console.info("setting values of field 'Kontext type'");
 	console.debug("values of 'Kontext type'", kontextTypes);
 	$("#selectType").empty();
+	$("#selectType").append("<option value='' >Bitte wählen</option>");
 
 	kontextTypes.forEach(kontextType => {
 		$("#selectType").append("<option value=" + kontextType.Id + ">" + kontextType.Bezeichnung + "</option>");
@@ -447,7 +448,7 @@ function InitButtonUndo() {
 	_viewModelFormBegehungsflaeche.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
 	_viewModelFormBegehungsflaeche.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
 	$("#buttonUndo").click(function () {
-        console.log("button 'undo' clicked");
+		console.log("button 'undo' clicked");
 		_viewModelFormBegehungsflaeche.undoAllChanges();
 	});
 }
@@ -479,19 +480,19 @@ function EnableButtonToOverview(parent) {
 		parent === null ||
 		parent.Id === undefined) {
 
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
-	}
-	else {
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html?Id=" + parent.Id, "_self");
+			$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
+		}
+		else {
+			$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html?Id=" + parent.Id, "_self");
+		}
+
+		$("#buttonToOverview").removeClass("disabled");
+		$("#buttonToOverview").prop("disabled", false);
 	}
 
-	$("#buttonToOverview").removeClass("disabled");
-	$("#buttonToOverview").prop("disabled", false);
-}
-
-function DisableButtonToOverview() {
-	$("#buttonToOverview").addClass("disabled");
-	$("#buttonToOverview").prop("disabled", true);
-}
-//#endregion
-//#endregion
+	function DisableButtonToOverview() {
+		$("#buttonToOverview").addClass("disabled");
+		$("#buttonToOverview").prop("disabled", true);
+	}
+	//#endregion
+	//#endregion

@@ -134,6 +134,17 @@ var ViewModelForm = function (webServiceClient) {
 		this._fail("load", messages);
 	};
 
+	this._getPropertyNameAsInMessage = function (propertyName) {
+		switch (propertyName) {
+			case "type" : {
+				return "typ";
+			}
+			default : {
+				return propertyName;
+			}
+		}
+	};
+
 	this._failCreate = function (messages) {
 		var properties = Object.keys(this._listeners.properties);
 
@@ -141,7 +152,7 @@ var ViewModelForm = function (webServiceClient) {
 			var messagesForOneProperty = new Array();
 
 			messages.forEach(message => {
-				if (message.toLowerCase().startsWith(property.toLowerCase())) {
+				if (message.toLowerCase().startsWith(this._getPropertyNameAsInMessage(property).toLowerCase())) {
 					messagesForOneProperty.push(message);
 				}
 			});
@@ -157,7 +168,7 @@ var ViewModelForm = function (webServiceClient) {
 			var isAboutProperty = false;
 
 			for (var i = 0; i < properties.length; i++) {
-				if (message.toLowerCase().startsWith(properties[i].toLowerCase())) {
+				if (message.toLowerCase().startsWith(this._getPropertyNameAsInMessage(properties[i]).toLowerCase())) {
 					isAboutProperty = true;
 					break;
 				}
@@ -180,7 +191,7 @@ var ViewModelForm = function (webServiceClient) {
 			var messagesForOneProperty = new Array();
 
 			messages.forEach(message => {
-				if (message.toLowerCase().startsWith(property.toLowerCase())) {
+				if (message.toLowerCase().startsWith(this._getPropertyNameAsInMessage(property).toLowerCase())) {
 					messagesForOneProperty.push(message);
 				}
 			});
@@ -196,7 +207,7 @@ var ViewModelForm = function (webServiceClient) {
 			var isAboutProperty = false;
 
 			for (var i = 0; i < properties.length; i++) {
-				if (message.toLowerCase().startsWith(properties[i].toLowerCase())) {
+				if (message.toLowerCase().startsWith(this._getPropertyNameAsInMessage(properties[i]).toLowerCase())) {
 					isAboutProperty = true;
 					break;
 				}
@@ -221,82 +232,82 @@ var ViewModelForm = function (webServiceClient) {
 	this.register = function (eventName, listener) {
 		if (listener == undefined ||
 			listener == null) {
-			return;
-		}
+				return;
+			}
 
-		if (this._isActionListener(eventName)) {
-			this._listeners.actions[eventName].push(listener);
-		}
-		else if (this._isPropertyListener(eventName)) {
-			this._listeners.properties[eventName].push(listener);
-		}
-	};
-
-	this._update = function (eventName, data) {
-		if (this._isActionListener(eventName)) {
-			this._listeners.actions[eventName].forEach(function (item) {
-				item.Update(data);
-			});
-		}
-		else if (this._isPropertyListener(eventName)) {
-			this._listeners.properties[eventName].forEach(function (item) {
-				item.Update(data);
-			});
-		}
-	};
-
-	this._fail = function (eventName, messages) {
-		if (this._isActionListener(eventName)) {
-			this._listeners.actions[eventName].forEach(function (item) {
-				item.Fail(messages);
-			});
-		}
-		else if (this._isPropertyListener(eventName)) {
-			this._listeners.properties[eventName].forEach(function (item) {
-				item.Fail(messages);
-			});
-		}
-	};
-
-	this._isActionListener = function (eventName) {
-		var actionListenerNames = Object.keys(this._listeners.actions);
-
-		for (var i = 0; i < actionListenerNames.length; i++) {
-			if (actionListenerNames[i] === eventName) {
-				return true;
+			if (this._isActionListener(eventName)) {
+				this._listeners.actions[eventName].push(listener);
+			}
+			else if (this._isPropertyListener(eventName)) {
+				this._listeners.properties[eventName].push(listener);
 			}
 		};
 
-		return false;
-	};
-
-	this._isPropertyListener = function (eventName) {
-		var propertyListenerNames = Object.keys(this._listeners.properties);
-
-		for (var i = 0; i < propertyListenerNames.length; i++) {
-			if (propertyListenerNames[i] === eventName) {
-				return true;
+		this._update = function (eventName, data) {
+			if (this._isActionListener(eventName)) {
+				this._listeners.actions[eventName].forEach(function (item) {
+					item.Update(data);
+				});
+			}
+			else if (this._isPropertyListener(eventName)) {
+				this._listeners.properties[eventName].forEach(function (item) {
+					item.Update(data);
+				});
 			}
 		};
 
-		return false;
-	};
-	//#endregion
-	//#endregion
+		this._fail = function (eventName, messages) {
+			if (this._isActionListener(eventName)) {
+				this._listeners.actions[eventName].forEach(function (item) {
+					item.Fail(messages);
+				});
+			}
+			else if (this._isPropertyListener(eventName)) {
+				this._listeners.properties[eventName].forEach(function (item) {
+					item.Fail(messages);
+				});
+			}
+		};
 
-	//#region init
-	this._initModel = function () {
-		this._model = this._createModel();
-	};
+		this._isActionListener = function (eventName) {
+			var actionListenerNames = Object.keys(this._listeners.actions);
 
-	this._initPropertyListeners = function () {
-		this._listeners.properties = this._createPropertyListeners();
-	};
+			for (var i = 0; i < actionListenerNames.length; i++) {
+				if (actionListenerNames[i] === eventName) {
+					return true;
+				}
+			};
 
-	this.init = function () {
-		this._initModel();
-		this._initPropertyListeners();
-		this._registerToWebServiceClient();
+			return false;
+		};
+
+		this._isPropertyListener = function (eventName) {
+			var propertyListenerNames = Object.keys(this._listeners.properties);
+
+			for (var i = 0; i < propertyListenerNames.length; i++) {
+				if (propertyListenerNames[i] === eventName) {
+					return true;
+				}
+			};
+
+			return false;
+		};
+		//#endregion
+		//#endregion
+
+		//#region init
+		this._initModel = function () {
+			this._model = this._createModel();
+		};
+
+		this._initPropertyListeners = function () {
+			this._listeners.properties = this._createPropertyListeners();
+		};
+
+		this.init = function () {
+			this._initModel();
+			this._initPropertyListeners();
+			this._registerToWebServiceClient();
+		};
+		//#endregion
 	};
-	//#endregion
-};

@@ -63,7 +63,7 @@ abstract class Factory
 		return $element;
 	}
 
-	private function insert(iNode $element)
+	protected function insert(iNode $element)
 	{
 		global $logger;
 		$logger->debug("Erzeuge Element");
@@ -92,7 +92,7 @@ abstract class Factory
 
 	abstract protected function getSQLStatementToInsert(iNode $element);
 
-	private function update($element)
+	protected function update($element)
 	{
 		global $logger;
 		$logger->debug("Aktualisiere Element (".$element->GetId().")");

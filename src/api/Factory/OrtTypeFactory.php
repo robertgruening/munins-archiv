@@ -26,8 +26,8 @@ class OrtTypeFactory extends Factory implements iListFactory
 
     #region methods
     /**
-     * Returns the name of the database table.
-     */
+    * Returns the name of the database table.
+    */
     public function getTableName()
     {
         // ToDo: Rename
@@ -38,25 +38,25 @@ class OrtTypeFactory extends Factory implements iListFactory
     protected function getSQLStatementToLoadById($id)
     {
         return "SELECT
-                    Id, Bezeichnung, (
-                        SELECT
-                            COUNT(*)
-                        FROM
-                            Ort
-                        WHERE
-                            Typ_Id = ".$id."
-                    ) AS CountOfOrten
-                FROM
-                    ".$this->getTableName()."
-                WHERE
-                    Id = ".$id.";";
+        Id, Bezeichnung, (
+            SELECT
+            COUNT(*)
+            FROM
+            Ort
+            WHERE
+            Typ_Id = ".$id."
+        ) AS CountOfOrten
+        FROM
+        ".$this->getTableName()."
+        WHERE
+        Id = ".$id.";";
     }
 
     public function loadAll()
     {
         return $this->getListFactory()->loadAll();
     }
-    
+
     protected function fill($dataset)
     {
         if ($dataset == null)
@@ -68,26 +68,26 @@ class OrtTypeFactory extends Factory implements iListFactory
         $ortType->setId(intval($dataset["Id"]));
         $ortType->setBezeichnung($dataset["Bezeichnung"]);
         $ortType->setCountOfOrten(intval($dataset["CountOfOrten"]));
-        
+
         return $ortType;
     }
     #endregion
-    
+
     #region save
     protected function getSQLStatementToInsert(iNode $element)
     {
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung)
-                VALUES ('".$element->getBezeichnung()."');";
+        VALUES ('".$element->getBezeichnung()."');";
     }
-    
+
     protected function getSQLStatementToUpdate(iNode $element)
     {
         return "UPDATE ".$this->getTableName()."
-                SET Bezeichnung = '".$element->getBezeichnung()."'
-                WHERE Id = ".$element->getId().";";
+        SET Bezeichnung = '".$element->getBezeichnung()."'
+        WHERE Id = ".$element->getId().";";
     }
     #endregion
-    
+
     #region convert
     public function convertToInstance($object)
     {
@@ -129,7 +129,6 @@ class OrtTypeFactory extends Factory implements iListFactory
             $logger->debug("Anzahl der Ort zu diesem Typ ist nicht gesetzt!");
         }
 
-        
         return $ortType;
     }
     #endregion

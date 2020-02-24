@@ -8,9 +8,9 @@ $(document).ready(function () {
 
 	InitStatusChanged();
 	InitDataChanged();
-    InitBreadcrumb();
-    InitButtonNew();
-    InitButtonSave();
+	InitBreadcrumb();
+	InitButtonNew();
+	InitButtonSave();
 	InitButtonDelete();
 	InitButtonUndo();
 	InitButtonToOverview();
@@ -68,7 +68,7 @@ function InitBreadcrumb()
 		$("#breadcrumb").Breadcrumb({
 			PageName: "AblageFormEdit"
 		});
-    }
+	}
 }
 
 function loadCreatedElement(element) {
@@ -78,34 +78,34 @@ function loadCreatedElement(element) {
 //#region messages
 function showMessageParentSet() {
 	$.toast({
-        heading: "Information",
-        text: "übergeordnete Ablage gesetzt",
-        icon: "info"
-    });
+		heading: "Information",
+		text: "übergeordnete Ablage gesetzt",
+		icon: "info"
+	});
 }
 
 function showMessageLoaded(element) {
-    $.toast({
-        heading: "Information",
-        text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
-        icon: "success"
-    });
+	$.toast({
+		heading: "Information",
+		text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
+		icon: "success"
+	});
 }
 
 function showMessageSaved(element) {
-    $.toast({
-        heading: "Information",
-        text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert",
-        icon: "success"
-    });
+	$.toast({
+		heading: "Information",
+		text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert",
+		icon: "success"
+	});
 }
 
 function showMessageDeleted(element) {
-    $.toast({
-        heading: "Information",
-        text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
-        icon: "success"
-    });
+	$.toast({
+		heading: "Information",
+		text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
+		icon: "success"
+	});
 }
 //#endregion
 
@@ -149,6 +149,7 @@ function fillSelectionAblageType(ablageTypes) {
 	console.info("setting values of field 'Ablage type'");
 	console.debug("values of 'Ablage type'", ablageTypes);
 	$("#selectType").empty();
+	$("#selectType").append("<option value='' >Bitte wählen</option>");
 
 	ablageTypes.forEach(ablageType => {
 		$("#selectType").append("<option value=" + ablageType.Id + ">" + ablageType.Bezeichnung + "</option>");
@@ -259,62 +260,62 @@ function InitGridFunde()
 	console.info("initializing grid of 'funde'");
 	_viewModelFormAblage.register("funde", new GuiClient(UpdateGridData, showErrorMessages));
 
-    jsGrid.locale("de");
-    jsGrid.fields.icon = IconField;
-    jsGrid.fields.linkToFundFormField = LinkToFundFormField;
+	jsGrid.locale("de");
+	jsGrid.fields.icon = IconField;
+	jsGrid.fields.linkToFundFormField = LinkToFundFormField;
 
-    $("#gridFunde").jsGrid({
-        width: "100%",
+	$("#gridFunde").jsGrid({
+		width: "100%",
 
-        inserting: false,
-        editing: false,
-        sorting: false,
-        paging: false,
-        autoload: false,
+		inserting: false,
+		editing: false,
+		sorting: false,
+		paging: false,
+		autoload: false,
 
-        fields: [
-					{
-						title: "",
-						name: "Id",
-						type: "linkToFundFormField",
-						width: 35
-					},
+		fields: [
+			{
+				title: "",
+				name: "Id",
+				type: "linkToFundFormField",
+				width: 35
+			},
 			{
 				title: "Icon",
 				name: "Icon",
 				type: "icon"
 			},
-            {
-                name: "Anzahl",
-                type: "text"
-            },
-            {
+			{
+				name: "Anzahl",
+				type: "text"
+			},
+			{
 				title: "Beschriftung",
-                name: "Bezeichnung",
-                type: "text"
-            },
-            {
-                title: "Fundattribute",
-                name: "FundAttributAnzeigeTexte",
-                type: "text"
-            }
-        ],
+				name: "Bezeichnung",
+				type: "text"
+			},
+			{
+				title: "Fundattribute",
+				name: "FundAttributAnzeigeTexte",
+				type: "text"
+			}
+		],
 
-        rowDoubleClick: function(args) {
+		rowDoubleClick: function(args) {
 			console.info("row double clicked");
 			console.debug("selected grid item", args.item);
 
 			window.open("/Munins Archiv/src/pages/Fund/Form.html?Id=" + args.item.Id, "_self");
-        }
-    });
+		}
+	});
 }
 
 function UpdateGridData(funde) {
 	console.info("setting value of 'funde'");
 	console.debug("'funde'", funde);
-    $("#gridFunde").empty();
+	$("#gridFunde").empty();
 
-    var entries = new Array();
+	var entries = new Array();
 
 	funde.forEach(fund => {
 		var copy = JSON.parse(JSON.stringify(fund));
@@ -419,7 +420,7 @@ function InitButtonUndo() {
 	_viewModelFormAblage.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
 	_viewModelFormAblage.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
 	$("#buttonUndo").click(function () {
-        console.log("button 'undo' clicked");
+		console.log("button 'undo' clicked");
 		_viewModelFormAblage.undoAllChanges();
 	});
 }
@@ -451,19 +452,19 @@ function EnableButtonToOverview(parent) {
 		parent === null ||
 		parent.Id === undefined) {
 
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Ablage/Explorer.html", "_self");
-	}
-	else {
-		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Ablage/Explorer.html?Id=" + parent.Id, "_self");
+			$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Ablage/Explorer.html", "_self");
+		}
+		else {
+			$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Ablage/Explorer.html?Id=" + parent.Id, "_self");
+		}
+
+		$("#buttonToOverview").removeClass("disabled");
+		$("#buttonToOverview").prop("disabled", false);
 	}
 
-	$("#buttonToOverview").removeClass("disabled");
-	$("#buttonToOverview").prop("disabled", false);
-}
-
-function DisableButtonToOverview() {
-	$("#buttonToOverview").addClass("disabled");
-	$("#buttonToOverview").prop("disabled", true);
-}
-//#endregion
-//#endregion
+	function DisableButtonToOverview() {
+		$("#buttonToOverview").addClass("disabled");
+		$("#buttonToOverview").prop("disabled", true);
+	}
+	//#endregion
+	//#endregion
