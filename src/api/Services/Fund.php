@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set("display_errors", 1); 
+ini_set("display_errors", 1);
 
 require_once("../UserStories/Fund/ConvertFund.php");
 require_once("../UserStories/Fund/LoadFund.php");
@@ -29,8 +29,14 @@ function Create()
     global $logger;
     $logger->info("Fund-anlegen gestartet");
 
-    parse_str(file_get_contents("php://input"), $fundObject);
-    
+    $fundObject = json_decode(file_get_contents('php://input'), true);
+
+    if (json_last_error() != JSON_ERROR_NONE)
+    {
+        $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
+        return;
+    }
+
     $convertFund = new ConvertFund();
     $convertFund->setMultidimensionalArray($fundObject);
 
@@ -44,13 +50,13 @@ function Create()
         echo json_encode($convertFund->getMessages());
         return;
     }
-    
+
     $saveFund = new SaveFund();
     $saveFund->setFund($fund);
-    
+
     if ($saveFund->run())
     {
-        echo json_encode($saveFund->getFund());    
+        echo json_encode($saveFund->getFund());
     }
     else
     {
@@ -66,13 +72,19 @@ function Update()
     global $logger;
     $logger->info("Fund-anhand-ID-aktualisieren gestartet");
 
-    parse_str(file_get_contents("php://input"),$fundObject);
+    $fundObject = json_decode(file_get_contents('php://input'), true);
+
+    if (json_last_error() != JSON_ERROR_NONE)
+    {
+        $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
+        return;
+    }
 
     if (isset($_GET["Id"]))
     {
-        $fundObject["Id"] = $_GET["Id"];    
+        $fundObject["Id"] = $_GET["Id"];
     }
-    
+
     $convertFund = new ConvertFund();
     $convertFund->setMultidimensionalArray($fundObject);
 
@@ -86,10 +98,10 @@ function Update()
         echo json_encode($convertFund->getMessages());
         return;
     }
-    
+
     $saveFund = new SaveFund();
     $saveFund->setFund($fund);
-    
+
     if ($saveFund->run())
     {
         echo json_encode($saveFund->getFund());
@@ -109,16 +121,16 @@ function Delete()
     $logger->info("Fund-anhand-ID-löschen gestartet");
 
     $loadFund = new LoadFund();
-    
+
     if (isset($_GET["Id"]))
     {
-        $loadFund->setId(intval($_GET["Id"])); 
+        $loadFund->setId(intval($_GET["Id"]));
     }
-    
+
     if ($loadFund->run())
     {
         $fund = $loadFund->getFund();
-        
+
         $deleteFund = new DeleteFund();
         $deleteFund->setFund($fund);
 
@@ -145,9 +157,9 @@ function Get()
 {
 	global $logger;
 	$logger->info("Fund-laden gestartet");
-	
+
 	if (isset($_GET["Id"]))
-	{		
+	{
 		$loadFund = new LoadFund();
 		$loadFund->setId(intval($_GET["Id"]));
 
@@ -159,7 +171,7 @@ function Get()
 		{
 			http_response_code(500);
 			echo json_encode($loadFund->getMessages());
-		}		
+		}
 	}
 	else
 	{
@@ -167,6 +179,6 @@ function Get()
 		echo json_encode(array("Es wurde keine ID übergeben!"));
 		$logger->warn("Es wurde keine ID übergeben!");
 	}
-	
+
 	$logger->info("Fund-laden beendet");
 }

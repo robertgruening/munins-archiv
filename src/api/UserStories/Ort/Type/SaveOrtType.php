@@ -24,14 +24,23 @@ class SaveOrtType extends UserStory
 
     protected function areParametersValid()
     {
+        global $logger;
         $ortType = $this->getOrtType();
 
-        if (strlen($ortType->getBezeichnung()) > 25)
+        if ($ortType->getBezeichnung() == null ||
+            trim($ortType->getBezeichnung()) == "")
         {
+            $logger->warn("Bezeichnung ist nicht gesetzt!");
+            $this->addMessage("Bezeichnung ist nicht gesetzt!");
+            return false;
+        }
+        else if (strlen($ortType->getBezeichnung()) > 25)
+        {
+            $logger->warn("Bezeichnung darf nicht länger als 25 Zeichen sein!");
             $this->addMessage("Bezeichnung darf nicht länger als 25 Zeichen sein!");
             return false;
         }
-        
+
         $ortTypeFactory = new OrtTypeFactory();
         $ortTypes = $ortTypeFactory->loadAll();
 
@@ -41,6 +50,7 @@ class SaveOrtType extends UserStory
                 ($ortType->getId() == -1 ||
                  $ortType->getId() != $ortTypes[$i]->getId()))
             {
+                $logger->warn("Es existiert bereits ein Ortstyp mit der Bezeichnung \"".$ortType->getBezeichnung()."\"!");
                 $this->addMessage("Es existiert bereits ein Ortstyp mit der Bezeichnung \"".$ortType->getBezeichnung()."\"!");
                 return false;
             }
@@ -57,7 +67,7 @@ class SaveOrtType extends UserStory
 
         $loadOrtType = new LoadOrtType();
         $loadOrtType->setId($savedOrtType->getId());
-        
+
         if (!$loadOrtType->run())
         {
             $this->addMessages($loadOrtType->getMessages());

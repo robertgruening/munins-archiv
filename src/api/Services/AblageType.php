@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set("display_errors", 1); 
+ini_set("display_errors", 1);
 
 require_once("../Factory/AblageTypeFactory.php");
 require_once("../UserStories/Ablage/Type/ConvertAblageType.php");
@@ -31,8 +31,14 @@ function Create()
     global $logger;
     $logger->info("Ablagetyp-anlegen gestartet");
 
-    parse_str(file_get_contents("php://input"), $ablageTypeObject);
-    
+    $ablageTypeObject = json_decode(file_get_contents('php://input'), true);
+
+    if (json_last_error() != JSON_ERROR_NONE)
+    {
+        $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
+        return;
+    }
+
     $convertAblageType = new ConvertAblageType();
     $convertAblageType->setMultidimensionalArray($ablageTypeObject);
 
@@ -46,13 +52,13 @@ function Create()
         echo json_encode($convertAblageType->getMessages());
         return;
     }
-    
+
     $saveAblageType = new SaveAblageType();
     $saveAblageType->setAblageType($ablageType);
-    
+
     if ($saveAblageType->run())
     {
-        echo json_encode($saveAblageType->getAblageType());    
+        echo json_encode($saveAblageType->getAblageType());
     }
     else
     {
@@ -68,13 +74,14 @@ function Update()
     global $logger;
     $logger->info("Ablagetyp-anhand-ID-aktualisieren gestartet");
 
-    parse_str(file_get_contents("php://input"), $ablageTypeObject);
+    $ablageTypeObject = json_decode(file_get_contents('php://input'), true);
 
-    if (isset($_GET["Id"]))
+    if (json_last_error() != JSON_ERROR_NONE)
     {
-        $ablageTypeObject["Id"] = $_GET["Id"];
+        $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
+        return;
     }
-    
+
     $convertAblageType = new ConvertAblageType();
     $convertAblageType->setMultidimensionalArray($ablageTypeObject);
 
@@ -88,13 +95,13 @@ function Update()
         echo json_encode($convertAblageType->getMessages());
         return;
     }
-    
+
     $saveAblageType = new SaveAblageType();
     $saveAblageType->setAblageType($ablageType);
-    
+
     if ($saveAblageType->run())
     {
-        echo json_encode($saveAblageType->getAblageType());    
+        echo json_encode($saveAblageType->getAblageType());
     }
     else
     {
@@ -111,16 +118,16 @@ function Delete()
     $logger->info("Ablagetyp-anhand-ID-löschen gestartet");
 
     $loadAblageType = new LoadAblageType();
-    
+
     if (isset($_GET["Id"]))
     {
-        $loadAblageType->setId(intval($_GET["Id"])); 
+        $loadAblageType->setId(intval($_GET["Id"]));
     }
-    
+
     if ($loadAblageType->run())
     {
         $ablageType = $loadAblageType->getAblageType();
-        
+
         $deleteAblageType = new DeleteAblageType();
         $deleteAblageType->setAblageType($ablageType);
 
@@ -152,7 +159,7 @@ function Get()
         $logger->info("Ablagetyp-anhand-ID-laden gestartet");
         $loadAblageType = new LoadAblageType();
         $loadAblageType->setId(intval($_GET["Id"]));
-        
+
         if ($loadAblageType->run())
         {
             echo json_encode($loadAblageType->getAblageType());
@@ -169,7 +176,7 @@ function Get()
     {
         $logger->info("Ablagetypen-laden gestartet");
         $loadAblageTypes = new LoadAblageTypes();
-        
+
         if ($loadAblageTypes->run())
         {
             echo json_encode($loadAblageTypes->getAblageTypes());
@@ -179,7 +186,7 @@ function Get()
             http_response_code(500);
             echo json_encode($loadAblageTypes->getMessages());
         }
-        
+
         $logger->info("Ablagetypen-laden beendet");
     }
 }

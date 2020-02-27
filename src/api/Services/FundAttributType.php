@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set("display_errors", 1); 
+ini_set("display_errors", 1);
 
 require_once("../Factory/FundAttributTypeFactory.php");
 require_once("../UserStories/FundAttribut/Type/ConvertFundAttributType.php");
@@ -31,8 +31,14 @@ function Create()
     global $logger;
     $logger->info("Fundattributtyp-anlegen gestartet");
 
-    parse_str(file_get_contents("php://input"), $fundAttributTypeObject);
-    
+    $fundAttributTypeObject = json_decode(file_get_contents('php://input'), true);
+
+    if (json_last_error() != JSON_ERROR_NONE)
+    {
+        $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
+        return;
+    }
+
     $convertFundAttributType = new ConvertFundAttributType();
     $convertFundAttributType->setMultidimensionalArray($fundAttributTypeObject);
 
@@ -46,13 +52,13 @@ function Create()
         echo json_encode($convertFundAttributType->getMessages());
         return;
     }
-    
+
     $saveFundAttributType = new SaveFundAttributType();
     $saveFundAttributType->setFundAttributType($fundAttributType);
-    
+
     if ($saveFundAttributType->run())
     {
-        echo json_encode($saveFundAttributType->getFundAttributType());    
+        echo json_encode($saveFundAttributType->getFundAttributType());
     }
     else
     {
@@ -68,13 +74,19 @@ function Update()
     global $logger;
     $logger->info("Fundattributtyp-anhand-ID-aktualisieren gestartet");
 
-    parse_str(file_get_contents("php://input"), $fundAttributTypeObject);
+    $fundAttributTypeObject = json_decode(file_get_contents('php://input'), true);
+
+    if (json_last_error() != JSON_ERROR_NONE)
+    {
+        $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
+        return;
+    }
 
     if (isset($_GET["Id"]))
     {
         $fundAttributTypeObject["Id"] = $_GET["Id"];
     }
-    
+
     $convertFundAttributType = new ConvertFundAttributType();
     $convertFundAttributType->setMultidimensionalArray($fundAttributTypeObject);
 
@@ -91,10 +103,10 @@ function Update()
 
     $saveFundAttributType = new SaveFundAttributType();
     $saveFundAttributType->setFundAttributType($fundAttributType);
-    
+
     if ($saveFundAttributType->run())
     {
-        echo json_encode($saveFundAttributType->getFundAttributType());    
+        echo json_encode($saveFundAttributType->getFundAttributType());
     }
     else
     {
@@ -111,16 +123,16 @@ function Delete()
     $logger->info("Fundattributtyp-anhand-ID-löschen gestartet");
 
     $loadFundAttributType = new LoadFundAttributType();
-    
+
     if (isset($_GET["Id"]))
     {
-        $loadFundAttributType->setId(intval($_GET["Id"])); 
+        $loadFundAttributType->setId(intval($_GET["Id"]));
     }
-    
+
     if ($loadFundAttributType->run())
     {
         $fundAttributType = $loadFundAttributType->getFundAttributType();
-        
+
         $deleteFundAttributType = new DeleteFundAttributType();
         $deleteFundAttributType->setFundAttributType($fundAttributType);
 
@@ -152,7 +164,7 @@ function Get()
         $logger->info("Fundattributtyp-anhand-ID-laden gestartet");
         $loadFundAttributType = new LoadFundAttributType();
         $loadFundAttributType->setId(intval($_GET["Id"]));
-        
+
         if ($loadFundAttributType->run())
         {
             echo json_encode($loadFundAttributType->getFundAttributType());
@@ -160,7 +172,7 @@ function Get()
         else
         {
             http_response_code(500);
-            echo json_encode($loadFundAttributType->getMessages()); 
+            echo json_encode($loadFundAttributType->getMessages());
         }
 
         $logger->info("Fundattributtyp-anhand-ID-laden beendet");
@@ -169,7 +181,7 @@ function Get()
     {
         $logger->info("Fundattributtypen-laden gestartet");
         $loadFundAttributTypes = new LoadFundAttributTypes();
-        
+
         if ($loadFundAttributTypes->run())
         {
             echo json_encode($loadFundAttributTypes->getFundAttributTypes());
@@ -179,7 +191,7 @@ function Get()
             http_response_code(500);
             echo json_encode($loadFundAttributTypes->getMessages());
         }
-        
+
         $logger->info("Fundattributtypen-laden beendet");
-    }    
+    }
 }

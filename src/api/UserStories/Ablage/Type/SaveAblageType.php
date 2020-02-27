@@ -36,6 +36,7 @@ class SaveAblageType extends UserStory
         }
         else if (strlen($ablageType->getBezeichnung()) > 30)
         {
+            $logger->warn("Bezeichnung darf nicht länger als 30 Zeichen sein!");
             $this->addMessage("Bezeichnung darf nicht länger als 30 Zeichen sein!");
             return false;
         }
@@ -66,7 +67,7 @@ class SaveAblageType extends UserStory
 
         $loadAblageType = new LoadAblageType();
         $loadAblageType->setId($savedAblageType->getId());
-        
+
         if (!$loadAblageType->run())
         {
             $this->addMessages($loadAblageType->getMessages());

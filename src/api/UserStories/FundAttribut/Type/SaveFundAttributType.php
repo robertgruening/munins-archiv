@@ -24,10 +24,19 @@ class SaveFundAttributType extends UserStory
 
     protected function areParametersValid()
     {
+        global $logger;
         $fundAttributType = $this->getFundAttributType();
 
-        if (strlen($fundAttributType->getBezeichnung()) > 25)
+        if ($fundAttributType->getBezeichnung() == null ||
+            trim($fundAttributType->getBezeichnung()) == "")
         {
+            $logger->warn("Bezeichnung ist nicht gesetzt!");
+            $this->addMessage("Bezeichnung ist nicht gesetzt!");
+            return false;
+        }
+        else if (strlen($fundAttributType->getBezeichnung()) > 25)
+        {
+            $logger->warn("Bezeichnung darf nicht länger als 25 Zeichen sein!");
             $this->addMessage("Bezeichnung darf nicht länger als 25 Zeichen sein!");
             return false;
         }
@@ -41,6 +50,7 @@ class SaveFundAttributType extends UserStory
                 ($fundAttributType->getId() == -1 ||
                  $fundAttributType->getId() != $fundAttributTypes[$i]->getId()))
             {
+                $logger->warn("Es existiert bereits ein Fundattributtyp mit der Bezeichnung \"".$fundAttributType->getBezeichnung()."\"!");
                 $this->addMessage("Es existiert bereits ein Fundattributtyp mit der Bezeichnung \"".$fundAttributType->getBezeichnung()."\"!");
                 return false;
             }
@@ -57,7 +67,7 @@ class SaveFundAttributType extends UserStory
 
         $loadFundAttributType = new LoadFundAttributType();
         $loadFundAttributType->setId($savedFundAttributType->getId());
-        
+
         if (!$loadFundAttributType->run())
         {
             $this->addMessages($loadFundAttributType->getMessages());

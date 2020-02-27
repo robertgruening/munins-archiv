@@ -29,7 +29,13 @@ function Create()
     global $logger;
     $logger->info("LfdNummer-anlegen gestartet");
 
-    parse_str(file_get_contents("php://input"), $lfdNummerObject);
+    $lfdNummerObject = json_decode(file_get_contents('php://input'), true);
+
+    if (json_last_error() != JSON_ERROR_NONE)
+    {
+        $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
+        return;
+    }
 
     $lfdNummer = new LfdNummer();
     $messages = new Array();
@@ -63,7 +69,13 @@ function Update()
     global $logger;
     $logger->info("LfdNummer-anhand-ID-aktualisieren gestartet");
 
-    parse_str(file_get_contents("php://input"), $lfdNummerObject);
+    $lfdNummerObject = json_decode(file_get_contents('php://input'), true);
+
+    if (json_last_error() != JSON_ERROR_NONE)
+    {
+        $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
+        return;
+    }
 
     $lfdNummer = new LfdNummer();
     $messages = new Array();
