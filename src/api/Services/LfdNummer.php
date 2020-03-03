@@ -2,9 +2,9 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
-require_once("../Factory/LfdNummerFactory.php");
 require_once("../UserStories/LfdNummer/LoadLfdNummer.php");
 require_once("../UserStories/LfdNummer/LoadLfdNummern.php");
+require_once("../UserStories/LfdNummer/SaveLfdNummer.php");
 require_once("../UserStories/LfdNummer/DeleteLfdNummer.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
@@ -38,7 +38,7 @@ function Create()
     }
 
     $lfdNummer = new LfdNummer();
-    $messages = new Array();
+    $messages = array();
 
     if (isset($lfdNummerObject["Bezeichnung"]))
     {
@@ -58,9 +58,19 @@ function Create()
         return;
     }
 
-    $lfdNummerFactory = new LfdNummerFactory();
-    $lfdNummer = $lfdNummerFactory->save($lfdNummer);
-    echo json_encode($lfdNummer);
+    $saveLfdNummer = new SaveLfdNummer();
+    $saveLfdNummer->setLfdNummer($lfdNummer);
+
+    if ($saveLfdNummer->run())
+    {
+        echo json_encode($saveLfdNummer->getLfdNummer());
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($saveLfdNummer->getMessages());
+    }
+
     $logger->info("LfdNummer-anlegen beendet");
 }
 
@@ -78,7 +88,7 @@ function Update()
     }
 
     $lfdNummer = new LfdNummer();
-    $messages = new Array();
+    $messages = array();
 
     if (isset($_GET["Id"]))
     {
@@ -108,9 +118,19 @@ function Update()
         return;
     }
 
-    $lfdNummerFactory = new LfdNummerFactory();
-    $lfdNummer = $lfdNummerFactory->save($lfdNummer);
-    echo json_encode($lfdNummer);
+    $saveLfdNummer = new SaveLfdNummer();
+    $saveLfdNummer->setLfdNummer($lfdNummer);
+
+    if ($saveLfdNummer->run())
+    {
+        echo json_encode($saveLfdNummer->getLfdNummer());
+    }
+    else
+    {
+        http_response_code(500);
+        echo json_encode($saveLfdNummer->getMessages());
+    }
+
     $logger->info("LfdNummer-anhand-ID-aktualisieren beendet");
 }
 
@@ -135,7 +155,7 @@ function Delete()
 
         if ($deleteLfdNummer->run())
         {
-            echo json_encode("LfD-Nummer (".$lfdNummer->getId().") ist gelöscht.");
+            echo json_encode($lfdNummer);
         }
         else
         {

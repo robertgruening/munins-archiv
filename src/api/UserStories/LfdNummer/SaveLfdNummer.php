@@ -26,6 +26,21 @@ class SaveLfdNummer extends UserStory
     {
         global $logger;
         $lfdNummer = $this->getLfdNummer();
+
+        if ($lfdNummer->getBezeichnung() == null ||
+            trim($lfdNummer->getBezeichnung()) == "")
+        {
+            $logger->warn("Bezeichnung ist nicht gesetzt!");
+            $this->addMessage("Bezeichnung ist nicht gesetzt!");
+            return false;
+        }
+        else if (strlen($lfdNummer->getBezeichnung()) > 30)
+        {
+            $logger->warn("Bezeichnung darf nicht länger als 30 Zeichen sein!");
+            $this->addMessage("Bezeichnung darf nicht länger als 30 Zeichen sein!");
+            return false;
+        }
+
         $lfdNummerFactory = new LfdNummerFactory();
         $lfdNummern = $lfdNummerFactory->loadAll();
 

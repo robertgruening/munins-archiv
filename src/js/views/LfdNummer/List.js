@@ -80,7 +80,7 @@ function InitGrid()
 {
     jsGrid.locale("de");
     jsGrid.fields.icon = IconField;
-    
+
     $("#gridContainer").jsGrid({
         width: "100%",
 
@@ -91,19 +91,19 @@ function InitGrid()
         autoload: false,
 
         fields: [
-			{ 
+			{
 				title: "Icon",
-				name: "Icon", 
+				name: "Icon",
 				type: "icon"
 			},
-            { 
-                name: "Bezeichnung", 
-                type: "text", 
+            {
+                name: "Bezeichnung",
+                type: "text",
                 validate: "required"
             },
-            { 
-                title: "Anzahl von Orten",
-                name: "CountOfOrten", 
+            {
+                title: "Anzahl von Kontexten",
+                name: "CountOfKontexte",
                 type: "number",
                 inserting: false,
                 editing: false
@@ -122,9 +122,9 @@ function InitGrid()
 
 function UpdateGridData(lfdNummern) {
     $("#grid").empty();
-    
+
     var entries = new Array();
-    
+
 	lfdNummern.forEach(lfdNummer => {
 		var copy = JSON.parse(JSON.stringify(lfdNummer));
 		copy.Icon = IconConfig.getCssClasses("LfD-Nummer");
@@ -143,7 +143,7 @@ function setIdToEditLink(id) {
 function showMessageAllLoaded(elements) {
     $.toast({
         heading: "Information",
-        text: elements.length + " Ortstypen geladen",
+        text: elements.length + " LfD-Nummern geladen",
         icon: "info"
     });
 }
@@ -151,7 +151,7 @@ function showMessageAllLoaded(elements) {
 function showMessageCreated(element) {
     $.toast({
         heading: "Information",
-        text: "Ortstyp \"" + element.Bezeichnung + "\" erzeugt",
+        text: "LfD-Nummer \"" + element.Bezeichnung + "\" erzeugt",
         icon: "success"
     });
 }
@@ -159,7 +159,7 @@ function showMessageCreated(element) {
 function showMessageSaved(element) {
     $.toast({
         heading: "Information",
-        text: "Ortstyp \"" + element.Bezeichnung + "\" gespeichert",
+        text: "LfD-Nummern \"" + element.Bezeichnung + "\" gespeichert",
         icon: "success"
     });
 }
@@ -167,7 +167,7 @@ function showMessageSaved(element) {
 function showMessageDeleted(element) {
     $.toast({
         heading: "Information",
-        text: "Ortstyp \"" + element.Bezeichnung + "\" gelöscht",
+        text: "LfD-Nummern \"" + element.Bezeichnung + "\" gelöscht",
         icon: "success"
     });
 }
@@ -176,7 +176,7 @@ function showMessageDeleted(element) {
 //#region new
 function InitButtonNew() {
 	EnableButtonNew();
-    $("#buttonNew").click(function () { 
+    $("#buttonNew").click(function () {
         console.log("button 'new' clicked");
         window.open("/Munins Archiv/src/pages/LfdNummer/Form.html", "_self");
     });
@@ -196,7 +196,7 @@ function DisableButtonNew() {
 //#region edit
 function InitButtonEdit() {
 	DisableButtonEdit();
-	$("#buttonEdit").click(function () { 
+	$("#buttonEdit").click(function () {
         console.log("button 'edit' clicked");
         window.open("/Munins Archiv/src/pages/LfdNummer/Form.html?Id=" + _viewModelListLfdNummer.getSelectedItem().Id, "_self");
     });
@@ -232,7 +232,7 @@ function DisableButtonDelete() {
 function ShowDialogDelete() {
 	$("#dialogDelete").empty();
 	$("#dialogDelete").append(
-		$("<p>").append("Möchten Sie den Orttyp \"" + _viewModelListLfdNummer.getSelectedItem().Bezeichnung + "\" löschen?")
+		$("<p>").append("Möchten Sie die LfD-Nummer \"" + _viewModelListLfdNummer.getSelectedItem().Bezeichnung + "\" löschen?")
 	);
 	$("#dialogDelete").dialog({
 		height: "auto",
@@ -257,7 +257,7 @@ function ShowDialogDelete() {
 //#region reload
 function InitButtonReload() {
 	EnableButtonReload();
-    $("#buttonReload").click(function () { 
+    $("#buttonReload").click(function () {
         console.log("button 'reload' clicked");
         _viewModelListLfdNummer.loadAll();
     });
