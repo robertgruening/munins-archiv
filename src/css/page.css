@@ -50,7 +50,8 @@ a {
 .linkButton {
     padding: 5px;
     color:#333333;
-    text-decoration: none
+    text-decoration: none;
+	border-radius: 5px;
 }
 
 .linkButton label {
@@ -64,7 +65,7 @@ a {
 
 .linkButton.riskyAction {
     padding: 5px;
-    color:#333333;
+    color: #b81900;
 }
 
 .linkButton.riskyAction:hover {

@@ -46,7 +46,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
     /**
      * Returns the SQL statement to load ID, Bezeichnung, Fundattribut type ID and count of Funde
      * by Fundattribut ID.
-     * 
+     *
      * @param $id ID of the Fundattribut to load.
      */
     protected function getSQLStatementToLoadById($id)
@@ -55,12 +55,12 @@ class FundAttributFactory extends Factory implements iTreeFactory
                 FROM FundAttribut RIGHT JOIN Fund_FundAttribut ON FundAttribut.Id = Fund_FundAttribut.FundAttribut_Id
                 WHERE Id = ".$id.";";
     }
-    
+
     /**
      * Creates an Fundattribut instance and fills
-     * the ID, Bezeichnung, Fundattribut type and 
+     * the ID, Bezeichnung, Fundattribut type and
      * count of Funde by the given dataset.
-     * 
+     *
      * @param $dataSet Dataset from Fundattribut table.
      */
     protected function fill($dataSet)
@@ -76,7 +76,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
         $fundAttribut->setPath($this->getPath($fundAttribut));
         $fundAttribut->setType($this->getFundAttributTypeFactory()->loadById(intval($dataSet["Typ_Id"])));
         $fundAttribut->setCountOfFunde(intval($dataSet["CountOfFunde"]));
-        
+
         return $fundAttribut;
     }
 
@@ -84,12 +84,12 @@ class FundAttributFactory extends Factory implements iTreeFactory
     {
         $fundAttribute = array();
         $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-		
+
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByFund($fund));	
-			
+			$ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByFund($fund));
+
 			if ($mysqli->errno)
 			{
 				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
@@ -102,12 +102,12 @@ class FundAttributFactory extends Factory implements iTreeFactory
 				}
 			}
 		}
-		
+
 		$mysqli->close();
-		
+
 		return $fundAttribute;
     }
-    
+
     protected function getSQLStatementToLoadIdsByFund($fund)
     {
         return "SELECT FundAttribut_Id AS Id
@@ -119,29 +119,29 @@ class FundAttributFactory extends Factory implements iTreeFactory
     #region save
     /**
      * Returns the SQL statement to insert Bezeichnung and Fundattribut type ID.
-     * 
+     *
      * @param iNode $element Fundattribut to be inserted.
      */
     protected function getSQLStatementToInsert(iNode $element)
-    {        
+    {
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
-                VALUES ('".$element->getBezeichnung()."', ".$element->getType()->getId().");";
+                VALUES ('".addslashes($element->getBezeichnung())."', ".$element->getType()->getId().");";
     }
-    
+
     /**
      * Returns the SQL statement to update Bezeichnung and Fundattribut type ID.
-     * 
+     *
      * @param iNode $element Fundattribut to be updated.
      */
     protected function getSQLStatementToUpdate(iNode $element)
     {
         return "UPDATE ".$this->getTableName()."
-                SET Bezeichnung = '".$element->getBezeichnung()."',
+                SET Bezeichnung = '".addslashes($element->getBezeichnung())."',
                     Typ_Id = ".$element->getType()->getId()."
                 WHERE Id = ".$element->getId().";";
     }
     #endregion
-    
+
     #region convert
     public function convertToInstance($object)
     {
@@ -200,7 +200,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
         {
             $fundAttribut->setCountOfFunde(intval($object["CountOfFunde"]));
         }
-        
+
         return $fundAttribut;
     }
     #endregion
@@ -216,7 +216,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
     {
         return $this->getTreeFactory()->linkParent($fundAttribut, $parent);
     }
-    
+
     public function unlinkParent(iTreeNode $fundAttribut)
     {
         return $this->getTreeFactory()->unlinkParent($fundAttribut);
@@ -269,7 +269,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
     {
         return $this->getTreeFactory()->getPath($fundAttribut);
     }
-    
+
     public function loadRoots()
     {
         return $this->getTreeFactory()->loadRoots();

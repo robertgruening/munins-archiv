@@ -91,7 +91,7 @@ class FundFactory extends Factory
   protected function getSQLStatementToInsert(iNode $element)
   {
     return "INSERT INTO ".$this->getTableName()." (Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse, Kontext_Id, Ablage_Id)
-    VALUES (".$element->getAnzahl().", '".$element->getBezeichnung()."',
+    VALUES (".$element->getAnzahl().", '".addslashes($element->getBezeichnung())."',
     ".($element->getDimension1() === null ? "NULL" : $element->getDimension1()).",
     ".($element->getDimension2() === null ? "NULL" : $element->getDimension2()).",
     ".($element->getDimension3() === null ? "NULL" : $element->getDimension3()).",
@@ -104,7 +104,7 @@ class FundFactory extends Factory
   {
     return "UPDATE ".$this->getTableName()."
     SET Anzahl = ".$element->getAnzahl().",
-    Bezeichnung = '".$element->getBezeichnung()."',
+    Bezeichnung = '".addslashes($element->getBezeichnung())."',
     Dimension1 = ".($element->getDimension1() === null ? "NULL" : $element->getDimension1()).",
     Dimension2 = ".($element->getDimension2() === null ? "NULL" : $element->getDimension2()).",
     Dimension3 = ".($element->getDimension3() === null ? "NULL" : $element->getDimension3()).",

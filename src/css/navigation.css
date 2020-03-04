@@ -27,6 +27,10 @@
 	text-decoration: none;
 }
 
+.topNavigation li a label {
+    padding-left: 5px;
+}
+
 .topNavigation li a:hover:not(.active) {
 }
 
@@ -35,6 +39,10 @@
 	z-index: 999 !important;
 	width: 100%;
 	display: none;
+}
+
+.topNavigationSubMenu h3 label {
+    padding-left: 5px;
 }
 
 .topNavigationSubMenu a {
@@ -53,7 +61,7 @@
 }
 
 nav div {
-	float: left;		
+	float: left;
 }
 
 
@@ -83,7 +91,7 @@ nav div {
 }
 
 .topNavigationSubMenu h3 {
-	color: #1c94c4;	
+	color: #1c94c4;
 }
 
 .topNavigationSubMenu a {
@@ -119,5 +127,5 @@ nav div {
 .topNavigationSubMenu .close {
 }
 
-nav div {		
+nav div {
 }

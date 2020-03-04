@@ -6,7 +6,7 @@ include_once(__DIR__."/KontextFactory.php");
 include_once(__DIR__."/../Model/LfdNummer.php");
 
 class LfdNummerFactory extends Factory implements iListFactory
-{    
+{
     #region variables
     private $_listFactory = null;
     private $_kontextFactory = null;
@@ -17,7 +17,7 @@ class LfdNummerFactory extends Factory implements iListFactory
     {
         return $this->_listFactory;
     }
-    
+
     protected function getKontextFactory()
     {
         if ($this->_kontextFactory == null)
@@ -57,7 +57,7 @@ class LfdNummerFactory extends Factory implements iListFactory
     {
         return $this->getListFactory()->loadAll();
     }
-    
+
     protected function fill($dataSet)
     {
         if ($dataSet == null)
@@ -69,26 +69,26 @@ class LfdNummerFactory extends Factory implements iListFactory
         $lfdNummer->setId(intval($dataSet["Id"]));
         $lfdNummer->setBezeichnung($dataSet["Bezeichnung"]);
         $lfdNummer->setCountOfKontexte(intval($dataSet["CountOfKontexte"]));
-        
+
         return $lfdNummer;
     }
     #endregion
-    
+
     #region save
     protected function getSQLStatementToInsert(iNode $element)
     {
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung)
-                VALUES ('".$element->getBezeichnung()."');";
+                VALUES ('".addslashes($element->getBezeichnung())."');";
     }
 
     protected function getSQLStatementToUpdate(iNode $element)
     {
         return "UPDATE ".$this->getTableName()."
-                SET Bezeichnung = '".$element->getBezeichnung()."'
+                SET Bezeichnung = '".addslashes($element->getBezeichnung())."'
                 WHERE Id = ".$element->getId().";";
     }
     #endregion
-    
+
     #region convert
     public function convertToInstance($object)
     {
@@ -125,7 +125,7 @@ class LfdNummerFactory extends Factory implements iListFactory
         {
             $lfdNummer->setCountOfKontexte(intval($object["CountOfKontexte"]));
         }
-        
+
         return $lfdNummer;
     }
     #endregion
@@ -135,12 +135,12 @@ class LfdNummerFactory extends Factory implements iListFactory
     {
         $elemente = array();
         $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-		
+
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByKontext($kontext));	
-			
+			$ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByKontext($kontext));
+
 			if (!$mysqli->errno)
 			{
 				while ($datensatz = $ergebnis->fetch_assoc())
@@ -149,12 +149,12 @@ class LfdNummerFactory extends Factory implements iListFactory
 				}
 			}
 		}
-		
+
 		$mysqli->close();
-		
+
 		return $elemente;
     }
-    
+
     protected function getSQLStatementToLoadIdsByKontext($kontext)
     {
         return "SELECT LfdNummer_Id AS Id

@@ -263,13 +263,13 @@ class KontextFactory extends Factory implements iTreeFactory
     protected function getSQLStatementToInsert(iNode $kontext)
     {
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
-        VALUES ('".$kontext->getBezeichnung()."', ".$kontext->getType()->getId().");";
+        VALUES ('".addslashes($kontext->getBezeichnung())."', ".$kontext->getType()->getId().");";
     }
 
     protected function getSQLStatementToInsertBegehung(iNode $kontext)
     {
         return "INSERT INTO Begehung (Id, Datum, Kommentar)
-        VALUES (".$kontext->getId().", '".$kontext->getDatum()."', '".$kontext->getKommentar()."');";
+        VALUES (".$kontext->getId().", '".addslashes($kontext->getDatum())."', '".addslashes($kontext->getKommentar())."');";
     }
 
     /**
@@ -338,23 +338,18 @@ class KontextFactory extends Factory implements iTreeFactory
     protected function getSQLStatementToUpdate(iNode $kontext)
     {
         return "UPDATE ".$this->getTableName()."
-        SET Bezeichnung = '".$kontext->getBezeichnung()."',
-        Typ_Id = ".$kontext->getType()->getId()."
-        WHERE Id = ".$kontext->getId().";";
+            SET Bezeichnung = '".addslashes($kontext->getBezeichnung())."',
+            Typ_Id = ".$kontext->getType()->getId()."
+            WHERE Id = ".$kontext->getId().";";
     }
 
     protected function getSQLStatementToUpdateBegehung(iNode $kontext)
     {
-        global $logger;
-        $logger->debug("UPDATE Begehung
-            SET Datum = '".$kontext->getDatum()."',
-            Kommentar = '".$kontext->getKommentar()."'
-            WHERE Id = ".$kontext->getId().";");
-            return "UPDATE Begehung
-            SET Datum = '".$kontext->getDatum()."',
-            Kommentar = '".$kontext->getKommentar()."'
+        return "UPDATE Begehung
+            SET Datum = '".addslashes($kontext->getDatum())."',
+            Kommentar = '".addslashes($kontext->getKommentar())."'
             WHERE Id = ".$kontext->getId().";";
-        }
+    }
         #endregion
 
         #region delete

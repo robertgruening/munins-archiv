@@ -141,7 +141,7 @@ class AblageFactory extends Factory implements iTreeFactory
     protected function getSQLStatementToInsert(iNode $ablage)
     {
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
-        VALUES ('".$ablage->getBezeichnung()."', ".$ablage->getType()->getId().");";
+        VALUES ('".addslashes($ablage->getBezeichnung())."', ".$ablage->getType()->getId().");";
     }
 
     /**
@@ -152,7 +152,7 @@ class AblageFactory extends Factory implements iTreeFactory
     protected function getSQLStatementToUpdate(iNode $ablage)
     {
         return "UPDATE ".$this->getTableName()."
-        SET Bezeichnung = '".$ablage->getBezeichnung()."',
+        SET Bezeichnung = '".addslashes($ablage->getBezeichnung())."',
         Typ_Id = ".$ablage->getType()->getId()."
         WHERE Id = ".$ablage->getId().";";
     }

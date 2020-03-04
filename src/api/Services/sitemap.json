@@ -1,12 +1,12 @@
 [
 	{
 		"Title" : "Tagebuch",
-		"Icon" : "fas-book",
+		"Icon" : "fa-book",
 		"Children" :
 		[
 			{
 				"Title" : "Fundstellen",
-				"Icon" : "fas-flag",
+				"Icon" : "fa-flag",
 				"Children" :
 				[
 					{
@@ -36,7 +36,7 @@
 			},
 			{
 				"Title" : "Orte",
-				"Icon" : "fas-map-marker",
+				"Icon" : "fa-map-marker",
 				"Children" :
 				[
 					{
@@ -75,7 +75,7 @@
 			},
 			{
 				"Title" : "Kontexte",
-				"Icon" : "",
+				"Icon" : "fa-flag",
 				"Children" :
 				[
 					{
@@ -111,7 +111,7 @@
 			},
 			{
 				"Title" : "LfD-Nummern",
-				"Icon" : "",
+				"Icon" : "fa-hashtag",
 				"Children" :
 				[
 					{
@@ -136,12 +136,12 @@
 	},
 	{
 		"Title" : "Archiv",
-		"Icon" : "fas-archive",
+		"Icon" : "fa-archive",
 		"Children" :
 		[
 			{
 				"Title" : "Ablagen",
-				"Icon" : "fas-box",
+				"Icon" : "fa-box",
 				"Children" :
 				[
 					{
@@ -165,7 +165,7 @@
 			},
 			{
 				"Title" : "Funde",
-				"Icon" : "fas-puzzle-piece",
+				"Icon" : "fa-puzzle-piece",
 				"Children" :
 				[
 					{
@@ -189,7 +189,7 @@
 			},
 			{
 				"Title" : "Fundattribute",
-				"Icon" : "fas-tag",
+				"Icon" : "fa-tag",
 				"Children" :
 				[
 					{
@@ -215,12 +215,12 @@
 	},
 	{
 		"Title" : "Administration",
-		"Icon" : "fas-cogs",
+		"Icon" : "fa-cogs",
 		"Children" :
 		[
 			{
 				"Title" : "Organisation",
-				"Icon" : "fas-users",
+				"Icon" : "fa-users",
 				"Children" :
 				[
 					{
@@ -237,7 +237,7 @@
 			},
 			{
 				"Title" : "Typen",
-				"Icon" : "fas-cubes",
+				"Icon" : "fa-cubes",
 				"Children" :
 				[
 					{
@@ -295,24 +295,24 @@
 			},
 			{
 				"Title" : "Anwendung",
-				"Icon" : "fas-cogs",
+				"Icon" : "fa-cogs",
 				"Children" :
 				[
 					{
 						"Title" : "Sicherung erstellen",
-						"Icon" : "fas-hdd",
+						"Icon" : "fa-hdd",
 						"Action" : "Backup();",
 						"Enabled" : false
 					},
 					{
 						"Title" : "Server herunterfahren",
-						"Icon" : "fas-power-off",
+						"Icon" : "fa-power-off",
 						"Action" : "Shutdown();",
 						"Enabled" : false
 					},
 					{
 						"Title" : "Log einsehen",
-						"Icon" : "fas-file-alt",
+						"Icon" : "fa-file-alt",
 						"URL" : "/Munins Archiv/src/api/Logs/Log.html",
 						"Enabled" : true
 					},
@@ -326,7 +326,7 @@
 	},
 	{
 		"Title" : "Hilfe",
-		"Icon" : "fas-question-circle",
+		"Icon" : "fa-info-circle",
 		"Action" : "Help();",
 		"Enabled" : false
 	}

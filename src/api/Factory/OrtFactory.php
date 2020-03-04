@@ -25,7 +25,7 @@ class OrtFactory extends Factory implements iTreeFactory
     {
         return $this->_ortsTypeFactory;
     }
-    
+
     protected function getKontextFactory()
     {
         if ($this->_kontextFactory == null)
@@ -61,7 +61,7 @@ class OrtFactory extends Factory implements iTreeFactory
                 FROM ".$this->getTableName()." RIGHT JOIN Kontext_Ort ON ".$this->getTableName().".Id = Kontext_Ort.Ort_Id
                 WHERE Id = ".$id.";";
     }
-    
+
     protected function fill($dataSet)
     {
         if ($dataSet == null)
@@ -78,7 +78,7 @@ class OrtFactory extends Factory implements iTreeFactory
         $ort->setPath($this->getPath($ort));
         $ort->setType($this->getOrtsTypeFactory()->loadById(intval($dataSet["Typ_Id"])));
         $ort->setCountOfKontexte(intval($dataSet["CountOfKontexte"]));
-        
+
         return $ort;
     }
     #endregion
@@ -87,18 +87,18 @@ class OrtFactory extends Factory implements iTreeFactory
     protected function getSQLStatementToInsert(iNode $ort)
     {
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
-                VALUES ('".$ort->getBezeichnung()."', ".$ort->getType()->getId().");";
+                VALUES ('".addslashes($ort->getBezeichnung())."', ".$ort->getType()->getId().");";
     }
 
     protected function getSQLStatementToUpdate(iNode $ort)
     {
         return "UPDATE ".$this->getTableName()."
-                SET Bezeichnung = '".$ort->getBezeichnung()."',
+                SET Bezeichnung = '".addslashes($ort->getBezeichnung())."',
                     Typ_Id = ".$ort->getType()->getId()."
                 WHERE Id = ".$ort->getId().";";
     }
     #endregion
-    
+
     #region convert
     public function convertToInstance($object)
     {
@@ -157,7 +157,7 @@ class OrtFactory extends Factory implements iTreeFactory
         {
             $ort->setCountOfKontexte(intval($object["CountOfKontexte"]));
         }
-        
+
         return $ort;
     }
     #endregion
@@ -173,7 +173,7 @@ class OrtFactory extends Factory implements iTreeFactory
     {
         return $this->getTreeFactory()->linkParent($ort, $parent);
     }
-    
+
     public function unlinkParent(iTreeNode $ort)
     {
         return $this->getTreeFactory()->unlinkParent($ort);
@@ -226,7 +226,7 @@ class OrtFactory extends Factory implements iTreeFactory
     {
         return $this->getTreeFactory()->getPath($ort);
     }
-    
+
     public function loadRoots()
     {
         return $this->getTreeFactory()->loadRoots();
@@ -237,18 +237,18 @@ class OrtFactory extends Factory implements iTreeFactory
         return TreeFactory::isNodeInCircleCondition($node);
 	}
     #endregion
-        
+
     #region Kontext
     public function loadByKontext($kontext)
     {
         $elemente = array();
         $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-		
+
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByKontext($kontext));	
-			
+			$ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByKontext($kontext));
+
 			if (!$mysqli->errno)
 			{
 				while ($datensatz = $ergebnis->fetch_assoc())
@@ -257,12 +257,12 @@ class OrtFactory extends Factory implements iTreeFactory
 				}
 			}
 		}
-		
+
 		$mysqli->close();
-		
+
 		return $elemente;
     }
-    
+
     protected function getSQLStatementToLoadIdsByKontext($kontext)
     {
         return "SELECT Ort_Id AS Id

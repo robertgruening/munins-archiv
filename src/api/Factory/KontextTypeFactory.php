@@ -94,13 +94,13 @@ class KontextTypeFactory extends Factory implements iListFactory
     protected function getSQLStatementToInsert(iNode $element)
     {
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung)
-        VALUES ('".$element->getBezeichnung()."');";
+        VALUES ('".addslashes($element->getBezeichnung())."');";
     }
 
     protected function getSQLStatementToUpdate(iNode $element)
     {
         return "UPDATE ".$this->getTableName()."
-        SET Bezeichnung = '".$element->getBezeichnung()."'
+        SET Bezeichnung = '".addslashes($element->getBezeichnung())."'
         WHERE Id = ".$element->getId().";";
     }
     #endregion

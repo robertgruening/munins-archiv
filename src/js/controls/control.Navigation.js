@@ -11,7 +11,7 @@
 	function LoadNavigation(options, htmlElement)
 	{
 		$(htmlElement).empty();
-		
+
 		$.ajax(
 		{
 			type:"GET",
@@ -29,12 +29,13 @@
 			{
 				console.log("FEHLER: \"../../api/Services/Sitemap/\" konnte nicht geladen werden!");
 			}
-		});	
+		});
 	}
 
 	function LoadNavigationItems(options, htmlElement, items)
-	{	
-		var html = "<ul class='topNavigation'>";
+	{
+		var ul = $("<ul></ul>");
+		ul.addClass("topNavigation");
 
 		for (var i = 0; i < items.length; i++)
 		{
@@ -43,24 +44,41 @@
 		    {
 		        continue;
 		    }
-    		    
-			html += "<li>";
+
+			var li = $("<li></li>");
+			var a = $("<a></a>");
 
 			if (items[i].Action != undefined)
 			{
-				html += "<a href=\"javascript:" + items[i].Action + "\">" + items[i].Title + "</a>";
+				a.attr("href", "javascript:" + items[i].Action);
+			}
+			else if (items[i].URL != undefined)
+			{
+				a.attr("href", items[i].URL);
 			}
 			else
 			{
-				html += "<a href=\"javascript:ShowSubMenu('" + items[i].Title + "');\">" + items[i].Title + "</a>";
+				a.attr("href", "javascript:ShowSubMenu('" + items[i].Title + "');");
 			}
 
-			html += "</li>";
+			if (items[i].Icon != undefined)
+			{
+				var icon = $("<i></i>");
+				icon.addClass("fas");
+				icon.addClass(items[i].Icon);
+
+				a.append(icon);
+			}
+
+			var label = $("<label></label>");
+			label.text(items[i].Title);
+
+			a.append(label);
+			li.append(a);
+			ul.append(li);
 		}
 
-		html += "</ul>";
-
-		return html;
+		return ul;
 	}
 
 	function LoadPanels(options, htmlElement, panels)
@@ -84,7 +102,7 @@
 		}
 
 		var html = "<nav id=" + panel.Title + " class=topNavigationSubMenu>";
-		html += "<a href=\"javascript:HideSubMenu('" + panel.Title + "');\" class=close>X</a>";
+		html += "<a href=\"javascript:HideSubMenu('" + panel.Title + "');\" class=close><i class=\"fas fa-window-close\"></i></a>";
 		html += LoadTopics(options, htmlElement, panel.Children);
 		html += "</nav>";
 
@@ -108,7 +126,7 @@
 		    {
 		        continue;
 		    }
-		    
+
 			html += LoadTopic(options, htmlElement, topics[i]);
 		}
 
@@ -124,7 +142,15 @@
 		}
 
 		var html = "<div>";
-		html += "<h3>" + topic.Title + "</h3>";
+
+		html += "<h3>";
+
+		if (topic.Icon != undefined)
+		{
+			html += "<i class=\"fas " + topic.Icon + "\"></i>";
+		}
+
+		html += "<label>" + topic.Title + "</label></h3>";
 
 		for (var i = 0; i < topic.Children.length; i++)
 		{
@@ -133,9 +159,9 @@
 		    {
 		        continue;
 		    }
-		    
+
 			html += "<a ";
-	
+
 			if (topic.Children[i].Enabled == undefined ||
 				topic.Children[i].Enabled == true)
 			{
@@ -160,21 +186,21 @@
 
 		return html;
 	}
-	
+
 })(jQuery);
 
-function ShowSubMenu(id) 
+function ShowSubMenu(id)
 {
 	var isHidden = $("#"+id).css("display") == "none";
 	$("nav").hide();
-	
-	if (isHidden)	
+
+	if (isHidden)
 	{
 		$("#"+id).show();
 	}
 }
 
-function HideSubMenu(id) 
+function HideSubMenu(id)
 {
 	$("#"+id).hide();
 }

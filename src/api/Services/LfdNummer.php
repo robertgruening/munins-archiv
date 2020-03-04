@@ -103,6 +103,7 @@ function Update()
     if (isset($lfdNummerObject["Bezeichnung"]))
     {
         $lfdNummer->setBezeichnung($lfdNummerObject["Bezeichnung"]);
+        $logger->debug("Bezeichnung: ".$lfdNummer->getBezeichnung());
     }
     else
     {
@@ -124,6 +125,7 @@ function Update()
     if ($saveLfdNummer->run())
     {
         echo json_encode($saveLfdNummer->getLfdNummer());
+        $logger->debug("Bezeichnung: ".$saveLfdNummer->getLfdNummer()->getBezeichnung());
     }
     else
     {
@@ -185,6 +187,7 @@ function Get()
         if ($loadLfdNummer->run())
         {
             echo json_encode($loadLfdNummer->getLfdNummer());
+            $logger->debug("Bezeichnung: ".$loadLfdNummer->getLfdNummer()->getBezeichnung());
         }
         else
         {
