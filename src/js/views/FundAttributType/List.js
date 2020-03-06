@@ -16,10 +16,14 @@ $(document).ready(function () {
     _viewModelListFundAttributType.loadAll();
 });
 
+function getPageName() {
+	return "FundAttributTypeList";
+}
+
 function InitBreadcrumb()
 {
     $("#breadcrumb").Breadcrumb({
-        PageName : "FundAttributTypeList"
+        PageName : getPageName()
 	});
 }
 
@@ -80,7 +84,7 @@ function InitGrid()
 {
     jsGrid.locale("de");
     jsGrid.fields.icon = IconField;
-    
+
     $("#gridContainer").jsGrid({
         width: "100%",
 
@@ -91,19 +95,19 @@ function InitGrid()
         autoload: false,
 
         fields: [
-			{ 
+			{
 				title: "Icon",
-				name: "Icon", 
+				name: "Icon",
 				type: "icon"
 			},
-            { 
-                name: "Bezeichnung", 
-                type: "text", 
+            {
+                name: "Bezeichnung",
+                type: "text",
                 validate: "required"
             },
-            { 
+            {
                 title: "Anzahl von Fundattributen",
-                name: "CountOfFundAttributen", 
+                name: "CountOfFundAttributen",
                 type: "number",
                 inserting: false,
                 editing: false
@@ -122,9 +126,9 @@ function InitGrid()
 
 function UpdateGridData(fundAttributTypes) {
     $("#grid").empty();
-    
+
     var entries = new Array();
-    
+
 	fundAttributTypes.forEach(fundAttributType => {
 		var copy = JSON.parse(JSON.stringify(fundAttributType));
 		copy.Icon = IconConfig.getCssClasses("FundAttribut");
@@ -176,7 +180,7 @@ function showMessageDeleted(element) {
 //#region new
 function InitButtonNew() {
 	EnableButtonNew();
-    $("#buttonNew").click(function () { 
+    $("#buttonNew").click(function () {
         console.log("button 'new' clicked");
         window.open("/Munins Archiv/src/pages/FundAttributType/Form.html", "_self");
     });
@@ -196,7 +200,7 @@ function DisableButtonNew() {
 //#region edit
 function InitButtonEdit() {
 	DisableButtonEdit();
-	$("#buttonEdit").click(function () { 
+	$("#buttonEdit").click(function () {
         console.log("button 'edit' clicked");
         window.open("/Munins Archiv/src/pages/FundAttributType/Form.html?Id=" + _viewModelListFundAttributType.getSelectedItem().Id, "_self");
     });
@@ -257,7 +261,7 @@ function ShowDialogDelete() {
 //#region reload
 function InitButtonReload() {
 	EnableButtonReload();
-    $("#buttonReload").click(function () { 
+    $("#buttonReload").click(function () {
         console.log("button 'reload' clicked");
         _viewModelListFundAttributType.loadAll();
     });

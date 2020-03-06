@@ -16,10 +16,14 @@ $(document).ready(function () {
     _viewModelListOrtType.loadAll();
 });
 
+function getPageName() {
+	return "OrtTypeList";
+}
+
 function InitBreadcrumb()
 {
     $("#breadcrumb").Breadcrumb({
-        PageName : "OrtTypeList"
+        PageName : getPageName()
 	});
 }
 
@@ -80,7 +84,7 @@ function InitGrid()
 {
     jsGrid.locale("de");
     jsGrid.fields.icon = IconField;
-    
+
     $("#gridContainer").jsGrid({
         width: "100%",
 
@@ -91,19 +95,19 @@ function InitGrid()
         autoload: false,
 
         fields: [
-			{ 
+			{
 				title: "Icon",
-				name: "Icon", 
+				name: "Icon",
 				type: "icon"
 			},
-            { 
-                name: "Bezeichnung", 
-                type: "text", 
+            {
+                name: "Bezeichnung",
+                type: "text",
                 validate: "required"
             },
-            { 
+            {
                 title: "Anzahl von Orten",
-                name: "CountOfOrten", 
+                name: "CountOfOrten",
                 type: "number",
                 inserting: false,
                 editing: false
@@ -122,9 +126,9 @@ function InitGrid()
 
 function UpdateGridData(ortTypes) {
     $("#grid").empty();
-    
+
     var entries = new Array();
-    
+
 	ortTypes.forEach(ortType => {
 		var copy = JSON.parse(JSON.stringify(ortType));
 		copy.Icon = IconConfig.getCssClasses("Ort");
@@ -176,7 +180,7 @@ function showMessageDeleted(element) {
 //#region new
 function InitButtonNew() {
 	EnableButtonNew();
-    $("#buttonNew").click(function () { 
+    $("#buttonNew").click(function () {
         console.log("button 'new' clicked");
         window.open("/Munins Archiv/src/pages/OrtType/Form.html", "_self");
     });
@@ -196,7 +200,7 @@ function DisableButtonNew() {
 //#region edit
 function InitButtonEdit() {
 	DisableButtonEdit();
-	$("#buttonEdit").click(function () { 
+	$("#buttonEdit").click(function () {
         console.log("button 'edit' clicked");
         window.open("/Munins Archiv/src/pages/OrtType/Form.html?Id=" + _viewModelListOrtType.getSelectedItem().Id, "_self");
     });
@@ -257,7 +261,7 @@ function ShowDialogDelete() {
 //#region reload
 function InitButtonReload() {
 	EnableButtonReload();
-    $("#buttonReload").click(function () { 
+    $("#buttonReload").click(function () {
         console.log("button 'reload' clicked");
         _viewModelListOrtType.loadAll();
     });

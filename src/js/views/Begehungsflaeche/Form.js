@@ -26,6 +26,15 @@ $(document).ready(function () {
 	InitFieldOrte();
 });
 
+function getPageName() {
+	if (getFormMode() == "create") {
+		return "BegehungsflaecheFormNew";
+	}
+	else if (getFormMode() == "edit") {
+		return "BegehungsflaecheFormEdit";
+	}
+}
+
 function loadForm() {
 	console.info("loading form");
 
@@ -61,16 +70,9 @@ function InitDataChanged() {
 
 function InitBreadcrumb()
 {
-	if (getFormMode() == "create") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "BegehungsflaecheFormNew"
-		});
-	}
-	else if (getFormMode() == "edit") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "BegehungsflaecheFormEdit"
-		});
-	}
+    $("#breadcrumb").Breadcrumb({
+        PageName : getPageName()
+	});
 }
 
 function loadCreatedElement(element) {

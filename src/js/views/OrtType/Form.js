@@ -26,6 +26,15 @@ $(document).ready(function () {
 	}
 });
 
+function getPageName() {
+	if (getFormMode() == "create") {
+		return "OrtTypeFormNew";
+	}
+	else if (getFormMode() == "edit") {
+		return "OrtTypeFormEdit";
+    }
+}
+
 function InitStatusChanged() {
 	_viewModelFormOrtType.register("load", new GuiClient(showMessageLoaded, showErrorMessages));
 	_viewModelFormOrtType.register("create", new GuiClient(showMessageCreated, showErrorMessages));
@@ -39,16 +48,9 @@ function InitDataChanged() {
 
 function InitBreadcrumb()
 {
-	if (getFormMode() == "create") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "OrtTypeFormNew"
-		});
-	}
-	else if (getFormMode() == "edit") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "OrtTypeFormEdit"
-		});
-    }
+    $("#breadcrumb").Breadcrumb({
+        PageName : getPageName()
+	});
 }
 
 //#region messages
@@ -226,9 +228,9 @@ function InitButtonUndo() {
 	DisableButtonUndo();
 	_viewModelFormOrtType.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
 	_viewModelFormOrtType.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
-	$("#buttonUndo").click(function () { 
+	$("#buttonUndo").click(function () {
         console.log("button 'undo' clicked");
-		_viewModelFormOrtType.undoAllChanges(); 
+		_viewModelFormOrtType.undoAllChanges();
 	});
 }
 

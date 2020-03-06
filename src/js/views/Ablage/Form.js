@@ -24,6 +24,15 @@ $(document).ready(function () {
 	InitGridFunde();
 });
 
+function getPageName() {
+	if (getFormMode() == "create") {
+		return "AblageFormNew";
+	}
+	else if (getFormMode() == "edit") {
+		return "AblageFormEdit";
+	}
+}
+
 function loadForm() {
 	console.info("loading form");
 
@@ -59,16 +68,9 @@ function InitDataChanged() {
 
 function InitBreadcrumb()
 {
-	if (getFormMode() == "create") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "AblageFormNew"
-		});
-	}
-	else if (getFormMode() == "edit") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "AblageFormEdit"
-		});
-	}
+    $("#breadcrumb").Breadcrumb({
+        PageName : getPageName()
+	});
 }
 
 function loadCreatedElement(element) {

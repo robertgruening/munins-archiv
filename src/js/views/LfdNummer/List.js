@@ -16,10 +16,14 @@ $(document).ready(function () {
     _viewModelListLfdNummer.loadAll();
 });
 
+function getPageName() {
+	return "LfdNummerList";
+}
+
 function InitBreadcrumb()
 {
     $("#breadcrumb").Breadcrumb({
-        PageName : "LfdNummerList"
+        PageName : getPageName()
 	});
 }
 

@@ -23,6 +23,15 @@ $(document).ready(function () {
 	InitFieldCountOfFunde();
 });
 
+function getPageName() {
+	if (getFormMode() == "create") {
+		return "FundAttributFormNew";
+	}
+	else if (getFormMode() == "edit") {
+		return "FundAttributFormEdit";
+	}
+}
+
 function loadForm() {
 	console.info("loading form");
 
@@ -58,16 +67,9 @@ function InitDataChanged() {
 
 function InitBreadcrumb()
 {
-	if (getFormMode() == "create") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "FundAttributFormNew"
-		});
-	}
-	else if (getFormMode() == "edit") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "FundAttributFormEdit"
-		});
-	}
+    $("#breadcrumb").Breadcrumb({
+        PageName : getPageName()
+	});
 }
 
 function loadCreatedElement(element) {

@@ -24,6 +24,15 @@ $(document).ready(function () {
 	InitFieldLfdNummern();
 });
 
+function getPageName() {
+	if (getFormMode() == "create") {
+		return "FundstelleFormNew";
+	}
+	else if (getFormMode() == "edit") {
+		return "FundstelleFormEdit";
+	}
+}
+
 function loadForm() {
 	console.info("loading form");
 
@@ -59,16 +68,9 @@ function InitDataChanged() {
 
 function InitBreadcrumb()
 {
-	if (getFormMode() == "create") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "FundstelleFormNew"
-		});
-	}
-	else if (getFormMode() == "edit") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "FundstelleFormEdit"
-		});
-	}
+    $("#breadcrumb").Breadcrumb({
+        PageName : getPageName()
+	});
 }
 
 function loadCreatedElement(element) {

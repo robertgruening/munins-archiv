@@ -1,6 +1,6 @@
 var _viewModelExplorerAblage = null;
 
-$(document).ready(function() {	
+$(document).ready(function() {
 	var viewModelFactory = new ViewModelFactory();
 	_viewModelExplorerAblage = viewModelFactory.getViewModelExplorerAblage();
 
@@ -23,6 +23,10 @@ $(document).ready(function() {
 		_viewModelExplorerAblage.load();
 	}
 });
+
+function getPageName() {
+	return "AblageExplorer";
+}
 
 function RegisterToViewModel() {
 	_viewModelExplorerAblage.register("id", new GuiClient(EnableButtonNew, showErrorMessages));
@@ -75,7 +79,7 @@ function markSelectedChildItem(selectedItemArgs) {
     }
 
 	console.debug("Setting selected child item:", selectedItemArgs);
-	
+
     var row = $(".jsgrid-row, .jsgrid-alt-row").eq(selectedItemArgs.Index)
 
     console.debug("Selected row:", row);
@@ -86,7 +90,7 @@ function markSelectedChildItem(selectedItemArgs) {
 function InitBreadcrumb()
 {
     $("#breadcrumb").Breadcrumb({
-        PageName : "AblageExplorer"
+        PageName : getPageName()
 	});
 }
 //#region form actions
@@ -306,7 +310,7 @@ function InitGrid()
 	_viewModelExplorerAblage.register("children", new GuiClient(UpdateGridDataChildren, showErrorMessages));
 
     jsGrid.fields.icon = IconField;
-    
+
     $("#grid").jsGrid({
         width: "100%",
 
@@ -315,21 +319,21 @@ function InitGrid()
         sorting: false,
         paging: false,
 		autoload: false,
-		
+
 		fields: [
-			{ 
+			{
 				title: "",
-				name: "Icon", 
+				name: "Icon",
 				type: "icon"
 			},
-			{ 
+			{
 				title: "Typ",
 				name: "Type.Bezeichnung",
 				type: "text"
 			},
-			{ 
-				name: "Bezeichnung", 
-				type: "text", 
+			{
+				name: "Bezeichnung",
+				type: "text",
 				validate: "required"
 			}
 		],
@@ -337,14 +341,14 @@ function InitGrid()
         rowClick: function(args) {
 			console.info("row clicked");
 			console.debug("selected grid item", args.item);
-			
+
 			_viewModelExplorerAblage.selectChildItem(args.item);
         },
 
 		rowDoubleClick: function(args) {
 			console.info("row double clicked");
 			console.debug("selected grid item", args.item);
-			
+
 			console.warn("view model will not be informed about double clicked grid item");
 
 			if (args.item.Id === undefined) {
@@ -367,11 +371,11 @@ function InitGrid()
 function UpdateGridDataChildren(children) {
 	console.info("updating children in grid");
 	console.debug("children", children);
-    
+
 	var entries = new Array();
 
 	console.info("adding " + children.length + " children to the grid");
-    
+
 	children.forEach(child => {
 		var copy = JSON.parse(JSON.stringify(child));
 		copy.Icon = IconConfig.getCssClasses("Ablage");

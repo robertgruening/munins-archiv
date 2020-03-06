@@ -26,6 +26,15 @@ $(document).ready(function () {
 	}
 });
 
+function getPageName() {
+	if (getFormMode() == "create") {
+		return "LfdNummerFormNew";
+	}
+	else if (getFormMode() == "edit") {
+		return "LfdNummerFormEdit";
+    }
+}
+
 function InitStatusChanged() {
 	_viewModelFormLfdNummer.register("load", new GuiClient(showMessageLoaded, showErrorMessages));
 	_viewModelFormLfdNummer.register("create", new GuiClient(showMessageCreated, showErrorMessages));
@@ -39,16 +48,9 @@ function InitDataChanged() {
 
 function InitBreadcrumb()
 {
-	if (getFormMode() == "create") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "LfdNummerFormNew"
-		});
-	}
-	else if (getFormMode() == "edit") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "LfdNummerFormEdit"
-		});
-    }
+	$("#breadcrumb").Breadcrumb({
+		PageName : getPageName()
+	});
 }
 
 //#region messages
@@ -226,9 +228,9 @@ function InitButtonUndo() {
 	DisableButtonUndo();
 	_viewModelFormLfdNummer.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
 	_viewModelFormLfdNummer.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
-	$("#buttonUndo").click(function () { 
+	$("#buttonUndo").click(function () {
         console.log("button 'undo' clicked");
-		_viewModelFormLfdNummer.undoAllChanges(); 
+		_viewModelFormLfdNummer.undoAllChanges();
 	});
 }
 

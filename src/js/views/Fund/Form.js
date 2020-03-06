@@ -34,6 +34,15 @@ $(document).ready(function () {
 	}
 });
 
+function getPageName() {
+	if (getFormMode() == "create") {
+		return "FundFormNew";
+	}
+	else if (getFormMode() == "edit") {
+		return "FundFormEdit";
+	}
+}
+
 function InitStatusChanged() {
 	_viewModelFormFund.register("load", new GuiClient(showMessageLoaded, showErrorMessages));
 	_viewModelFormFund.register("create", new GuiClient(showMessageCreated, showErrorMessages));
@@ -45,17 +54,11 @@ function InitDataChanged() {
 	_viewModelFormFund.register("dataChanged", new GuiClient(EnableButtonUndo, showErrorMessages));
 }
 
-function InitBreadcrumb() {
-	if (getFormMode() == "create") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "FundFormNew"
-		});
-	}
-	else if (getFormMode() == "edit") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "FundFormEdit"
-		});
-	}
+function InitBreadcrumb()
+{
+    $("#breadcrumb").Breadcrumb({
+        PageName : getPageName()
+	});
 }
 
 //#region form actions

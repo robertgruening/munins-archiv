@@ -1,215 +1,165 @@
 [
 	{
-		"Title" : "Tagebuch",
-		"Icon" : "fa-book",
+		"Title" : "Kontexte",
+		"Icon" : "fa-flag",
+		"URL" : "/Munins Archiv/src/pages/Kontext/Explorer.html",
 		"Children" :
 		[
 			{
-				"Title" : "Fundstellen",
-				"Icon" : "fa-flag",
-				"Children" :
-				[
-					{
-						"Title" : "neu anlegen",
-						"URL" : "/Munins Archiv/src/pages/Fundstelle/Form.html",
-						"PageName" : "FundstelleFormNew"
-					},
-					{
-						"Title" : "bearbeiten",
-						"URL" : "/Munins Archiv/src/pages/Fundstelle/Form.html",
-						"PageName" : "FundstelleFormEdit",
-						"Visible": false
-					},
-					{
-						"Title" : "suchen und bearbeiten",
-						"URL" : "/Munins Archiv/src/pages/Fundstelle/Search.html",
-						"PageName" : "FundstelleSearch",
-						"Enabled" : false
-					},
-					{
-						"Title" : "in Karte anzeigen",
-						"URL" : "/Munins Archiv/src/pages/Fundstelle/Map.html",
-						"PageName" : "FundstelleMap",
-						"Enabled" : false
-					}
-				]
+				"Title" : "durchsuchen",
+				"URL" : "/Munins Archiv/src/pages/Kontext/Explorer.html",
+				"PageName" : "KontextExplorer"
 			},
 			{
-				"Title" : "Orte",
-				"Icon" : "fa-map-marker",
-				"Children" :
-				[
-					{
-						"Title" : "durchsuchen",
-						"URL" : "/Munins Archiv/src/pages/Ort/Explorer.html",
-						"PageName" : "OrtExplorer"
-					},
-					{
-						"Title" : "bearbeiten",
-						"URL" : "/Munins Archiv/src/pages/Ort/Form.html",
-						"PageName" : "OrtFormNew",
-						"Visible" : false
-					},
-					{
-						"Title" : "bearbeiten",
-						"URL" : "/Munins Archiv/src/pages/Ort/Form.html",
-						"PageName" : "OrtFormEdit",
-						"Visible" : false
-					},
-					{
-						"Title" : "Gebietskörperschaften verwalten",
-						"URL" : "/Munins Archiv/src/pages/Ort/Gebietskoerperschaft/Form.html",
-						"Enabled" : false
-					},
-					{
-						"Title" : "Kartasterdaten verwalten",
-						"URL" : "/Munins Archiv/src/pages/Ort/Fundstelle/Form.html",
-						"Enabled" : false
-					},
-					{
-						"Title" : "Flurnamen verwalten",
-						"URL" : "/Munins Archiv/src/pages/Ort/Flurname/Form.html",
-						"Enabled" : false
-					}
-				]
+				"Title" : "Fundstelle anlegen",
+				"URL" : "/Munins Archiv/src/pages/Fundstelle/Form.html",
+				"PageName" : "FundstelleFormNew",
+				"Visible": false
 			},
 			{
-				"Title" : "Kontexte",
-				"Icon" : "fa-flag",
-				"Children" :
-				[
-					{
-						"Title" : "durchsuchen",
-						"URL" : "/Munins Archiv/src/pages/Kontext/Explorer.html",
-						"PageName" : "KontextExplorer"
-					},
-					{
-						"Title" : "Begehungsfläche anlegen",
-						"URL" : "/Munins Archiv/src/pages/Begehungsflaeche/Form.html",
-						"PageName" : "BegehungsflaecheFormNew",
-						"Visible": false
-					},
-					{
-						"Title" : "Begehungsfläche bearbeiten",
-						"URL" : "/Munins Archiv/src/pages/Begehungsflaeche/Form.html",
-						"PageName" : "BegehungsflaecheFormEdit",
-						"Visible": false
-					},
-					{
-						"Title" : "Begehung anlegen",
-						"URL" : "/Munins Archiv/src/pages/Begehung/Form.html",
-						"PageName" : "BegehungFormNew",
-						"Visible": false
-					},
-					{
-						"Title" : "Begehung bearbeiten",
-						"URL" : "/Munins Archiv/src/pages/Begehung/Form.html",
-						"PageName" : "BegehungFormEdit",
-						"Visible": false
-					}
-				]
+				"Title" : "Fundstelle bearbeiten",
+				"URL" : "/Munins Archiv/src/pages/Fundstelle/Form.html",
+				"PageName" : "FundstelleFormEdit",
+				"Visible": false
 			},
 			{
-				"Title" : "LfD-Nummern",
-				"Icon" : "fa-hashtag",
-				"Children" :
-				[
-					{
-						"Title" : "durchsuchen",
-						"URL" : "/Munins Archiv/src/pages/LfdNummer/List.html",
-						"PageName" : "LfdNummerList"
-					},
-					{
-						"Title" : "neu anlegen",
-						"URL" : "/Munins Archiv/src/pages/LfdNummer/Form.html",
-						"PageName" : "LfdNummerFormNew"
-					},
-					{
-						"Title" : "bearbeiten",
-						"URL" : "/Munins Archiv/src/pages/LfdNummer/Form.html",
-						"PageName" : "LfdNummerFormEdit",
-						"Visible" : false
-					}
-				]
+				"Title" : "Begehungsfläche anlegen",
+				"URL" : "/Munins Archiv/src/pages/Begehungsflaeche/Form.html",
+				"PageName" : "BegehungsflaecheFormNew",
+				"Visible": false
+			},
+			{
+				"Title" : "Begehungsfläche bearbeiten",
+				"URL" : "/Munins Archiv/src/pages/Begehungsflaeche/Form.html",
+				"PageName" : "BegehungsflaecheFormEdit",
+				"Visible": false
+			},
+			{
+				"Title" : "Begehung anlegen",
+				"URL" : "/Munins Archiv/src/pages/Begehung/Form.html",
+				"PageName" : "BegehungFormNew",
+				"Visible": false
+			},
+			{
+				"Title" : "Begehung bearbeiten",
+				"URL" : "/Munins Archiv/src/pages/Begehung/Form.html",
+				"PageName" : "BegehungFormEdit",
+				"Visible": false
 			}
 		]
 	},
 	{
-		"Title" : "Archiv",
-		"Icon" : "fa-archive",
+		"Title" : "Orte",
+		"Icon" : "fa-map-marker",
+		"URL" : "/Munins Archiv/src/pages/Ort/Explorer.html",
 		"Children" :
 		[
 			{
-				"Title" : "Ablagen",
-				"Icon" : "fa-box",
-				"Children" :
-				[
-					{
-						"Title" : "durchsuchen",
-						"URL" : "/Munins Archiv/src/pages/Ablage/Explorer.html",
-						"PageName" : "AblageExplorer"
-					},
-					{
-						"Title" : "bearbeiten",
-						"URL" : "/Munins Archiv/src/pages/Ablage/Form.html",
-						"PageName" : "AblageFormNew",
-						"Visible" : false
-					},
-					{
-						"Title" : "bearbeiten",
-						"URL" : "/Munins Archiv/src/pages/Ablage/Form.html",
-						"PageName" : "AblageFormEdit",
-						"Visible" : false
-					}
-				]
+				"Title" : "durchsuchen",
+				"URL" : "/Munins Archiv/src/pages/Ort/Explorer.html",
+				"PageName" : "OrtExplorer"
 			},
 			{
-				"Title" : "Funde",
-				"Icon" : "fa-puzzle-piece",
-				"Children" :
-				[
-					{
-						"Title" : "neu anlegen",
-						"URL" : "/Munins Archiv/src/pages/Fund/Form.html",
-						"PageName" : "FundFormNew"
-					},
-					{
-						"Title" : "bearbeiten",
-						"URL" : "/Munins Archiv/src/pages/Fund/Form.html",
-						"PageName" : "FundFormEdit",
-						"Visible" : false
-					},
-					{
-						"Title" : "suchen",
-						"URL" : "/Munins Archiv/src/pages/Fund/Search.html",
-						"PageName" : "FundSearch",
-						"Enabled" : false
-					}
-				]
+				"Title" : "bearbeiten",
+				"URL" : "/Munins Archiv/src/pages/Ort/Form.html",
+				"PageName" : "OrtFormNew",
+				"Visible" : false
 			},
 			{
-				"Title" : "Fundattribute",
-				"Icon" : "fa-tag",
-				"Children" :
-				[
-					{
-						"Title" : "durchsuchen",
-						"URL" : "/Munins Archiv/src/pages/FundAttribut/Explorer.html",
-						"PageName" : "FundAttributExplorer"
-					},
-					{
-						"Title" : "bearbeiten",
-						"URL" : "/Munins Archiv/src/pages/FundAttribut/Form.html",
-						"PageName" : "FundAttributFormNew",
-						"Visible" : false
-					},
-					{
-						"Title" : "bearbeiten",
-						"URL" : "/Munins Archiv/src/pages/FundAttribut/Form.html",
-						"PageName" : "FundAttributFormEdit",
-						"Visible" : false
-					}
-				]
+				"Title" : "bearbeiten",
+				"URL" : "/Munins Archiv/src/pages/Ort/Form.html",
+				"PageName" : "OrtFormEdit",
+				"Visible" : false
+			},
+			{
+				"Title" : "Gebietskörperschaften verwalten",
+				"URL" : "/Munins Archiv/src/pages/Ort/Gebietskoerperschaft/Form.html",
+				"Enabled" : false
+			},
+			{
+				"Title" : "Kartasterdaten verwalten",
+				"URL" : "/Munins Archiv/src/pages/Ort/Fundstelle/Form.html",
+				"Enabled" : false
+			},
+			{
+				"Title" : "Flurnamen verwalten",
+				"URL" : "/Munins Archiv/src/pages/Ort/Flurname/Form.html",
+				"Enabled" : false
+			}
+		]
+	},
+	{
+		"Title" : "Ablagen",
+		"Icon" : "fa-box",
+		"URL" : "/Munins Archiv/src/pages/Ablage/Explorer.html",
+		"Children" :
+		[
+			{
+				"Title" : "durchsuchen",
+				"URL" : "/Munins Archiv/src/pages/Ablage/Explorer.html",
+				"PageName" : "AblageExplorer"
+			},
+			{
+				"Title" : "bearbeiten",
+				"URL" : "/Munins Archiv/src/pages/Ablage/Form.html",
+				"PageName" : "AblageFormNew",
+				"Visible" : false
+			},
+			{
+				"Title" : "bearbeiten",
+				"URL" : "/Munins Archiv/src/pages/Ablage/Form.html",
+				"PageName" : "AblageFormEdit",
+				"Visible" : false
+			}
+		]
+	},
+	{
+		"Title" : "Funde",
+		"Icon" : "fa-puzzle-piece",
+		"URL" : "/Munins Archiv/src/pages/Fund/Form.html",
+		"Children" :
+		[
+			{
+				"Title" : "neu anlegen",
+				"URL" : "/Munins Archiv/src/pages/Fund/Form.html",
+				"PageName" : "FundFormNew"
+			},
+			{
+				"Title" : "bearbeiten",
+				"URL" : "/Munins Archiv/src/pages/Fund/Form.html",
+				"PageName" : "FundFormEdit",
+				"Visible" : false
+			},
+			{
+				"Title" : "suchen",
+				"URL" : "/Munins Archiv/src/pages/Fund/Search.html",
+				"PageName" : "FundSearch",
+				"Enabled" : false
+			}
+		]
+	},
+	{
+		"Title" : "Fundattribute",
+		"Icon" : "fa-tag",
+		"URL" : "/Munins Archiv/src/pages/FundAttribut/Explorer.html",
+		"Children" :
+		[
+			{
+				"Title" : "durchsuchen",
+				"URL" : "/Munins Archiv/src/pages/FundAttribut/Explorer.html",
+				"PageName" : "FundAttributExplorer"
+			},
+			{
+				"Title" : "bearbeiten",
+				"URL" : "/Munins Archiv/src/pages/FundAttribut/Form.html",
+				"PageName" : "FundAttributFormNew",
+				"Visible" : false
+			},
+			{
+				"Title" : "bearbeiten",
+				"URL" : "/Munins Archiv/src/pages/FundAttribut/Form.html",
+				"PageName" : "FundAttributFormEdit",
+				"Visible" : false
 			}
 		]
 	},
@@ -319,6 +269,29 @@
 					{
 						"Title" : "Version 1.1",
 						"Enabled" : false
+					}
+				]
+			},
+			{
+				"Title" : "LfD-Nummern",
+				"Icon" : "fa-hashtag",
+				"Children" :
+				[
+					{
+						"Title" : "durchsuchen",
+						"URL" : "/Munins Archiv/src/pages/LfdNummer/List.html",
+						"PageName" : "LfdNummerList"
+					},
+					{
+						"Title" : "neu anlegen",
+						"URL" : "/Munins Archiv/src/pages/LfdNummer/Form.html",
+						"PageName" : "LfdNummerFormNew"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/LfdNummer/Form.html",
+						"PageName" : "LfdNummerFormEdit",
+						"Visible" : false
 					}
 				]
 			}

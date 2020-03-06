@@ -28,6 +28,15 @@ $(document).ready(function () {
 	InitGridFunde();
 });
 
+function getPageName() {
+	if (getFormMode() == "create") {
+		return "BegehungFormNew";
+	}
+	else if (getFormMode() == "edit") {
+		return "BegehungFormEdit";
+	}
+}
+
 function loadForm() {
 	console.info("loading form");
 
@@ -63,16 +72,9 @@ function InitDataChanged() {
 
 function InitBreadcrumb()
 {
-	if (getFormMode() == "create") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "BegehungFormNew"
-		});
-	}
-	else if (getFormMode() == "edit") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "BegehungFormEdit"
-		});
-	}
+    $("#breadcrumb").Breadcrumb({
+        PageName : getPageName()
+	});
 }
 
 function loadCreatedElement(element) {

@@ -32,6 +32,29 @@
 		});
 	}
 
+	function containsActiveNavigationNode(navigationNode)
+	{
+		if (getPageName() == navigationNode.PageName)
+		{
+			return true;
+		}
+
+		if (navigationNode.Children != undefined &&
+			navigationNode.Children != null)
+		{
+
+			for (var i = 0; i < navigationNode.Children.length; i++)
+			{
+	    		if (containsActiveNavigationNode(navigationNode.Children[i]))
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	function LoadNavigationItems(options, htmlElement, items)
 	{
 		var ul = $("<ul></ul>");
@@ -47,6 +70,11 @@
 
 			var li = $("<li></li>");
 			var a = $("<a></a>");
+
+			if (containsActiveNavigationNode(items[i]))
+			{
+				a.addClass("navigation-node--active");
+			}
 
 			if (items[i].Action != undefined)
 			{
@@ -70,10 +98,10 @@
 				a.append(icon);
 			}
 
-			var label = $("<label></label>");
-			label.text(items[i].Title);
-
-			a.append(label);
+			var span= $("<span></span>");
+			span.text(items[i].Title);
+			a.append(span);
+			a.attr("title", items[i].Title);
 			li.append(a);
 			ul.append(li);
 		}
@@ -87,7 +115,10 @@
 
 		for (var i = 0; i < panels.length; i++)
 		{
-			html += LoadPanel(options, htmlElement, panels[i]);
+			if (panels[i].URL == undefined)
+			{
+				html += LoadPanel(options, htmlElement, panels[i]);
+			}
 		}
 
 		return html;
@@ -150,7 +181,7 @@
 			html += "<i class=\"fas " + topic.Icon + "\"></i>";
 		}
 
-		html += "<label>" + topic.Title + "</label></h3>";
+		html += "<span>" + topic.Title + "</span></h3>";
 
 		for (var i = 0; i < topic.Children.length; i++)
 		{

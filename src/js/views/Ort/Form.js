@@ -23,6 +23,15 @@ $(document).ready(function () {
 	InitFieldCountOfKontexte();
 });
 
+function getPageName() {
+	if (getFormMode() == "create") {
+		return "OrtFormNew";
+	}
+	else if (getFormMode() == "edit") {
+		return "OrtFormEdit";
+    }
+}
+
 function loadForm() {
 	console.info("loading form");
 
@@ -58,16 +67,9 @@ function InitDataChanged() {
 
 function InitBreadcrumb()
 {
-	if (getFormMode() == "create") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "OrtFormNew"
-		});
-	}
-	else if (getFormMode() == "edit") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "OrtFormEdit"
-		});
-	}
+    $("#breadcrumb").Breadcrumb({
+        PageName : getPageName()
+	});
 }
 
 function loadCreatedElement(element) {

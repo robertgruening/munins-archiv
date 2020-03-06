@@ -26,6 +26,15 @@ $(document).ready(function () {
 	}
 });
 
+function getPageName() {
+	if (getFormMode() == "create") {
+		return "FundAttributTypeFormNew";
+	}
+	else if (getFormMode() == "edit") {
+		return "FundAttributTypeFormEdit";
+	}
+}
+
 function InitStatusChanged() {
 	_viewModelFormFundAttributType.register("load", new GuiClient(showMessageLoaded, showErrorMessages));
 	_viewModelFormFundAttributType.register("create", new GuiClient(showMessageCreated, showErrorMessages));
@@ -39,16 +48,9 @@ function InitDataChanged() {
 
 function InitBreadcrumb()
 {
-	if (getFormMode() == "create") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "FundAttributTypeFormNew"
-		});
-	}
-	else if (getFormMode() == "edit") {
-		$("#breadcrumb").Breadcrumb({
-			PageName: "FundAttributTypeFormEdit"
-		});
-    }
+    $("#breadcrumb").Breadcrumb({
+        PageName : getPageName()
+	});
 }
 
 //#region messages
@@ -226,9 +228,9 @@ function InitButtonUndo() {
 	DisableButtonUndo();
 	_viewModelFormFundAttributType.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
 	_viewModelFormFundAttributType.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
-	$("#buttonUndo").click(function () { 
+	$("#buttonUndo").click(function () {
         console.log("button 'undo' clicked");
-		_viewModelFormFundAttributType.undoAllChanges(); 
+		_viewModelFormFundAttributType.undoAllChanges();
 	});
 }
 
