@@ -267,142 +267,148 @@ function DisableButtonOpenParent()
 }
 //#endregion
 
-	//#region open abstract root
-	function InitButtonOpenAbstractRoot() {
+//#region open abstract root
+function InitButtonOpenAbstractRoot()
+{
+	DisableButtonOpenAbstractRoot();
+	_viewModelExplorerKontext.register("parent", new GuiClient(EnableButtonOpenAbstractRoot, showErrorMessages));
+	$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html");
+}
+
+function EnableButtonOpenAbstractRoot(parent)
+{
+	if (parent === undefined ||
+		parent === null)
+	{
 		DisableButtonOpenAbstractRoot();
-		_viewModelExplorerKontext.register("parent", new GuiClient(EnableButtonOpenAbstractRoot, showErrorMessages));
-		$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html");
+		return;
 	}
 
-	function EnableButtonOpenAbstractRoot(parent) {
-		if (parent === undefined ||
-			parent === null)
+	$("#buttonOpenAbstractRoot").removeClass("disabled");
+	$("#buttonOpenAbstractRoot").prop("disabled", false);
+}
+
+function DisableButtonOpenAbstractRoot()
+{
+	$("#buttonOpenAbstractRoot").addClass("disabled");
+	$("#buttonOpenAbstractRoot").prop("disabled", true);
+}
+//#endregion
+//#endregion
+
+//#region fields
+//#region path
+function InitFieldPath()
+{
+	_viewModelExplorerKontext.register("path", new GuiClient(setPath, showErrorMessages));
+}
+
+function setPath(path) {
+	console.info("setting value of 'Path'");
+	console.debug("'Path' is", path);
+
+	if (!path.startsWith("/")) {
+		console.warn("added '/' to path");
+		path = "/" + path;
+	}
+
+	$("#path").val(path);
+}
+//#endregion
+//#endregion
+
+//#region grid
+var IconField = function(config)
+{
+	jsGrid.Field.call(this, config);
+}
+
+IconField.prototype = new jsGrid.Field({
+	itemTemplate: function(value) {
+		return $("<i>").addClass(value);
+	}
+});
+
+function InitGrid()
+{
+	_viewModelExplorerKontext.register("children", new GuiClient(UpdateGridDataChildren, showErrorMessages));
+
+	jsGrid.fields.icon = IconField;
+
+	$("#grid").jsGrid({
+		width: "100%",
+
+		inserting: false,
+		editing: false,
+		sorting: false,
+		paging: false,
+		autoload: false,
+
+		fields: [
 			{
-				DisableButtonOpenAbstractRoot();
-				return;
+				title: "",
+				name: "Icon",
+				type: "icon",
+				width: 16
+			},
+			{
+				title: "Typ",
+				name: "Type.Bezeichnung",
+				type: "text"
+			},
+			{
+				name: "Bezeichnung",
+				type: "text",
+				validate: "required"
+			}
+		],
+
+		rowClick: function(args) {
+			console.info("row clicked");
+			console.debug("selected grid item", args.item);
+
+			_viewModelExplorerKontext.selectChildItem(args.item);
+		},
+
+		rowDoubleClick: function(args) {
+			console.info("row double clicked");
+			console.debug("selected grid item", args.item);
+
+			console.warn("view model will not be informed about double clicked grid item");
+
+			if (args.item.Id === undefined) {
+				console.debug("selected grid item is abstract root");
+				window.open("/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
+			}
+			else if (args.item.Parent === undefined) {
+				console.debug("selected grid item is root");
+				window.open("/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
+			}
+			else {
+				console.debug("selected grid item is standard node");
+				window.open("/Munins Archiv/src/pages/Kontext/Explorer.html?Id=" + args.item.Id, "_self");
 			}
 
-			$("#buttonOpenAbstractRoot").removeClass("disabled");
-			$("#buttonOpenAbstractRoot").prop("disabled", false);
 		}
+	});
+}
 
-		function DisableButtonOpenAbstractRoot() {
-			$("#buttonOpenAbstractRoot").addClass("disabled");
-			$("#buttonOpenAbstractRoot").prop("disabled", true);
-		}
-		//#endregion
-		//#endregion
+function UpdateGridDataChildren(children) {
+	console.info("updating children in grid");
+	console.debug("children", children);
 
-		//#region fields
-		//#region path
-		function InitFieldPath() {
-			_viewModelExplorerKontext.register("path", new GuiClient(setPath, showErrorMessages));
-		}
+	var entries = new Array();
 
-		function setPath(path) {
-			console.info("setting value of 'Path'");
-			console.debug("'Path' is", path);
+	console.info("adding " + children.length + " children to the grid");
 
-			if (!path.startsWith("/")) {
-				console.warn("added '/' to path");
-				path = "/" + path;
-			}
+	children.forEach(child => {
+		var copy = JSON.parse(JSON.stringify(child));
+		copy.Icon = IconConfig.getCssClasses(child.Type.Bezeichnung);
+		entries.push(copy);
+	});
 
-			$("#path").val(path);
-		}
-		//#endregion
-		//#endregion
-
-		//#region grid
-		var IconField = function(config) {
-			jsGrid.Field.call(this, config);
-		}
-
-		IconField.prototype = new jsGrid.Field({
-			itemTemplate: function(value) {
-				return $("<i>").addClass(value);
-			}
-		});
-
-		function InitGrid()
-		{
-			_viewModelExplorerKontext.register("children", new GuiClient(UpdateGridDataChildren, showErrorMessages));
-
-			jsGrid.fields.icon = IconField;
-
-			$("#grid").jsGrid({
-				width: "100%",
-
-				inserting: false,
-				editing: false,
-				sorting: false,
-				paging: false,
-				autoload: false,
-
-				fields: [
-					{
-						title: "",
-						name: "Icon",
-						type: "icon"
-					},
-					{
-						title: "Typ",
-						name: "Type.Bezeichnung",
-						type: "text"
-					},
-					{
-						name: "Bezeichnung",
-						type: "text",
-						validate: "required"
-					}
-				],
-
-				rowClick: function(args) {
-					console.info("row clicked");
-					console.debug("selected grid item", args.item);
-
-					_viewModelExplorerKontext.selectChildItem(args.item);
-				},
-
-				rowDoubleClick: function(args) {
-					console.info("row double clicked");
-					console.debug("selected grid item", args.item);
-
-					console.warn("view model will not be informed about double clicked grid item");
-
-					if (args.item.Id === undefined) {
-						console.debug("selected grid item is abstract root");
-						window.open("/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
-					}
-					else if (args.item.Parent === undefined) {
-						console.debug("selected grid item is root");
-						window.open("/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
-					}
-					else {
-						console.debug("selected grid item is standard node");
-						window.open("/Munins Archiv/src/pages/Kontext/Explorer.html?Id=" + args.item.Id, "_self");
-					}
-
-				}
-			});
-		}
-
-		function UpdateGridDataChildren(children) {
-			console.info("updating children in grid");
-			console.debug("children", children);
-
-			var entries = new Array();
-
-			console.info("adding " + children.length + " children to the grid");
-
-			children.forEach(child => {
-				var copy = JSON.parse(JSON.stringify(child));
-				copy.Icon = IconConfig.getCssClasses(child.Type.Bezeichnung);
-				entries.push(copy);
-			});
-
-			$("#grid").jsGrid({
-				data: entries
-			});
-		}
-		//#endregion
+	$("#grid").jsGrid({
+		data: entries
+	});
+}
+//#endregion

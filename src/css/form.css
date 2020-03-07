@@ -46,7 +46,7 @@
 	box-sizing: border-box;
 }
 
-.formBlock .fieldBlock 
+.formBlock .fieldBlock
 input[type="button"] {
 	float: right;
 }
@@ -78,7 +78,7 @@ input[type="button"] {
 #toolBar {
     list-style-type: none;
     margin: 0;
-    padding: 5px 0px 5px 5px;
+    padding: 5px 0px 5px 0px;
 }
 
 #toolBar li {

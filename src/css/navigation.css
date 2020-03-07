@@ -100,10 +100,7 @@ nav div {
 	color: #ffffff;
 }
 
-.topNavigation li a:hover:not(.active) {
-    background-color: #e78f08;
-}
-
+.topNavigation li a:hover:not(.active),
 .topNavigation li a.navigation-node--active {
     background-color: #e78f08;
 }

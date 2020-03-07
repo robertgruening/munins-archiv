@@ -96,9 +96,10 @@ function InitGrid()
 
         fields: [
 			{
-				title: "Icon",
+				title: "",
 				name: "Icon",
-				type: "icon"
+				type: "icon",
+				width: 16
 			},
             {
                 name: "Bezeichnung",

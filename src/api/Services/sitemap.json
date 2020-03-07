@@ -169,23 +169,6 @@
 		"Children" :
 		[
 			{
-				"Title" : "Organisation",
-				"Icon" : "fa-users",
-				"Children" :
-				[
-					{
-						"Title" : "Organisationsprofil bearbeiten",
-						"URL" : "/Munins Archiv/src/pages/Organisation/Profile.html",
-						"Enabled" : false
-					},
-					{
-						"Title" : "Mitglieder verwalten",
-						"URL" : "/Munins Archiv/src/pages/Member/Form.html",
-						"Enabled" : false
-					}
-				]
-			},
-			{
 				"Title" : "Typen",
 				"Icon" : "fa-cubes",
 				"Children" :
@@ -244,6 +227,46 @@
 				]
 			},
 			{
+				"Title" : "LfD-Nummern",
+				"Icon" : "fa-hashtag",
+				"Children" :
+				[
+					{
+						"Title" : "durchsuchen",
+						"URL" : "/Munins Archiv/src/pages/LfdNummer/List.html",
+						"PageName" : "LfdNummerList"
+					},
+					{
+						"Title" : "neu anlegen",
+						"URL" : "/Munins Archiv/src/pages/LfdNummer/Form.html",
+						"PageName" : "LfdNummerFormNew"
+					},
+					{
+						"Title" : "bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/LfdNummer/Form.html",
+						"PageName" : "LfdNummerFormEdit",
+						"Visible" : false
+					}
+				]
+			},
+			{
+				"Title" : "Organisation",
+				"Icon" : "fa-users",
+				"Children" :
+				[
+					{
+						"Title" : "Organisationsprofil bearbeiten",
+						"URL" : "/Munins Archiv/src/pages/Organisation/Profile.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Mitglieder verwalten",
+						"URL" : "/Munins Archiv/src/pages/Member/Form.html",
+						"Enabled" : false
+					}
+				]
+			},
+			{
 				"Title" : "Anwendung",
 				"Icon" : "fa-cogs",
 				"Children" :
@@ -269,29 +292,6 @@
 					{
 						"Title" : "Version 1.1",
 						"Enabled" : false
-					}
-				]
-			},
-			{
-				"Title" : "LfD-Nummern",
-				"Icon" : "fa-hashtag",
-				"Children" :
-				[
-					{
-						"Title" : "durchsuchen",
-						"URL" : "/Munins Archiv/src/pages/LfdNummer/List.html",
-						"PageName" : "LfdNummerList"
-					},
-					{
-						"Title" : "neu anlegen",
-						"URL" : "/Munins Archiv/src/pages/LfdNummer/Form.html",
-						"PageName" : "LfdNummerFormNew"
-					},
-					{
-						"Title" : "bearbeiten",
-						"URL" : "/Munins Archiv/src/pages/LfdNummer/Form.html",
-						"PageName" : "LfdNummerFormEdit",
-						"Visible" : false
 					}
 				]
 			}

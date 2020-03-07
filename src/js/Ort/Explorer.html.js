@@ -9,7 +9,7 @@ $(document).ready(function() {
 	_webServiceClientOrt.Register("load", new GuiClient(FillGridWithOrtChildren));
 
     $("#navigation").Navigation();
-    
+
     $("#breadcrumb").Breadcrumb({
         PageName : "OrtExplorer"
 	});
@@ -21,7 +21,7 @@ $(document).ready(function() {
     });
 
 	jsGrid.fields.icon = IconField;
-	
+
 	InitGrid();
 
 	$("#tree")
@@ -101,7 +101,7 @@ $(document).ready(function() {
 		{
 			node.Bezeichnung = newName;
 		}
-		
+
 		_webServiceClientOrt.Save(node, "tree.renamed");
 	})
 	.on("loaded.jstree", function(event, data) {
@@ -166,7 +166,7 @@ $(document).ready(function() {
         "core": {
 			"multiple": false,
 			"check_callback" : true,
-			"data" : function (node, callbackFunction) 
+			"data" : function (node, callbackFunction)
 			{
 				if (node.id === "#")
 				{
@@ -204,7 +204,7 @@ $(document).ready(function() {
 					"Rename": {
 						"label": "Umbenennen",
 						"title": "Umbenennen",
-						"action": function (obj) { 
+						"action": function (obj) {
 							$("#tree").jstree(true).edit($node);
 						}
 					}
@@ -231,7 +231,7 @@ function FillTreeWithRootOrten(rootOrte, sender)
 		ortNode.parent = "-1";
 		$("#tree").jstree(true).create_node(ortNode.parent, ortNode, "last");
 	}
-	
+
 	$("#tree").jstree(true).open_node(GetAbstractOrtNode().id);
 }
 
@@ -284,7 +284,7 @@ function FillTreeWithOrtChildren(ort, sender)
 	{
 		var ortNode = CreateOrtNode(ort.Children[i]);
 		ortNode.parent = ort.Id;
-		
+
 		$("#tree").jstree(true).create_node(ortNode.parent, ortNode, "last");
 	}
 
@@ -301,9 +301,9 @@ function InitGrid()
         sorting: true,
         paging: false,
 		autoload: false,
-		
+
 		controller: {
-			insertItem: function(item) { 
+			insertItem: function(item) {
 				_webServiceClientOrt.Create(ConvertToJson(item), "grid.created");
 			},
 			updateItem: function(item) {
@@ -314,23 +314,24 @@ function InitGrid()
 			}
 		},
 
-		// Rewritten to avoid quick edit mode. Double click 
+		// Rewritten to avoid quick edit mode. Double click
 		// should open the parent node or the child node.
 		rowClick: function() {
 		},
-		
+
 		fields: [
-			{ 
+			{
 				title: "",
-				name: "Icon", 
-				type: "icon"
+				name: "Icon",
+				type: "icon",
+				width: 16
 			},
-			{ 
-				name: "Bezeichnung", 
-				type: "text", 
+			{
+				name: "Bezeichnung",
+				type: "text",
 				validate: "required"
 			},
-			{ 
+			{
 				title: "Typ",
 				name: "Type",
 				type: "text"
@@ -424,7 +425,7 @@ function ConvertToJson(item)
 
 function FillGridWithRootOrten(orte, sender)
 {
-	if (sender == undefined || 
+	if (sender == undefined ||
 		(sender != "tree.loaded" &&
 		 sender != "tree.selected"))
 	{
@@ -451,7 +452,7 @@ function FillGridWithRootOrten(orte, sender)
 
 function FillGridWithOrtChildren(ort, sender)
 {
-	if (sender == undefined || 
+	if (sender == undefined ||
 		(sender != "tree.loaded" &&
 		 sender != "tree.selected"))
 	{
@@ -499,7 +500,7 @@ function GetFundLabelText(fund)
 {
 	var labelText = "";
 	labelText += fund.Anzahl.toString().replace("-", ">")+"x ";
-	
+
 	if (fund.FundAttribute != undefined &&
 		fund.FundAttribute != null &&
 		fund.FundAttribute.length > 0)
@@ -507,7 +508,7 @@ function GetFundLabelText(fund)
 		var material = null;
 		var gegenstand = null;
 		var erhaltung = null;
-		
+
 		for (var j = 0; j < fund.FundAttribute.length; j++)
 		{
 			if (fund.FundAttribute[j].Type.Bezeichnung == "Material")
@@ -522,7 +523,7 @@ function GetFundLabelText(fund)
 			{
 				erhaltung = fund.FundAttribute[j];
 			}
-				
+
 			if (material != null &&
 				gegenstand != null &&
 				erhaltung != null)
@@ -535,18 +536,18 @@ function GetFundLabelText(fund)
 		{
 			labelText += material.Bezeichnung + " ";
 		}
-			
+
 		if (gegenstand != null)
 		{
 			labelText += gegenstand.Bezeichnung + " ";
 		}
-			
+
 		if (erhaltung != null)
 		{
 			labelText += erhaltung.Bezeichnung + " ";
 		}
 	}
-	
+
 	if (fund.Bezeichnung != null &&
 		fund.Bezeichnung != "")
 	{
