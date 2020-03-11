@@ -71,6 +71,11 @@
 			var li = $("<li></li>");
 			var a = $("<a></a>");
 
+			if (items[i].Target != undefined)
+			{
+				a.attr("target", items[i].Target);
+			}
+
 			if (containsActiveNavigationNode(items[i]))
 			{
 				a.addClass("navigation-node--active");
@@ -198,16 +203,21 @@
 			{
 				if (topic.Children[i].URL != undefined)
 				{
-					html += "href=\"" + topic.Children[i].URL + "\"";
+					html += "href=\"" + topic.Children[i].URL + "\" ";
 				}
 				else if (topic.Children[i].Action != undefined)
 				{
-					html += "href=\"javascript:" + topic.Children[i].Action + "\"";
+					html += "href=\"javascript:" + topic.Children[i].Action + "\" ";
+				}
+
+				if (topic.Children[i].Target != undefined)
+				{
+					html += "target=\"" + topic.Children[i].Target + "\" ";
 				}
 			}
 			else
 			{
-				html += "class=\"disabled\"";
+				html += "class=\"disabled\" ";
 			}
 
 			html += ">" + topic.Children[i].Title + "</a>";

@@ -264,7 +264,8 @@
 						"URL" : "/Munins Archiv/src/pages/Member/Form.html",
 						"Enabled" : false
 					}
-				]
+				],
+				"Visible" : false
 			},
 			{
 				"Title" : "Anwendung",
@@ -275,19 +276,22 @@
 						"Title" : "Sicherung erstellen",
 						"Icon" : "fa-hdd",
 						"Action" : "Backup();",
-						"Enabled" : false
+						"Enabled" : false,
+						"Visible" : false
 					},
 					{
 						"Title" : "Server herunterfahren",
 						"Icon" : "fa-power-off",
 						"Action" : "Shutdown();",
-						"Enabled" : false
+						"Enabled" : false,
+						"Visible" : false
 					},
 					{
 						"Title" : "Log einsehen",
 						"Icon" : "fa-file-alt",
 						"URL" : "/Munins Archiv/src/api/Logs/Log.html",
-						"Enabled" : true
+						"Enabled" : true,
+						"Target" : "_blank"
 					},
 					{
 						"Title" : "Version 1.1",
@@ -300,7 +304,8 @@
 	{
 		"Title" : "Hilfe",
 		"Icon" : "fa-info-circle",
-		"Action" : "Help();",
-		"Enabled" : false
+		"URL" : "/Munins Archiv/doc/Benutzerhandbuch.pdf",
+		"Enabled" : false,
+		"Target" : "_blank"
 	}
 ]

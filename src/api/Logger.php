@@ -16,7 +16,7 @@ Logger::configure(array(
             'params' => array(
                 'file' => __DIR__ . '/Logs/Log.html',
                 'maxFileSize' => '1MB',
-                'maxBackupIndex' => 5,
+                'maxBackupIndex' => 1,
                 'append' => true
             )
         )

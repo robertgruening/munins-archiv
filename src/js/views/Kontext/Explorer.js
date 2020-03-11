@@ -340,7 +340,7 @@ function InitGrid()
 
 		inserting: false,
 		editing: false,
-		sorting: false,
+		sorting: true,
 		paging: false,
 		autoload: false,
 
@@ -349,17 +349,20 @@ function InitGrid()
 				title: "",
 				name: "Icon",
 				type: "icon",
-				width: 16
+				width: 16,
+				sorting: false
 			},
 			{
 				title: "Typ",
-				name: "Type.Bezeichnung",
-				type: "text"
+				name: "TypeBezeichnung",
+				type: "text",
+				sorting: true
 			},
 			{
 				name: "Bezeichnung",
 				type: "text",
-				validate: "required"
+				validate: "required",
+				sorting: true
 			}
 		],
 
@@ -404,6 +407,7 @@ function UpdateGridDataChildren(children) {
 	children.forEach(child => {
 		var copy = JSON.parse(JSON.stringify(child));
 		copy.Icon = IconConfig.getCssClasses(child.Type.Bezeichnung);
+		copy.TypeBezeichnung = child.Type.Bezeichnung;
 		entries.push(copy);
 	});
 

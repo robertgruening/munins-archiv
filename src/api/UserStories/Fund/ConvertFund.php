@@ -57,7 +57,7 @@ class ConvertFund extends UserStory
     {
         return $this->_fundAttributFactory;
     }
-    
+
     protected function getAblageFactory()
     {
         if ($this->_ablageFactory == null)
@@ -67,7 +67,7 @@ class ConvertFund extends UserStory
 
         return $this->_ablageFactory;
     }
-    
+
     protected function getKontextFactory()
     {
         if ($this->_kontextFactory == null)
@@ -108,7 +108,7 @@ class ConvertFund extends UserStory
         $fund = new Fund();
 
         #region Id
-        if (isset($multidimensionalArray["Id"]) && 
+        if (isset($multidimensionalArray["Id"]) &&
             !empty($multidimensionalArray["Id"]))
         {
             if (!is_numeric($multidimensionalArray["Id"]))
@@ -127,22 +127,22 @@ class ConvertFund extends UserStory
         #endregion
 
         #region Anzahl
-        if (!isset($multidimensionalArray["Anzahl"]) || 
+        if (!isset($multidimensionalArray["Anzahl"]) ||
             empty($multidimensionalArray["Anzahl"]))
         {
             $this->addMessage("Anzahl ist nicht gesetzt!");
         }
-        else if (!is_numeric($multidimensionalArray["Anzahl"]))
+        else if (!is_numeric(str_replace(">", "", $multidimensionalArray["Anzahl"])))
         {
             $this->addMessage("Anzahl muss eine Zahl sein!");
         }
-        else if (intval($multidimensionalArray["Anzahl"]) <= 0)
+        else if (intval(str_replace(">", "", $multidimensionalArray["Anzahl"])) <= 0)
         {
             $this->addMessage("Anzahl muss mindestens 1 sein!");
         }
         else
         {
-            $fund->setAnzahl(intval($multidimensionalArray["Anzahl"]));
+            $fund->setAnzahl($multidimensionalArray["Anzahl"]);
         }
         #endregion
 
@@ -162,9 +162,9 @@ class ConvertFund extends UserStory
             }
         }
         #endregion
-        
+
         #region Dimension1
-        if (isset($multidimensionalArray["Dimension1"]) && 
+        if (isset($multidimensionalArray["Dimension1"]) &&
             !empty($multidimensionalArray["Dimension1"]))
         {
             if (!is_numeric($multidimensionalArray["Dimension1"]))
@@ -183,7 +183,7 @@ class ConvertFund extends UserStory
         #endregion
 
         #region Dimension2
-        if (isset($multidimensionalArray["Dimension2"]) && 
+        if (isset($multidimensionalArray["Dimension2"]) &&
             !empty($multidimensionalArray["Dimension2"]))
         {
             if (!is_numeric($multidimensionalArray["Dimension2"]))
@@ -202,7 +202,7 @@ class ConvertFund extends UserStory
         #endregion
 
         #region Dimension3
-        if (isset($multidimensionalArray["Dimension3"]) && 
+        if (isset($multidimensionalArray["Dimension3"]) &&
             !empty($multidimensionalArray["Dimension3"]))
         {
             if (!is_numeric($multidimensionalArray["Dimension3"]))
@@ -221,7 +221,7 @@ class ConvertFund extends UserStory
         #endregion
 
         #region Masse
-        if (isset($multidimensionalArray["Masse"]) && 
+        if (isset($multidimensionalArray["Masse"]) &&
             !empty($multidimensionalArray["Masse"]))
         {
             if (!is_numeric($multidimensionalArray["Masse"]))
