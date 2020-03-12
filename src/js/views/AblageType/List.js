@@ -90,7 +90,7 @@ function InitGrid()
 
         inserting: false,
         editing: false,
-        sorting: false,
+        sorting: true,
         paging: false,
         autoload: false,
 
@@ -99,19 +99,23 @@ function InitGrid()
 				title: "",
 				name: "Icon",
 				type: "icon",
-				width: 16
+				width: 16,
+				sorting: false
 			},
             {
+				title: "Bezeichnung",
                 name: "Bezeichnung",
                 type: "text",
-                validate: "required"
+                validate: "required",
+				sorting: true
             },
             {
                 title: "Anzahl von Ablagen",
                 name: "CountOfAblagen",
                 type: "number",
                 inserting: false,
-                editing: false
+                editing: false,
+				sorting: true
             }
         ],
 
@@ -139,6 +143,8 @@ function UpdateGridData(ablageTypes) {
 	$("#gridContainer").jsGrid({
 		data: entries
 	});
+
+	$("#grid").jsGrid("sort", "Bezeichnung");
 }
 
 function setIdToEditLink(id) {

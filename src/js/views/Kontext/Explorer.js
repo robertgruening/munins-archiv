@@ -414,5 +414,8 @@ function UpdateGridDataChildren(children) {
 	$("#grid").jsGrid({
 		data: entries
 	});
+
+	$("#grid").jsGrid("sort", "Bezeichnung");
+	$("#grid").jsGrid("sort", "TypeBezeichnung");
 }
 //#endregion
