@@ -85,23 +85,3 @@ input[type="button"] {
 #toolBar li {
     display: inline;
 }
-
-#toolBar li:nth-child(n+2):nth-last-child(n+2) .linkButton {
-	border-radius: 0;
-	border-right: 0;
-}
-
-#toolBar li:first-of-type .linkButton {
-	border-top-left-radius: 5px;
-	border-bottom-left-radius: 5px;
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
-	border-right: 0;
-}
-
-#toolBar li:nth-last-of-type(1) .linkButton {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-	border-top-right-radius: 5px;
-	border-bottom-right-radius: 5px;
-}
