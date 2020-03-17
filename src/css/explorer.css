@@ -24,20 +24,6 @@
     display: inline;
 }
 
-#toolBar li .linkButton {
-    border-radius: 0;
-}
-
-#toolBar li:first .linkButton {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
-
-#toolBar li:last .linkButton {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-
 input#path {
 	margin: 5px 0px 5px 10px;
 	line-height: 30px;
