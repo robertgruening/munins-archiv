@@ -46,42 +46,32 @@ a {
 	color: SteelBlue;
 }
 
-.linkButton {
-    padding: 7px 15px;
-    color:#333333;
-    text-decoration: none;
-	border-radius: 5px;
-	border: 1px solid #cccccc;
-	background-color: #eeeeee;
-	display: block;
-}
-
-.linkButton label {
+.ui-button label {
     padding-left: 5px;
 }
 
-.linkButton:hover {
-    color: #1d5987;
-    background-color: #d0e5f5;
-}
-
-.linkButton.riskyAction {
+.ui-button.riskyAction {
     color: #b81900;
 }
 
-.linkButton.riskyAction:hover {
-    color: white;
-    background-color: #b81900;
+.ui-button.riskyAction:hover {
+    color: #b81900;
+    background-color: #ffd3cc;
+	background-image: none;
+	border-color: #b81900;
 }
 
-.linkButton.disabled {
-	color: #969696;
-	background-color: #eeeeee;
-}
-
-.linkButton.disabled:hover {
+.ui-button.disabled {
     color: #969696;
-    background-color: #eeeeee;
+	background-color: #eeeeee;
+	background-image: none;
+}
+
+.ui-button.disabled:hover {
+    color: #969696;
+	background-color: #eeeeee;
+	background-image: none;
+	border-color: #cccccc;
 }
 
 /**************/
