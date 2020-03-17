@@ -180,7 +180,10 @@ class KontextFactory extends Factory implements iTreeFactory
             {
                 if ($datensatz = $ergebnis->fetch_assoc())
                 {
-                    $kontext = $this->loadById(intval($datensatz["Id"]));
+					if ($datensatz["Id"] != null)
+					{
+                    	$kontext = $this->loadById(intval($datensatz["Id"]));
+					}
                 }
             }
         }
@@ -771,7 +774,10 @@ class KontextFactory extends Factory implements iTreeFactory
                 {
                     while ($datensatz = $ergebnis->fetch_assoc())
                     {
-                        array_push($kontexte, $this->loadById(intval($datensatz["Id"])));
+						if ($datensatz["Id"] != null)
+						{
+                        	array_push($kontexte, $this->loadById(intval($datensatz["Id"])));
+						}
                     }
                 }
             }
@@ -887,7 +893,10 @@ class KontextFactory extends Factory implements iTreeFactory
                 {
                     while ($datensatz = $ergebnis->fetch_assoc())
                     {
-                        array_push($kontexte, $this->loadById(intval($datensatz["Id"])));
+						if ($datensatz["Id"] != null)
+						{
+                        	array_push($kontexte, $this->loadById(intval($datensatz["Id"])));
+						}
                     }
                 }
             }

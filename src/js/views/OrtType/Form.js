@@ -55,35 +55,19 @@ function InitBreadcrumb()
 
 //#region messages
 function showMessageLoaded(element) {
-    $.toast({
-        heading: "Information",
-        text: "Ortstyp \"" + element.Bezeichnung + "\" geladen",
-        icon: "info"
-    });
+    showInformationMessageBox("Ortstyp \"" + element.Bezeichnung + "\" geladen");
 }
 
 function showMessageCreated(element) {
-    $.toast({
-        heading: "Information",
-        text: "Ortstyp \"" + element.Bezeichnung + "\" erzeugt",
-        icon: "success"
-    });
+    showSuccessMessageBox("Ortstyp \"" + element.Bezeichnung + "\" erzeugt");
 }
 
 function showMessageSaved(element) {
-    $.toast({
-        heading: "Information",
-        text: "Ortstyp \"" + element.Bezeichnung + "\" gespeichert",
-        icon: "success"
-    });
+    showSuccessMessageBox("Ortstyp \"" + element.Bezeichnung + "\" gespeichert");
 }
 
 function showMessageDeleted(element) {
-    $.toast({
-        heading: "Information",
-        text: "Ortstyp \"" + element.Bezeichnung + "\" gelöscht",
-        icon: "success"
-    });
+    showSuccessMessageBox("Ortstyp \"" + element.Bezeichnung + "\" gelöscht");
 }
 //#endregion
 

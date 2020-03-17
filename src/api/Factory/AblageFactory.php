@@ -114,7 +114,10 @@ class AblageFactory extends Factory implements iTreeFactory
             {
                 if ($datensatz = $ergebnis->fetch_assoc())
                 {
-                    $ablage = $this->loadById(intval($datensatz["Id"]));
+					if ($datensatz["Id"] != null)
+					{
+                    	$ablage = $this->loadById(intval($datensatz["Id"]));
+					}
                 }
             }
         }
@@ -322,7 +325,10 @@ class AblageFactory extends Factory implements iTreeFactory
             {
                 while ($datensatz = $ergebnis->fetch_assoc())
                 {
-                    array_push($elemente, $this->loadById(intval($datensatz["Id"])));
+					if ($datensatz["Id"] != null)
+					{
+                    	array_push($elemente, $this->loadById(intval($datensatz["Id"])));
+					}
                 }
             }
         }

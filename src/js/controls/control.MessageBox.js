@@ -1,31 +1,34 @@
-function InitMessageBox()
-{
-    $("#messageBox").dialog({
-        autoOpen: false,
-        height: "auto",
-        modal: true
-    });
-}
-
-function showMessages(messages)
-{
-	ShowMessages(messages);
-}
-
-function ShowMessages(messages)
-{
-	$("#messageBox").empty();
-	messages.forEach(function(item, index) {
-		$("#messageBox").append(item);
-
-		if ((index + 1) < messages.length)
-		{
-			$("#messageBox").append("<br/>");
-		}
+function showInformationMessageBox(message) {
+	$.toast({
+		heading: "Information",
+		text: message,
+		icon: "info"
 	});
-    $("#messageBox").dialog("open");
 }
 
-$(document).ready(function() {
-	InitMessageBox();
-});
+function showSuccessMessageBox(message) {
+	$.toast({
+		heading: "Information",
+		text: message,
+		icon: "success"
+	});
+}
+
+function showWarningMessageBox(message) {
+	$.toast({
+		heading: "Warnung",
+		text: message,
+		hideAfter: false,
+		icon: "warning"
+	});
+}
+
+function showErrorMessage(message)
+{
+	$.toast({
+		heading: "Fehler",
+		text: message,
+		hideAfter: false,
+		icon: "error"
+	});
+}

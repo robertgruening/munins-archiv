@@ -55,35 +55,19 @@ function InitBreadcrumb()
 
 //#region messages
 function showMessageLoaded(element) {
-    $.toast({
-        heading: "Information",
-        text: "LfD-Nummer \"" + element.Bezeichnung + "\" geladen",
-        icon: "info"
-    });
+    showInformationMessageBox("LfD-Nummer \"" + element.Bezeichnung + "\" geladen");
 }
 
 function showMessageCreated(element) {
-    $.toast({
-        heading: "Information",
-        text: "LfD-Nummer \"" + element.Bezeichnung + "\" erzeugt",
-        icon: "success"
-    });
+    showSuccessMessageBox("LfD-Nummer \"" + element.Bezeichnung + "\" erzeugt");
 }
 
 function showMessageSaved(element) {
-    $.toast({
-        heading: "Information",
-        text: "LfD-Nummer \"" + element.Bezeichnung + "\" gespeichert",
-        icon: "success"
-    });
+    showSuccessMessageBox("LfD-Nummer \"" + element.Bezeichnung + "\" gespeichert");
 }
 
 function showMessageDeleted(element) {
-    $.toast({
-        heading: "Information",
-        text: "LfD-Nummer \"" + element.Bezeichnung + "\" gelöscht",
-        icon: "success"
-    });
+    showSuccessMessageBox("LfD-Nummer \"" + element.Bezeichnung + "\" gelöscht");
 }
 //#endregion
 

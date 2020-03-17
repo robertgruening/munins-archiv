@@ -81,35 +81,19 @@ function loadCreatedElement(element) {
 
 //#region messages
 function showMessageParentSet() {
-	$.toast({
-		heading: "Information",
-		text: "übergeordnete Kontext gesetzt",
-		icon: "info"
-	});
+	showInformationMessageBox("übergeordnete Kontext gesetzt");
 }
 
 function showMessageLoaded(element) {
-	$.toast({
-		heading: "Information",
-		text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
-		icon: "success"
-	});
+	showSuccessMessageBox("Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen");
 }
 
 function showMessageSaved(element) {
-	$.toast({
-		heading: "Information",
-		text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert",
-		icon: "success"
-	});
+	showSuccessMessageBox("Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert");
 }
 
 function showMessageDeleted(element) {
-	$.toast({
-		heading: "Information",
-		text: "Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
-		icon: "success"
-	});
+	showSuccessMessageBox("Kontext \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht");
 }
 //#endregion
 
@@ -306,7 +290,7 @@ function InitButtonSelectOrt() {
 }
 
 function ShowFormSelectOrt() {
-	$("#dialogSelectOrt").dialog({
+	$("#dialogSelect").dialog({
 		height: "auto",
 		width: 750,
 		title: "Ort auswählen",
@@ -314,7 +298,7 @@ function ShowFormSelectOrt() {
 		resizable: false,
 		buttons: {
 			"Speichern": function () {
-				_viewModelFormBegehungsflaeche.addOrt(GetSelectedOrt());
+				_viewModelFormBegehungsflaeche.addOrt(getSelectedItem());
 				$(this).dialog("close");
 			},
 			"Abbrechen": function () {
@@ -323,9 +307,12 @@ function ShowFormSelectOrt() {
 		}
 	});
 
-	$("#treeSelectOrt").jstree(true).refresh();
+	var viewModelFactory = new ViewModelFactory();
+	var viewModelExplorer = viewModelFactory.getViewModelExplorerOrt();
+	var iconCssClasses =  IconConfig.getCssClasses("Ort");
+	initExplorerSelectTypedItem(viewModelExplorer, iconCssClasses);
 
-	$("#dialogSelectOrt").dialog("open");
+	$("#dialogSelect").dialog("open");
 }
 
 function setOrte(orte) {

@@ -8,10 +8,11 @@
 	<script type="text/javascript" src="../../js/ui/jquery-ui/jquery-ui.js"></script>
 	<script type="text/javascript" src="../../js/solid.min.js"></script>
 	<!-- controls -->
-	<script type="text/javascript" src="../../js/controls/vakata-jstree/jstree.min.js"></script>
+	<script type="text/javascript" src="../../js/controls/jsgrid/jsgrid.min.js"></script>
 	<script type="text/javascript" src="../../js/controls/jquery.toast.min.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.Navigation.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.Breadcrumb.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.MessageBox.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.ErrorMessageBox.js"></script>
 	<script type="text/javascript" src="../../js/ui/controls/control.List.js"></script>
 	<!-- basic page functions -->
@@ -32,15 +33,14 @@
 	<!-- view model -->
 	<script type="text/javascript" src="../../js/viewModels/ViewModelForm.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelFormFund.js"></script>
-	<script type="text/javascript" src="../../js/viewModels/Fund/FormSelectFundAttribut.js"></script>
-	<script type="text/javascript" src="../../js/viewModels/Fund/FormSelectKontext.js"></script>
-	<script type="text/javascript" src="../../js/viewModels/Fund/FormSelectAblage.js"></script>
+	<script type="text/javascript" src="../../js/viewModels/ViewModelExplorer.js"></script>
+	<script type="text/javascript" src="../../js/viewModels/ViewModelExplorerAblage.js"></script>
+	<script type="text/javascript" src="../../js/viewModels/ViewModelExplorerKontext.js"></script>
+	<script type="text/javascript" src="../../js/viewModels/ViewModelExplorerFundAttribut.js"></script>
 	<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
 	<!-- view -->
 	<script type="text/javascript" src="../../js/views/Fund/Form.js"></script>
-	<script type="text/javascript" src="../../js/views/Fund/FormSelectFundAttribut.js"></script>
-	<script type="text/javascript" src="../../js/views/Fund/FormSelectKontext.js"></script>
-	<script type="text/javascript" src="../../js/views/Fund/FormSelectAblage.js"></script>
+	<script type="text/javascript" src="../../js/views/ExplorerSelectTypedItem.js"></script>
 
 	<!-- javascript frameworks etc. -->
 	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
@@ -49,9 +49,11 @@
 	<!-- page -->
 	<link rel="stylesheet" type="text/css" href="../../css/page.css" />
 	<!-- controls -->
-	<link rel="stylesheet" type="text/css" href="../../js/controls/vakata-jstree/themes/default/style.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid-theme.min.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/jquery.toast.min.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/form.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/grid.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/navigation.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/breadcrumb.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/leftSidebar.css" />
@@ -173,14 +175,17 @@
 				</div>
 			</div>
 		</div>
-		<div id=dialogSelectFundAttribut title="Fundattribut auswählen" class=dialog>
-			<div id=treeSelectFundAttribut></div>
-		</div>
-		<div id=dialogSelectKontext title="Kontext auswählen" class=dialog>
-			<div id=treeSelectKontext></div>
-		</div>
-		<div id=dialogSelectAblage class=dialog>
-			<div id=treeSelectAblage></div>
+		<div id=dialogSelect title="" class=dialog>
+			<ul id=toolBar>
+				<li><a id=buttonOpen title=öffnen class=linkButton><i class="fas fa-external-link-alt"></i><label>Öffnen</label></a></li>
+			</ul>
+			<ul id=toolBar style="float:left;">
+				<li><a id=buttonOpenParent title="Übergeordneten Knoten öffnen" class="linkButton"><i class="fas fa-arrow-alt-circle-up"></i></a></li>
+				<li><a id=buttonOpenAbstractRoot title="Wurzelknoten öffnen" class="linkButton"><i class="fas fa-home"></i></a></li>
+			</ul>
+			<input id=path type=text />
+			<div class=clear></div>
+			<div id=explorerSelect></div>
 		</div>
 		<div id=dialogDelete title=Löschen class=dialog></div>
 	</div>

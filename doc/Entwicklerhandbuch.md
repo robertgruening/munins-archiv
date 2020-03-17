@@ -64,7 +64,6 @@
 * [jQuery UI](https://jquery.com/) v1.12.1 von der **jQuery Foundation** unter der *MIT-Lizenz*
 * [jQuery Toast Plugin](https://github.com/kamranahmedse/jquery-toast-plugin) v1.3.2 von **Kamran Ahmed** unter der *MIT-Lizenz*
 * [jsGrid](http://js-grid.com/) v1.5.3 von **Artem Tabalin** unter der *MIT-Lizenz*
-* [jsTree](https://www.jstree.com/) v3.3.9 unter der *MIT-Lizenz*
 
 ## 4. Architektur
 

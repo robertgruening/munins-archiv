@@ -78,35 +78,19 @@ function loadCreatedElement(element) {
 
 //#region messages
 function showMessageParentSet() {
-	$.toast({
-		heading: "Information",
-		text: "übergeordneten Ort gesetzt",
-		icon: "info"
-	});
+	showInformationMessageBox("übergeordneten Ort gesetzt");
 }
 
 function showMessageLoaded(element) {
-	$.toast({
-		heading: "Information",
-		text: "Ort \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
-		icon: "success"
-	});
+	showSuccessMessageBox("Ort \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen");
 }
 
 function showMessageSaved(element) {
-	$.toast({
-		heading: "Information",
-		text: "Ort \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert",
-		icon: "success"
-	});
+	showSuccessMessageBox("Ort \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert");
 }
 
 function showMessageDeleted(element) {
-	$.toast({
-		heading: "Information",
-		text: "Ort \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
-		icon: "success"
-	});
+	showSuccessMessageBox("Ort \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht");
 }
 //#endregion
 

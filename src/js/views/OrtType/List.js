@@ -32,42 +32,42 @@ function RegisterToViewModel() {
 	_viewModelListOrtType.register("loadAll", new GuiClient(showMessageAllLoaded, showErrorMessages));
 	_viewModelListOrtType.register("create", new GuiClient(showMessageCreated, showErrorMessages));
 	_viewModelListOrtType.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
-	_viewModelListOrtType.register("itemSelected", new GuiClient(markSelectedItem, showErrorMessages));
     _viewModelListOrtType.register("itemSelected", new GuiClient(EnableButtonEdit, null));
     _viewModelListOrtType.register("itemSelected", new GuiClient(EnableButtonDelete, null));
-    _viewModelListOrtType.register("selectionCleared", new GuiClient(clearSelectedItemHighlighting, null));
     _viewModelListOrtType.register("selectionCleared", new GuiClient(DisableButtonEdit, null));
     _viewModelListOrtType.register("selectionCleared", new GuiClient(DisableButtonDelete, null));
 }
 
 function clearSelectedItemHighlighting() {
     $(".jsgrid-row, .jsgrid-alt-row").each(function(index){
-        console.log("DEBUG: Removing css class from:")
-        console.log($(this));
         $(this).removeClass("selectedRow");
     });
 }
 
-function markSelectedItem(selectedItemArgs) {
-    clearSelectedItemHighlighting();
-
-    if (selectedItemArgs == undefined ||
-        selectedItemArgs == null ||
-        selectedItemArgs.Index == undefined)
+function markSelectedItem(selectedItemIndex) {
+    if (selectedItemIndex == undefined ||
+        selectedItemIndex == null)
     {
-        console.log("ERROR: Setting selected item index is not set!")
+        console.error("Selected item index is not set!")
         return;
     }
 
-    console.log("DEBUG: Setting selected item:")
-    console.log(selectedItemArgs);
+	console.debug("Selected item index", selectedItemIndex);
 
-    var row = $(".jsgrid-row, .jsgrid-alt-row").eq(selectedItemArgs.Index)
+    var row = $(".jsgrid-row, .jsgrid-alt-row").eq(selectedItemIndex)
 
-    console.log("DEBUG: Selected row:");
-    console.log(row);
+	if (row.hasClass("selectedRow"))
+	{
+		console.debug("Deselect row");
+	    row.removeClass("selectedRow");
+	}
+	else
+	{
+		clearSelectedItemHighlighting();
 
-    row.addClass("selectedRow");
+		console.debug("Select row");
+	    row.addClass("selectedRow");
+	}
 }
 
 var IconField = function(config) {
@@ -120,9 +120,10 @@ function InitGrid()
         ],
 
         rowClick: function(args) {
-            console.log("DEBUG: Selected element:");
-            console.log(args.item);
-            _viewModelListOrtType.selectItem(args.item);
+			console.info("row clicked");
+			console.debug("clicked item", args.item);
+			markSelectedItem(args.itemIndex);
+			_viewModelListOrtType.selectItem(args.item);
         }
     });
 
@@ -152,35 +153,19 @@ function setIdToEditLink(id) {
 }
 
 function showMessageAllLoaded(elements) {
-    $.toast({
-        heading: "Information",
-        text: elements.length + " Ortstypen geladen",
-        icon: "info"
-    });
+    showInformationMessageBox(elements.length + " Ortstypen geladen");
 }
 
 function showMessageCreated(element) {
-    $.toast({
-        heading: "Information",
-        text: "Ortstyp \"" + element.Bezeichnung + "\" erzeugt",
-        icon: "success"
-    });
+    showSuccessMessageBox("Ortstyp \"" + element.Bezeichnung + "\" erzeugt");
 }
 
 function showMessageSaved(element) {
-    $.toast({
-        heading: "Information",
-        text: "Ortstyp \"" + element.Bezeichnung + "\" gespeichert",
-        icon: "success"
-    });
+    showSuccessMessageBox("Ortstyp \"" + element.Bezeichnung + "\" gespeichert");
 }
 
 function showMessageDeleted(element) {
-    $.toast({
-        heading: "Information",
-        text: "Ortstyp \"" + element.Bezeichnung + "\" gelöscht",
-        icon: "success"
-    });
+    showSuccessMessageBox("Ortstyp \"" + element.Bezeichnung + "\" gelöscht");
 }
 
 //#region form actions

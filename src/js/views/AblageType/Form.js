@@ -55,35 +55,19 @@ function InitBreadcrumb()
 
 //#region messages
 function showMessageLoaded(element) {
-    $.toast({
-        heading: "Information",
-        text: "Ablagetyp \"" + element.Bezeichnung + "\" geladen",
-        icon: "info"
-    });
+	showInformationMessageBox("Ablagetyp \"" + element.Bezeichnung + "\" geladen");
 }
 
 function showMessageCreated(element) {
-    $.toast({
-        heading: "Information",
-        text: "Ablagetyp \"" + element.Bezeichnung + "\" erzeugt",
-        icon: "success"
-    });
+	showSuccessMessageBox("Ablagetyp \"" + element.Bezeichnung + "\" erzeugt");
 }
 
 function showMessageSaved(element) {
-    $.toast({
-        heading: "Information",
-        text: "Ablagetyp \"" + element.Bezeichnung + "\" gespeichert",
-        icon: "success"
-    });
+	showSuccessMessageBox("Ablagetyp \"" + element.Bezeichnung + "\" gespeichert");
 }
 
 function showMessageDeleted(element) {
-    $.toast({
-        heading: "Information",
-        text: "Ablagetyp \"" + element.Bezeichnung + "\" gelöscht",
-        icon: "success"
-    });
+	showSuccessMessageBox("Ablagetyp \"" + element.Bezeichnung + "\" gelöscht");
 }
 //#endregion
 

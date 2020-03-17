@@ -79,35 +79,19 @@ function loadCreatedElement(element) {
 
 //#region messages
 function showMessageParentSet() {
-	$.toast({
-		heading: "Information",
-		text: "übergeordnete Ablage gesetzt",
-		icon: "info"
-	});
+	showInformationMessageBox("übergeordnete Ablage gesetzt");
 }
 
 function showMessageLoaded(element) {
-	$.toast({
-		heading: "Information",
-		text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen",
-		icon: "success"
-	});
+	showSuccessMessageBox("Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") geladen");
 }
 
 function showMessageSaved(element) {
-	$.toast({
-		heading: "Information",
-		text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert",
-		icon: "success"
-	});
+	showSuccessMessageBox("Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gespeichert");
 }
 
 function showMessageDeleted(element) {
-	$.toast({
-		heading: "Information",
-		text: "Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
-		icon: "success"
-	});
+	showSuccessMessageBox("Ablage \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht");
 }
 //#endregion
 

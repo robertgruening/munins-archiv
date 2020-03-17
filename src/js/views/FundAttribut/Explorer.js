@@ -30,11 +30,9 @@ function getPageName() {
 
 function RegisterToViewModel() {
 	_viewModelExplorerFundAttribut.register("id", new GuiClient(EnableButtonNew, showErrorMessages));
-	_viewModelExplorerFundAttribut.register("childItemSelected", new GuiClient(markSelectedChildItem, showErrorMessages));
 	_viewModelExplorerFundAttribut.register("childItemSelected", new GuiClient(EnableButtonOpen, null));
 	_viewModelExplorerFundAttribut.register("childItemSelected", new GuiClient(EnableButtonEdit, null));
 	_viewModelExplorerFundAttribut.register("childItemSelected", new GuiClient(EnableButtonDelete, null));
-    _viewModelExplorerFundAttribut.register("childSelectionCleared", new GuiClient(clearSelectedItemHighlighting, null));
 	_viewModelExplorerFundAttribut.register("childSelectionCleared", new GuiClient(DisableButtonOpen, null));
 	_viewModelExplorerFundAttribut.register("childSelectionCleared", new GuiClient(DisableButtonEdit, null));
 	_viewModelExplorerFundAttribut.register("childSelectionCleared", new GuiClient(DisableButtonDelete, null));
@@ -47,44 +45,30 @@ function clearSelectedItemHighlighting() {
     });
 }
 
-function markSelectedParentItem(selectedItemArgs) {
-    clearSelectedItemHighlighting();
-
-    if (selectedItemArgs == undefined ||
-        selectedItemArgs == null ||
-        selectedItemArgs.Index == undefined)
+function markSelectedChildItem(selectedItemIndex) {
+    if (selectedItemIndex == undefined ||
+        selectedItemIndex == null)
     {
-        console.error("Setting selected parent item index is not set!")
+        console.error("Selected child item index is not set!")
         return;
     }
 
-    console.debug("Setting selected parent item:", selectedItemArgs);
+	console.debug("Selected child item index", selectedItemIndex);
 
-    var row = $(".jsgrid-row, .jsgrid-alt-row").eq(selectedItemArgs.Index)
+    var row = $(".jsgrid-row, .jsgrid-alt-row").eq(selectedItemIndex)
 
-    console.debug("Selected row:", row);
+	if (row.hasClass("selectedRow"))
+	{
+		console.debug("Deselect row");
+	    row.removeClass("selectedRow");
+	}
+	else
+	{
+		clearSelectedItemHighlighting();
 
-    row.addClass("selectedRow");
-}
-
-function markSelectedChildItem(selectedItemArgs) {
-    clearSelectedItemHighlighting();
-
-    if (selectedItemArgs == undefined ||
-        selectedItemArgs == null ||
-        selectedItemArgs.Index == undefined)
-    {
-        console.error("Setting selected child item index is not set!")
-        return;
-    }
-
-	console.debug("Setting selected child item:", selectedItemArgs);
-
-    var row = $(".jsgrid-row, .jsgrid-alt-row").eq(selectedItemArgs.Index)
-
-    console.debug("Selected row:", row);
-
-    row.addClass("selectedRow");
+		console.debug("Select row");
+	    row.addClass("selectedRow");
+	}
 }
 
 function InitBreadcrumb()
@@ -209,11 +193,7 @@ function ShowDialogDelete() {
 }
 
 function showMessageDeleted(element) {
-    $.toast({
-        heading: "Information",
-        text: "Fundattribut \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht",
-        icon: "success"
-    });
+	showSuccessMessageBox("Fundattribut \"" + element.Bezeichnung + "\" (" + element.Type.Bezeichnung + ") gelöscht");
 }
 //#endregion
 
@@ -344,30 +324,17 @@ function InitGrid()
 
         rowClick: function(args) {
 			console.info("row clicked");
-			console.debug("selected grid item", args.item);
-
+			console.debug("clicked item", args.item);
+			markSelectedChildItem(args.itemIndex);
 			_viewModelExplorerFundAttribut.selectChildItem(args.item);
         },
 
 		rowDoubleClick: function(args) {
 			console.info("row double clicked");
-			console.debug("selected grid item", args.item);
-
+			console.debug("clicked item", args.item);
+			markSelectedChildItem(args.itemIndex);
 			console.warn("view model will not be informed about double clicked grid item");
-
-			if (args.item.Id === undefined) {
-				console.debug("selected grid item is abstract root");
-				window.open("/Munins Archiv/src/pages/FundAttribut/Explorer.html", "_self");
-			}
-			else if (args.item.Parent === undefined) {
-				console.debug("selected grid item is root");
-				window.open("/Munins Archiv/src/pages/FundAttribut/Explorer.html", "_self");
-			}
-			else {
-				console.debug("selected grid item is standard node");
-				window.open("/Munins Archiv/src/pages/FundAttribut/Explorer.html?Id=" + args.item.Id, "_self");
-			}
-
+			window.open("/Munins Archiv/src/pages/FundAttribut/Explorer.html?Id=" + args.item.Id, "_self");
 		}
     });
 }

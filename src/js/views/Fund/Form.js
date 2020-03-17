@@ -209,7 +209,7 @@ function InitButtonSelectFundAttribut() {
 }
 
 function ShowFormSelectFundAttribut() {
-	$("#dialogSelectFundAttribut").dialog({
+	$("#dialogSelect").dialog({
 		height: "auto",
 		width: 750,
 		title: "Fundattribut auswählen",
@@ -217,7 +217,8 @@ function ShowFormSelectFundAttribut() {
 		resizable: false,
 		buttons: {
 			"Speichern": function () {
-				_viewModelFormFund.addFundAttribut(GetSelectedFundAttribut());
+				_viewModelFormFund.addFundAttribut(getSelectedItem());
+				setKontext(_viewModelFormFund.getKontext());
 				$(this).dialog("close");
 			},
 			"Abbrechen": function () {
@@ -226,9 +227,12 @@ function ShowFormSelectFundAttribut() {
 		}
 	});
 
-	$("#treeSelectFundAttribut").jstree(true).refresh();
+	var viewModelFactory = new ViewModelFactory();
+	var viewModelExplorer = viewModelFactory.getViewModelExplorerFundAttribut();
+	var iconCssClasses =  IconConfig.getCssClasses("FundAttribut");
+	initExplorerSelectTypedItem(viewModelExplorer, iconCssClasses);
 
-	$("#dialogSelectFundAttribut").dialog("open");
+	$("#dialogSelect").dialog("open");
 }
 
 function setFundAttribute(fundAttribute) {
@@ -239,7 +243,7 @@ function setFundAttribute(fundAttribute) {
 		var li = $("<li>");
 		var linkFundAttribut = $("<a>");
 		linkFundAttribut.attr("title", "gehe zu");
-		linkFundAttribut.attr("href", "../../pages/FundAttribut/Explorer.html?Id=" + fundAttribut.Id);
+		linkFundAttribut.attr("href", "../../pages/FundAttribut/Form.html?Id=" + fundAttribut.Id);
 		linkFundAttribut.text("/" + fundAttribut.Path);
 		li.append(linkFundAttribut);
 
@@ -376,7 +380,7 @@ function setAblage(ablage) {
 }
 
 function ShowFormSelectAblage() {
-	$("#dialogSelectAblage").dialog({
+	$("#dialogSelect").dialog({
 		height: "auto",
 		width: 750,
 		title: "Ablage auswählen",
@@ -384,7 +388,7 @@ function ShowFormSelectAblage() {
 		resizable: false,
 		buttons: {
 			"Speichern": function () {
-				_viewModelFormFund.setAblage(GetSelectedAblage());
+				_viewModelFormFund.setAblage(getSelectedItem());
 				setAblage(_viewModelFormFund.getAblage());
 				$(this).dialog("close");
 			},
@@ -394,9 +398,12 @@ function ShowFormSelectAblage() {
 		}
 	});
 
-	$("#treeSelectAblage").jstree(true).refresh();
+	var viewModelFactory = new ViewModelFactory();
+	var viewModelExplorer = viewModelFactory.getViewModelExplorerAblage();
+	var iconCssClasses =  IconConfig.getCssClasses("Ablage");
+	initExplorerSelectTypedItem(viewModelExplorer, iconCssClasses);
 
-	$("#dialogSelectAblage").dialog("open");
+	$("#dialogSelect").dialog("open");
 }
 
 function showMessagesAblage(messages) {
@@ -425,7 +432,7 @@ function setKontext(kontext) {
 }
 
 function ShowFormSelectKontext() {
-	$("#dialogSelectKontext").dialog({
+	$("#dialogSelect").dialog({
 		height: "auto",
 		width: 750,
 		title: "Kontext auswählen",
@@ -433,7 +440,7 @@ function ShowFormSelectKontext() {
 		resizable: false,
 		buttons: {
 			"Speichern": function () {
-				_viewModelFormFund.setKontext(GetSelectedKontext());
+				_viewModelFormFund.setKontext(getSelectedItem());
 				setKontext(_viewModelFormFund.getKontext());
 				$(this).dialog("close");
 			},
@@ -443,9 +450,12 @@ function ShowFormSelectKontext() {
 		}
 	});
 
-	$("#treeSelectKontext").jstree(true).refresh();
+	var viewModelFactory = new ViewModelFactory();
+	var viewModelExplorer = viewModelFactory.getViewModelExplorerKontext();
+	var iconCssClasses = null;
+	initExplorerSelectTypedItem(viewModelExplorer, iconCssClasses);
 
-	$("#dialogSelectKontext").dialog("open");
+	$("#dialogSelect").dialog("open");
 }
 
 function showMessagesKontext(messages) {
@@ -455,33 +465,17 @@ function showMessagesKontext(messages) {
 
 
 function showMessageLoaded(element) {
-    $.toast({
-        heading: "Information",
-        text: "Fund (" + element.Id + ") geladen",
-        icon: "info"
-    });
+    showInformationMessageBox("Fund (" + element.Id + ") geladen");
 }
 
 function showMessageCreated(element) {
-    $.toast({
-        heading: "Information",
-        text: "Fund (" + element.Id + ") erzeugt",
-        icon: "success"
-    });
+	showSuccessMessageBox("Fund (" + element.Id + ") erzeugt");
 }
 
 function showMessageSaved(element) {
-    $.toast({
-        heading: "Information",
-        text: "Fund (" + element.Id + ") gespeichert",
-        icon: "success"
-    });
+	showSuccessMessageBox("Fund (" + element.Id + ") gespeichert");
 }
 
 function showMessageDeleted(element) {
-    $.toast({
-        heading: "Information",
-        text: "Fund (" + element.Id + ") gelöscht",
-        icon: "success"
-    });
+    showSuccessMessageBox("Fund (" + element.Id + ") gelöscht");
 }
