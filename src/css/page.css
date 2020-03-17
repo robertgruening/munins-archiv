@@ -27,8 +27,7 @@ html, body {
 /**********/
 
 html, body {
-	font-family: Verdana, Arial;
-	background-color: #eeeeee;
+	font-family: Verdana, Arial;	
 	color: #333333;
 }
 
@@ -48,10 +47,13 @@ a {
 }
 
 .linkButton {
-    padding: 5px;
+    padding: 7px 15px;
     color:#333333;
     text-decoration: none;
 	border-radius: 5px;
+	border: 1px solid #cccccc;
+	background-color: #eeeeee;
+	display: block;
 }
 
 .linkButton label {
@@ -59,28 +61,27 @@ a {
 }
 
 .linkButton:hover {
-    color:azure;
-    background-color: SteelBlue;
+    color: #1d5987;
+    background-color: #d0e5f5;
 }
 
 .linkButton.riskyAction {
-    padding: 5px;
     color: #b81900;
 }
 
 .linkButton.riskyAction:hover {
-    color:azure;
+    color: white;
     background-color: #b81900;
 }
 
 .linkButton.disabled {
-    padding: 5px;
-    color: #969696;
+	color: #969696;
+	background-color: #eeeeee;
 }
 
 .linkButton.disabled:hover {
     color: #969696;
-    background-color: inherit;
+    background-color: #eeeeee;
 }
 
 /**************/
