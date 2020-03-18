@@ -249,13 +249,10 @@ function setLfdNummern(lfdNummern) {
 
 	lfdNummern.forEach(lfdNummer => {
 		var li = $("<li>");
-		var labelLfdNummer = $("<label>");
-		labelLfdNummer.text(lfdNummer.Bezeichnung);
-		li.append(labelLfdNummer);
 
 		var linkButtonDelete = $("<a>");
 		linkButtonDelete.attr("title", "löschen");
-		linkButtonDelete.attr("class", "linkButton riskyAction");
+		linkButtonDelete.attr("class", "ui-button risky-action");
 		linkButtonDelete.attr("href", "javascript:removeLfdNummer(" + lfdNummer.Id + ");");
 
 		var icon = $("<i>");
@@ -263,6 +260,11 @@ function setLfdNummern(lfdNummern) {
 		linkButtonDelete.append(icon);
 		li.append(linkButtonDelete);
 
+		li.append("&nbsp;");
+
+		var labelLfdNummer = $("<label>");
+		labelLfdNummer.text(lfdNummer.Bezeichnung);
+		li.append(labelLfdNummer);
 
 		$("#divLfdNummern div #divList ul").append(li);
 	});
@@ -321,15 +323,10 @@ function setOrte(orte) {
 
 	orte.forEach(ort => {
 		var li = $("<li>");
-		var linkOrt = $("<a>");
-		linkOrt.attr("title", "gehe zu");
-		linkOrt.attr("href", "../../pages/Ort/Explorer.html?Id=" + ort.Id);
-		linkOrt.text("/" + ort.Path);
-		li.append(linkOrt);
 
 		var linkButtonDelete = $("<a>");
 		linkButtonDelete.attr("title", "löschen");
-		linkButtonDelete.attr("class", "linkButton riskyAction");
+		linkButtonDelete.attr("class", "ui-button risky-action");
 		linkButtonDelete.attr("href", "javascript:removeOrt(" + ort.Id + ");");
 
 		var icon = $("<i>");
@@ -337,6 +334,13 @@ function setOrte(orte) {
 		linkButtonDelete.append(icon);
 		li.append(linkButtonDelete);
 
+		li.append("&nbsp;");
+
+		var linkOrt = $("<a>");
+		linkOrt.attr("title", "gehe zu");
+		linkOrt.attr("href", "../../pages/Ort/Explorer.html?Id=" + ort.Id);
+		linkOrt.text("/" + ort.Path);
+		li.append(linkOrt);
 
 		$("#divOrte div #divList ul").append(li);
 	});

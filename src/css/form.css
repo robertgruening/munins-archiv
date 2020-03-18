@@ -1,22 +1,6 @@
 /* colors */
-.formBlock .fieldBlock {
-	margin-bottom: 10px;
-	padding-top: 5px;
-	border-top: 1px dashed;
-	overflow: hidden;
-}
-
-.formBlock .buttonBlock {
-	margin-top: 10px;
-	padding-top: 20px;
-	border-top: 1px dashed;
-}
 
 .formBlock .fieldBlock {
-	border-color: DarkGray;
-}
-
-.formBlock .buttonBlock {
 	border-color: DarkGray;
 }
 
@@ -25,16 +9,25 @@
 }
 
 /* boxing and sizing */
+
 .formBlock {
 	padding-right: 20px;
 }
 
 .formBlock .fieldBlock {
+	margin-bottom: 10px;
+	padding-top: 5px;
+	overflow: hidden;
+
     min-height: 25px;
     overflow: auto;
 }
 
-.formBlock .fieldBlock div {
+.formBlock .fieldBlock:not(:first-of-type) {
+	border-top: 1px dashed;
+}
+
+.formBlock .fieldBlock > div {
     float: left;
 }
 
@@ -84,4 +77,14 @@ input[type="button"] {
 
 #toolBar li {
     display: inline;
+}
+
+.editable-list ul {
+	margin: 0;
+	padding: 0;
+}
+
+.editable-list ul li {
+	list-style: none;
+	padding-bottom: 5px;
 }

@@ -21,3 +21,8 @@
     border-bottom: 2px solid #cccccc;
     background-color: inherit;
 }
+
+/* v1.1 */
+#breadcrumb {
+    display: none;
+}

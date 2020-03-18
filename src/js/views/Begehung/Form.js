@@ -252,13 +252,10 @@ function setLfdNummern(lfdNummern) {
 
 	lfdNummern.forEach(lfdNummer => {
 		var li = $("<li>");
-		var labelLfdNummer = $("<label>");
-		labelLfdNummer.text(lfdNummer.Bezeichnung);
-		li.append(labelLfdNummer);
 
 		var linkButtonDelete = $("<a>");
 		linkButtonDelete.attr("title", "löschen");
-		linkButtonDelete.attr("class", "linkButton riskyAction");
+		linkButtonDelete.attr("class", "ui-button risky-action");
 		linkButtonDelete.attr("href", "javascript:removeLfdNummer(" + lfdNummer.Id + ");");
 
 		var icon = $("<i>");
@@ -266,6 +263,11 @@ function setLfdNummern(lfdNummern) {
 		linkButtonDelete.append(icon);
 		li.append(linkButtonDelete);
 
+		li.append("&nbsp;");
+
+		var labelLfdNummer = $("<label>");
+		labelLfdNummer.text(lfdNummer.Bezeichnung);
+		li.append(labelLfdNummer);
 
 		$("#divLfdNummern div #divList ul").append(li);
 	});

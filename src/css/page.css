@@ -10,7 +10,10 @@ html, body {
 }
 
 #content {
-    padding-top: 76px; /* = outer height of #navigation + outer height of #breadcrumb */
+	padding-top: 66px; /* = outer height of #navigation + outer height of #breadcrumb */
+
+	/* v1.1 */	
+	padding-top: 47px; /* = outer height of #navigation */
 }
 
 .form {
@@ -50,11 +53,11 @@ a {
     padding-left: 5px;
 }
 
-.ui-button.riskyAction {
-    color: #b81900;
+.ui-button.risky-action {
+    color: #b81900 !important;
 }
 
-.ui-button.riskyAction:hover {
+.ui-button.risky-action:hover {
     color: #b81900;
     background-color: #ffd3cc;
 	background-image: none;
@@ -72,6 +75,10 @@ a {
 	background-color: #eeeeee;
 	background-image: none;
 	border-color: #cccccc;
+}
+
+input[type=text] {
+	border: 1px solid #cccccc;
 }
 
 /**************/

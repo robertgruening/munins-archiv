@@ -6,7 +6,7 @@
 		"Children" :
 		[
 			{
-				"Title" : "durchsuchen",
+				"Title" : "Kontexte durchsuchen",
 				"URL" : "/Munins Archiv/src/pages/Kontext/Explorer.html",
 				"PageName" : "KontextExplorer"
 			},
@@ -55,18 +55,18 @@
 		"Children" :
 		[
 			{
-				"Title" : "durchsuchen",
+				"Title" : "Orte durchsuchen",
 				"URL" : "/Munins Archiv/src/pages/Ort/Explorer.html",
 				"PageName" : "OrtExplorer"
 			},
 			{
-				"Title" : "bearbeiten",
+				"Title" : "Ort anlegen",
 				"URL" : "/Munins Archiv/src/pages/Ort/Form.html",
 				"PageName" : "OrtFormNew",
 				"Visible" : false
 			},
 			{
-				"Title" : "bearbeiten",
+				"Title" : "Ort bearbeiten",
 				"URL" : "/Munins Archiv/src/pages/Ort/Form.html",
 				"PageName" : "OrtFormEdit",
 				"Visible" : false
@@ -95,18 +95,18 @@
 		"Children" :
 		[
 			{
-				"Title" : "durchsuchen",
+				"Title" : "Ablagen durchsuchen",
 				"URL" : "/Munins Archiv/src/pages/Ablage/Explorer.html",
 				"PageName" : "AblageExplorer"
 			},
 			{
-				"Title" : "bearbeiten",
+				"Title" : "Ablage anlegen",
 				"URL" : "/Munins Archiv/src/pages/Ablage/Form.html",
 				"PageName" : "AblageFormNew",
 				"Visible" : false
 			},
 			{
-				"Title" : "bearbeiten",
+				"Title" : "Ablage bearbeiten",
 				"URL" : "/Munins Archiv/src/pages/Ablage/Form.html",
 				"PageName" : "AblageFormEdit",
 				"Visible" : false
@@ -120,12 +120,12 @@
 		"Children" :
 		[
 			{
-				"Title" : "neu anlegen",
+				"Title" : "Fund anlegen",
 				"URL" : "/Munins Archiv/src/pages/Fund/Form.html",
 				"PageName" : "FundFormNew"
 			},
 			{
-				"Title" : "bearbeiten",
+				"Title" : "Fund bearbeiten",
 				"URL" : "/Munins Archiv/src/pages/Fund/Form.html",
 				"PageName" : "FundFormEdit",
 				"Visible" : false
@@ -145,18 +145,18 @@
 		"Children" :
 		[
 			{
-				"Title" : "durchsuchen",
+				"Title" : "Fundattribut durchsuchen",
 				"URL" : "/Munins Archiv/src/pages/FundAttribut/Explorer.html",
 				"PageName" : "FundAttributExplorer"
 			},
 			{
-				"Title" : "bearbeiten",
+				"Title" : "Fundattribut anlegen",
 				"URL" : "/Munins Archiv/src/pages/FundAttribut/Form.html",
 				"PageName" : "FundAttributFormNew",
 				"Visible" : false
 			},
 			{
-				"Title" : "bearbeiten",
+				"Title" : "Fundattribut bearbeiten",
 				"URL" : "/Munins Archiv/src/pages/FundAttribut/Form.html",
 				"PageName" : "FundAttributFormEdit",
 				"Visible" : false
@@ -174,12 +174,12 @@
 				"Children" :
 				[
 					{
-						"Title" : "Ablagetypen verwalten",
+						"Title" : "Ablagetypen durchsuchen",
 						"URL" : "/Munins Archiv/src/pages/AblageType/List.html",
 						"PageName" : "AblageTypeList"
 					},
 					{
-						"Title" : "Ablage neu anlegen",
+						"Title" : "Ablage anlegen",
 						"URL" : "/Munins Archiv/src/pages/AblageType/Form.html",
 						"PageName" : "AblageTypeFormNew",
 						"Visible" : false
@@ -191,29 +191,29 @@
 						"Visible" : false
 					},
 					{
-						"Title" : "Ortstypen verwalten",
+						"Title" : "Ortstypen durchsuchen",
 						"URL" : "/Munins Archiv/src/pages/OrtType/List.html",
 						"PageName" : "OrtTypeList"
 					},
 					{
-						"Title" : "Ort neu anlegen",
+						"Title" : "Ortstyp anlegen",
 						"URL" : "/Munins Archiv/src/pages/OrtType/Form.html",
 						"PageName" : "OrtTypeFormNew",
 						"Visible" : false
 					},
 					{
-						"Title" : "Ort bearbeiten",
+						"Title" : "Ortstyp bearbeiten",
 						"URL" : "/Munins Archiv/src/pages/OrtType/Form.html",
 						"PageName" : "OrtTypeFormEdit",
 						"Visible" : false
 					},
 					{
-						"Title" : "Fundattributtypen verwalten",
+						"Title" : "Fundattributtypen durchsuchen",
 						"URL" : "/Munins Archiv/src/pages/FundAttributType/List.html",
 						"PageName" : "FundAttributTypeList"
 					},
 					{
-						"Title" : "Fundattributtyp neu anlegen",
+						"Title" : "Fundattributtyp anlegen",
 						"URL" : "/Munins Archiv/src/pages/FundAttributType/Form.html",
 						"PageName" : "FundAttributTypeFormNew",
 						"Visible" : false
@@ -232,17 +232,17 @@
 				"Children" :
 				[
 					{
-						"Title" : "durchsuchen",
+						"Title" : "LfD-Nummern durchsuchen",
 						"URL" : "/Munins Archiv/src/pages/LfdNummer/List.html",
 						"PageName" : "LfdNummerList"
 					},
 					{
-						"Title" : "neu anlegen",
+						"Title" : "LfD-Nummer anlegen",
 						"URL" : "/Munins Archiv/src/pages/LfdNummer/Form.html",
 						"PageName" : "LfdNummerFormNew"
 					},
 					{
-						"Title" : "bearbeiten",
+						"Title" : "LfD-Nummer bearbeiten",
 						"URL" : "/Munins Archiv/src/pages/LfdNummer/Form.html",
 						"PageName" : "LfdNummerFormEdit",
 						"Visible" : false

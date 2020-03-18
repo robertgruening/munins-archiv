@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="../../js/controls/jsgrid/i18n/jsgrid-de.js"></script>
 	<script type="text/javascript" src="../../js/controls/jquery.toast.min.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.Navigation.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.Headline.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.Breadcrumb.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.MessageBox.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.ErrorMessageBox.js"></script>
@@ -74,7 +75,7 @@
 					<li><a id=buttonNew title=anlegen class=ui-button><i class="fas fa-plus"></i><label>Anlegen</label></a></li>
 					<li><a id=buttonSave title=speichern class=ui-button><i class="fas fa-save"></i><label>Speichern</label></a></li>
 					<li><a id=buttonUndo title="Änderungen verwerfen" class=ui-button><i class="fas fa-undo-alt"></i><label>Änderungen verwerfen</label></a></li>
-					<li><a id=buttonDelete title=löschen class="ui-button riskyAction"><i class="fas fa-trash-alt"></i><label>Löschen</label></a></li>
+					<li><a id=buttonDelete title=löschen class="ui-button risky-action"><i class="fas fa-trash-alt"></i><label>Löschen</label></a></li>
 					<li><a id=buttonToOverview title="Übersicht öffnen" class=ui-button><i class="fas fa-list"></i><label>Übersicht öffnen</label></a></li>
 				</ul>
 				<div id=divType class=fieldBlock>
@@ -124,7 +125,7 @@
 					</div>
 					<div class=fieldValue>
 						<div name="messages"></div>
-						<div id=divList class=field></div>
+						<div id=divList class="field editable-list"></div>
 						<a id=buttonSelectLfdNummer title="auswählen" class="notToPrint ui-button"><i class="fas fa-plus"></i></a>
 					</div>
 				</div>

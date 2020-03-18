@@ -24,3 +24,8 @@
     border-top:2px solid #cccccc;
     background-color: inherit;
 }
+
+/* v1.1 */
+#clipboard {
+    display: none;
+}

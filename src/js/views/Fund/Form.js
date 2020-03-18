@@ -241,15 +241,10 @@ function setFundAttribute(fundAttribute) {
 
 	fundAttribute.forEach(fundAttribut => {
 		var li = $("<li>");
-		var linkFundAttribut = $("<a>");
-		linkFundAttribut.attr("title", "gehe zu");
-		linkFundAttribut.attr("href", "../../pages/FundAttribut/Form.html?Id=" + fundAttribut.Id);
-		linkFundAttribut.text("/" + fundAttribut.Path);
-		li.append(linkFundAttribut);
 
 		var linkButtonDelete = $("<a>");
 		linkButtonDelete.attr("title", "löschen");
-		linkButtonDelete.attr("class", "linkButton riskyAction");
+		linkButtonDelete.attr("class", "ui-button risky-action");
 		linkButtonDelete.attr("href", "javascript:removeFundAttribut(" + fundAttribut.Id + ");");
 
 		var icon = $("<i>");
@@ -257,6 +252,13 @@ function setFundAttribute(fundAttribute) {
 		linkButtonDelete.append(icon);
 		li.append(linkButtonDelete);
 
+		li.append("&nbsp;");
+
+		var linkFundAttribut = $("<a>");
+		linkFundAttribut.attr("title", "gehe zu");
+		linkFundAttribut.attr("href", "../../pages/FundAttribut/Form.html?Id=" + fundAttribut.Id);
+		linkFundAttribut.text("/" + fundAttribut.Path);
+		li.append(linkFundAttribut);
 
 		$("#divFundAttribute div #divList ul").append(li);
 	});
