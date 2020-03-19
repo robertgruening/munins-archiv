@@ -95,8 +95,7 @@ function InitBreadcrumb()
 //#region form actions
 //#region new
 function InitButtonNew() {
-EnableButtonNew();
-$("#buttonNew").attr("href", "/Munins Archiv/src/pages/" + getChildKontextTypeBezeichnung(null) + "/Form.html");
+	EnableButtonNew();
 }
 
 function EnableButtonNew(id) {
@@ -114,6 +113,7 @@ if (id === undefined ||
 }
 
 function DisableButtonNew() {
+	$("#buttonNew").removeAttr("href");
 	$("#buttonNew").addClass("disabled");
 	$("#buttonNew").prop("disabled", true);
 }
@@ -122,7 +122,6 @@ function DisableButtonNew() {
 //#region open
 function InitButtonOpen() {
 	DisableButtonOpen();
-	$("#buttonOpen").click();
 }
 
 function EnableButtonOpen(args) {
@@ -138,6 +137,7 @@ function EnableButtonOpen(args) {
 }
 
 function DisableButtonOpen() {
+	$("#buttonOpen").removeAttr("href");
 	$("#buttonOpen").addClass("disabled");
 	$("#buttonOpen").prop("disabled", true);
 }
@@ -146,7 +146,6 @@ function DisableButtonOpen() {
 //#region edit
 function InitButtonEdit() {
 	DisableButtonEdit();
-	$("#buttonEdit").click();
 }
 
 function EnableButtonEdit(args) {
@@ -162,6 +161,7 @@ function EnableButtonEdit(args) {
 }
 
 function DisableButtonEdit() {
+	$("#buttonEdit").removeAttr("href");
 	$("#buttonEdit").addClass("disabled");
 	$("#buttonEdit").prop("disabled", true);
 }
@@ -170,15 +170,16 @@ function DisableButtonEdit() {
 //#region delete
 function InitButtonDelete() {
 	DisableButtonDelete();
-	$("#buttonDelete").click(ShowDialogDelete);
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
 }
 
 function DisableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").addClass("disabled");
 	$("#buttonDelete").prop("disabled", true);
 }
@@ -240,6 +241,7 @@ function EnableButtonOpenParent(parent)
 
 function DisableButtonOpenParent()
 {
+	$("#buttonOpenParent").removeAttr("click");
 	$("#buttonOpenParent").addClass("disabled");
 	$("#buttonOpenParent").prop("disabled", true);
 }
@@ -250,7 +252,6 @@ function InitButtonOpenAbstractRoot()
 {
 	DisableButtonOpenAbstractRoot();
 	_viewModelExplorerKontext.register("parent", new GuiClient(EnableButtonOpenAbstractRoot, showErrorMessages));
-	$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html");
 }
 
 function EnableButtonOpenAbstractRoot(parent)
@@ -262,12 +263,14 @@ function EnableButtonOpenAbstractRoot(parent)
 		return;
 	}
 
+	$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html");
 	$("#buttonOpenAbstractRoot").removeClass("disabled");
 	$("#buttonOpenAbstractRoot").prop("disabled", false);
 }
 
 function DisableButtonOpenAbstractRoot()
 {
+	$("#buttonOpenAbstractRoot").removeAttr("href");
 	$("#buttonOpenAbstractRoot").addClass("disabled");
 	$("#buttonOpenAbstractRoot").prop("disabled", true);
 }

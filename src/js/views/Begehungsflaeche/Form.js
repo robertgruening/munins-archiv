@@ -7,7 +7,6 @@ $(document).ready(function () {
 	_viewModelListKontextType = viewModelFactory.getViewModelListKontextType();
 
 	InitStatusChanged();
-	InitDataChanged();
 	InitBreadcrumb();
 	InitButtonNew();
 	InitButtonSave();
@@ -62,10 +61,6 @@ function InitStatusChanged() {
 	_viewModelFormBegehungsflaeche.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormBegehungsflaeche.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormBegehungsflaeche.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
-}
-
-function InitDataChanged() {
-	_viewModelFormBegehungsflaeche.register("dataChanged", new GuiClient(EnableButtonUndo, showErrorMessages));
 }
 
 function InitBreadcrumb()
@@ -363,15 +358,16 @@ function showMessagesOrte(messages) {
 //#region new
 function InitButtonNew() {
 	EnableButtonNew();
-	$("#buttonNew").click(openFormNewElement);
 }
 
 function EnableButtonNew() {
+	$("#buttonNew").click(openFormNewElement);
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
 }
 
 function DisableButtonNew() {
+	$("#buttonNew").off("click");
 	$("#buttonNew").addClass("disabled");
 	$("#buttonNew").prop("disabled", true);
 }
@@ -379,16 +375,19 @@ function DisableButtonNew() {
 
 //#region save
 function InitButtonSave() {
-	EnableButtonSave();
-	$("#buttonSave").click(function () { _viewModelFormBegehungsflaeche.save(); });
+	DisableButtonSave();
+	_viewModelFormBegehungsflaeche.register("dataChanged", new GuiClient(EnableButtonSave, showErrorMessages));
+	_viewModelFormBegehungsflaeche.register("dataResetted", new GuiClient(DisableButtonSave, showErrorMessages));
 }
 
 function EnableButtonSave() {
+	$("#buttonSave").click(function () { _viewModelFormBegehungsflaeche.save(); });
 	$("#buttonSave").removeClass("disabled");
 	$("#buttonSave").prop("disabled", false);
 }
 
 function DisableButtonSave() {
+	$("#buttonSave").off("click");
 	$("#buttonSave").addClass("disabled");
 	$("#buttonSave").prop("disabled", true);
 }
@@ -397,15 +396,16 @@ function DisableButtonSave() {
 //#region delete
 function InitButtonDelete() {
 	DisableButtonDelete();
-	$("#buttonDelete").click(ShowDialogDelete);
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
 }
 
 function DisableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").addClass("disabled");
 	$("#buttonDelete").prop("disabled", true);
 }
@@ -438,20 +438,22 @@ function ShowDialogDelete() {
 //#region undo
 function InitButtonUndo() {
 	DisableButtonUndo();
+	_viewModelFormBegehungsflaeche.register("dataChanged", new GuiClient(EnableButtonUndo, showErrorMessages));
 	_viewModelFormBegehungsflaeche.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
 	_viewModelFormBegehungsflaeche.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
+}
+
+function EnableButtonUndo() {
 	$("#buttonUndo").click(function () {
 		console.log("button 'undo' clicked");
 		_viewModelFormBegehungsflaeche.undoAllChanges();
 	});
-}
-
-function EnableButtonUndo() {
 	$("#buttonUndo").removeClass("disabled");
 	$("#buttonUndo").prop("disabled", false);
 }
 
 function DisableButtonUndo() {
+	$("#buttonUndo").off("click");
 	$("#buttonUndo").addClass("disabled");
 	$("#buttonUndo").prop("disabled", true);
 }
@@ -465,7 +467,6 @@ function ResetPropertiesMessages() {
 function InitButtonToOverview() {
 	EnableButtonToOverview();
 	_viewModelFormBegehungsflaeche.register("parent", new GuiClient(EnableButtonToOverview, showErrorMessages));
-	$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
 }
 
 function EnableButtonToOverview(parent) {
@@ -484,6 +485,7 @@ function EnableButtonToOverview(parent) {
 	}
 
 	function DisableButtonToOverview() {
+		$("#buttonToOverview").removeAttr("href");
 		$("#buttonToOverview").addClass("disabled");
 		$("#buttonToOverview").prop("disabled", true);
 	}

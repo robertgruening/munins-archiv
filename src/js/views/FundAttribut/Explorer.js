@@ -81,13 +81,11 @@ function InitBreadcrumb()
 //#region new
 function InitButtonNew() {
 	EnableButtonNew();
-	$("#buttonNew").attr("href", "/Munins Archiv/src/pages/FundAttribut/Form.html");
 }
 
 function EnableButtonNew(id) {
 	if (id === undefined ||
 		id === null) {
-
 		$("#buttonNew").attr("href", "/Munins Archiv/src/pages/FundAttribut/Form.html");
 	}
 	else {
@@ -99,6 +97,7 @@ function EnableButtonNew(id) {
 }
 
 function DisableButtonNew() {
+	$("#buttonNew").removeAttr("href");
 	$("#buttonNew").addClass("disabled");
 	$("#buttonNew").prop("disabled", true);
 }
@@ -107,7 +106,6 @@ function DisableButtonNew() {
 //#region open
 function InitButtonOpen() {
 	DisableButtonOpen();
-	$("#buttonOpen").click();
 }
 
 function EnableButtonOpen(args) {
@@ -123,6 +121,7 @@ function EnableButtonOpen(args) {
 }
 
 function DisableButtonOpen() {
+	$("#buttonOpen").removeAttr("href");
 	$("#buttonOpen").addClass("disabled");
 	$("#buttonOpen").prop("disabled", true);
 }
@@ -131,7 +130,6 @@ function DisableButtonOpen() {
 //#region edit
 function InitButtonEdit() {
 	DisableButtonEdit();
-	$("#buttonEdit").click();
 }
 
 function EnableButtonEdit(args) {
@@ -147,6 +145,7 @@ function EnableButtonEdit(args) {
 }
 
 function DisableButtonEdit() {
+	$("#buttonEdit").removeAttr("href");
 	$("#buttonEdit").addClass("disabled");
 	$("#buttonEdit").prop("disabled", true);
 }
@@ -155,15 +154,16 @@ function DisableButtonEdit() {
 //#region delete
 function InitButtonDelete() {
 	DisableButtonDelete();
-	$("#buttonDelete").click(ShowDialogDelete);
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
 }
 
 function DisableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").addClass("disabled");
 	$("#buttonDelete").prop("disabled", true);
 }
@@ -223,6 +223,7 @@ function EnableButtonOpenParent(parent) {
 }
 
 function DisableButtonOpenParent() {
+	$("#buttonOpenParent").removeAttr("href");
 	$("#buttonOpenParent").addClass("disabled");
 	$("#buttonOpenParent").prop("disabled", true);
 }
@@ -232,7 +233,6 @@ function DisableButtonOpenParent() {
 function InitButtonOpenAbstractRoot() {
 	DisableButtonOpenAbstractRoot();
 	_viewModelExplorerFundAttribut.register("parent", new GuiClient(EnableButtonOpenAbstractRoot, showErrorMessages));
-	$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/src/pages/FundAttribut/Explorer.html");
 }
 
 function EnableButtonOpenAbstractRoot(parent) {
@@ -243,11 +243,13 @@ function EnableButtonOpenAbstractRoot(parent) {
 		return;
 	}
 
+	$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/src/pages/FundAttribut/Explorer.html");
 	$("#buttonOpenAbstractRoot").removeClass("disabled");
 	$("#buttonOpenAbstractRoot").prop("disabled", false);
 }
 
 function DisableButtonOpenAbstractRoot() {
+	$("#buttonOpenAbstractRoot").removeAttr("href");
 	$("#buttonOpenAbstractRoot").addClass("disabled");
 	$("#buttonOpenAbstractRoot").prop("disabled", true);
 }

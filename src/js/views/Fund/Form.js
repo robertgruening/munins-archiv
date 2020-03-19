@@ -5,7 +5,6 @@ $(document).ready(function () {
 	_viewModelFormFund = viewModelFactory.getViewModelFormFund();
 
 	InitStatusChanged();
-	InitDataChanged();
 	InitBreadcrumb();
 	InitButtonNew();
 	InitButtonSave();
@@ -50,10 +49,6 @@ function InitStatusChanged() {
 	_viewModelFormFund.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
 }
 
-function InitDataChanged() {
-	_viewModelFormFund.register("dataChanged", new GuiClient(EnableButtonUndo, showErrorMessages));
-}
-
 function InitBreadcrumb()
 {
     $("#breadcrumb").Breadcrumb({
@@ -65,15 +60,16 @@ function InitBreadcrumb()
 //#region new
 function InitButtonNew() {
 	EnableButtonNew();
-	$("#buttonNew").click(openFormNewElement);
 }
 
 function EnableButtonNew() {
+	$("#buttonNew").click(openFormNewElement);
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
 }
 
 function DisableButtonNew() {
+	$("#buttonNew").off("click");
 	$("#buttonNew").addClass("disabled");
 	$("#buttonNew").prop("disabled", true);
 }
@@ -81,16 +77,19 @@ function DisableButtonNew() {
 
 //#region save
 function InitButtonSave() {
-	EnableButtonSave();
-	$("#buttonSave").click(function () { _viewModelFormFund.save(); });
+	DisableButtonSave();
+	_viewModelFormFund.register("dataChanged", new GuiClient(EnableButtonSave, showErrorMessages));
+	_viewModelFormFund.register("dataResetted", new GuiClient(DisableButtonSave, showErrorMessages));
 }
 
 function EnableButtonSave() {
+	$("#buttonSave").click(function () { _viewModelFormFund.save(); });
 	$("#buttonSave").removeClass("disabled");
 	$("#buttonSave").prop("disabled", false);
 }
 
 function DisableButtonSave() {
+	$("#buttonSave").off("click");
 	$("#buttonSave").addClass("disabled");
 	$("#buttonSave").prop("disabled", true);
 }
@@ -99,15 +98,16 @@ function DisableButtonSave() {
 //#region delete
 function InitButtonDelete() {
 	DisableButtonDelete();
-	$("#buttonDelete").click(ShowDialogDelete);
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
 }
 
 function DisableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").addClass("disabled");
 	$("#buttonDelete").prop("disabled", true);
 }
@@ -140,17 +140,19 @@ function ShowDialogDelete() {
 //#region undo
 function InitButtonUndo() {
 	DisableButtonUndo();
+	_viewModelFormFund.register("dataChanged", new GuiClient(EnableButtonUndo, showErrorMessages));
 	_viewModelFormFund.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
 	_viewModelFormFund.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
-	$("#buttonUndo").click(function () { _viewModelFormFund.undoAllChanges(); });
 }
 
 function EnableButtonUndo() {
+	$("#buttonUndo").click(function () { _viewModelFormFund.undoAllChanges(); });
 	$("#buttonUndo").removeClass("disabled");
 	$("#buttonUndo").prop("disabled", false);
 }
 
 function DisableButtonUndo() {
+	$("#buttonUndo").off("click");
 	$("#buttonUndo").addClass("disabled");
 	$("#buttonUndo").prop("disabled", true);
 }

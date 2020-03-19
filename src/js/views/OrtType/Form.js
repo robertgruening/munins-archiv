@@ -5,7 +5,6 @@ $(document).ready(function () {
 	_viewModelFormOrtType = viewModelFactory.getViewModelFormOrtType();
 
 	InitStatusChanged();
-	InitDataChanged();
     InitBreadcrumb();
     InitButtonNew();
     InitButtonSave();
@@ -40,10 +39,6 @@ function InitStatusChanged() {
 	_viewModelFormOrtType.register("create", new GuiClient(showMessageCreated, showErrorMessages));
 	_viewModelFormOrtType.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormOrtType.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
-}
-
-function InitDataChanged() {
-	_viewModelFormOrtType.register("dataChanged", new GuiClient(EnableButtonUndo, showErrorMessages));
 }
 
 function InitBreadcrumb()
@@ -135,15 +130,16 @@ function setCountOfOrten(countOfOrten) {
 //#region new
 function InitButtonNew() {
 	EnableButtonNew();
-	$("#buttonNew").click(openFormNewElement);
 }
 
 function EnableButtonNew() {
+	$("#buttonNew").click(openFormNewElement);
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
 }
 
 function DisableButtonNew() {
+	$("#buttonNew").off("click");
 	$("#buttonNew").addClass("disabled");
 	$("#buttonNew").prop("disabled", true);
 }
@@ -151,16 +147,19 @@ function DisableButtonNew() {
 
 //#region save
 function InitButtonSave() {
-	EnableButtonSave();
-	$("#buttonSave").click(function () { _viewModelFormOrtType.save(); });
+	DisableButtonSave();
+	_viewModelFormOrtType.register("dataChanged", new GuiClient(EnableButtonSave, showErrorMessages));
+	_viewModelFormOrtType.register("dataResetted", new GuiClient(DisableButtonSave, showErrorMessages));
 }
 
 function EnableButtonSave() {
+	$("#buttonSave").click(function () { _viewModelFormOrtType.save(); });
 	$("#buttonSave").removeClass("disabled");
 	$("#buttonSave").prop("disabled", false);
 }
 
 function DisableButtonSave() {
+	$("#buttonSave").off("click");
 	$("#buttonSave").addClass("disabled");
 	$("#buttonSave").prop("disabled", true);
 }
@@ -169,15 +168,16 @@ function DisableButtonSave() {
 //#region delete
 function InitButtonDelete() {
 	DisableButtonDelete();
-	$("#buttonDelete").click(ShowDialogDelete);
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
 }
 
 function DisableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").addClass("disabled");
 	$("#buttonDelete").prop("disabled", true);
 }
@@ -210,20 +210,22 @@ function ShowDialogDelete() {
 //#region undo
 function InitButtonUndo() {
 	DisableButtonUndo();
+	_viewModelFormOrtType.register("dataChanged", new GuiClient(EnableButtonUndo, showErrorMessages));
 	_viewModelFormOrtType.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
 	_viewModelFormOrtType.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
-	$("#buttonUndo").click(function () {
-        console.log("button 'undo' clicked");
-		_viewModelFormOrtType.undoAllChanges();
-	});
 }
 
 function EnableButtonUndo() {
+	$("#buttonUndo").click(function () {
+		console.log("button 'undo' clicked");
+		_viewModelFormOrtType.undoAllChanges();
+	});
 	$("#buttonUndo").removeClass("disabled");
 	$("#buttonUndo").prop("disabled", false);
 }
 
 function DisableButtonUndo() {
+	$("#buttonUndo").off("click");
 	$("#buttonUndo").addClass("disabled");
 	$("#buttonUndo").prop("disabled", true);
 }
@@ -236,18 +238,19 @@ function ResetPropertiesMessages() {
 //#region open list
 function InitButtonToList() {
 	EnableButtonToList();
+}
+
+function EnableButtonToList() {
 	$("#buttonToList").click( function() {
         console.log("button 'to list' clicked");
 		window.open("/Munins Archiv/src/pages/OrtType/List.html", "_self");
 	});
-}
-
-function EnableButtonToList() {
 	$("#buttonToList").removeClass("disabled");
 	$("#buttonToList").prop("disabled", false);
 }
 
 function DisableButtonToList() {
+	$("#buttonToList").off("click");
 	$("#buttonToList").addClass("disabled");
 	$("#buttonToList").prop("disabled", true);
 }

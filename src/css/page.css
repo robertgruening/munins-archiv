@@ -12,7 +12,7 @@ html, body {
 #content {
 	padding-top: 66px; /* = outer height of #navigation + outer height of #breadcrumb */
 
-	/* v1.1 */	
+	/* v1.1 */
 	padding-top: 47px; /* = outer height of #navigation */
 }
 
@@ -30,7 +30,7 @@ html, body {
 /**********/
 
 html, body {
-	font-family: Verdana, Arial;	
+	font-family: Verdana, Arial;
 	color: #333333;
 }
 
@@ -65,7 +65,7 @@ a {
 }
 
 .ui-button.disabled {
-    color: #969696;
+    color: #969696 !important;
 	background-color: #eeeeee;
 	background-image: none;
 }

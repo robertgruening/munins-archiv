@@ -7,7 +7,6 @@ $(document).ready(function () {
 	_viewModelListKontextType = viewModelFactory.getViewModelListKontextType();
 
 	InitStatusChanged();
-	InitDataChanged();
 	InitBreadcrumb();
 	InitButtonNew();
 	InitButtonSave();
@@ -60,10 +59,6 @@ function InitStatusChanged() {
 	_viewModelFormFundstelle.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormFundstelle.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormFundstelle.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
-}
-
-function InitDataChanged() {
-	_viewModelFormFundstelle.register("dataChanged", new GuiClient(EnableButtonUndo, showErrorMessages));
 }
 
 function InitBreadcrumb()
@@ -285,15 +280,16 @@ function showMessagesLfdNummern(messages) {
 //#region new
 function InitButtonNew() {
 	EnableButtonNew();
-	$("#buttonNew").click(openFormNewElement);
 }
 
 function EnableButtonNew() {
+	$("#buttonNew").click(openFormNewElement);
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
 }
 
 function DisableButtonNew() {
+	$("#buttonNew").off("click");
 	$("#buttonNew").addClass("disabled");
 	$("#buttonNew").prop("disabled", true);
 }
@@ -301,16 +297,19 @@ function DisableButtonNew() {
 
 //#region save
 function InitButtonSave() {
-	EnableButtonSave();
-	$("#buttonSave").click(function () { _viewModelFormFundstelle.save(); });
+	DisableButtonSave();
+	_viewModelFormFundstelle.register("dataChanged", new GuiClient(EnableButtonSave, showErrorMessages));
+	_viewModelFormFundstelle.register("dataResetted", new GuiClient(DisableButtonSave, showErrorMessages));
 }
 
 function EnableButtonSave() {
+	$("#buttonSave").click(function () { _viewModelFormFundstelle.save(); });
 	$("#buttonSave").removeClass("disabled");
 	$("#buttonSave").prop("disabled", false);
 }
 
 function DisableButtonSave() {
+	$("#buttonSave").off("click");
 	$("#buttonSave").addClass("disabled");
 	$("#buttonSave").prop("disabled", true);
 }
@@ -319,15 +318,16 @@ function DisableButtonSave() {
 //#region delete
 function InitButtonDelete() {
 	DisableButtonDelete();
-	$("#buttonDelete").click(ShowDialogDelete);
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
 }
 
 function DisableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").addClass("disabled");
 	$("#buttonDelete").prop("disabled", true);
 }
@@ -360,20 +360,22 @@ function ShowDialogDelete() {
 //#region undo
 function InitButtonUndo() {
 	DisableButtonUndo();
+	_viewModelFormFundstelle.register("dataChanged", new GuiClient(EnableButtonUndo, showErrorMessages));
 	_viewModelFormFundstelle.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
 	_viewModelFormFundstelle.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
+}
+
+function EnableButtonUndo() {
 	$("#buttonUndo").click(function () {
 		console.log("button 'undo' clicked");
 		_viewModelFormFundstelle.undoAllChanges();
 	});
-}
-
-function EnableButtonUndo() {
 	$("#buttonUndo").removeClass("disabled");
 	$("#buttonUndo").prop("disabled", false);
 }
 
 function DisableButtonUndo() {
+	$("#buttonUndo").off("click");
 	$("#buttonUndo").addClass("disabled");
 	$("#buttonUndo").prop("disabled", true);
 }
@@ -387,27 +389,27 @@ function ResetPropertiesMessages() {
 function InitButtonToOverview() {
 	EnableButtonToOverview();
 	_viewModelFormFundstelle.register("parent", new GuiClient(EnableButtonToOverview, showErrorMessages));
-	$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
 }
 
 function EnableButtonToOverview(parent) {
 	if (parent === undefined ||
 		parent === null ||
-		parent.Id === undefined) {
-
-			$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
-		}
-		else {
-			$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html?Id=" + parent.Id, "_self");
-		}
-
-		$("#buttonToOverview").removeClass("disabled");
-		$("#buttonToOverview").prop("disabled", false);
+		parent.Id === undefined)
+	{
+		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html", "_self");
+	}
+	else {
+		$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/Kontext/Explorer.html?Id=" + parent.Id, "_self");
 	}
 
-	function DisableButtonToOverview() {
-		$("#buttonToOverview").addClass("disabled");
-		$("#buttonToOverview").prop("disabled", true);
-	}
-	//#endregion
-	//#endregion
+	$("#buttonToOverview").removeClass("disabled");
+	$("#buttonToOverview").prop("disabled", false);
+}
+
+function DisableButtonToOverview() {
+	$("#buttonToOverview").removeAttr("href");
+	$("#buttonToOverview").addClass("disabled");
+	$("#buttonToOverview").prop("disabled", true);
+}
+//#endregion
+//#endregion

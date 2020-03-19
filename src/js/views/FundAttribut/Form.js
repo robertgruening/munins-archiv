@@ -7,7 +7,6 @@ $(document).ready(function () {
 	_viewModelListFundAttributType = viewModelFactory.getViewModelListFundAttributType();
 
 	InitStatusChanged();
-	InitDataChanged();
 	InitBreadcrumb();
 	InitButtonNew();
 	InitButtonSave();
@@ -59,10 +58,6 @@ function InitStatusChanged() {
 	_viewModelFormFundAttribut.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormFundAttribut.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormFundAttribut.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
-}
-
-function InitDataChanged() {
-	_viewModelFormFundAttribut.register("dataChanged", new GuiClient(EnableButtonUndo, showErrorMessages));
 }
 
 function InitBreadcrumb()
@@ -219,15 +214,16 @@ function setCountOfFunde(countOfFunde) {
 //#region new
 function InitButtonNew() {
 	EnableButtonNew();
-	$("#buttonNew").click(openFormNewElement);
 }
 
 function EnableButtonNew() {
+	$("#buttonNew").click(openFormNewElement);
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
 }
 
 function DisableButtonNew() {
+	$("#buttonNew").off("click");
 	$("#buttonNew").addClass("disabled");
 	$("#buttonNew").prop("disabled", true);
 }
@@ -235,16 +231,19 @@ function DisableButtonNew() {
 
 //#region save
 function InitButtonSave() {
-	EnableButtonSave();
-	$("#buttonSave").click(function () { _viewModelFormFundAttribut.save(); });
+	DisableButtonSave();
+	_viewModelFormFundAttribut.register("dataChanged", new GuiClient(EnableButtonSave, showErrorMessages));
+	_viewModelFormFundAttribut.register("dataResetted", new GuiClient(DisableButtonSave, showErrorMessages));
 }
 
 function EnableButtonSave() {
+	$("#buttonSave").click(function () { _viewModelFormFundAttribut.save(); });
 	$("#buttonSave").removeClass("disabled");
 	$("#buttonSave").prop("disabled", false);
 }
 
 function DisableButtonSave() {
+	$("#buttonSave").off("click");
 	$("#buttonSave").addClass("disabled");
 	$("#buttonSave").prop("disabled", true);
 }
@@ -253,15 +252,16 @@ function DisableButtonSave() {
 //#region delete
 function InitButtonDelete() {
 	DisableButtonDelete();
-	$("#buttonDelete").click(ShowDialogDelete);
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
 }
 
 function DisableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").addClass("disabled");
 	$("#buttonDelete").prop("disabled", true);
 }
@@ -294,20 +294,22 @@ function ShowDialogDelete() {
 //#region undo
 function InitButtonUndo() {
 	DisableButtonUndo();
+	_viewModelFormFundAttribut.register("dataChanged", new GuiClient(EnableButtonUndo, showErrorMessages));
 	_viewModelFormFundAttribut.register("dataResetted", new GuiClient(DisableButtonUndo, showErrorMessages));
 	_viewModelFormFundAttribut.register("dataResetted", new GuiClient(ResetPropertiesMessages, showErrorMessages));
+}
+
+function EnableButtonUndo() {
 	$("#buttonUndo").click(function () {
 		console.log("button 'undo' clicked");
 		_viewModelFormFundAttribut.undoAllChanges();
 	});
-}
-
-function EnableButtonUndo() {
 	$("#buttonUndo").removeClass("disabled");
 	$("#buttonUndo").prop("disabled", false);
 }
 
 function DisableButtonUndo() {
+	$("#buttonUndo").off("click");
 	$("#buttonUndo").addClass("disabled");
 	$("#buttonUndo").prop("disabled", true);
 }
@@ -321,7 +323,6 @@ function ResetPropertiesMessages() {
 function InitButtonToOverview() {
 	EnableButtonToOverview();
 	_viewModelFormFundAttribut.register("parent", new GuiClient(EnableButtonToOverview, showErrorMessages));
-	$("#buttonToOverview").attr("href", "/Munins Archiv/src/pages/FundAttribut/Explorer.html", "_self");
 }
 
 function EnableButtonToOverview(parent) {
@@ -340,6 +341,7 @@ function EnableButtonToOverview(parent) {
 	}
 
 	function DisableButtonToOverview() {
+		$("#buttonToOverview").removeAttr("href");
 		$("#buttonToOverview").addClass("disabled");
 		$("#buttonToOverview").prop("disabled", true);
 	}

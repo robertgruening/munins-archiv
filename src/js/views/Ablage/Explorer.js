@@ -99,6 +99,7 @@ function EnableButtonNew(id) {
 }
 
 function DisableButtonNew() {
+	$("#buttonNew").removeAttr("href");
 	$("#buttonNew").addClass("disabled");
 	$("#buttonNew").prop("disabled", true);
 }
@@ -123,6 +124,7 @@ function EnableButtonOpen(args) {
 }
 
 function DisableButtonOpen() {
+	$("#buttonOpen").removeAttr("href");
 	$("#buttonOpen").addClass("disabled");
 	$("#buttonOpen").prop("disabled", true);
 }
@@ -147,6 +149,7 @@ function EnableButtonEdit(args) {
 }
 
 function DisableButtonEdit() {
+	$("#buttonEdit").removeAttr("href");
 	$("#buttonEdit").addClass("disabled");
 	$("#buttonEdit").prop("disabled", true);
 }
@@ -155,15 +158,16 @@ function DisableButtonEdit() {
 //#region delete
 function InitButtonDelete() {
 	DisableButtonDelete();
-	$("#buttonDelete").click(ShowDialogDelete);
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
 }
 
 function DisableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").addClass("disabled");
 	$("#buttonDelete").prop("disabled", true);
 }
@@ -223,6 +227,7 @@ function EnableButtonOpenParent(parent) {
 }
 
 function DisableButtonOpenParent() {
+	$("#buttonOpenParent").removeAttr("href");
 	$("#buttonOpenParent").addClass("disabled");
 	$("#buttonOpenParent").prop("disabled", true);
 }
@@ -232,7 +237,6 @@ function DisableButtonOpenParent() {
 function InitButtonOpenAbstractRoot() {
 	DisableButtonOpenAbstractRoot();
 	_viewModelExplorerAblage.register("parent", new GuiClient(EnableButtonOpenAbstractRoot, showErrorMessages));
-	$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/src/pages/Ablage/Explorer.html");
 }
 
 function EnableButtonOpenAbstractRoot(parent) {
@@ -243,11 +247,13 @@ function EnableButtonOpenAbstractRoot(parent) {
 		return;
 	}
 
+	$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/src/pages/Ablage/Explorer.html");
 	$("#buttonOpenAbstractRoot").removeClass("disabled");
 	$("#buttonOpenAbstractRoot").prop("disabled", false);
 }
 
 function DisableButtonOpenAbstractRoot() {
+	$("#buttonOpenAbstractRoot").removeAttr("href");
 	$("#buttonOpenAbstractRoot").addClass("disabled");
 	$("#buttonOpenAbstractRoot").prop("disabled", true);
 }

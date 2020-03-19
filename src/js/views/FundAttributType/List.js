@@ -172,18 +172,19 @@ function showMessageDeleted(element) {
 //#region new
 function InitButtonNew() {
 	EnableButtonNew();
-    $("#buttonNew").click(function () {
-        console.log("button 'new' clicked");
-        window.open("/Munins Archiv/src/pages/FundAttributType/Form.html", "_self");
-    });
 }
 
 function EnableButtonNew() {
+	$("#buttonNew").click(function () {
+		console.log("button 'new' clicked");
+		window.open("/Munins Archiv/src/pages/FundAttributType/Form.html", "_self");
+	});
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
 }
 
 function DisableButtonNew() {
+	$("#buttonNew").off("click");
 	$("#buttonNew").addClass("disabled");
 	$("#buttonNew").prop("disabled", true);
 }
@@ -192,18 +193,19 @@ function DisableButtonNew() {
 //#region edit
 function InitButtonEdit() {
 	DisableButtonEdit();
-	$("#buttonEdit").click(function () {
-        console.log("button 'edit' clicked");
-        window.open("/Munins Archiv/src/pages/FundAttributType/Form.html?Id=" + _viewModelListFundAttributType.getSelectedItem().Id, "_self");
-    });
 }
 
 function EnableButtonEdit() {
+	$("#buttonEdit").click(function () {
+		console.log("button 'edit' clicked");
+		window.open("/Munins Archiv/src/pages/FundAttributType/Form.html?Id=" + _viewModelListFundAttributType.getSelectedItem().Id, "_self");
+	});
 	$("#buttonEdit").removeClass("disabled");
 	$("#buttonEdit").prop("disabled", false);
 }
 
 function DisableButtonEdit() {
+	$("#buttonEdit").off("click");
 	$("#buttonEdit").addClass("disabled");
 	$("#buttonEdit").prop("disabled", true);
 }
@@ -212,15 +214,16 @@ function DisableButtonEdit() {
 //#region delete
 function InitButtonDelete() {
 	DisableButtonDelete();
-	$("#buttonDelete").click(ShowDialogDelete);
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
 }
 
 function DisableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").addClass("disabled");
 	$("#buttonDelete").prop("disabled", true);
 }
@@ -253,18 +256,19 @@ function ShowDialogDelete() {
 //#region reload
 function InitButtonReload() {
 	EnableButtonReload();
-    $("#buttonReload").click(function () {
-        console.log("button 'reload' clicked");
-        _viewModelListFundAttributType.loadAll();
-    });
 }
 
 function EnableButtonReload() {
+	$("#buttonReload").click(function () {
+		console.log("button 'reload' clicked");
+		_viewModelListFundAttributType.loadAll();
+	});
 	$("#buttonReload").removeClass("disabled");
 	$("#buttonReload").prop("disabled", false);
 }
 
 function DisableButtonReload() {
+	$("#buttonReload").off("click");
 	$("#buttonReload").addClass("disabled");
 	$("#buttonReload").prop("disabled", true);
 }
