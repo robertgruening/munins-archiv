@@ -10,7 +10,7 @@
     color: #c77405;
 }
 
-.selectedRow > .jsgrid-cell {
+.selected-row > .jsgrid-cell {
     background-color: #f6a828;
     border-color: #f6a828;
     color: #ffffff;

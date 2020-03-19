@@ -307,7 +307,7 @@ function ShowFormSelectOrt() {
 	var viewModelFactory = new ViewModelFactory();
 	var viewModelExplorer = viewModelFactory.getViewModelExplorerOrt();
 	var iconCssClasses =  IconConfig.getCssClasses("Ort");
-	initExplorerSelectTypedItem(viewModelExplorer, iconCssClasses);
+	initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
 
 	$("#dialogSelect").dialog("open");
 }

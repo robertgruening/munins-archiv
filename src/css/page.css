@@ -38,13 +38,6 @@ a {
 	color: SteelBlue;
 }
 
-.selectedRow .fa-box,
-.selectedRow .fa-box-open,
-.selectedRow .fa-calendar-alt,
-.selectedRow .fa-tag  {
-    color: white;
-}
-
 .fa-question-circle {
 	color: SteelBlue;
 }

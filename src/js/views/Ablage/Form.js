@@ -259,13 +259,13 @@ function InitGridFunde()
 				title: "",
 				name: "Id",
 				type: "linkToFundFormField",
-				width: 35
+				width: 27
 			},
 			{
 				title: "",
 				name: "Icon",
 				type: "icon",
-				width: 16
+				width: 27
 			},
 			{
 				name: "Anzahl",

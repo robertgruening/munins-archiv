@@ -1,16 +1,13 @@
 #path {
     /*float: left;*/
     width: 85%;
+	margin: 5px 0px 5px 10px;
+	line-height: 30px;
+	font-size: 16px;
 }
 
 #grid {
     width: 100%;
-}
-
-.selected-row,
-.selected-row td.jsgrid-cell {
-    background: #c4e2ff;
-    border-color: #c4e2ff;
 }
 
 #toolBar {
@@ -22,10 +19,4 @@
 
 #toolBar li {
     display: inline;
-}
-
-input#path {
-	margin: 5px 0px 5px 10px;
-	line-height: 30px;
-	font-size: 16px;
 }

@@ -1,8 +1,10 @@
+var _htmlContainerElement = null;
 var _viewModelExplorer = null;
 var _iconCssClasses = null;
 var _selectedItem = null;
 
-function initExplorerSelectTypedItem(viewModelExplorer, iconCssClasses) {
+function initExplorerSelectTypedItem(htmlContainerElement, viewModelExplorer, iconCssClasses) {
+	_htmlContainerElement = htmlContainerElement;
 	_viewModelExplorer = viewModelExplorer;
 	_iconCssClasses = iconCssClasses;
 	_selectedItem = null;
@@ -46,8 +48,8 @@ function getSelectedItem() {
 }
 
 function clearSelectedItemHighlighting() {
-    $(".jsgrid-row, .jsgrid-alt-row").each(function(index){
-        $(this).removeClass("selectedRow");
+    $(".jsgrid-row, .jsgrid-alt-row", _htmlContainerElement).each(function(index){
+        $(this).removeClass("selected-row");
     });
 }
 
@@ -61,19 +63,19 @@ function markSelectedChildItem(selectedItemIndex) {
 
 	console.debug("Selected child item index", selectedItemIndex);
 
-    var row = $(".jsgrid-row, .jsgrid-alt-row").eq(selectedItemIndex)
+    var row = $(".jsgrid-row, .jsgrid-alt-row", _htmlContainerElement).eq(selectedItemIndex)
 
-	if (row.hasClass("selectedRow"))
+	if (row.hasClass("selected-row"))
 	{
 		console.debug("Deselect row");
-	    row.removeClass("selectedRow");
+	    row.removeClass("selected-row");
 	}
 	else
 	{
 		clearSelectedItemHighlighting();
 
 		console.debug("Select row");
-	    row.addClass("selectedRow");
+	    row.addClass("selected-row");
 	}
 }
 
@@ -85,19 +87,19 @@ function initButtonOpen() {
 
 function enableButtonOpen(args) {
 	if (args.SelectedItem.Id === undefined) {
-		$("#buttonOpen").attr("href", "javascript:_viewModelExplorer.load()");
+		$("#buttonOpen", _htmlContainerElement).attr("href", "javascript:_viewModelExplorer.load()");
 	}
 	else {
-		$("#buttonOpen").attr("href", "javascript:_viewModelExplorer.load(" + args.SelectedItem.Id + ")");
+		$("#buttonOpen", _htmlContainerElement).attr("href", "javascript:_viewModelExplorer.load(" + args.SelectedItem.Id + ")");
 	}
 
-	$("#buttonOpen").removeClass("disabled");
-	$("#buttonOpen").prop("disabled", false);
+	$("#buttonOpen", _htmlContainerElement).removeClass("disabled");
+	$("#buttonOpen", _htmlContainerElement).prop("disabled", false);
 }
 
 function disableButtonOpen() {
-	$("#buttonOpen").addClass("disabled");
-	$("#buttonOpen").prop("disabled", true);
+	$("#buttonOpen", _htmlContainerElement).addClass("disabled");
+	$("#buttonOpen", _htmlContainerElement).prop("disabled", true);
 }
 //#endregion
 
@@ -116,19 +118,19 @@ function enableButtonOpenParent(parent) {
 	}
 
 	if (parent.Id === undefined) {
-		$("#buttonOpenParent").attr("href", "javascript:_viewModelExplorer.load()");
+		$("#buttonOpenParent", _htmlContainerElement).attr("href", "javascript:_viewModelExplorer.load()");
 	}
 	else {
-		$("#buttonOpenParent").attr("href", "javascript:_viewModelExplorer.load(" + parent.Id + ")");
+		$("#buttonOpenParent", _htmlContainerElement).attr("href", "javascript:_viewModelExplorer.load(" + parent.Id + ")");
 	}
 
-	$("#buttonOpenParent").removeClass("disabled");
-	$("#buttonOpenParent").prop("disabled", false);
+	$("#buttonOpenParent", _htmlContainerElement).removeClass("disabled");
+	$("#buttonOpenParent", _htmlContainerElement).prop("disabled", false);
 }
 
 function disableButtonOpenParent() {
-	$("#buttonOpenParent").addClass("disabled");
-	$("#buttonOpenParent").prop("disabled", true);
+	$("#buttonOpenParent", _htmlContainerElement).addClass("disabled");
+	$("#buttonOpenParent", _htmlContainerElement).prop("disabled", true);
 }
 //#endregion
 
@@ -136,7 +138,7 @@ function disableButtonOpenParent() {
 function initButtonOpenAbstractRoot() {
 	disableButtonOpenAbstractRoot();
 	_viewModelExplorer.register("parent", new GuiClient(enableButtonOpenAbstractRoot, showErrorMessages));
-	$("#buttonOpenAbstractRoot").attr("href", "javascript:_viewModelExplorer.load()");
+	$("#buttonOpenAbstractRoot", _htmlContainerElement).attr("href", "javascript:_viewModelExplorer.load()");
 }
 
 function enableButtonOpenAbstractRoot(parent) {
@@ -147,13 +149,13 @@ function enableButtonOpenAbstractRoot(parent) {
 		return;
 	}
 
-	$("#buttonOpenAbstractRoot").removeClass("disabled");
-	$("#buttonOpenAbstractRoot").prop("disabled", false);
+	$("#buttonOpenAbstractRoot", _htmlContainerElement).removeClass("disabled");
+	$("#buttonOpenAbstractRoot", _htmlContainerElement).prop("disabled", false);
 }
 
 function disableButtonOpenAbstractRoot() {
-	$("#buttonOpenAbstractRoot").addClass("disabled");
-	$("#buttonOpenAbstractRoot").prop("disabled", true);
+	$("#buttonOpenAbstractRoot", _htmlContainerElement).addClass("disabled");
+	$("#buttonOpenAbstractRoot", _htmlContainerElement).prop("disabled", true);
 }
 //#endregion
 //#endregion
@@ -173,7 +175,7 @@ function setPath(path) {
 		path = "/" + path;
 	}
 
-	$("#path").val(path);
+	$("#path", _htmlContainerElement).val(path);
 }
 //#endregion
 //#endregion
@@ -185,7 +187,7 @@ var IconField = function(config) {
 
 IconField.prototype = new jsGrid.Field({
 	itemTemplate: function(value) {
-		return $("<i>").addClass(value);
+		return $("<i>", _htmlContainerElement).addClass(value);
 	}
 });
 
@@ -195,7 +197,7 @@ function initGrid()
 
     jsGrid.fields.icon = IconField;
 
-    $("#explorerSelect").jsGrid({
+    $("#explorerSelect", _htmlContainerElement).jsGrid({
         width: "100%",
 
         inserting: false,
@@ -209,7 +211,7 @@ function initGrid()
 				title: "",
 				name: "Icon",
 				type: "icon",
-				width: 16,
+				width: 27,
 				sorting: false
 			},
 			{
@@ -258,11 +260,11 @@ function updateGridDataChildren(children) {
 		entries.push(copy);
 	});
 
-	$("#explorerSelect").jsGrid({
+	$("#explorerSelect", _htmlContainerElement).jsGrid({
 		data: entries
 	});
 
-	$("#explorerSelect").jsGrid("sort", "Bezeichnung");
-	$("#explorerSelect").jsGrid("sort", "TypeBezeichnung");
+	$("#explorerSelect", _htmlContainerElement).jsGrid("sort", "Bezeichnung");
+	$("#explorerSelect", _htmlContainerElement).jsGrid("sort", "TypeBezeichnung");
 }
 //#endregion

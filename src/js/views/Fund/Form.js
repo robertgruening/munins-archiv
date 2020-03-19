@@ -232,7 +232,7 @@ function ShowFormSelectFundAttribut() {
 	var viewModelFactory = new ViewModelFactory();
 	var viewModelExplorer = viewModelFactory.getViewModelExplorerFundAttribut();
 	var iconCssClasses =  IconConfig.getCssClasses("FundAttribut");
-	initExplorerSelectTypedItem(viewModelExplorer, iconCssClasses);
+	initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
 
 	$("#dialogSelect").dialog("open");
 }
@@ -405,7 +405,7 @@ function ShowFormSelectAblage() {
 	var viewModelFactory = new ViewModelFactory();
 	var viewModelExplorer = viewModelFactory.getViewModelExplorerAblage();
 	var iconCssClasses =  IconConfig.getCssClasses("Ablage");
-	initExplorerSelectTypedItem(viewModelExplorer, iconCssClasses);
+	initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
 
 	$("#dialogSelect").dialog("open");
 }
@@ -457,7 +457,7 @@ function ShowFormSelectKontext() {
 	var viewModelFactory = new ViewModelFactory();
 	var viewModelExplorer = viewModelFactory.getViewModelExplorerKontext();
 	var iconCssClasses = null;
-	initExplorerSelectTypedItem(viewModelExplorer, iconCssClasses);
+	initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
 
 	$("#dialogSelect").dialog("open");
 }

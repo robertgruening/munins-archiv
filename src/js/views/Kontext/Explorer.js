@@ -56,7 +56,7 @@ function getChildKontextTypeBezeichnung(type) {
 
 function clearSelectedItemHighlighting() {
     $(".jsgrid-row, .jsgrid-alt-row").each(function(index){
-        $(this).removeClass("selectedRow");
+        $(this).removeClass("selected-row");
     });
 }
 
@@ -72,17 +72,17 @@ function markSelectedChildItem(selectedItemIndex) {
 
     var row = $(".jsgrid-row, .jsgrid-alt-row").eq(selectedItemIndex)
 
-	if (row.hasClass("selectedRow"))
+	if (row.hasClass("selected-row"))
 	{
 		console.debug("Deselect row");
-	    row.removeClass("selectedRow");
+	    row.removeClass("selected-row");
 	}
 	else
 	{
 		clearSelectedItemHighlighting();
 
 		console.debug("Select row");
-	    row.addClass("selectedRow");
+	    row.addClass("selected-row");
 	}
 }
 
@@ -330,7 +330,7 @@ function InitGrid()
 				title: "",
 				name: "Icon",
 				type: "icon",
-				width: 16,
+				width: 27,
 				sorting: false
 			},
 			{
