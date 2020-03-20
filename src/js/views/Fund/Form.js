@@ -219,7 +219,7 @@ function ShowFormSelectFundAttribut() {
 		resizable: false,
 		buttons: {
 			"Speichern": function () {
-				_viewModelFormFund.addFundAttribut(getSelectedItem());
+				_viewModelFormFund.addFundAttribut(esti_getSelectedItem());
 				setKontext(_viewModelFormFund.getKontext());
 				$(this).dialog("close");
 			},
@@ -232,7 +232,7 @@ function ShowFormSelectFundAttribut() {
 	var viewModelFactory = new ViewModelFactory();
 	var viewModelExplorer = viewModelFactory.getViewModelExplorerFundAttribut();
 	var iconCssClasses =  IconConfig.getCssClasses("FundAttribut");
-	initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
+	esti_initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
 
 	$("#dialogSelect").dialog("open");
 }
@@ -392,7 +392,7 @@ function ShowFormSelectAblage() {
 		resizable: false,
 		buttons: {
 			"Speichern": function () {
-				_viewModelFormFund.setAblage(getSelectedItem());
+				_viewModelFormFund.setAblage(esti_getSelectedItem());
 				setAblage(_viewModelFormFund.getAblage());
 				$(this).dialog("close");
 			},
@@ -405,7 +405,7 @@ function ShowFormSelectAblage() {
 	var viewModelFactory = new ViewModelFactory();
 	var viewModelExplorer = viewModelFactory.getViewModelExplorerAblage();
 	var iconCssClasses =  IconConfig.getCssClasses("Ablage");
-	initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
+	esti_initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
 
 	$("#dialogSelect").dialog("open");
 }
@@ -444,7 +444,7 @@ function ShowFormSelectKontext() {
 		resizable: false,
 		buttons: {
 			"Speichern": function () {
-				_viewModelFormFund.setKontext(getSelectedItem());
+				_viewModelFormFund.setKontext(esti_getSelectedItem());
 				setKontext(_viewModelFormFund.getKontext());
 				$(this).dialog("close");
 			},
@@ -457,7 +457,7 @@ function ShowFormSelectKontext() {
 	var viewModelFactory = new ViewModelFactory();
 	var viewModelExplorer = viewModelFactory.getViewModelExplorerKontext();
 	var iconCssClasses = null;
-	initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
+	esti_initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
 
 	$("#dialogSelect").dialog("open");
 }

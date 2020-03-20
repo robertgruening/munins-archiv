@@ -3,57 +3,57 @@ var _viewModelExplorer = null;
 var _iconCssClasses = null;
 var _selectedItem = null;
 
-function initExplorerSelectTypedItem(htmlContainerElement, viewModelExplorer, iconCssClasses) {
+function esti_initExplorerSelectTypedItem(htmlContainerElement, viewModelExplorer, iconCssClasses) {
 	_htmlContainerElement = htmlContainerElement;
 	_viewModelExplorer = viewModelExplorer;
 	_iconCssClasses = iconCssClasses;
 	_selectedItem = null;
 
-    registerToViewModel();
-	initButtonOpen();
-	initButtonOpenParent();
-	initButtonOpenAbstractRoot();
+    esti_registerToViewModel();
+	esti_initButtonOpen();
+	esti_initButtonOpenParent();
+	esti_initButtonOpenAbstractRoot();
 
-	initFieldPath();
-	initGrid();
+	esti_initFieldPath();
+	esti_initGrid();
 
     _viewModelExplorer.load();
 }
 
-function registerToViewModel() {
-	_viewModelExplorer.register("childItemSelected", new GuiClient(setSelectedItem, showErrorMessages));
-	_viewModelExplorer.register("childItemSelected", new GuiClient(enableButtonOpen, null));
-	_viewModelExplorer.register("childSelectionCleared", new GuiClient(disableButtonOpen, null));
+function esti_registerToViewModel() {
+	_viewModelExplorer.register("childItemSelected", new GuiClient(esti_setSelectedItem, showErrorMessages));
+	_viewModelExplorer.register("childItemSelected", new GuiClient(esti_enableButtonOpen, null));
+	_viewModelExplorer.register("childSelectionCleared", new GuiClient(esti_disableButtonOpen, null));
 }
 
-function resetSelectedItem() {
+function esti_resetSelectedItem() {
 	_selectedItem = null;
 }
 
-function setSelectedItem(selectedItemArgs) {
+function esti_setSelectedItem(selectedItemArgs) {
     if (selectedItemArgs == undefined ||
         selectedItemArgs == null ||
         selectedItemArgs.SelectedItem == undefined ||
         selectedItemArgs.SelectedItem == null)
     {
-        resetSelectedItem();
+        esti_resetSelectedItem();
         return;
     }
 
     _selectedItem = selectedItemArgs.SelectedItem;
 }
 
-function getSelectedItem() {
+function esti_getSelectedItem() {
 	return _selectedItem;
 }
 
-function clearSelectedItemHighlighting() {
+function esti_clearSelectedItemHighlighting() {
     $(".jsgrid-row, .jsgrid-alt-row", _htmlContainerElement).each(function(index){
         $(this).removeClass("selected-row");
     });
 }
 
-function markSelectedChildItem(selectedItemIndex) {
+function esti_markSelectedChildItem(selectedItemIndex) {
     if (selectedItemIndex == undefined ||
         selectedItemIndex == null)
     {
@@ -72,7 +72,7 @@ function markSelectedChildItem(selectedItemIndex) {
 	}
 	else
 	{
-		clearSelectedItemHighlighting();
+		esti_clearSelectedItemHighlighting();
 
 		console.debug("Select row");
 	    row.addClass("selected-row");
@@ -81,11 +81,11 @@ function markSelectedChildItem(selectedItemIndex) {
 
 //#region form actions
 //#region open
-function initButtonOpen() {
-	disableButtonOpen();
+function esti_initButtonOpen() {
+	esti_disableButtonOpen();
 }
 
-function enableButtonOpen(args) {
+function esti_enableButtonOpen(args) {
 	if (args.SelectedItem.Id === undefined) {
 		$("#buttonOpen", _htmlContainerElement).attr("href", "javascript:_viewModelExplorer.load()");
 	}
@@ -97,23 +97,24 @@ function enableButtonOpen(args) {
 	$("#buttonOpen", _htmlContainerElement).prop("disabled", false);
 }
 
-function disableButtonOpen() {
+function esti_disableButtonOpen() {
+	$("#buttonOpen", _htmlContainerElement).removeAttr("href");
 	$("#buttonOpen", _htmlContainerElement).addClass("disabled");
 	$("#buttonOpen", _htmlContainerElement).prop("disabled", true);
 }
 //#endregion
 
 //#region open parent
-function initButtonOpenParent() {
-	disableButtonOpenParent();
-	_viewModelExplorer.register("parent", new GuiClient(enableButtonOpenParent, showErrorMessages));
+function esti_initButtonOpenParent() {
+	esti_disableButtonOpenParent();
+	_viewModelExplorer.register("parent", new GuiClient(esti_enableButtonOpenParent, showErrorMessages));
 }
 
-function enableButtonOpenParent(parent) {
+function esti_enableButtonOpenParent(parent) {
 	if (parent === undefined ||
 		parent === null)
 	{
-		disableButtonOpenParent();
+		esti_disableButtonOpenParent();
 		return;
 	}
 
@@ -128,32 +129,34 @@ function enableButtonOpenParent(parent) {
 	$("#buttonOpenParent", _htmlContainerElement).prop("disabled", false);
 }
 
-function disableButtonOpenParent() {
+function esti_disableButtonOpenParent() {
+	$("#buttonOpenParent", _htmlContainerElement).removeAttr("href");
 	$("#buttonOpenParent", _htmlContainerElement).addClass("disabled");
 	$("#buttonOpenParent", _htmlContainerElement).prop("disabled", true);
 }
 //#endregion
 
 //#region open abstract root
-function initButtonOpenAbstractRoot() {
-	disableButtonOpenAbstractRoot();
-	_viewModelExplorer.register("parent", new GuiClient(enableButtonOpenAbstractRoot, showErrorMessages));
-	$("#buttonOpenAbstractRoot", _htmlContainerElement).attr("href", "javascript:_viewModelExplorer.load()");
+function esti_initButtonOpenAbstractRoot() {
+	esti_disableButtonOpenAbstractRoot();
+	_viewModelExplorer.register("parent", new GuiClient(esti_enableButtonOpenAbstractRoot, showErrorMessages));
 }
 
-function enableButtonOpenAbstractRoot(parent) {
+function esti_enableButtonOpenAbstractRoot(parent) {
 	if (parent === undefined ||
 		parent === null)
 	{
-		disableButtonOpenAbstractRoot();
+		esti_disableButtonOpenAbstractRoot();
 		return;
 	}
 
+	$("#buttonOpenAbstractRoot", _htmlContainerElement).attr("href", "javascript:_viewModelExplorer.load()");
 	$("#buttonOpenAbstractRoot", _htmlContainerElement).removeClass("disabled");
 	$("#buttonOpenAbstractRoot", _htmlContainerElement).prop("disabled", false);
 }
 
-function disableButtonOpenAbstractRoot() {
+function esti_disableButtonOpenAbstractRoot() {
+	$("#buttonOpenAbstractRoot", _htmlContainerElement).removeAttr("href");
 	$("#buttonOpenAbstractRoot", _htmlContainerElement).addClass("disabled");
 	$("#buttonOpenAbstractRoot", _htmlContainerElement).prop("disabled", true);
 }
@@ -162,11 +165,11 @@ function disableButtonOpenAbstractRoot() {
 
 //#region fields
 //#region path
-function initFieldPath() {
-	_viewModelExplorer.register("path", new GuiClient(setPath, showErrorMessages));
+function esti_initFieldPath() {
+	_viewModelExplorer.register("path", new GuiClient(esti_setPath, showErrorMessages));
 }
 
-function setPath(path) {
+function esti_setPath(path) {
 	console.info("setting value of 'Path'");
 	console.debug("'Path' is", path);
 
@@ -191,9 +194,9 @@ IconField.prototype = new jsGrid.Field({
 	}
 });
 
-function initGrid()
+function esti_initGrid()
 {
-	_viewModelExplorer.register("children", new GuiClient(updateGridDataChildren, showErrorMessages));
+	_viewModelExplorer.register("children", new GuiClient(esti_updateGridDataChildren, showErrorMessages));
 
     jsGrid.fields.icon = IconField;
 
@@ -231,21 +234,21 @@ function initGrid()
         rowClick: function(args) {
 			console.info("row clicked");
 			console.debug("clicked item", args.item);
-			markSelectedChildItem(args.itemIndex);
+			esti_markSelectedChildItem(args.itemIndex);
 			_viewModelExplorer.selectChildItem(args.item);
         },
 
 		rowDoubleClick: function(args) {
 			console.info("row double clicked");
 			console.debug("clicked item", args.item);
-			markSelectedChildItem(args.itemIndex);
+			esti_markSelectedChildItem(args.itemIndex);
 			console.warn("view model will not be informed about double clicked grid item");
 			_viewModelExplorer.load(args.item.Id);
 		}
     });
 }
 
-function updateGridDataChildren(children) {
+function esti_updateGridDataChildren(children) {
 	console.info("updating children in grid");
 	console.debug("children", children);
 

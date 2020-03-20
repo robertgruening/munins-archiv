@@ -1,8 +1,7 @@
 #path {
     /*float: left;*/
-    width: 85%;
-	margin: 5px 0px 5px 10px;
-	line-height: 30px;
+    width: 100%;
+	line-height: 28px;
 	font-size: 16px;
 }
 
@@ -15,8 +14,13 @@
     margin: 0;
     padding: 5px 0px 5px 0px;
 	display: flex;
+	width: 100%;
 }
 
 #toolBar li {
     display: inline;
+}
+
+.toolbar__item--max-width {
+	width: 100%;
 }

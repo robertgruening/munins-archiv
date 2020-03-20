@@ -295,7 +295,7 @@ function ShowFormSelectOrt() {
 		resizable: false,
 		buttons: {
 			"Speichern": function () {
-				_viewModelFormBegehungsflaeche.addOrt(getSelectedItem());
+				_viewModelFormBegehungsflaeche.addOrt(esti_getSelectedItem());
 				$(this).dialog("close");
 			},
 			"Abbrechen": function () {
@@ -307,7 +307,7 @@ function ShowFormSelectOrt() {
 	var viewModelFactory = new ViewModelFactory();
 	var viewModelExplorer = viewModelFactory.getViewModelExplorerOrt();
 	var iconCssClasses =  IconConfig.getCssClasses("Ort");
-	initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
+	esti_initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
 
 	$("#dialogSelect").dialog("open");
 }
