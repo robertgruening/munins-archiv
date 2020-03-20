@@ -153,7 +153,11 @@ function InitButtonSave() {
 }
 
 function EnableButtonSave() {
-	$("#buttonSave").click(function () { _viewModelFormOrtType.save(); });
+	$("#buttonSave").click(function ()
+	{
+		ResetPropertiesMessages();
+		_viewModelFormOrtType.save();
+	});
 	$("#buttonSave").removeClass("disabled");
 	$("#buttonSave").prop("disabled", false);
 }

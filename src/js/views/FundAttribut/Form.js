@@ -237,7 +237,11 @@ function InitButtonSave() {
 }
 
 function EnableButtonSave() {
-	$("#buttonSave").click(function () { _viewModelFormFundAttribut.save(); });
+	$("#buttonSave").click(function ()
+	{
+		ResetPropertiesMessages();
+		_viewModelFormFundAttribut.save();
+	});
 	$("#buttonSave").removeClass("disabled");
 	$("#buttonSave").prop("disabled", false);
 }

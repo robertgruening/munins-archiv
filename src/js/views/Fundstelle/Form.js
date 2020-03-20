@@ -303,7 +303,11 @@ function InitButtonSave() {
 }
 
 function EnableButtonSave() {
-	$("#buttonSave").click(function () { _viewModelFormFundstelle.save(); });
+	$("#buttonSave").click(function ()
+	{
+		ResetPropertiesMessages();
+		_viewModelFormFundstelle.save();
+	});
 	$("#buttonSave").removeClass("disabled");
 	$("#buttonSave").prop("disabled", false);
 }

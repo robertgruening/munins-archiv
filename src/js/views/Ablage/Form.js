@@ -347,7 +347,11 @@ function InitButtonSave() {
 }
 
 function EnableButtonSave() {
-	$("#buttonSave").click(function () { _viewModelFormAblage.save(); });
+	$("#buttonSave").click(function ()
+	{
+		ResetPropertiesMessages();
+		_viewModelFormAblage.save();
+	});
 	$("#buttonSave").removeClass("disabled");
 	$("#buttonSave").prop("disabled", false);
 }
