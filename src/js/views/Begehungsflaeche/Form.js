@@ -212,7 +212,6 @@ function InitButtonSelectLfdNummer() {
 function ShowFormSelectLfdNummer() {
 	$("#dialogSelectLfdNummer").dialog({
 		height: "auto",
-		width: 750,
 		title: "Lfd-Nummer auswählen",
 		modal: true,
 		resizable: false,

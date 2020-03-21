@@ -5,7 +5,7 @@
 }
 
 .formBlock .fieldValue div[name=messages] {
-	color: red;
+	color: #b81900;
 }
 
 /* boxing and sizing */
@@ -15,8 +15,8 @@
 }
 
 .formBlock .fieldBlock {
-	margin-bottom: 10px;
-	padding-top: 5px;
+	margin-bottom: 15px;
+	padding-top: 10px;
 	overflow: hidden;
 
     min-height: 25px;
@@ -27,21 +27,14 @@
 	border-top: 1px dashed;
 }
 
-.formBlock .fieldBlock > div {
-    float: left;
-}
-
 .formBlock .fieldBlock input[type="text"],
 .formBlock .fieldBlock textarea,
 .formBlock .fieldBlock select {
 	width: 100%;
 	resize: vertical;
 	box-sizing: border-box;
-}
-
-.formBlock .fieldBlock
-input[type="button"] {
-	float: right;
+	line-height: 28px;
+	font-size: 16px;
 }
 
 .clear {
@@ -49,11 +42,17 @@ input[type="button"] {
 }
 
 .fieldDescription {
-	width: 200px;
+	width: 100%;
 }
 
 .fieldValue {
-	width: 514px;
+	width: 100%;
+}
+
+@media only screen and (min-width: 981px) {
+	.formBlock .fieldBlock > div {
+   	float: left;
+	}
 }
 
 .fieldDescription label{

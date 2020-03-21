@@ -191,7 +191,6 @@ function ShowDialogDelete() {
 	);
 	$("#dialogDelete").dialog({
 		height: "auto",
-		width: 750,
 		modal: true,
 		buttons: {
 			"Löschen": function () {

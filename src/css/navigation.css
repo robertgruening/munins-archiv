@@ -28,7 +28,7 @@
 }
 
 .topNavigation li a span {
-    padding-left: 5px;
+    
 }
 
 .topNavigationSubMenu {
@@ -46,9 +46,6 @@
 	display: block;
 }
 
-.topNavigationSubMenu a:hover {
-}
-
 .topNavigationSubMenu div {
 	padding: 0px 0px 15px 25px;
 }
@@ -60,28 +57,6 @@
 nav div {
 	float: left;
 }
-
-@media (max-width: 804px) {
-    .topNavigation li a i {
-        display: none;
-    }
-
-    .topNavigation li a span {
-        display: inline;
-        padding-left: 0px;
-    }
-}
-
-@media (max-width: 688px) {
-    .topNavigation li a i {
-        display: inline;
-    }
-
-    .topNavigation li a span {
-        display: none;
-    }
-}
-
 
 
 /**********/
@@ -148,4 +123,27 @@ nav div {
 }
 
 nav div {
+}
+
+/**
+ * visibility
+ */
+
+.topNavigation li a i {
+	display: inline;
+}
+
+.topNavigation li a span {
+    display: none;
+}
+
+@media only screen and (min-width: 981px) {
+	.topNavigation li a i {
+		display: inline;
+	}
+
+   .topNavigation li a span {
+   	display: inline;
+      padding-left: 5px;
+   }
 }
