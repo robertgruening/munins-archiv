@@ -36,7 +36,7 @@ function getPageName() {
 
 function InitStatusChanged() {
 	_viewModelFormLfdNummer.register("load", new GuiClient(showMessageLoaded, showErrorMessages));
-	_viewModelFormLfdNummer.register("create", new GuiClient(showMessageCreated, showErrorMessages));
+	_viewModelFormLfdNummer.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormLfdNummer.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormLfdNummer.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
 }
@@ -48,13 +48,13 @@ function InitBreadcrumb()
 	});
 }
 
+function loadCreatedElement(element) {
+	window.open(window.location.href.replace(window.location.search, "") + "?Id=" + element.Id, "_self");
+}
+
 //#region messages
 function showMessageLoaded(element) {
     showInformationMessageBox("LfD-Nummer \"" + element.Bezeichnung + "\" geladen");
-}
-
-function showMessageCreated(element) {
-    showSuccessMessageBox("LfD-Nummer \"" + element.Bezeichnung + "\" erzeugt");
 }
 
 function showMessageSaved(element) {

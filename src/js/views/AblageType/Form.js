@@ -36,7 +36,7 @@ function getPageName() {
 
 function InitStatusChanged() {
 	_viewModelFormAblageType.register("load", new GuiClient(showMessageLoaded, showErrorMessages));
-	_viewModelFormAblageType.register("create", new GuiClient(showMessageCreated, showErrorMessages));
+	_viewModelFormAblageType.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormAblageType.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormAblageType.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
 }
@@ -48,13 +48,13 @@ function InitBreadcrumb()
 	});
 }
 
+function loadCreatedElement(element) {
+	window.open(window.location.href.replace(window.location.search, "") + "?Id=" + element.Id, "_self");
+}
+
 //#region messages
 function showMessageLoaded(element) {
 	showInformationMessageBox("Ablagetyp \"" + element.Bezeichnung + "\" geladen");
-}
-
-function showMessageCreated(element) {
-	showSuccessMessageBox("Ablagetyp \"" + element.Bezeichnung + "\" erzeugt");
 }
 
 function showMessageSaved(element) {

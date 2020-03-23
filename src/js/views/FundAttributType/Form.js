@@ -36,7 +36,7 @@ function getPageName() {
 
 function InitStatusChanged() {
 	_viewModelFormFundAttributType.register("load", new GuiClient(showMessageLoaded, showErrorMessages));
-	_viewModelFormFundAttributType.register("create", new GuiClient(showMessageCreated, showErrorMessages));
+	_viewModelFormFundAttributType.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormFundAttributType.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormFundAttributType.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
 }
@@ -48,13 +48,13 @@ function InitBreadcrumb()
 	});
 }
 
+function loadCreatedElement(element) {
+	window.open(window.location.href.replace(window.location.search, "") + "?Id=" + element.Id, "_self");
+}
+
 //#region messages
 function showMessageLoaded(element) {
     showInformationMessageBox("Fundattributtyp \"" + element.Bezeichnung + "\" geladen");
-}
-
-function showMessageCreated(element) {
-    showSuccessMessageBox("Fundattributtyp \"" + element.Bezeichnung + "\" erzeugt");
 }
 
 function showMessageSaved(element) {

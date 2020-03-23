@@ -44,7 +44,7 @@ function getPageName() {
 
 function InitStatusChanged() {
 	_viewModelFormFund.register("load", new GuiClient(showMessageLoaded, showErrorMessages));
-	_viewModelFormFund.register("create", new GuiClient(showMessageCreated, showErrorMessages));
+	_viewModelFormFund.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormFund.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormFund.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
 }
@@ -54,6 +54,10 @@ function InitBreadcrumb()
     $("#breadcrumb").Breadcrumb({
         PageName : getPageName()
 	});
+}
+
+function loadCreatedElement(element) {
+	window.open(window.location.href.replace(window.location.search, "") + "?Id=" + element.Id, "_self");
 }
 
 //#region form actions
@@ -474,10 +478,6 @@ function showMessagesKontext(messages) {
 
 function showMessageLoaded(element) {
     showInformationMessageBox("Fund (" + element.Id + ") geladen");
-}
-
-function showMessageCreated(element) {
-	showSuccessMessageBox("Fund (" + element.Id + ") erzeugt");
 }
 
 function showMessageSaved(element) {

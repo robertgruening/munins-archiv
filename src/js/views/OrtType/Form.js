@@ -36,7 +36,7 @@ function getPageName() {
 
 function InitStatusChanged() {
 	_viewModelFormOrtType.register("load", new GuiClient(showMessageLoaded, showErrorMessages));
-	_viewModelFormOrtType.register("create", new GuiClient(showMessageCreated, showErrorMessages));
+	_viewModelFormOrtType.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormOrtType.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormOrtType.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
 }
@@ -48,13 +48,13 @@ function InitBreadcrumb()
 	});
 }
 
+function loadCreatedElement(element) {
+	window.open(window.location.href.replace(window.location.search, "") + "?Id=" + element.Id, "_self");
+}
+
 //#region messages
 function showMessageLoaded(element) {
     showInformationMessageBox("Ortstyp \"" + element.Bezeichnung + "\" geladen");
-}
-
-function showMessageCreated(element) {
-    showSuccessMessageBox("Ortstyp \"" + element.Bezeichnung + "\" erzeugt");
 }
 
 function showMessageSaved(element) {
