@@ -368,18 +368,26 @@ function showMessagesOrte(messages) {
 //#region form actions
 //#region new
 function InitButtonNew() {
-	EnableButtonNew();
+	DisableButtonNew();
+	_viewModelFormBegehungsflaeche.register("parent", new GuiClient(EnableButtonNew, showErrorMessages));
 }
 
-function EnableButtonNew() {
-	$("#buttonNew").off("click");
-	$("#buttonNew").click(openFormNewElement);
+function EnableButtonNew(parent) {	
+	if (parent == undefined ||
+		 parent == null ||
+		 parent.Id == null)
+	{
+		DisableButtonNew();
+		return;
+	}
+	
+	$("#buttonNew").attr("href", "/Munins Archiv/src/pages/Begehungsflaeche/Form.html?Parent_Id=" + parent.Id);
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
 }
 
 function DisableButtonNew() {
-	$("#buttonNew").off("click");
+	$("#buttonNew").removeAttr("href");
 	$("#buttonNew").addClass("disabled");
 	$("#buttonNew").prop("disabled", true);
 }
