@@ -98,7 +98,7 @@ var ViewModelForm = function (webServiceClient) {
 				this._model = this._createModel();
 				this._updateAllPropertyListeners();
 				this._update("dataResetted", this._model);
-				this._update("delete", this._model);
+				this._update("delete", data);
 				break;
 			}
 		}
