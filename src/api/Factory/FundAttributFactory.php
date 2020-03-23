@@ -155,6 +155,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
         }
 
         $fundAttribut = new FundAttribut();
+        $fundAttributType = null;
 
         if (isset($object["Id"]))
         {
@@ -176,16 +177,27 @@ class FundAttributFactory extends Factory implements iTreeFactory
 
         if (isset($object["Type"]))
         {
-            $fundAttribut->setType($this->getFundAttributTypeFactory()->convertToInstance($object["Type"]));
+            $fundAttributType = $this->getFundAttributTypeFactory()->convertToInstance($object["Type"]);
+        }
+        
+        if ($fundAttributType == null ||
+        		$fundAttributType->getId() == null ||
+        		$fundAttributType->getId() == "")
+        {
+            $logger->warn("Typ ist nicht gesetzt!");
         }
         else
         {
-            $logger->warn("Typ ist nicht gesetzt!");
+        		$fundAttribut->setType($fundAttributType);
         }
 
         if (isset($object["Parent"]))
         {
             $fundAttribut->setParent($this->convertToInstance($object["Parent"]));
+        }
+        else
+        {
+				$logger->debug("Parent ist nicht gesetzt!");
         }
 
         if (isset($object["Children"]))

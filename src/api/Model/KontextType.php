@@ -7,6 +7,7 @@ class KontextType implements iNode
     public $Id;
     public $Bezeichnung;
     public $OrderNumber;
+    public $CountOfKontexte;
     #endregion
     
     #region properties
@@ -39,6 +40,16 @@ class KontextType implements iNode
     {
         $this->OrderNumber = $orderNumber;
     }
+    
+    public function getCountOfKontexte()
+    {
+        return $this->CountOfKontexte;
+    }
+    
+    public function setCountOfKOntexte($countOfKontexte)
+    {
+        $this->CountOfKontexte = $countOfKontexte;
+    }
     #endregion
 
     #region constructors
@@ -47,6 +58,7 @@ class KontextType implements iNode
         $this->Id = -1;
         $this->Bezeichnung = null;
         $this->OrderNumber = null;
+        $this->CountOfKontexte = 0;
     }
     #endegion
 }

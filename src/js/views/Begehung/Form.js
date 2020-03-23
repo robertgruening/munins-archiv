@@ -123,6 +123,15 @@ function InitFieldType() {
 	_viewModelListKontextType.loadAll();
 
 	$("#selectType").change(function () {
+		
+		if ($("#selectType").val() == undefined ||
+			 $("#selectType").val() == null ||
+			 $("#selectType").val().length == 0)
+		{
+			_viewModelFormBegehung.setType(null);
+			return;
+		}
+		
 		var kontextType = new KontextType();
 		kontextType.Id = $("#selectType").val();
 		kontextType.Bezeichnung = $("#selectType option:selected").text();
@@ -138,7 +147,10 @@ function fillSelectionKontextType(kontextTypes) {
 	$("#selectType").append("<option value='' >Bitte wählen</option>");
 
 	kontextTypes.forEach(kontextType => {
-		$("#selectType").append("<option value=" + kontextType.Id + ">" + kontextType.Bezeichnung + "</option>");
+		if (kontextType.Bezeichnung == "Begehung")
+		{
+			$("#selectType").append("<option value=" + kontextType.Id + " text=\"" + kontextType.Bezeichnung + "\">" + kontextType.Bezeichnung + "</option>");
+		}
 	});
 
 	loadForm();
@@ -444,6 +456,7 @@ function InitButtonNew() {
 }
 
 function EnableButtonNew() {
+	$("#buttonNew").off("click");
 	$("#buttonNew").click(openFormNewElement);
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
@@ -464,6 +477,7 @@ function InitButtonSave() {
 }
 
 function EnableButtonSave() {
+	$("#buttonSave").off("click");
 	$("#buttonSave").click(function ()
 	{
 		ResetPropertiesMessages();
@@ -486,6 +500,7 @@ function InitButtonDelete() {
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
@@ -504,7 +519,6 @@ function ShowDialogDelete() {
 	);
 	$("#dialogDelete").dialog({
 		height: "auto",
-		width: 750,
 		modal: true,
 		buttons: {
 			"Löschen": function () {
@@ -531,6 +545,7 @@ function InitButtonUndo() {
 }
 
 function EnableButtonUndo() {
+	$("#buttonUndo").off("click");
 	$("#buttonUndo").click(function () {
 		console.log("button 'undo' clicked");
 		_viewModelFormBegehung.undoAllChanges();

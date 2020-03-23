@@ -13,10 +13,12 @@ class Begehung extends Kontext implements iFundContainer
     
     public function setParent($parent)
     {
+    	/* Note: convertToInstance setzt einen Parent, der nur eine ID hat
         if (!($parent instanceof Begehungsflaeche))
         {
             return;
         }
+		*/
     
         $this->Parent = $parent;
     }

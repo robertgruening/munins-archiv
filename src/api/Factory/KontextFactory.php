@@ -379,12 +379,11 @@ class KontextFactory extends Factory implements iTreeFactory
                     $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
                     $passed = true;
-                    $passed = $mysqli->query($this->getSQLStatementToDelete($element)) && $passed;
+                    $passed = $mysqli->query($this->getSQLStatementToDeleteBegehung($element)) && $passed;
 
                     if ($passed)
                     {
-                        $element->setId($mysqli->insert_id);
-                        $passed = $mysqli->query($this->getSQLStatementToDeleteBegehung($element)) && $passed;
+                        $passed = $mysqli->query($this->getSQLStatementToDelete($element)) && $passed;
                     }
 
                     if ($passed)
@@ -436,7 +435,7 @@ class KontextFactory extends Factory implements iTreeFactory
         {
             global $logger;
             $logger->debug("Konvertiere Daten zu Kontext");
-
+            
             if ($object == null)
             {
                 $logger->error("Kontext ist nicht gesetzt!");
@@ -451,7 +450,11 @@ class KontextFactory extends Factory implements iTreeFactory
                 $kontextType = $this->getKontextTypeFactory()->convertToInstance($object["Type"]);
             }
 
-            if ($kontextType == null)
+            if ($kontextType == null ||
+            	 $kontextType->getId() == null ||
+            	 $kontextType->getId() == "" ||
+            	 $kontextType->getBezeichnung() == null ||
+            	 $kontextType->getBezeichnung() == "")
             {
                 $logger->error("Kontexttyp ist nicht gesetzt!");
             }
@@ -505,7 +508,8 @@ class KontextFactory extends Factory implements iTreeFactory
             {
                 $kontext->setParent($this->convertToInstance($object["Parent"]));
             }
-            else {
+            else 
+            {
                 $logger->debug("Parent ist nicht gesetzt!");
             }
 
@@ -560,7 +564,7 @@ class KontextFactory extends Factory implements iTreeFactory
             {
                 $kontext->setKommentar($object["Kommentar"]);
             }
-
+            
             return $kontext;
         }
         #endregion

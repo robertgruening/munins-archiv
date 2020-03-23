@@ -14,11 +14,12 @@ class Begehungsflaeche extends Kontext implements iOrtContainer
     #region properties
     public function setParent($parent)
     {
+    	/* Note: convertToInstance setzt einen Parent, der nur eine ID hat
         if (!($parent instanceof Fundstelle))
         {
             return;
         }
-    
+    	*/
         $this->Parent = $parent;
     }
     

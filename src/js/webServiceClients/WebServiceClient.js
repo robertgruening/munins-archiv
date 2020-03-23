@@ -63,7 +63,7 @@ var WebServiceClient = function () {
 						controller.Fail("create", jqXHR.responseJSON, sender);
 					}
 					else {
-						controller.Fail("create", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
+						controller.Fail("create", new Array("Es ist ein Servicefehler aufgetreten!"), sender);
 					}
 				}
 			});
@@ -87,7 +87,7 @@ var WebServiceClient = function () {
 						controller.Fail("save", jqXHR.responseJSON, sender);
 					}
 					else {
-						controller.Fail("save", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
+						controller.Fail("save", new Array("Es ist ein Servicefehler aufgetreten!"), sender);
 					}
 				}
 			});
@@ -109,7 +109,7 @@ var WebServiceClient = function () {
 						controller.Fail("load", jqXHR.responseJSON, sender);
 					}
 					else {
-						controller.Fail("load", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
+						controller.Fail("load", new Array("Es ist ein Servicerfehle aufgetreten!"), sender);
 					}
 				}
 			});
@@ -131,7 +131,7 @@ var WebServiceClient = function () {
 						controller.Fail("loadAll", jqXHR.responseJSON, sender);
 					}
 					else {
-						controller.Fail("loadAll", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
+						controller.Fail("loadAll", new Array("Es ist ein Servicefehler aufgetreten!"), sender);
 					}
 				}
 			});
@@ -153,7 +153,7 @@ var WebServiceClient = function () {
 						controller.Fail("delete", jqXHR.responseJSON, sender);
 					}
 					else {
-						controller.Fail("delete", new Array("Es ist ein Servicerfehler aufgetreten!"), sender);
+						controller.Fail("delete", new Array("Es ist ein Servicefehler aufgetreten!"), sender);
 					}
 				}
 			});

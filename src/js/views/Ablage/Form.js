@@ -119,8 +119,18 @@ function InitFieldType() {
 	_viewModelListAblageType.loadAll();
 
 	$("#selectType").change(function () {
+		
+		if ($("#selectType").val() == undefined ||
+			 $("#selectType").val() == null ||
+			 $("#selectType").val().length == 0)
+		{
+			_viewModelFormAblage.setType(null);
+			return;
+		}
+		
 		var ablageType = new AblageType();
 		ablageType.Id = $("#selectType").val();
+		ablageType.Bezeichnung = $("#selectType option:selected").text();
 
 		_viewModelFormAblage.setType(ablageType);
 	});
@@ -327,6 +337,7 @@ function InitButtonNew() {
 }
 
 function EnableButtonNew() {
+	$("#buttonNew").off("click");
 	$("#buttonNew").click(openFormNewElement);
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
@@ -347,6 +358,7 @@ function InitButtonSave() {
 }
 
 function EnableButtonSave() {
+	$("#buttonSave").off("click");
 	$("#buttonSave").click(function ()
 	{
 		ResetPropertiesMessages();
@@ -369,6 +381,7 @@ function InitButtonDelete() {
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
@@ -413,6 +426,7 @@ function InitButtonUndo() {
 }
 
 function EnableButtonUndo() {
+	$("#buttonUndo").off("click");
 	$("#buttonUndo").click(function () {
 		console.log("button 'undo' clicked");
 		_viewModelFormAblage.undoAllChanges();

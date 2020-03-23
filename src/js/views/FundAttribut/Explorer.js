@@ -157,6 +157,7 @@ function InitButtonDelete() {
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);

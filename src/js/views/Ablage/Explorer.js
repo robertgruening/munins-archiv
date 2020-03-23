@@ -108,7 +108,6 @@ function DisableButtonNew() {
 //#region open
 function InitButtonOpen() {
 	DisableButtonOpen();
-	$("#buttonOpen").click();
 }
 
 function EnableButtonOpen(args) {
@@ -133,7 +132,6 @@ function DisableButtonOpen() {
 //#region edit
 function InitButtonEdit() {
 	DisableButtonEdit();
-	$("#buttonEdit").click();
 }
 
 function EnableButtonEdit(args) {
@@ -161,6 +159,7 @@ function InitButtonDelete() {
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);

@@ -112,6 +112,7 @@ class OrtFactory extends Factory implements iTreeFactory
         }
 
         $ort = new Ort();
+        $ortsType = null;
 
         if (isset($object["Id"]))
         {
@@ -133,16 +134,27 @@ class OrtFactory extends Factory implements iTreeFactory
 
         if (isset($object["Type"]))
         {
-            $ort->setType($this->getOrtsTypeFactory()->convertToInstance($object["Type"]));
+            $ortsType = $this->getOrtsTypeFactory()->convertToInstance($object["Type"]);
+        }
+        
+        if ($ortsType == null ||
+        		$ortsType->getId() == null ||
+        		$ortsType->getId() == "")
+        {
+            $logger->warn("Typ ist nicht gesetzt!");
         }
         else
         {
-            $logger->warn("Typ ist nicht gesetzt!");
+        		$ort->setType($ortsType);
         }
 
         if (isset($object["Parent"]))
         {
             $ort->setParent($this->convertToInstance($object["Parent"]));
+        }
+        else
+        {
+				$logger->debug("Parent ist nicht gesetzt!");
         }
 
         if (isset($object["Children"]))

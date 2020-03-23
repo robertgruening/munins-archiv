@@ -174,6 +174,7 @@ class AblageFactory extends Factory implements iTreeFactory
         }
 
         $ablage = new Ablage();
+        $ablageType = null;
 
         if (isset($object["Id"]))
         {
@@ -195,16 +196,27 @@ class AblageFactory extends Factory implements iTreeFactory
 
         if (isset($object["Type"]))
         {
-            $ablage->setType($this->getAblageTypeFactory()->convertToInstance($object["Type"]));
+            $ablageType = $this->getAblageTypeFactory()->convertToInstance($object["Type"]);
         }
-        else
+        
+        if ($ablageType == null ||
+        		$ablageType->getId() == null ||
+            $ablageType->getId() == "")
         {
             $logger->warn("Typ ist nicht gesetzt!");
         }
+        else
+        {
+        		$ablage->setType($ablageType);
+			}
 
         if (isset($object["Parent"]))
         {
             $ablage->setParent($this->convertToInstance($object["Parent"]));
+        }
+        else
+        {
+				$logger->debug("Parent ist nicht gesetzt!");
         }
 
         if (isset($object["Children"]))

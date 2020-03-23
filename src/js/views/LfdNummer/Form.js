@@ -133,6 +133,7 @@ function InitButtonNew() {
 }
 
 function EnableButtonNew() {
+	$("#buttonNew").off("click");
 	$("#buttonNew").click(openFormNewElement);
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
@@ -153,6 +154,7 @@ function InitButtonSave() {
 }
 
 function EnableButtonSave() {
+	$("#buttonSave").off("click");
 	$("#buttonSave").click(function ()
 	{
 		ResetPropertiesMessages();
@@ -175,6 +177,7 @@ function InitButtonDelete() {
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
@@ -219,6 +222,7 @@ function InitButtonUndo() {
 }
 
 function EnableButtonUndo() {
+	$("#buttonUndo").off("click");
 	$("#buttonUndo").click(function () {
 		console.log("button 'undo' clicked");
 		_viewModelFormLfdNummer.undoAllChanges();
@@ -244,6 +248,7 @@ function InitButtonToList() {
 }
 
 function EnableButtonToList() {
+	$("#buttonToList").off("click");
 	$("#buttonToList").click( function() {
         console.log("button 'to list' clicked");
 		window.open("/Munins Archiv/src/pages/LfdNummer/List.html", "_self");

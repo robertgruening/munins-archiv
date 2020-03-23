@@ -175,6 +175,7 @@ function InitButtonNew() {
 }
 
 function EnableButtonNew() {
+	$("#buttonNew").off("click");
 	$("#buttonNew").click(function () {
 		console.log("button 'new' clicked");
 		window.open("/Munins Archiv/src/pages/FundAttributType/Form.html", "_self");
@@ -196,6 +197,7 @@ function InitButtonEdit() {
 }
 
 function EnableButtonEdit() {
+	$("#buttonEdit").off("click");
 	$("#buttonEdit").click(function () {
 		console.log("button 'edit' clicked");
 		window.open("/Munins Archiv/src/pages/FundAttributType/Form.html?Id=" + _viewModelListFundAttributType.getSelectedItem().Id, "_self");
@@ -217,6 +219,7 @@ function InitButtonDelete() {
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
@@ -258,6 +261,7 @@ function InitButtonReload() {
 }
 
 function EnableButtonReload() {
+	$("#buttonReload").off("click");
 	$("#buttonReload").click(function () {
 		console.log("button 'reload' clicked");
 		_viewModelListFundAttributType.loadAll();

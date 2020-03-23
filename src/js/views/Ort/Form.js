@@ -118,8 +118,18 @@ function InitFieldType() {
 	_viewModelListOrtType.loadAll();
 
 	$("#selectType").change(function () {
+		
+		if ($("#selectType").val() == undefined ||
+			 $("#selectType").val() == null ||
+			 $("#selectType").val().length == 0)
+		{
+			_viewModelFormOrt.setType(null);
+			return;
+		}
+		
 		var ortType = new OrtType();
 		ortType.Id = $("#selectType").val();
+		ortType.Bezeichnung = $("#selectType option:selected").text();
 
 		_viewModelFormOrt.setType(ortType);
 	});
@@ -217,6 +227,7 @@ function InitButtonNew() {
 }
 
 function EnableButtonNew() {
+	$("#buttonNew").off("click");
 	$("#buttonNew").click(openFormNewElement);
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
@@ -237,6 +248,7 @@ function InitButtonSave() {
 }
 
 function EnableButtonSave() {
+	$("#buttonSave").off("click");
 	$("#buttonSave").click(function ()
 	{
 		ResetPropertiesMessages();
@@ -259,6 +271,7 @@ function InitButtonDelete() {
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
@@ -303,6 +316,7 @@ function InitButtonUndo() {
 }
 
 function EnableButtonUndo() {
+	$("#buttonUndo").off("click");
 	$("#buttonUndo").click(function () {
 		console.log("button 'undo' clicked");
 		_viewModelFormOrt.undoAllChanges();

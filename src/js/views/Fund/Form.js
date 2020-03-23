@@ -63,6 +63,7 @@ function InitButtonNew() {
 }
 
 function EnableButtonNew() {
+	$("#buttonNew").off("click");
 	$("#buttonNew").click(openFormNewElement);
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
@@ -83,6 +84,7 @@ function InitButtonSave() {
 }
 
 function EnableButtonSave() {
+	$("#buttonSave").off("click");
 	$("#buttonSave").click(function ()
 	{
 		ResetPropertiesMessages();
@@ -105,6 +107,7 @@ function InitButtonDelete() {
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
@@ -149,6 +152,7 @@ function InitButtonUndo() {
 }
 
 function EnableButtonUndo() {
+	$("#buttonUndo").off("click");
 	$("#buttonUndo").click(function () { _viewModelFormFund.undoAllChanges(); });
 	$("#buttonUndo").removeClass("disabled");
 	$("#buttonUndo").prop("disabled", false);
@@ -216,7 +220,6 @@ function InitButtonSelectFundAttribut() {
 function ShowFormSelectFundAttribut() {
 	$("#dialogSelect").dialog({
 		height: "auto",
-		width: 750,
 		title: "Fundattribut auswählen",
 		modal: true,
 		resizable: false,
@@ -389,7 +392,6 @@ function setAblage(ablage) {
 function ShowFormSelectAblage() {
 	$("#dialogSelect").dialog({
 		height: "auto",
-		width: 750,
 		title: "Ablage auswählen",
 		modal: true,
 		resizable: false,
@@ -441,7 +443,6 @@ function setKontext(kontext) {
 function ShowFormSelectKontext() {
 	$("#dialogSelect").dialog({
 		height: "auto",
-		width: 750,
 		title: "Kontext auswählen",
 		modal: true,
 		resizable: false,

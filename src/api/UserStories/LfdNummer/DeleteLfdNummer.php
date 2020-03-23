@@ -43,6 +43,13 @@ class DeleteLfdNummer extends UserStory
             $this->addMessage("LfdNummer ist nicht gesetzt!");
             return false;
         }
+        
+        if ($lfdNummer->getCountOfKontexte() >= 1)
+        {
+            $logger->warn("LfdNummer hat ".$lfdNummer->getCountOfKontexte()." Kontexte!");
+            $this->addMessage("LfdNummer hat ".$lfdNummer->getCountOfKontexte()." Kontexte!");
+            return false;				
+        }
 
         return true;
     }

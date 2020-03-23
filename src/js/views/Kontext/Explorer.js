@@ -173,6 +173,7 @@ function InitButtonDelete() {
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
@@ -240,7 +241,7 @@ function EnableButtonOpenParent(parent)
 
 function DisableButtonOpenParent()
 {
-	$("#buttonOpenParent").removeAttr("click");
+	$("#buttonOpenParent").removeAttr("href");
 	$("#buttonOpenParent").addClass("disabled");
 	$("#buttonOpenParent").prop("disabled", true);
 }

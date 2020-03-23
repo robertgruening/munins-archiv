@@ -157,6 +157,7 @@ function InitButtonDelete() {
 }
 
 function EnableButtonDelete() {
+	$("#buttonDelete").off("click");
 	$("#buttonDelete").click(ShowDialogDelete);
 	$("#buttonDelete").removeClass("disabled");
 	$("#buttonDelete").prop("disabled", false);
@@ -242,6 +243,7 @@ function EnableButtonOpenAbstractRoot(parent) {
 		return;
 	}
 
+	$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/src/pages/Ort/Explorer.html");
 	$("#buttonOpenAbstractRoot").removeClass("disabled");
 	$("#buttonOpenAbstractRoot").prop("disabled", false);
 }
