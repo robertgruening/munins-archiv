@@ -24,12 +24,12 @@ SET time_zone = "+00:00";
 -- Dumping data for table `OrtTyp`
 --
 
-INSERT INTO `OrtTyp` (`Id`, `Bezeichnung`) VALUES
-(1, 'Landkreis'),
-(2, 'Gemeinde'),
-(3, 'Gemarkung'),
-(4, 'Flurname'),
-(5, 'Flurstück');
+INSERT INTO `OrtTyp` (`Bezeichnung`) VALUES
+('Landkreis'),
+('Gemeinde'),
+('Gemarkung'),
+('Flurname'),
+('Flurstück');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -1,0 +1,92 @@
+/*********/
+/* sizes */
+/*********/
+
+html, body {
+	height: 100%;
+    width: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+#content {
+	padding-top: 66px; /* = outer height of #navigation + outer height of #breadcrumb */
+
+	/* v1.1 */
+	padding-top: 47px; /* = outer height of #navigation */
+}
+
+.form {
+    padding-left: 16px;
+}
+
+
+/**********/
+/* colors */
+/**********/
+
+html, body {
+	font-family: Verdana, Arial;
+	color: #333333;
+}
+
+a {
+	color: #1c94c4;
+}
+
+.fa-question-circle {
+	color: #1c94c4;
+}
+
+.ui-button span {
+	display: none;
+}
+
+@media only screen and (min-width: 981px) {
+	.ui-button span {
+		display: inline;
+    	padding-left: 5px;
+	}
+}
+
+.ui-button.risky-action {
+    color: #b81900 !important;
+}
+
+.ui-button.risky-action:hover {
+    color: #b81900;
+    background-color: #ffd3cc;
+	background-image: none;
+	border-color: #b81900;
+}
+
+.ui-button.disabled {
+    color: #969696 !important;
+	background-color: #eeeeee;
+	background-image: none;
+}
+
+.ui-button.disabled:hover {
+    color: #969696;
+	background-color: #eeeeee;
+	background-image: none;
+	border-color: #cccccc;
+}
+
+input[type=text] {
+	border: 1px solid #cccccc;
+}
+
+/**************/
+/* visibility */
+/**************/
+
+.dialog {
+	display: none;
+}
+
+@media only screen and (min-width: 981px) {
+	.dialog {
+		width: 80%;
+	}
+}

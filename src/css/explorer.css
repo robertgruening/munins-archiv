@@ -1,0 +1,26 @@
+#path {
+    /*float: left;*/
+    width: 100%;
+	line-height: 28px;
+	font-size: 16px;
+}
+
+#grid {
+    width: 100%;
+}
+
+#toolBar {
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0px 5px 0px;
+	display: flex;
+	width: 100%;
+}
+
+#toolBar li {
+    display: inline;
+}
+
+.toolbar__item--max-width {
+	width: 100%;
+}

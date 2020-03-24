@@ -1,0 +1,149 @@
+/*********/
+/* sizes */
+/*********/
+
+#navigation {
+    height: 47px;
+    width: inherit;
+    position: fixed;
+    z-index: 2;
+}
+
+.topNavigation {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.topNavigation li {
+	float: left;
+}
+
+.topNavigation li a {
+	display: block;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+.topNavigation li a span {
+    
+}
+
+.topNavigationSubMenu {
+	position: absolute;
+	z-index: 999 !important;
+	width: 100%;
+	display: none;
+}
+
+.topNavigationSubMenu h3 span {
+    padding-left: 5px;
+}
+
+.topNavigationSubMenu a {
+	display: block;
+}
+
+.topNavigationSubMenu div {
+	padding: 0px 0px 15px 25px;
+}
+
+.topNavigationSubMenu .close {
+	float: right;
+}
+
+nav div {
+	float: left;
+}
+
+
+/**********/
+/* colors */
+/**********/
+
+.topNavigation {
+	background-color: #f6a828;
+	border: 1px solid #e78f08;
+}
+
+.topNavigation li {
+}
+
+.topNavigation li a {
+	color: #ffffff;
+}
+
+.topNavigation li a:hover:not(.active),
+.topNavigation li a.navigation-node--active {
+    background-color: #e78f08;
+}
+
+.topNavigationSubMenu {
+	background-color: #f6f6f6;
+	border: 1px solid #cccccc;
+}
+
+.topNavigationSubMenu h3 {
+	color: #1c94c4;
+}
+
+.topNavigationSubMenu a {
+	color: #1c94c4;
+	border: 1px solid #f6f6f6;
+	padding: 4px 12px 4px 12px;
+	text-decoration: none;
+}
+
+.topNavigationSubMenu a.disabled {
+	color: #aaaaaa;
+	border: 1px solid #f6f6f6;
+	padding: 4px 12px 4px 12px;
+	text-decoration: none;
+}
+
+.topNavigationSubMenu a:hover {
+	background-color: #fdf5ce;
+	color: #c77405;
+	border: 1px solid #fbcb09;
+}
+
+.topNavigationSubMenu a.disabled:hover {
+	color: #aaaaaa;
+	border: 1px solid #dddddd;
+	padding: 4px 12px 4px 12px;
+	text-decoration: none;
+}
+
+.topNavigationSubMenu div {
+}
+
+.topNavigationSubMenu .close {
+}
+
+nav div {
+}
+
+/**
+ * visibility
+ */
+
+.topNavigation li a i {
+	display: inline;
+}
+
+.topNavigation li a span {
+    display: none;
+}
+
+@media only screen and (min-width: 981px) {
+	.topNavigation li a i {
+		display: inline;
+	}
+
+   .topNavigation li a span {
+   	display: inline;
+      padding-left: 5px;
+   }
+}

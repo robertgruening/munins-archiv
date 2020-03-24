@@ -15,7 +15,7 @@
 		$.ajax(
 		{
 			type:"GET",
-			url: "../Dienste/Sitemap/" + options.PageName + "/WithPath",
+			url: "../../api/Services/Sitemap/" + options.PageName + "/WithPath",
 			dataType: "JSON",
 			success:function(data, textStatus, jqXHR)
 			{
@@ -26,28 +26,17 @@
 			},
 			error:function(jqXHR, textStatus, errorThrown)
 			{
-				console.log("FEHLER: \"../Dienste/Sitemap/" + options.PageName + "/WithPath\" konnte nicht geladen werden!");
+				console.log("FEHLER: \"../../api/Services/Sitemap/" + options.PageName + "/WithPath\" konnte nicht geladen werden!");
 			}
 		});	
 	}
 
 	function LoadBreadcrumbItem(options, htmlElement, item)
 	{
-		if (item.URL == undefined)
+		$(htmlElement).append($("<span/>", 
 		{
-			$(htmlElement).append($("<span/>", 
-			{
-				text : item.Title
-			}));
-		}
-		else
-		{
-			$(htmlElement).append($("<a/>", 
-			{
-				href : item.URL,
-				text : item.Title
-			}));
-		}
+			text : item.Title
+		}));
 
 		if (item.Children != undefined &&
 			item.Children != null)

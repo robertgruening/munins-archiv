@@ -11,17 +11,17 @@ function LoadCounts()
 	LoadCount("Ort");
 }
 
-function LoadCount(typ)
+function LoadCount(type)
 {	
 	$.ajax(
 	{
 		type:"POST",
-		url:"Dienste/" + typ + "/Count",
+		url:"Dienste/" + type + "/Count",
 		success:function(data, textStatus, jqXHR)
 		{
 			if (data)
 			{
-				$("#labelCount"+typ).text(data);
+				$("#labelCount"+type).text(data);
 			}
 		},
 		error:function(jqXHR, textStatus, errorThrown)

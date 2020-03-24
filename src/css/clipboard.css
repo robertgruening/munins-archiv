@@ -1,0 +1,31 @@
+/*********/
+/* sizes */
+/*********/
+
+#content {
+    padding-bottom: 81px; /* = outer height of #clipboard */
+}
+
+#clipboard {
+    height: 80px;
+    width: inherit;
+    position: fixed;
+    z-index: 2;   
+    bottom: 0px;
+}
+
+
+
+/**********/
+/* colors */
+/**********/
+
+#clipboard {
+    border-top:2px solid #cccccc;
+    background-color: inherit;
+}
+
+/* v1.1 */
+#clipboard {
+    display: none;
+}

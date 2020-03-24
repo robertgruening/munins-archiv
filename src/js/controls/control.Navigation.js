@@ -11,11 +11,11 @@
 	function LoadNavigation(options, htmlElement)
 	{
 		$(htmlElement).empty();
-		
+
 		$.ajax(
 		{
 			type:"GET",
-			url: "../Dienste/Sitemap/",
+			url: "../../api/Services/Sitemap/",
 			dataType: "JSON",
 			success:function(data, textStatus, jqXHR)
 			{
@@ -27,34 +27,91 @@
 			},
 			error:function(jqXHR, textStatus, errorThrown)
 			{
-				console.log("FEHLER: \"../Dienste/Sitemap/\" konnte nicht geladen werden!");
+				console.log("FEHLER: \"../../api/Services/Sitemap/\" konnte nicht geladen werden!");
 			}
-		});	
+		});
+	}
+
+	function containsActiveNavigationNode(navigationNode)
+	{
+		if (getPageName() == navigationNode.PageName)
+		{
+			return true;
+		}
+
+		if (navigationNode.Children != undefined &&
+			navigationNode.Children != null)
+		{
+
+			for (var i = 0; i < navigationNode.Children.length; i++)
+			{
+	    		if (containsActiveNavigationNode(navigationNode.Children[i]))
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	function LoadNavigationItems(options, htmlElement, items)
-	{	
-		var html = "<ul class='topNavigation'>";
+	{
+		var ul = $("<ul></ul>");
+		ul.addClass("topNavigation");
 
 		for (var i = 0; i < items.length; i++)
 		{
-			html += "<li>";
+    		if (items[i].Visible != undefined &&
+    		    !items[i].Visible)
+		    {
+		        continue;
+		    }
+
+			var li = $("<li></li>");
+			var a = $("<a></a>");
+
+			if (items[i].Target != undefined)
+			{
+				a.attr("target", items[i].Target);
+			}
+
+			if (containsActiveNavigationNode(items[i]))
+			{
+				a.addClass("navigation-node--active");
+			}
 
 			if (items[i].Action != undefined)
 			{
-				html += "<a href=\"javascript:" + items[i].Action + "\">" + items[i].Title + "</a>";
+				a.attr("href", "javascript:" + items[i].Action);
+			}
+			else if (items[i].URL != undefined)
+			{
+				a.attr("href", items[i].URL);
 			}
 			else
 			{
-				html += "<a href=\"javascript:ShowSubMenu('" + items[i].Title + "');\">" + items[i].Title + "</a>";
+				a.attr("href", "javascript:ShowSubMenu('" + items[i].Title + "');");
 			}
 
-			html += "</li>";
+			if (items[i].Icon != undefined)
+			{
+				var icon = $("<i></i>");
+				icon.addClass("fas");
+				icon.addClass(items[i].Icon);
+
+				a.append(icon);
+			}
+
+			var span= $("<span></span>");
+			span.text(items[i].Title);
+			a.append(span);
+			a.attr("title", items[i].Title);
+			li.append(a);
+			ul.append(li);
 		}
 
-		html += "</ul>";
-
-		return html;
+		return ul;
 	}
 
 	function LoadPanels(options, htmlElement, panels)
@@ -63,7 +120,10 @@
 
 		for (var i = 0; i < panels.length; i++)
 		{
-			html += LoadPanel(options, htmlElement, panels[i]);
+			if (panels[i].URL == undefined)
+			{
+				html += LoadPanel(options, htmlElement, panels[i]);
+			}
 		}
 
 		return html;
@@ -78,7 +138,7 @@
 		}
 
 		var html = "<nav id=" + panel.Title + " class=topNavigationSubMenu>";
-		html += "<a href=\"javascript:HideSubMenu('" + panel.Title + "');\" class=close>X</a>";
+		html += "<a href=\"javascript:HideSubMenu('" + panel.Title + "');\" class=close><i class=\"fas fa-window-close\"></i></a>";
 		html += LoadTopics(options, htmlElement, panel.Children);
 		html += "</nav>";
 
@@ -97,6 +157,12 @@
 
 		for (var i = 0; i < topics.length; i++)
 		{
+    		if (topics[i].Visible != undefined &&
+    		    !topics[i].Visible)
+		    {
+		        continue;
+		    }
+
 			html += LoadTopic(options, htmlElement, topics[i]);
 		}
 
@@ -112,27 +178,46 @@
 		}
 
 		var html = "<div>";
-		html += "<h3>" + topic.Title + "</h3>";
+
+		html += "<h3>";
+
+		if (topic.Icon != undefined)
+		{
+			html += "<i class=\"fas " + topic.Icon + "\"></i>";
+		}
+
+		html += "<span>" + topic.Title + "</span></h3>";
 
 		for (var i = 0; i < topic.Children.length; i++)
 		{
+    		if (topic.Children[i].Visible != undefined &&
+    		    !topic.Children[i].Visible)
+		    {
+		        continue;
+		    }
+
 			html += "<a ";
-	
+
 			if (topic.Children[i].Enabled == undefined ||
 				topic.Children[i].Enabled == true)
 			{
 				if (topic.Children[i].URL != undefined)
 				{
-					html += "href=\"" + topic.Children[i].URL + "\"";
+					html += "href=\"" + topic.Children[i].URL + "\" ";
 				}
 				else if (topic.Children[i].Action != undefined)
 				{
-					html += "href=\"javascript:" + topic.Children[i].Action + "\"";
+					html += "href=\"javascript:" + topic.Children[i].Action + "\" ";
+				}
+
+				if (topic.Children[i].Target != undefined)
+				{
+					html += "target=\"" + topic.Children[i].Target + "\" ";
 				}
 			}
 			else
 			{
-				html += "class=\"disabled\"";
+				html += "class=\"disabled\" ";
 			}
 
 			html += ">" + topic.Children[i].Title + "</a>";
@@ -142,21 +227,30 @@
 
 		return html;
 	}
-	
+
 })(jQuery);
 
-function ShowSubMenu(id) 
+function ShowSubMenu(id)
 {
 	var isHidden = $("#"+id).css("display") == "none";
 	$("nav").hide();
-	
-	if (isHidden)	
+
+	if (isHidden)
 	{
 		$("#"+id).show();
 	}
 }
 
-function HideSubMenu(id) 
+function HideSubMenu(id)
 {
 	$("#"+id).hide();
 }
+
+function InitNavigation()
+{
+    $("#navigation").Navigation();
+}
+
+$(document).ready(function() {
+	InitNavigation();
+});

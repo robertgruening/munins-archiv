@@ -24,14 +24,10 @@ SET time_zone = "+00:00";
 -- Dumping data for table `KontextTyp`
 --
 
-INSERT INTO `KontextTyp` (`Id`, `Bezeichnung`) VALUES
-(5, 'Befund'),
-(2, 'Begehung'),
-(6, 'Begehungsfläche'),
-(4, 'Fläche'),
-(1, 'Fundstelle'),
-(3, 'Grabung'),
-(7, 'Laufende Nummer');
+INSERT INTO `KontextTyp` (`Bezeichnung`) VALUES
+('Begehung'),
+('Begehungsfläche'),
+('Fundstelle')
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
