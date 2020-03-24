@@ -119,7 +119,7 @@ function InitFieldType() {
 	_viewModelListKontextType.loadAll();
 
 	$("#selectType").change(function () {
-		
+
 		if ($("#selectType").val() == undefined ||
 			 $("#selectType").val() == null ||
 			 $("#selectType").val().length == 0)
@@ -127,7 +127,7 @@ function InitFieldType() {
 			_viewModelFormFundstelle.setType(null);
 			return;
 		}
-		
+
 		var kontextType = new KontextType();
 		kontextType.Id = $("#selectType").val();
 		kontextType.Bezeichnung = $("#selectType option:selected").text();
@@ -148,7 +148,7 @@ function fillSelectionKontextType(kontextTypes) {
 			$("#selectType").append("<option value=" + kontextType.Id + " text=\"" + kontextType.Bezeichnung + "\">" + kontextType.Bezeichnung + "</option>");
 		}
 	});
-	
+
 	loadForm();
 }
 
@@ -225,7 +225,6 @@ function ShowFormSelectLfdNummer() {
 		height: "auto",
 		title: "Lfd-Nummer auswählen",
 		modal: true,
-		resizable: false,
 		buttons: {
 			"Speichern": function () {
 				_viewModelFormFundstelle.addLfdNummer(GetSelectedLfdNummerNode());

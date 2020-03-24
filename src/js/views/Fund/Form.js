@@ -226,7 +226,6 @@ function ShowFormSelectFundAttribut() {
 		height: "auto",
 		title: "Fundattribut auswählen",
 		modal: true,
-		resizable: false,
 		buttons: {
 			"Speichern": function () {
 				_viewModelFormFund.addFundAttribut(esti_getSelectedItem());
@@ -398,7 +397,6 @@ function ShowFormSelectAblage() {
 		height: "auto",
 		title: "Ablage auswählen",
 		modal: true,
-		resizable: false,
 		buttons: {
 			"Speichern": function () {
 				_viewModelFormFund.setAblage(esti_getSelectedItem());
@@ -449,7 +447,6 @@ function ShowFormSelectKontext() {
 		height: "auto",
 		title: "Kontext auswählen",
 		modal: true,
-		resizable: false,
 		buttons: {
 			"Speichern": function () {
 				_viewModelFormFund.setKontext(esti_getSelectedItem());

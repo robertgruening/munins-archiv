@@ -9,7 +9,6 @@ $(document).ready(function () {
     InitButtonNew();
     InitButtonEdit();
     InitButtonDelete();
-    InitButtonReload();
 
     InitGrid();
 
@@ -252,28 +251,6 @@ function ShowDialogDelete() {
 	});
 
 	$("#DialogDelete").dialog("open");
-}
-//#endregion
-
-//#region reload
-function InitButtonReload() {
-	EnableButtonReload();
-}
-
-function EnableButtonReload() {
-	$("#buttonReload").off("click");
-	$("#buttonReload").click(function () {
-		console.log("button 'reload' clicked");
-		_viewModelListFundAttributType.loadAll();
-	});
-	$("#buttonReload").removeClass("disabled");
-	$("#buttonReload").prop("disabled", false);
-}
-
-function DisableButtonReload() {
-	$("#buttonReload").off("click");
-	$("#buttonReload").addClass("disabled");
-	$("#buttonReload").prop("disabled", true);
 }
 //#endregion
 //#endregion

@@ -121,7 +121,7 @@ function InitFieldType() {
 	_viewModelListKontextType.loadAll();
 
 	$("#selectType").change(function () {
-		
+
 		if ($("#selectType").val() == undefined ||
 			 $("#selectType").val() == null ||
 			 $("#selectType").val().length == 0)
@@ -129,7 +129,7 @@ function InitFieldType() {
 			_viewModelFormBegehungsflaeche.setType(null);
 			return;
 		}
-		
+
 		var kontextType = new KontextType();
 		kontextType.Id = $("#selectType").val();
 		kontextType.Bezeichnung = $("#selectType option:selected").text();
@@ -227,7 +227,6 @@ function ShowFormSelectLfdNummer() {
 		height: "auto",
 		title: "Lfd-Nummer auswählen",
 		modal: true,
-		resizable: false,
 		buttons: {
 			"Speichern": function () {
 				_viewModelFormBegehungsflaeche.addLfdNummer(GetSelectedLfdNummerNode());
@@ -303,7 +302,6 @@ function ShowFormSelectOrt() {
 		height: "auto",
 		title: "Ort auswählen",
 		modal: true,
-		resizable: false,
 		buttons: {
 			"Speichern": function () {
 				_viewModelFormBegehungsflaeche.addOrt(esti_getSelectedItem());
@@ -372,7 +370,7 @@ function InitButtonNew() {
 	_viewModelFormBegehungsflaeche.register("parent", new GuiClient(EnableButtonNew, showErrorMessages));
 }
 
-function EnableButtonNew(parent) {	
+function EnableButtonNew(parent) {
 	if (parent == undefined ||
 		 parent == null ||
 		 parent.Id == null)
@@ -380,7 +378,7 @@ function EnableButtonNew(parent) {
 		DisableButtonNew();
 		return;
 	}
-	
+
 	$("#buttonNew").attr("href", "/Munins Archiv/src/pages/Begehungsflaeche/Form.html?Parent_Id=" + parent.Id);
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
