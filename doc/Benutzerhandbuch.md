@@ -65,7 +65,7 @@ Um einen Fund zu identifizieren, wird er beschriftet, siehe Abbildung 2. Für di
 ![Fundbeispiel: Graphittonwandscherbe mit Kammstrichverzierung mit Beschriftung "10-2"](Fund_mit_Beschriftung.jpg)  
 *Abbildung 2 - Graphittonwandscherbe mit Kammstrichverzierung mit Beschriftung "10-2"*
 
-In der Praxis sind nicht nur besondere Einzelfunde zu erfassen, sondern auch Massenfunde, die zu Dutzenden oder Tausenden auftreten. Um den Aufwand bei der Verwaltung und der technischen Datenhaltung gering zu halten, gibt es für jeden Funddatensatz das Merkmal **Anzahl** mit dem Standardwert „1“. Ist das Ermitteln der exakten Anzahl zu aufwändig, kann eine Mindestangabe erfolgen, z. B. „>50“ (mindestens 50 Exemplare). Wichtig ist hierbei, dass tatsächlich bis zu der angegebenen Anzahl gezählt wird. Schließlich kann es im Fall einer exakten Zählung, bspw. bei einer Inventur, zur irrtümlichen Annahme kommen, dass Funde aphandengekommen sind.
+In der Praxis sind nicht nur besondere Einzelfunde zu erfassen, sondern auch Massenfunde, die zu Dutzenden oder Tausenden auftreten. Um den Aufwand bei der Verwaltung und der technischen Datenhaltung gering zu halten, gibt es für jeden Funddatensatz das Merkmal **Anzahl** mit dem Standardwert „1“. Ist das Ermitteln der exakten Anzahl zu aufwändig, kann eine Mindestangabe erfolgen, z. B. „>50“ (mindestens 50 Exemplare). Wichtig ist hierbei, dass tatsächlich bis zu der angegebenen Anzahl gezählt wird. Schließlich kann es im Fall einer exakten Zählung, bspw. bei einer Inventur, zur irrtümlichen Annahme kommen, dass Funde abhandengekommen sind.
 
 Jeder Fund hat eine Herkunft, sei es durch eine Feldbegehung oder eine Grabung. Die Zuordnung der Funde zu ihrem Herkunftskontext ist von großer Bedeutung für eine wissenschaftliche Auswertung. Eine detaillierte Auseinandersetzung mit dem **Kontext** findet in [Kapitel 2.3.](#23-kontext) statt.
 
@@ -82,36 +82,14 @@ Die folgenden Merkmale und Ausprägungen in Abbildung 3 orientieren sich am Beis
 ![Fundbeispiel: Graphittonwandscherbe mit Kammstrichverzierung](Fund.jpg)  
 *Abbildung 1 - Graphittonwandscherbe mit Kammstrichverzierung*
 
-@startuml
-rectangle {
-rectangle "**Material:** Graphitton"
-rectangle "**Gegenstand:** Gefäß"
-rectangle "**Erhaltung:** Wandfragment"
-rectangle "**Verzierung:** Kammstrich"
-}
-@enduml
+![Fundattribute als Karteikarten](Fundattribute_als_Karteikarten.jpg)  
 *Abbildung 3 - Fundbeschreibung mittels Fundattributen als Karteikarten*
 
 Aufgrund der Fülle von Ausprägungen sowie Synonymen sind die Fundattribute **hierarchisch** strukturiert. Das heißt, dass der Anwender in der obersten Ebene allgemeine Ausprägungen vorfindet und darunter Spezifizierungen. Beispiel: Im Typ „Material“ befinden sich u.a. die Ausprägungen „Metall“, „Gestein“ und „Knochen“. Unter „Metall“ könnten Untergruppen, wie bspw. „Legierung“, „Edelmetall“ oder „Nichtedelmetall“ aufgeführt sein, bevor „Eisen“, „Kupfer“, „Bronze“ etc. zu finden sind.
 
 Beim Beispiel der Graphittonscherbe ist „Graphitton“ eine Spezialisierung von „Ton“ vgl. Abbildung 4.
 
-@startuml
-rectangle **Material** {
-    rectangle Metall
-    rectangle Legierung
-    rectangle Bronze
-    rectangle Kupfer
-    rectangle Eisen
-    rectangle Ton
-    rectangle Graphitton
-    Metall --> Legierung
-    Metall --> Kupfer
-    Metall --> Eisen
-    Legierung --> Bronze
-    Ton --> Graphitton
-}
-@enduml
+![Hierarchische Struktur von Fundattributen](Fundattribute.jpg)  
 *Abbildung 4 - Hierarchische Struktur von Fundattributen*
 
 Für die Erfassung von Funden ergibt sich mit der hierarchischen Schlagworttechnik der Fundattribute der Vorteil, dass flexibel auf den Grad der Spezifizierung eingegangen werden kann. Wenn zum Beispiel der Erfasser das Material des Fundes als Metall bestimmen kann, aber nicht mehr, um welches Metall bzw. um welche Legierung es sich handelt, dann verknüpft er nur das Attribut „Metall“. Falls bei der Restaurierung des Fundes festgestellt wird, dass es sich um eine Bronzelegierung handelt, dann kann der Restaurator die Merkmalsbestimmung entsprechend der Hierarchie verfeinern.
@@ -158,19 +136,7 @@ Ablagen können hierarchisch angelegt werden. So kann beispielsweise die Ablage 
 
 Sinnvollerweise werden die Ablagen so angelegt, dass sie sich auch tatsächlich in der angegebenen Ablage befinden. So sollte das „Regal A“ auch wirklich im „Raum Archiv“ stehen und ein „Regalbrett 2“ mit dem „Karton 10-I-2-1“ und all seinen Funden enthalten.
 
-@startuml
-rectangle "**Raum:** Archiv" as raumArchiv
-rectangle "**Regal:** A" as regalA
-rectangle "**Regalbrett:** 2" as regalbrett2
-rectangle "**Karton:** 10-I-2-1" as karton10I21
-rectangle "**Regal:** B" as regal1B
-rectangle "**Regal:** C" as regalC
-raumArchiv --> regalA
-regalA --> regalbrett2
-regalbrett2 --> karton10I21
-raumArchiv --> regal1B
-raumArchiv --> regalC
-@enduml
+![Beispiel für hierarchische Ablagestruktur](Ablagestruktur.jpg)  
 *Abbildung 8 - Beispiel für hierarchische Ablagestruktur*
 
 ### 2.5. Ort

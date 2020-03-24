@@ -1,0 +1,13 @@
+@startuml
+rectangle "**Raum:** Archiv" as raumArchiv
+rectangle "**Regal:** A" as regalA
+rectangle "**Regalbrett:** 2" as regalbrett2
+rectangle "**Karton:** 10-I-2-1" as karton10I21
+rectangle "**Regal:** B" as regal1B
+rectangle "**Regal:** C" as regalC
+raumArchiv --> regalA
+regalA --> regalbrett2
+regalbrett2 --> karton10I21
+raumArchiv --> regal1B
+raumArchiv --> regalC
+@enduml

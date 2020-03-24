@@ -1,0 +1,8 @@
+@startuml
+rectangle {
+rectangle "**Material:** Graphitton"
+rectangle "**Gegenstand:** Gefäß"
+rectangle "**Erhaltung:** Wandfragment"
+rectangle "**Verzierung:** Kammstrich"
+}
+@enduml
