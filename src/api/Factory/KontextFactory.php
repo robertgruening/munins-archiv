@@ -6,6 +6,7 @@ include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/FundFactory.php");
 include_once(__DIR__."/OrtFactory.php");
 include_once(__DIR__."/LfdNummerFactory.php");
+include_once(__DIR__."/../Model/GeoPoint.php");
 include_once(__DIR__."/../Model/Kontext.php");
 include_once(__DIR__."/../Model/Fundstelle.php");
 include_once(__DIR__."/../Model/Begehungsflaeche.php");
@@ -94,9 +95,9 @@ class KontextFactory extends Factory implements iTreeFactory
         {
             case "Fundstelle":
             {
-                return "SELECT Id, Bezeichnung, Typ_Id
-                FROM ".$this->getTableName()."
-                WHERE Id = ".$id.";";
+                return "SELECT ".$this->getTableName().".Id AS Id, ".$this->getTableName().".Bezeichnung AS Bezeichnung, ".$this->getTableName().".Typ_Id AS Typ_Id, ST_X(Fundstelle.GeoPoint) AS GeoPointX, ST_Y(Fundstelle.GeoPoint) AS GeoPointY
+                FROM ".$this->getTableName()." LEFT JOIN Fundstelle ON ".$this->getTableName().".Id = Fundstelle.Id
+                WHERE ".$this->getTableName().".Id = ".$id.";";
             }
             case "Begehungsfläche":
             {
@@ -107,8 +108,8 @@ class KontextFactory extends Factory implements iTreeFactory
             case "Begehung":
             {
                 return "SELECT ".$this->getTableName().".Id AS Id, ".$this->getTableName().".Bezeichnung AS Bezeichnung, ".$this->getTableName().".Typ_Id AS Typ_Id, Begehung.Datum AS Datum, Begehung.Kommentar AS Kommentar
-                FROM ".$this->getTableName()." LEFT JOIN Begehung ON Kontext.Id = Begehung.Id
-                WHERE Kontext.Id = ".$id.";";
+                FROM ".$this->getTableName()." LEFT JOIN Begehung ON ".$this->getTableName().".Id = Begehung.Id
+                WHERE ".$this->getTableName().".Id = ".$id.";";
             }
         }
 
@@ -150,7 +151,18 @@ class KontextFactory extends Factory implements iTreeFactory
         $kontext->setPath($this->getPath($kontext));
         $kontext->setType($kontextType);
 
-        if ($kontext instanceof Begehung)
+        if ($kontext instanceof Fundstelle)
+        {
+			if ($dataSet["GeoPointX"] != null &&
+				$dataSet["GeoPointY"] != null)
+			{
+				$point = new Point();
+				$point->setX($dataSet["GeoPointX"]);
+				$point->setY($dataSet["GeoPointY"]);
+	            $kontext->setGeoPoint($point);
+			}
+        }
+		else if ($kontext instanceof Begehung)
         {
             $kontext->setDatum($dataSet["Datum"]);
             $kontext->setKommentar($dataSet["Kommentar"]);
@@ -220,8 +232,31 @@ class KontextFactory extends Factory implements iTreeFactory
         {
             $mysqli->set_charset("utf8");
 
-            if ($element->getType()->getBezeichnung() == "Begehung")
+            if ($element->getType()->getBezeichnung() == "Fundstelle")
             {
+                $mysqli->autocommit(false);
+                $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+
+                $passed = true;
+                $passed = $mysqli->query($this->getSQLStatementToInsert($element)) && $passed;
+
+                if ($passed)
+                {
+                	$element->setId($mysqli->insert_id);
+                	$passed = $mysqli->query($this->getSQLStatementToInsertFundstelle($element)) && $passed;
+                }
+
+                if ($passed)
+                {
+                    $mysqli->commit();
+                }
+                else
+                {
+                    $mysqli->rollback();
+                }
+            }
+			else if ($element->getType()->getBezeichnung() == "Begehung")
+			{
                 $mysqli->autocommit(false);
                 $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 
@@ -242,7 +277,7 @@ class KontextFactory extends Factory implements iTreeFactory
                 {
                     $mysqli->rollback();
                 }
-            }
+			}
             else
             {
                 $ergebnis = $mysqli->multi_query($this->getSQLStatementToInsert($element));
@@ -267,6 +302,21 @@ class KontextFactory extends Factory implements iTreeFactory
     {
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
         VALUES ('".addslashes($kontext->getBezeichnung())."', ".$kontext->getType()->getId().");";
+    }
+
+    protected function getSQLStatementToInsertFundstelle(iNode $kontext)
+    {
+		$geoPointValue = null;
+
+		if ($kontext->getGeoPoint() != null &&
+			$kontext->getGeoPoint()->getX() != null &&
+			$kontext->getGeoPoint()->getY() != null)
+		{
+			$geoPointValue = "ST_GeomFromText('POINT(".$kontext->getGeoPoint()->getX()." ".$kontext->getGeoPoint()->getY().")')";
+		}
+
+        return "INSERT INTO Fundstelle (Id, GeoPoint)
+        VALUES (".$kontext->getId().", ".$geoPointValue.");";
     }
 
     protected function getSQLStatementToInsertBegehung(iNode $kontext)
@@ -294,7 +344,31 @@ class KontextFactory extends Factory implements iTreeFactory
             $mysqli->set_charset("utf8");
             $logger->debug("HIER: ".$element->getType()->getBezeichnung());
 
-            if ($element->getType()->getBezeichnung() == "Begehung")
+			if ($element->getType()->getBezeichnung() == "Fundstelle")
+            {
+                $mysqli->autocommit(false);
+                $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+
+                $passed = true;
+                $passed = $mysqli->query($this->getSQLStatementToUpdate($element)) && $passed;
+                $logger->debug("PASSED: ".$passed);
+
+                if ($passed)
+                {
+                    $passed = $mysqli->query($this->getSQLStatementToUpdateFundstelle($element)) && $passed;
+                    $logger->debug("PASSED: ".$passed);
+                }
+
+                if ($passed)
+                {
+                    $mysqli->commit();
+                }
+                else
+                {
+                    $mysqli->rollback();
+                }
+            }
+			else if ($element->getType()->getBezeichnung() == "Begehung")
             {
                 $mysqli->autocommit(false);
                 $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
@@ -346,6 +420,22 @@ class KontextFactory extends Factory implements iTreeFactory
             WHERE Id = ".$kontext->getId().";";
     }
 
+    protected function getSQLStatementToUpdateFundstelle(iNode $kontext)
+    {
+		$geoPointValue = null;
+
+		if ($kontext->getGeoPoint() != null &&
+			$kontext->getGeoPoint()->getX() != null &&
+			$kontext->getGeoPoint()->getY() != null)
+		{
+			$geoPointValue = "ST_GeomFromText('POINT(".$kontext->getGeoPoint()->getX()." ".$kontext->getGeoPoint()->getY().")')";
+		}
+
+        return "UPDATE Fundstelle
+            SET GeoPoint = ".$geoPointValue."
+            WHERE Id = ".$kontext->getId().";";
+    }
+
     protected function getSQLStatementToUpdateBegehung(iNode $kontext)
     {
         return "UPDATE Begehung
@@ -373,7 +463,29 @@ class KontextFactory extends Factory implements iTreeFactory
             {
                 $mysqli->set_charset("utf8");
 
-                if ($element->getType()->getBezeichnung() == "Begehung")
+				if ($element->getType()->getBezeichnung() == "Fundstelle")
+                {
+                    $mysqli->autocommit(false);
+                    $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+
+                    $passed = true;
+                    $passed = $mysqli->query($this->getSQLStatementToDeleteFundstelle($element)) && $passed;
+
+                    if ($passed)
+                    {
+                        $passed = $mysqli->query($this->getSQLStatementToDelete($element)) && $passed;
+                    }
+
+                    if ($passed)
+                    {
+                        $mysqli->commit();
+                    }
+                    else
+                    {
+                        $mysqli->rollback();
+                    }
+                }
+				else if ($element->getType()->getBezeichnung() == "Begehung")
                 {
                     $mysqli->autocommit(false);
                     $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
@@ -422,6 +534,13 @@ class KontextFactory extends Factory implements iTreeFactory
             WHERE Id = ".$element->getId().";";
         }
 
+        protected function getSQLStatementToDeleteFundstelle($element)
+        {
+            return "DELETE
+            FROM Fundstelle
+            WHERE Id = ".$element->getId().";";
+        }
+
         protected function getSQLStatementToDeleteBegehung($element)
         {
             return "DELETE
@@ -435,7 +554,7 @@ class KontextFactory extends Factory implements iTreeFactory
         {
             global $logger;
             $logger->debug("Konvertiere Daten zu Kontext");
-            
+
             if ($object == null)
             {
                 $logger->error("Kontext ist nicht gesetzt!");
@@ -508,7 +627,7 @@ class KontextFactory extends Factory implements iTreeFactory
             {
                 $kontext->setParent($this->convertToInstance($object["Parent"]));
             }
-            else 
+            else
             {
                 $logger->debug("Parent ist nicht gesetzt!");
             }
@@ -553,18 +672,30 @@ class KontextFactory extends Factory implements iTreeFactory
                 }
             }
 
-            if ($kontext instanceof Begehung &&
-            isset($object["Datum"]))
+            if ($kontext instanceof Fundstelle &&
+            	isset($object["GeoPoint"]) &&
+				isset($object["GeoPoint"]["X"]) &&
+				isset($object["GeoPoint"]["Y"]))
             {
-                $kontext->setDatum($object["Datum"]);
+				$geoPoint = new GeoPoint();
+				$geoPoint-setX($object["GeoPoint"]["X"]);
+				$geoPoint-setY($object["GeoPoint"]["Y"]);
+                $kontext->setGeoPoint($geoPoint);
             }
 
-            if ($kontext instanceof Begehung &&
-            isset($object["Kommentar"]))
-            {
-                $kontext->setKommentar($object["Kommentar"]);
-            }
-            
+            if ($kontext instanceof Begehung)
+			{
+				if (isset($object["Datum"]))
+				{
+	                $kontext->setDatum($object["Datum"]);
+	            }
+
+				if (isset($object["Kommentar"]))
+	            {
+	                $kontext->setKommentar($object["Kommentar"]);
+	            }
+			}
+			
             return $kontext;
         }
         #endregion

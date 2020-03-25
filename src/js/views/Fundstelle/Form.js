@@ -20,6 +20,7 @@ $(document).ready(function () {
 	InitFieldPath();
 	InitFieldCountOfChildren();
 	InitFieldLfdNummern();
+	InitGeoPoint();
 });
 
 function getPageName() {
@@ -275,6 +276,30 @@ function removeLfdNummer(lfdNummerId) {
 
 function showMessagesLfdNummern(messages) {
 	$("#divLfdNummern .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
+//#region GeoPoint
+var _map = null;
+var _popup = null;
+
+function InitGeoPoint() {
+	$("#divMap").width("100%");
+	$("#divMap").height(700);
+
+	_popup = L.popup();
+
+	_map = L.map("divMap").setView([49.47997, 10.98847], 13);
+	_map.options.minZoom = 11;
+	_map.options.maxZoom = 17;
+	//_map.zoomIn(13);
+	L.control.scale().addTo(_map);
+	L.tileLayer("/Munins%20Archiv/src/api/Services/KartenKacheln/{z}/{x}/{y}.png").addTo(_map);
+	_map.on("click", onMapClick);
+}
+
+function onMapClick(e) {
+	$("#labelGeoPoint").text("Lat.: " + e.latlng.lat + " Long.: " + e.latlng.lng);
 }
 //#endregion
 //#endregion
