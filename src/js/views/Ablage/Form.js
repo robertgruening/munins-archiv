@@ -7,7 +7,6 @@ $(document).ready(function () {
 	_viewModelListAblageType = viewModelFactory.getViewModelListAblageType();
 
 	InitStatusChanged();
-	InitBreadcrumb();
 	InitButtonNew();
 	InitButtonSave();
 	InitButtonDelete();
@@ -61,13 +60,6 @@ function InitStatusChanged() {
 	_viewModelFormAblage.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
 }
 
-function InitBreadcrumb()
-{
-    $("#breadcrumb").Breadcrumb({
-        PageName : getPageName()
-	});
-}
-
 function loadCreatedElement(element) {
 	window.open(window.location.href.replace(window.location.search, "") + "?Id=" + element.Id, "_self");
 }
@@ -119,7 +111,7 @@ function InitFieldType() {
 	_viewModelListAblageType.loadAll();
 
 	$("#selectType").change(function () {
-		
+
 		if ($("#selectType").val() == undefined ||
 			 $("#selectType").val() == null ||
 			 $("#selectType").val().length == 0)
@@ -127,7 +119,7 @@ function InitFieldType() {
 			_viewModelFormAblage.setType(null);
 			return;
 		}
-		
+
 		var ablageType = new AblageType();
 		ablageType.Id = $("#selectType").val();
 		ablageType.Bezeichnung = $("#selectType option:selected").text();

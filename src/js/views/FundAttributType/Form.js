@@ -5,7 +5,6 @@ $(document).ready(function () {
 	_viewModelFormFundAttributType = viewModelFactory.getViewModelFormFundAttributType();
 
 	InitStatusChanged();
-    InitBreadcrumb();
     InitButtonNew();
     InitButtonSave();
 	InitButtonDelete();
@@ -39,13 +38,6 @@ function InitStatusChanged() {
 	_viewModelFormFundAttributType.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormFundAttributType.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormFundAttributType.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
-}
-
-function InitBreadcrumb()
-{
-    $("#breadcrumb").Breadcrumb({
-        PageName : getPageName()
-	});
 }
 
 function loadCreatedElement(element) {

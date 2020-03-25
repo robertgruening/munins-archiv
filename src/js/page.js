@@ -6,11 +6,10 @@ $(function() {
     });
 });
 
-function setSizes() {	   	        
+function setSizes() {
     $("#leftSidebar").height(
 	    $("body").height() -
-        $("#navigation").outerHeight() -
-        $("#breadcrumb").outerHeight() -
+        $("#navigation").outerHeight() -        
         $("#clipboard").outerHeight() -
         16 /* #leftSidebar.padding-top */
     );
@@ -29,7 +28,7 @@ function containsUrlParameter(name)
     for (var i = 0; i < parameters.length; i++)
     {
         var parameter = parameters[i].split("=");
-        
+
         if (parameter[0].toLowerCase() == name.toLowerCase())
         {
             return true;

@@ -5,7 +5,6 @@ $(document).ready(function () {
 	_viewModelFormOrtType = viewModelFactory.getViewModelFormOrtType();
 
 	InitStatusChanged();
-    InitBreadcrumb();
     InitButtonNew();
     InitButtonSave();
 	InitButtonDelete();
@@ -39,13 +38,6 @@ function InitStatusChanged() {
 	_viewModelFormOrtType.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormOrtType.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormOrtType.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
-}
-
-function InitBreadcrumb()
-{
-    $("#breadcrumb").Breadcrumb({
-        PageName : getPageName()
-	});
 }
 
 function loadCreatedElement(element) {

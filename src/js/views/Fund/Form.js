@@ -5,7 +5,6 @@ $(document).ready(function () {
 	_viewModelFormFund = viewModelFactory.getViewModelFormFund();
 
 	InitStatusChanged();
-	InitBreadcrumb();
 	InitButtonNew();
 	InitButtonSave();
 	InitButtonDelete();
@@ -47,13 +46,6 @@ function InitStatusChanged() {
 	_viewModelFormFund.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormFund.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormFund.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
-}
-
-function InitBreadcrumb()
-{
-    $("#breadcrumb").Breadcrumb({
-        PageName : getPageName()
-	});
 }
 
 function loadCreatedElement(element) {

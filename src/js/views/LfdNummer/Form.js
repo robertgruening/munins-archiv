@@ -5,7 +5,6 @@ $(document).ready(function () {
 	_viewModelFormLfdNummer = viewModelFactory.getViewModelFormLfdNummer();
 
 	InitStatusChanged();
-    InitBreadcrumb();
     InitButtonNew();
     InitButtonSave();
 	InitButtonDelete();
@@ -39,13 +38,6 @@ function InitStatusChanged() {
 	_viewModelFormLfdNummer.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormLfdNummer.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormLfdNummer.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
-}
-
-function InitBreadcrumb()
-{
-	$("#breadcrumb").Breadcrumb({
-		PageName : getPageName()
-	});
 }
 
 function loadCreatedElement(element) {

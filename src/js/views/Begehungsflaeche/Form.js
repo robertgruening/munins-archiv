@@ -7,7 +7,6 @@ $(document).ready(function () {
 	_viewModelListKontextType = viewModelFactory.getViewModelListKontextType();
 
 	InitStatusChanged();
-	InitBreadcrumb();
 	InitButtonNew();
 	InitButtonSave();
 	InitButtonDelete();
@@ -61,13 +60,6 @@ function InitStatusChanged() {
 	_viewModelFormBegehungsflaeche.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormBegehungsflaeche.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormBegehungsflaeche.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
-}
-
-function InitBreadcrumb()
-{
-    $("#breadcrumb").Breadcrumb({
-        PageName : getPageName()
-	});
 }
 
 function loadCreatedElement(element) {

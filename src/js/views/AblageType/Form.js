@@ -5,7 +5,6 @@ $(document).ready(function () {
 	_viewModelFormAblageType = viewModelFactory.getViewModelFormAblageType();
 
 	InitStatusChanged();
-    InitBreadcrumb();
     InitButtonNew();
     InitButtonSave();
 	InitButtonDelete();
@@ -39,13 +38,6 @@ function InitStatusChanged() {
 	_viewModelFormAblageType.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormAblageType.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormAblageType.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
-}
-
-function InitBreadcrumb()
-{
-    $("#breadcrumb").Breadcrumb({
-        PageName : getPageName()
-	});
 }
 
 function loadCreatedElement(element) {

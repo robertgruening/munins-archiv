@@ -5,7 +5,6 @@ $(document).ready(function () {
 	_viewModelListOrtType = viewModelFactory.getViewModelListOrtType();
 
     RegisterToViewModel();
-    InitBreadcrumb();
     InitButtonNew();
     InitButtonEdit();
     InitButtonDelete();
@@ -17,13 +16,6 @@ $(document).ready(function () {
 
 function getPageName() {
 	return "OrtTypeList";
-}
-
-function InitBreadcrumb()
-{
-    $("#breadcrumb").Breadcrumb({
-        PageName : getPageName()
-	});
 }
 
 function RegisterToViewModel() {

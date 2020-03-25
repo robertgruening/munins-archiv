@@ -5,7 +5,6 @@ $(document).ready(function() {
 	_viewModelExplorerFundAttribut = viewModelFactory.getViewModelExplorerFundAttribut();
 
     RegisterToViewModel();
-    InitBreadcrumb();
 	InitButtonNew();
 	InitButtonOpen();
     InitButtonEdit();
@@ -69,13 +68,6 @@ function markSelectedChildItem(selectedItemIndex) {
 		console.debug("Select row");
 	    row.addClass("selected-row");
 	}
-}
-
-function InitBreadcrumb()
-{
-    $("#breadcrumb").Breadcrumb({
-        PageName : getPageName()
-	});
 }
 //#region form actions
 //#region new

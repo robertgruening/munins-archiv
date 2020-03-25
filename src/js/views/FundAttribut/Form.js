@@ -7,7 +7,6 @@ $(document).ready(function () {
 	_viewModelListFundAttributType = viewModelFactory.getViewModelListFundAttributType();
 
 	InitStatusChanged();
-	InitBreadcrumb();
 	InitButtonNew();
 	InitButtonSave();
 	InitButtonDelete();
@@ -58,13 +57,6 @@ function InitStatusChanged() {
 	_viewModelFormFundAttribut.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormFundAttribut.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormFundAttribut.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
-}
-
-function InitBreadcrumb()
-{
-    $("#breadcrumb").Breadcrumb({
-        PageName : getPageName()
-	});
 }
 
 function loadCreatedElement(element) {
@@ -118,7 +110,7 @@ function InitFieldType() {
 	_viewModelListFundAttributType.loadAll();
 
 	$("#selectType").change(function () {
-		
+
 		if ($("#selectType").val() == undefined ||
 			 $("#selectType").val() == null ||
 			 $("#selectType").val().length == 0)
@@ -126,7 +118,7 @@ function InitFieldType() {
 			_viewModelFormFundAttribut.setType(null);
 			return;
 		}
-		
+
 		var kontextType = new FundAttributType();
 		kontextType.Id = $("#selectType").val();
 		kontextType.Bezeichnung = $("#selectType option:selected").text();

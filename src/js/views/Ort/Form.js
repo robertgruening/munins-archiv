@@ -7,7 +7,6 @@ $(document).ready(function () {
 	_viewModelListOrtType = viewModelFactory.getViewModelListOrtType();
 
 	InitStatusChanged();
-	InitBreadcrumb();
 	InitButtonNew();
 	InitButtonSave();
 	InitButtonDelete();
@@ -58,13 +57,6 @@ function InitStatusChanged() {
 	_viewModelFormOrt.register("create", new GuiClient(loadCreatedElement, showErrorMessages));
 	_viewModelFormOrt.register("save", new GuiClient(showMessageSaved, showErrorMessages));
 	_viewModelFormOrt.register("delete", new GuiClient(showMessageDeleted, showErrorMessages));
-}
-
-function InitBreadcrumb()
-{
-    $("#breadcrumb").Breadcrumb({
-        PageName : getPageName()
-	});
 }
 
 function loadCreatedElement(element) {
@@ -118,7 +110,7 @@ function InitFieldType() {
 	_viewModelListOrtType.loadAll();
 
 	$("#selectType").change(function () {
-		
+
 		if ($("#selectType").val() == undefined ||
 			 $("#selectType").val() == null ||
 			 $("#selectType").val().length == 0)
@@ -126,7 +118,7 @@ function InitFieldType() {
 			_viewModelFormOrt.setType(null);
 			return;
 		}
-		
+
 		var ortType = new OrtType();
 		ortType.Id = $("#selectType").val();
 		ortType.Bezeichnung = $("#selectType option:selected").text();

@@ -5,7 +5,6 @@ $(document).ready(function () {
 	_viewModelListLfdNummer = viewModelFactory.getViewModelListLfdNummer();
 
     RegisterToViewModel();
-    InitBreadcrumb();
     InitButtonNew();
     InitButtonEdit();
     InitButtonDelete();
@@ -17,13 +16,6 @@ $(document).ready(function () {
 
 function getPageName() {
 	return "LfdNummerList";
-}
-
-function InitBreadcrumb()
-{
-    $("#breadcrumb").Breadcrumb({
-        PageName : getPageName()
-	});
 }
 
 function RegisterToViewModel() {

@@ -7,7 +7,7 @@
 }
 
 #leftSidebar {
-    padding-top: 76px; /* = outer height of #navigation + outer height of #breadcrumb */
+    padding-top: 76px; /* = outer height of #navigation */
     padding-bottom: 52px; /* = outer height of #clipboard */
     position: fixed;
     height: inherit;

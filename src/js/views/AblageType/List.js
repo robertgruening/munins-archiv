@@ -5,7 +5,6 @@ $(document).ready(function () {
 	_viewModelListAblageType = viewModelFactory.getViewModelListAblageType();
 
     RegisterToViewModel();
-    InitBreadcrumb();
     InitButtonNew();
     InitButtonEdit();
     InitButtonDelete();
@@ -17,13 +16,6 @@ $(document).ready(function () {
 
 function getPageName() {
 	return "AblageTypeList";
-}
-
-function InitBreadcrumb()
-{
-    $("#breadcrumb").Breadcrumb({
-        PageName : getPageName()
-	});
 }
 
 function RegisterToViewModel() {

@@ -10,7 +10,7 @@ html, body {
 }
 
 #content {
-	padding-top: 66px; /* = outer height of #navigation + outer height of #breadcrumb */
+	padding-top: 66px; /* = outer height of #navigation */
 
 	/* v1.1 */
 	padding-top: 47px; /* = outer height of #navigation */
