@@ -28,7 +28,7 @@ import os
 
 serviceUrl = "http://tile.openstreetmap.org/!z/!x/!y.png"
 attribution = 'Map data (c) OpenStreetMap'
-downloadRootPath = "/var/www/html/Munins Archiv/src/api/Services/KartenKacheln/"
+downloadRootPath = "/var/www/html/Munins Archiv/src/api/Services/mapTiles/"
 numberOfTiles = (xmax - xmin + 1) * (ymax - ymin + 1)
 counterOfTiles = 0
 

@@ -11,6 +11,11 @@
 				"PageName" : "KontextExplorer"
 			},
 			{
+				"Title" : "Fundstellenkarte",
+				"URL" : "/Munins Archiv/src/pages/Fundstelle/Map.html",
+				"PageName" : "FundstelleMap"
+			},
+			{
 				"Title" : "Fundstelle anlegen",
 				"URL" : "/Munins Archiv/src/pages/Fundstelle/Form.html",
 				"PageName" : "FundstelleFormNew",

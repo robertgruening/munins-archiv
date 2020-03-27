@@ -12,6 +12,7 @@ $(document).ready(function () {
 	InitButtonDelete();
 	InitButtonUndo();
 	InitButtonToOverview();
+	InitButtonToMap();
 	InitButtonSelectLfdNummer();
 	InitButtonEditGeoPoint();
 	InitButtonDeleteGeoPoint();
@@ -290,7 +291,7 @@ function InitGeoPoint() {
 	_map.options.minZoom = 5;
 	_map.options.maxZoom = 13;
 	L.control.scale().addTo(_map);
-	L.tileLayer("/Munins%20Archiv/src/api/Services/KartenKacheln/{z}/{x}/{y}.png").addTo(_map);
+	L.tileLayer("/Munins Archiv/src/api/Services/mapTiles/{z}/{x}/{y}.png").addTo(_map);
 
 	_viewModelFormFundstelle.register("geoPoint", new GuiClient(setGeoPointMarker, showErrorMessages));
 }
@@ -536,4 +537,10 @@ function DisableButtonToOverview() {
 	$("#buttonToOverview").prop("disabled", true);
 }
 //#endregion
+
+//#region open map
+function InitButtonToMap() {
+	$("#buttonToMap").attr("href", "/Munins Archiv/src/pages/Fundstelle/Map.html", "_self");
+}
+//#endregon
 //#endregion
