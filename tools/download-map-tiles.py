@@ -2,14 +2,29 @@
 import urllib.request
 import os
 
+#Note:
+# Go to http://tools.geofabrik.de/calc/#type=geofabrik_standard&bbox=5,47,16,55&grid=1
+# Click "+" at the map to see the x and y values of the tiles and to use them below.
+# More example code: https://egorikas.com/download-open-street-tiles-for-offline-using/
+
 # 1 : 4.000
 #(zoom, xmin, ymin, xmax, ymax) = (17, 69298, 44734, 69540, 44846)
 
 # 1 : 35.000
-(zoom, xmin, ymin, xmax, ymax) = (13, 4331, 2795, 4346, 2802)
+#(zoom, xmin, ymin, xmax, ymax) = (13, 4331, 2795, 4346, 2802)
 
 # 1 : 250.000
 #(zoom, xmin, ymin, xmax, ymax) = (11, 1082, 698, 1086, 700)
+
+# Regionen: Fürth, Bad Windsheim, Erlangen
+#(zoom, xmin, ymin, xmax, ymax) = (10, 540, 348, 543, 350)
+#(zoom, xmin, ymin, xmax, ymax) = (9, 270, 174, 271, 175) 
+#(zoom, xmin, ymin, xmax, ymax) = (8, 134, 86, 135, 87)
+#(zoom, xmin, ymin, xmax, ymax) = (7, 67, 43, 67, 43)
+
+# Deutschland
+#(zoom, xmin, ymin, xmax, ymax) = (6, 33, 20, 34, 22)
+#(zoom, xmin, ymin, xmax, ymax) = (5, 16, 10, 17, 11)
 
 serviceUrl = "http://tile.openstreetmap.org/!z/!x/!y.png"
 attribution = 'Map data (c) OpenStreetMap'

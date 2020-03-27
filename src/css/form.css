@@ -87,3 +87,14 @@
 	list-style: none;
 	padding-bottom: 5px;
 }
+
+#divMap{
+	height: 300px;
+	width: 100%;
+}
+
+@media only screen and (min-width: 981px) {
+	#divMap{
+		height: 800px;
+	}
+}

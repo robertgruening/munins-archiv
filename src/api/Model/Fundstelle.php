@@ -47,4 +47,10 @@ class Fundstelle extends Kontext
 	{
 		return $this->GeoPoint;
 	}
+    
+    function __construct()
+    {
+        parent::__construct();
+        $this->GeoPoint = null;
+   }
 }

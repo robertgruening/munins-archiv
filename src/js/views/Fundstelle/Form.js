@@ -13,6 +13,8 @@ $(document).ready(function () {
 	InitButtonUndo();
 	InitButtonToOverview();
 	InitButtonSelectLfdNummer();
+	InitButtonEditGeoPoint();
+	InitButtonDeleteGeoPoint();
 
 	InitFieldId();
 	InitFieldType();
@@ -281,25 +283,112 @@ function showMessagesLfdNummern(messages) {
 
 //#region GeoPoint
 var _map = null;
-var _popup = null;
+var _marker = null;
 
 function InitGeoPoint() {
-	$("#divMap").width("100%");
-	$("#divMap").height(700);
-
-	_popup = L.popup();
-
-	_map = L.map("divMap").setView([49.47997, 10.98847], 13);
-	_map.options.minZoom = 11;
-	_map.options.maxZoom = 17;
-	//_map.zoomIn(13);
+	_map = L.map("divMap").setView([51.163375, 10.447683333333], 5);
+	_map.options.minZoom = 5;
+	_map.options.maxZoom = 13;
 	L.control.scale().addTo(_map);
 	L.tileLayer("/Munins%20Archiv/src/api/Services/KartenKacheln/{z}/{x}/{y}.png").addTo(_map);
-	_map.on("click", onMapClick);
+
+	_viewModelFormFundstelle.register("geoPoint", new GuiClient(setGeoPointMarker, showErrorMessages));
 }
 
 function onMapClick(e) {
-	$("#labelGeoPoint").text("Lat.: " + e.latlng.lat + " Long.: " + e.latlng.lng);
+	_viewModelFormFundstelle.setGeoPoint({
+		Latitude: e.latlng.lat,
+		Longitude: e.latlng.lng
+	});
+}
+
+function setGeoPointMarker(geoPoint) {
+	console.info("setting value of 'geoPoint'");
+	
+	if (geoPoint == null)
+	{
+		if (_marker != null)
+		{
+			_marker.remove();
+			_marker = null;
+		}
+		
+		return;
+	}
+	
+	if (_marker == null)
+	{
+		_marker = L.marker([geoPoint.Latitude, geoPoint.Longitude]).addTo(_map);
+	}
+	
+	_marker.setLatLng({
+		lat: geoPoint.Latitude,
+		lng: geoPoint.Longitude
+	});
+	
+	_map.setView([geoPoint.Latitude, geoPoint.Longitude]);
+}
+
+function InitButtonEditGeoPoint() {
+	EnableButtonEditGeoPoint();
+	_viewModelFormFundstelle.register("load", new GuiClient(EnableButtonEditGeoPoint, showErrorMessages));
+	_viewModelFormFundstelle.register("create", new GuiClient(EnableButtonEditGeoPoint, showErrorMessages));
+	_viewModelFormFundstelle.register("save", new GuiClient(EnableButtonEditGeoPoint, showErrorMessages));
+	_viewModelFormFundstelle.register("dataResetted", new GuiClient(EnableButtonEditGeoPoint, showErrorMessages));
+}
+
+function EnableButtonEditGeoPoint() {
+	if (_map != null)
+	{
+		_map.off("click");
+	}
+	
+	$("#buttonEditGeoPoint").off("click");
+	$("#buttonEditGeoPoint").click(function () {
+		if (_map != null)
+		{
+			_map.off("click");
+			_map.on("click", onMapClick);
+		}
+
+		DisableButtonEditGeoPoint();
+	});
+	$("#buttonEditGeoPoint").removeClass("disabled");
+	$("#buttonEditGeoPoint").prop("disabled", false);
+}
+
+function DisableButtonEditGeoPoint() {
+	$("#buttonEditGeoPoint").off("click");
+	$("#buttonEditGeoPoint").addClass("disabled");
+	$("#buttonEditGeoPoint").prop("disabled", true);
+}
+
+function InitButtonDeleteGeoPoint() {
+	DisableButtonDeleteGeoPoint();
+	_viewModelFormFundstelle.register("geoPoint", new GuiClient(EnableButtonDeleteGeoPoint, showErrorMessages));
+}
+
+function EnableButtonDeleteGeoPoint(geoPoint) {
+	if (geoPoint == null ||
+		 geoPoint.Latitude == null ||
+		 geoPoint.Longitude == null)
+	{
+		DisableButtonDeleteGeoPoint();
+		return;
+	}
+		
+	$("#buttonDeleteGeoPoint").off("click");
+	$("#buttonDeleteGeoPoint").click(function () {
+		_viewModelFormFundstelle.clearGeoPoint();
+	});
+	$("#buttonDeleteGeoPoint").removeClass("disabled");
+	$("#buttonDeleteGeoPoint").prop("disabled", false);
+}
+
+function DisableButtonDeleteGeoPoint() {
+	$("#buttonDeleteGeoPoint").off("click");
+	$("#buttonDeleteGeoPoint").addClass("disabled");
+	$("#buttonDeleteGeoPoint").prop("disabled", true);
 }
 //#endregion
 //#endregion

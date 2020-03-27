@@ -1,33 +1,33 @@
 <?php
 
-class Point
+class GeoPoint
 {
-    public $X;
-	public $Y;
+    public $Latitude;
+	public $Longitude;
 
-	public function getX()
+	public function getLatitude()
 	{
-		return $this->X;
+		return $this->Latitude;
 	}
 
-	public function setX($x)
+	public function setLatitude($latitude)
 	{
-		$this->X = $x;
+		$this->Latitude = $latitude;
 	}
 
-	public function getY()
+	public function getLongitude()
 	{
-		return $this->Y;
+		return $this->Longitude;
 	}
 
-	public function setY($y)
+	public function setLongitude($longitude)
 	{
-		$this->Y = $y;
+		$this->Longitude = $longitude;
 	}
 
     function __construct()
     {
-        $this->X = 0;
-        $this->Y = 0;
+        $this->Latitude = 0;
+        $this->Longitude = 0;
     }
 }

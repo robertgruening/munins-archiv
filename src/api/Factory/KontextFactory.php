@@ -95,7 +95,7 @@ class KontextFactory extends Factory implements iTreeFactory
         {
             case "Fundstelle":
             {
-                return "SELECT ".$this->getTableName().".Id AS Id, ".$this->getTableName().".Bezeichnung AS Bezeichnung, ".$this->getTableName().".Typ_Id AS Typ_Id, ST_X(Fundstelle.GeoPoint) AS GeoPointX, ST_Y(Fundstelle.GeoPoint) AS GeoPointY
+                return "SELECT ".$this->getTableName().".Id AS Id, ".$this->getTableName().".Bezeichnung AS Bezeichnung, ".$this->getTableName().".Typ_Id AS Typ_Id, ST_X(Fundstelle.GeoPoint) AS GeoPointLatitude, ST_Y(Fundstelle.GeoPoint) AS GeoPointLongitude
                 FROM ".$this->getTableName()." LEFT JOIN Fundstelle ON ".$this->getTableName().".Id = Fundstelle.Id
                 WHERE ".$this->getTableName().".Id = ".$id.";";
             }
@@ -153,13 +153,13 @@ class KontextFactory extends Factory implements iTreeFactory
 
         if ($kontext instanceof Fundstelle)
         {
-			if ($dataSet["GeoPointX"] != null &&
-				$dataSet["GeoPointY"] != null)
+			if ($dataSet["GeoPointLatitude"] != null &&
+				$dataSet["GeoPointLongitude"] != null)
 			{
-				$point = new Point();
-				$point->setX($dataSet["GeoPointX"]);
-				$point->setY($dataSet["GeoPointY"]);
-	            $kontext->setGeoPoint($point);
+				$geoPoint = new GeoPoint();
+				$geoPoint->setLatitude($dataSet["GeoPointLatitude"]);
+				$geoPoint->setLongitude($dataSet["GeoPointLongitude"]);
+	            $kontext->setGeoPoint($geoPoint);
 			}
         }
 		else if ($kontext instanceof Begehung)
@@ -306,13 +306,13 @@ class KontextFactory extends Factory implements iTreeFactory
 
     protected function getSQLStatementToInsertFundstelle(iNode $kontext)
     {
-		$geoPointValue = null;
+		$geoPointValue = "NULL";
 
 		if ($kontext->getGeoPoint() != null &&
-			$kontext->getGeoPoint()->getX() != null &&
-			$kontext->getGeoPoint()->getY() != null)
+			$kontext->getGeoPoint()->getLatitude() != null &&
+			$kontext->getGeoPoint()->getLongitude() != null)
 		{
-			$geoPointValue = "ST_GeomFromText('POINT(".$kontext->getGeoPoint()->getX()." ".$kontext->getGeoPoint()->getY().")')";
+			$geoPointValue = "ST_GeomFromText('POINT(".$kontext->getGeoPoint()->getLatitude()." ".$kontext->getGeoPoint()->getLongitude().")')";
 		}
 
         return "INSERT INTO Fundstelle (Id, GeoPoint)
@@ -422,13 +422,13 @@ class KontextFactory extends Factory implements iTreeFactory
 
     protected function getSQLStatementToUpdateFundstelle(iNode $kontext)
     {
-		$geoPointValue = null;
+		$geoPointValue = "NULL";
 
 		if ($kontext->getGeoPoint() != null &&
-			$kontext->getGeoPoint()->getX() != null &&
-			$kontext->getGeoPoint()->getY() != null)
+			$kontext->getGeoPoint()->getLatitude() != null &&
+			$kontext->getGeoPoint()->getLongitude() != null)
 		{
-			$geoPointValue = "ST_GeomFromText('POINT(".$kontext->getGeoPoint()->getX()." ".$kontext->getGeoPoint()->getY().")')";
+			$geoPointValue = "ST_GeomFromText('POINT(".$kontext->getGeoPoint()->getLatitude()." ".$kontext->getGeoPoint()->getLongitude().")')";
 		}
 
         return "UPDATE Fundstelle
@@ -674,14 +674,16 @@ class KontextFactory extends Factory implements iTreeFactory
 
             if ($kontext instanceof Fundstelle &&
             	isset($object["GeoPoint"]) &&
-				isset($object["GeoPoint"]["X"]) &&
-				isset($object["GeoPoint"]["Y"]))
+					isset($object["GeoPoint"]["Latitude"]) &&
+					isset($object["GeoPoint"]["Longitude"]))
             {
-				$geoPoint = new GeoPoint();
-				$geoPoint-setX($object["GeoPoint"]["X"]);
-				$geoPoint-setY($object["GeoPoint"]["Y"]);
+					$geoPoint = new GeoPoint();
+					$geoPoint->setLatitude($object["GeoPoint"]["Latitude"]);
+					$geoPoint->setLongitude($object["GeoPoint"]["Longitude"]);
                 $kontext->setGeoPoint($geoPoint);
             }
+            
+            $logger->debug(json_encode($kontext));
 
             if ($kontext instanceof Begehung)
 			{
