@@ -285,6 +285,7 @@ function showMessagesLfdNummern(messages) {
 //#region GeoPoint
 var _map = null;
 var _marker = null;
+var _isGeoPointInEditMode = false;
 
 function InitGeoPoint() {
 	_map = L.map("divMap").setView([51.163375, 10.447683333333], 5);
@@ -319,15 +320,33 @@ function setGeoPointMarker(geoPoint) {
 	
 	if (_marker == null)
 	{
-		_marker = L.marker([geoPoint.Latitude, geoPoint.Longitude]).addTo(_map);
+		_marker = L.marker([geoPoint.Latitude, geoPoint.Longitude]);
+		_marker.addTo(_map);
 	}
 	
+	refreshMapMarkerStatusIcon();
 	_marker.setLatLng({
 		lat: geoPoint.Latitude,
 		lng: geoPoint.Longitude
 	});
 	
 	_map.setView([geoPoint.Latitude, geoPoint.Longitude]);
+}
+
+function refreshMapMarkerStatusIcon()
+{
+	if (_marker == null)
+	{
+		return;
+	}
+	
+	
+	var iconFile = _isGeoPointInEditMode ? "marker-icon.png" : "marker-icon__disabled.png"
+	var icon = L.icon({
+		iconUrl : "/Munins Archiv/src/images/map/" + iconFile
+	});
+	
+	_marker.setIcon(icon);
 }
 
 function InitButtonEditGeoPoint() {
@@ -339,6 +358,9 @@ function InitButtonEditGeoPoint() {
 }
 
 function EnableButtonEditGeoPoint() {
+	_isGeoPointInEditMode = false;
+	refreshMapMarkerStatusIcon();
+
 	if (_map != null)
 	{
 		_map.off("click");
@@ -348,6 +370,8 @@ function EnableButtonEditGeoPoint() {
 	$("#buttonEditGeoPoint").click(function () {
 		if (_map != null)
 		{
+			_isGeoPointInEditMode = true;
+			refreshMapMarkerStatusIcon();			
 			_map.off("click");
 			_map.on("click", onMapClick);
 		}
