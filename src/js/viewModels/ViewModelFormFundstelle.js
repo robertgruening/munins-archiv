@@ -13,7 +13,8 @@ var ViewModelFormFundstelle = function (webServiceClient) {
 			parent: new Array(),
 			children: new Array(),
 			path: new Array(),
-			lfdNummern: new Array()
+			lfdNummern: new Array(),
+			geoPoint: new Array()
 		};
 	};
 
@@ -25,6 +26,7 @@ var ViewModelFormFundstelle = function (webServiceClient) {
 		this._update("children", this._model.Children);
 		this._update("path", this._model.Path);
 		this._update("lfdNummern", this._model.LfdNummern);
+		this._update("geoPoint", this._model.GeoPoint);
 	};
 
 	//#region properties
@@ -108,6 +110,22 @@ var ViewModelFormFundstelle = function (webServiceClient) {
 		}
 		this._update("dataChanged");
 		this._update("lfdNummern", this._model.LfdNummern);
+	};
+	//#endregion
+	
+	//#region GeoPoint
+	this.setGeoPoint = function (geoPoint) {
+		this._model.GeoPoint = geoPoint;
+		this._update("dataChanged");
+		this._update("geoPoint", this._model.GeoPoint);		
+	};
+	
+	this.clearGeoPoint = function () {
+		this.setGeoPoint(null);
+	};
+	
+	this.getGeoPoint = function () {
+		return this._model.GeoPoint;
 	};
 	//#endregion
 	//#endregion

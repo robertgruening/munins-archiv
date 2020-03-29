@@ -11,6 +11,7 @@ $(document).ready(function() {
 	InitButtonDelete();
 	InitButtonOpenParent();
 	InitButtonOpenAbstractRoot();
+	InitButtonToMap();
 
 	InitFieldPath();
 	InitGrid();
@@ -267,6 +268,12 @@ function DisableButtonOpenAbstractRoot()
 	$("#buttonOpenAbstractRoot").prop("disabled", true);
 }
 //#endregion
+
+//#region open map
+function InitButtonToMap() {
+	$("#buttonToMap").attr("href", "/Munins Archiv/src/pages/Fundstelle/Map.html", "_self");
+}
+//#endregon
 //#endregion
 
 //#region fields

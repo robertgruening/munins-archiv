@@ -11,6 +11,7 @@
 	<!-- controls -->
 	<script type="text/javascript" src="../../js/controls/jsgrid/jsgrid.min.js"></script>
 	<script type="text/javascript" src="../../js/controls/jsgrid/i18n/jsgrid-de.js"></script>
+	<script type="text/javascript" src="../../js/controls/leaflet/leaflet.js"></script>
 	<script type="text/javascript" src="../../js/controls/jquery.toast.min.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.Navigation.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.Headline.js"></script>
@@ -52,6 +53,7 @@
 	<!-- controls -->
 	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid.min.css" />
 	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid-theme.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../js/controls/leaflet/leaflet.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/jquery.toast.min.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/form.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/navigation.css" />
@@ -74,6 +76,7 @@
 					<li><a id=buttonUndo title="Änderungen verwerfen" class=ui-button><i class="fas fa-undo-alt"></i><span>Änderungen verwerfen</span></a></li>
 					<li><a id=buttonDelete title=löschen class="ui-button risky-action"><i class="fas fa-trash-alt"></i><span>Löschen</span></a></li>
 					<li><a id=buttonToOverview title="Übersicht öffnen" class=ui-button><i class="fas fa-list"></i><span>Übersicht öffnen</span></a></li>
+					<li><a id=buttonToMap title="Karte öffnen" class=ui-button><i class="fas fa-map-marked"></i><span>Karte öffnen</span></a></li>
 				</ul>
 				<div id=divType class=fieldBlock>
 					<div class=fieldDescription>
@@ -124,6 +127,20 @@
 						<div name="messages"></div>
 						<div id=divList class="field editable-list"></div>
 						<a id=buttonSelectLfdNummer title="auswählen" class="notToPrint ui-button"><i class="fas fa-plus"></i></a>
+					</div>
+				</div>
+				<div id=divGeoPoint class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Geografische Position der Fundstelle mittels Breiten- und Längengrad."></i>
+						<label>Geo. Position: </label>
+					</div>
+					<div class=fieldValue>
+						<div class=button-bar>
+							<a id=buttonEditGeoPoint title="bearbeiten" class=ui-button><i class="fas fa-edit"></i><span>Bearbeiten</span></a>
+							<a id=buttonDeleteGeoPoint title="löschen" class="ui-button risky-action"><i class="fas fa-trash-alt"></i><span>Löschen</span></a>
+						</div>
+						<div name="messages"></div>
+						<div id=divMap></div>
 					</div>
 				</div>
 			</div>
