@@ -20,6 +20,7 @@ $(document).ready(function () {
 	InitFieldCountOfChildren();
 	InitFieldCountOfFunde();
 	InitGridFunde();
+	InitFieldGuid();
 });
 
 function getPageName() {
@@ -318,6 +319,18 @@ function UpdateGridData(funde) {
 	$("#gridFunde").jsGrid({
 		data: entries
 	});
+}
+//#endregion
+
+//#region GUID
+function InitFieldGuid() {
+	_viewModelFormAblage.register("guid", new GuiClient(setGuid, null));
+}
+
+function setGuid(guid) {
+	console.info("setting value of 'GUID'");
+	console.debug("GUID is ", guid);
+	$("#labelGuid").text(guid);
 }
 //#endregion
 //#endregion

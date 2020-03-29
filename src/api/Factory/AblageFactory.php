@@ -55,21 +55,21 @@ class AblageFactory extends Factory implements iTreeFactory
 
     #region load
     /**
-    * Returns the SQL statement to load ID, Bezeichnung and Ablage type ID
+    * Returns the SQL statement to load ID, Bezeichnung, Ablage type ID and GUID
     * by Ablage ID.
     *
     * @param $id ID of the Ablage to load.
     */
     protected function getSQLStatementToLoadById($id)
     {
-        return "SELECT Id, Bezeichnung, Typ_Id
+        return "SELECT Id, Bezeichnung, Typ_Id, Guid
         FROM ".$this->getTableName()."
         WHERE Id = ".$id.";";
     }
 
     /**
     * Creates an Ablage instance and fills
-    * the ID and Bezeichnung by the given
+    * the ID, Bezeichnung and GUID by the given
     * dataset.
     *
     * @param $dataset Dataset from Ablage table.
@@ -87,6 +87,7 @@ class AblageFactory extends Factory implements iTreeFactory
         $ablage = new Ablage();
         $ablage->setId(intval($dataset["Id"]));
         $ablage->setBezeichnung($dataset["Bezeichnung"]);
+        $ablage->setGuid($dataset["Guid"]);
         $ablage->setPath($this->getPath($ablage));
         $ablage->setType($this->getAblageTypeFactory()->loadById(intval($dataset["Typ_Id"])));
 
@@ -137,18 +138,19 @@ class AblageFactory extends Factory implements iTreeFactory
 
     #region save
     /**
-    * Returns the SQL statement to insert Bezeichnung and Ablage type ID.
+    * Returns the SQL statement to insert Bezeichnung, Ablage type ID and GUID.
     *
     * @param iNode $ablage Ablage to be inserted.
     */
     protected function getSQLStatementToInsert(iNode $ablage)
     {
-        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
-        VALUES ('".addslashes($ablage->getBezeichnung())."', ".$ablage->getType()->getId().");";
+        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, Guid)
+        VALUES ('".addslashes($ablage->getBezeichnung())."', ".$ablage->getType()->getId().", UUID());";
     }
 
     /**
     * Returns the SQL statement to update Bezeichnung and Ablage type ID.
+    * Note:GUID is not allowed to be changed (updated)! 
     *
     * @param iNode $ablage Ablage to be updated.
     */
@@ -233,6 +235,15 @@ class AblageFactory extends Factory implements iTreeFactory
             {
                 $ablage->addFund($this->getFundFactory()->convertToInstance($object["Funde"][$i]));
             }
+        }
+
+        if (isset($object["Guid"]))
+        {
+            $ablage->setGuid($object["Guid"]);
+        }
+        else
+        {
+            $logger->debug("GUID ist nicht gesetzt!");
         }
 
         return $ablage;
