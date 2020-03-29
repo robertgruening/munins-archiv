@@ -1,4 +1,4 @@
-// var _viewModelFormAblage = null;
+var _viewModelFormAblage = null;
 var _viewModelListAblageType = null;
 
 $(document).ready(function () {

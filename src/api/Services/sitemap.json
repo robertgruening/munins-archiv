@@ -102,7 +102,14 @@
 			{
 				"Title" : "Ablagen durchsuchen",
 				"URL" : "/Munins Archiv/src/pages/Ablage/Explorer.html",
-				"PageName" : "AblageExplorer"
+				"PageName" : "AblageExplorer",
+				"visible" : false
+			},
+			{
+				"Title" : "Ablage scannen",
+				"URL" : "/Munins Archiv/src/pages/Ablage/Scan.html",
+				"PageName" : "AblageScan",
+				"visible" : false
 			},
 			{
 				"Title" : "Ablage anlegen",
