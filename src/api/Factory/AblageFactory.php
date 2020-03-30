@@ -54,6 +54,47 @@ class AblageFactory extends Factory implements iTreeFactory
     }
 
     #region load
+	public function loadByGuid($guid)
+	{
+		global $logger;
+		$logger->debug("Lade Element (".$guid.")");
+
+		$element = null;
+		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->getSQLStatementToLoadByGuid($guid));
+
+			if ($mysqli->errno)
+			{
+				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+			}
+			else
+			{
+				$element = $this->fill($ergebnis->fetch_assoc());
+			}
+		}
+
+		$mysqli->close();
+
+		return $element;
+	}
+
+    /**
+    * Returns the SQL statement to load ID, Bezeichnung, Ablage type ID and GUID
+    * by Ablage GUID.
+    *
+    * @param $guid GUID of the Ablage to load.
+    */
+    protected function getSQLStatementToLoadByGuid($guid)
+    {
+        return "SELECT Id, Bezeichnung, Typ_Id, Guid
+        FROM ".$this->getTableName()."
+        WHERE Guid = ".$guid.";";
+    }
+
     /**
     * Returns the SQL statement to load ID, Bezeichnung, Ablage type ID and GUID
     * by Ablage ID.
@@ -150,7 +191,7 @@ class AblageFactory extends Factory implements iTreeFactory
 
     /**
     * Returns the SQL statement to update Bezeichnung and Ablage type ID.
-    * Note:GUID is not allowed to be changed (updated)! 
+    * Note:GUID is not allowed to be changed (updated)!
     *
     * @param iNode $ablage Ablage to be updated.
     */
@@ -200,7 +241,7 @@ class AblageFactory extends Factory implements iTreeFactory
         {
             $ablageType = $this->getAblageTypeFactory()->convertToInstance($object["Type"]);
         }
-        
+
         if ($ablageType == null ||
         		$ablageType->getId() == null ||
             $ablageType->getId() == "")

@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set("display_errors", 1); 
+ini_set("display_errors", 1);
 
 require_once("../UserStories/Ablage/LoadAblage.php");
 require_once("../UserStories/Ablage/LoadRootAblagen.php");
@@ -36,16 +36,16 @@ function Create()
         $logger->error(json_last_error().json_last_error_msg().PHP_EOL.PHP_EOL);
         return;
     }
-    
+
     $ablageFactory = new AblageFactory();
     $ablage = $ablageFactory->convertToInstance($ablageObject);
-    
+
     $saveAblage = new SaveAblage();
     $saveAblage->setAblage($ablage);
-    
+
     if ($saveAblage->run())
     {
-        echo json_encode($saveAblage->getAblage());    
+        echo json_encode($saveAblage->getAblage());
     }
     else
     {
@@ -73,13 +73,13 @@ function Update()
     {
         $ablageObject["Id"] = $_GET["Id"];
     }
-    
+
     $ablageFactory = new AblageFactory();
     $ablage = $ablageFactory->convertToInstance($ablageObject);
-    
+
     $saveAblage = new SaveAblage();
     $saveAblage->setAblage($ablage);
-    
+
     if ($saveAblage->run())
     {
         echo json_encode($saveAblage->getAblage());
@@ -108,7 +108,7 @@ function Delete()
     if ($loadAblage->run())
     {
         $ablage = $loadAblage->getAblage();
-        
+
         $deleteAblage = new DeleteAblage();
         $deleteAblage->setAblage($ablage);
 
@@ -153,6 +153,24 @@ function Get()
 
         $logger->info("Ablage-anhand-ID-laden beendet");
     }
+	else if (isset($_GET["Guid"]))
+	{
+        $logger->info("Ablage-anhand-GUID-laden gestartet");
+        $loadAblage = new LoadAblage();
+        $loadAblage->setGuid(intval($_GET["Guid"]));
+
+        if ($loadAblage->run())
+        {
+            echo json_encode($loadAblage->getAblage());
+        }
+        else
+        {
+            http_response_code(500);
+            echo json_encode($loadAblage->getMessages());
+        }
+
+        $logger->info("Ablage-anhand-GUID-laden beendet");
+	}
     else
     {
         $logger->info("Root-Ablagen-laden gestartet");
