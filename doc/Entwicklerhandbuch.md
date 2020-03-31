@@ -15,6 +15,7 @@
 1. [Benutzerführung](#5-benutzerfhrung)
 1. [Logfunktion](#6-logfunktion)
 1. [Releasemanagement](#7-releasemanagement)
+1. [Sonstiges](#8-sonstiges)
 
 ## 1. Entwicklungsumgebung
 
@@ -45,6 +46,34 @@
 
 1. Beliebigen Webserver einrichten (z. B. Apache Http Server)
 1. git-Repository als Wurzel der Website einrichten ([http://localhost:80/Munins Archiv/src](http://localhost:80/Munins%20Archiv/src))
+1. **URL-Weiterleitung** einrichten (Beispiel: Ubuntu mit Apache Http Server)
+	1. sudo a2enmod rewrite
+    1. sudo nano /etc/apache2/sites-available/default-ssl.conf
+		```
+    	<Directory "/var/www/html">
+    		AllowOverride All
+    	</Directory>
+		```
+	1. sudo service apache2 restart
+1. **HTTPS** einrichten (Beispiel: Ubuntu mit Apache Http Server)
+		1. sudo a2enmod ssl
+		1. sudo service apache2 restart
+		1. sudo mkdir /etc/apache2/ssl
+		1. sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+	    1. sudo nano /etc/apache2/sites-available/000-default.conf
+			```
+			SSLEngine on
+			SSLCertificateFile /etc/apache2/ssl/apache.crt
+			SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+			```
+		1. sudo a2enmod headers
+	    1. sudo nano /etc/apache2/sites-available/default-ssl.conf
+			```
+			<IfModule mod_headers.c>
+				Header always set Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"
+			</IfModule>
+			```
+		1. sudo service apache2 restart
 
 ## 2. Verzeichnisstruktur
 
@@ -65,6 +94,7 @@
 * [jQuery Toast Plugin](https://github.com/kamranahmedse/jquery-toast-plugin) v1.3.2 von **Kamran Ahmed** unter der *MIT-Lizenz*
 * [jsGrid](http://js-grid.com/) v1.5.3 von **Artem Tabalin** unter der *MIT-Lizenz*
 * [leaflet](http://leafletjs.com/) v1.6.0 von **Vladimir Agafonkin** und **Community** unter der *BSD-2-Lizenz*
+* [jsQR](https://github.com/cozmo/jsQR) v1.2.0 von **Cozmo Wolfe** unter der *Apache-Lizenz 2.0*
 
 ## 4. Architektur
 
@@ -152,3 +182,8 @@ Eine wesentliche Neuerung auf der Serverseite ist das Protokollieren des Program
 Jedes Jahr soll es eine Hauptversion geben. Dazwischen soll mindestens eine Zwischenversion erscheinen. Der Zweck der Zwischenversion ist, die "Must Have"-Anforderungen umzusetzen und Rückmeldungen der Anwender für die Hauptversion zu sammeln. Die nachfolgenden Zwischenversionen oder die Hauptversion setzen das Benutzer-Feedback um und ergänzen die Anwendung um Funktionen der Kategorie "Should Have" und "Nice To Have".
 
 Im Bereich Branching ist das Ziel "Continuous Integration" zu erreichen. Zu diesem Zweck ist der Branch "main" geschützt. Bei einem Merge muss die Funktionsfähigkeit der Anwendung beachtet werden, um jederzeit ein lauffähiges und idealerweise fehlerfreies Release zu erzeugen.
+
+## 8. Sonstiges
+
+"QR Code" is registered trademark of DENSO WAVE INCORPORATED.
+"QR Code" ist eine registrierte Handelsmarke der DENSO WAVE INCORPORATED.

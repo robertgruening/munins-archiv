@@ -8,6 +8,7 @@
 	<script type="text/javascript" src="../../js/jquery.min.js"></script>
 	<script type="text/javascript" src="../../js/ui/jquery-ui/jquery-ui.js"></script>
 	<script type="text/javascript" src="../../js/solid.min.js"></script>
+	<script type="text/javascript" src="../../js/jsQR.js"></script>
 	<!-- controls -->
 	<script type="text/javascript" src="../../js/controls/jquery.toast.min.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.Navigation.js"></script>
@@ -59,6 +60,8 @@
 					<input type=text id=textBoxGuid></input>
 					<a id=buttonScan title=scannen class=ui-button><i class="fas fa-qrcode"></i><span>Scannen</span></a>
 				</div>
+				<label id="labelStatusConsole">Auf das Videosignal kann nicht zugegriffen werden. Bitte stellen Sie sicher, dass eine WebCam aktiviert ist.</label>
+				<canvas id="canvasVideoScrean" hidden></canvas>
 			</div>
 		</div>
 	</div>
