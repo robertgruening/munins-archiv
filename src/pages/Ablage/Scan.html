@@ -8,8 +8,8 @@
 	<script type="text/javascript" src="../../js/jquery.min.js"></script>
 	<script type="text/javascript" src="../../js/ui/jquery-ui/jquery-ui.js"></script>
 	<script type="text/javascript" src="../../js/solid.min.js"></script>
+	<script type="text/javascript" src="../../js/jsQR.js"></script>
 	<!-- controls -->
-	<script type="text/javascript" src="../../js/controls/jsgrid/jsgrid.min.js"></script>
 	<script type="text/javascript" src="../../js/controls/jquery.toast.min.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.Navigation.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.Headline.js"></script>
@@ -17,24 +17,22 @@
 	<script type="text/javascript" src="../../js/controls/control.ErrorMessageBox.js"></script>
 	<!-- basic page functions -->
 	<script type="text/javascript" src="../../js/page.js"></script>
+	<script type="text/javascript" src="../../js/ui/IconConfig.js"></script>
 	<!-- observer pattern data structure -->
 	<script type="text/javascript" src="../../js/ui/GuiClient.js"></script>
 	<!-- model -->
 	<script type="text/javascript" src="../../js/models/Ablage.js"></script>
+	<script type="text/javascript" src="../../js/models/AblageType.js"></script>
 	<!-- web service client -->
 	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClient.js"></script>
 	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientAblage.js"></script>
-	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientAblageType.js"></script>
 	<script type="text/javascript" src="../../js/factories/webServiceClientFactory.js"></script>
 	<!-- view model -->
+	<script type="text/javascript" src="../../js/viewModels/ViewModelForm.js"></script>
+	<script type="text/javascript" src="../../js/viewModels/ViewModelFormAblage.js"></script>
 	<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
-	<!-- old view model -->
-	<script type="text/javascript" src="../../js/viewModels/ViewModelExplorer.js"></script>
-	<script type="text/javascript" src="../../js/viewModels/ViewModelExplorerAblage.js"></script>
-	<!-- old view -->
-	<script type="text/javascript" src="../../js/ui/IconConfig.js"></script>
-	<script type="text/javascript" src="../../js/views/Ablage/Explorer.js"></script>
-	<script type="text/javascript" src="../../js/Fund/Factory.js"></script>
+	<!-- view -->
+	<script type="text/javascript" src="../../js/views/Ablage/Scan.js"></script>
 
 	<!-- javascript frameworks etc. -->
 	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
@@ -43,44 +41,28 @@
 	<!-- page -->
 	<link rel="stylesheet" type="text/css" href="../../css/page.css" />
 	<!-- controls -->
-	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid.min.css" />
-	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid-theme.min.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/jquery.toast.min.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/explorer.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/grid.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/form.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/navigation.css" />
 	<!-- print -->
 	<link rel="stylesheet" type="text/css" href="../../css/print.css" media="print" />
 	<link rel=icon type="image/png" href="../../images/system/IconMunin_001.png">
-	<title>Ablage-Explorer</title>
+	<title>Ablage</title>
 </head>
 
 <body>
 	<div id=navigation class="notToPrint"></div>
 	<div id=content>
-		<div id=explorer class=form>
-			<div class="formBlock">
-				<h2>Explorer</h2>
-				<ul id=toolBar>
-					<li><a id=buttonNew title=anlegen class=ui-button><i class="fas fa-plus"></i><span>Anlegen</span></a></li>
-					<li><a id=buttonOpen title=öffnen class=ui-button><i class="fas fa-external-link-alt"></i><span>Öffnen</span></a></li>
-					<li><a id=buttonEdit title=bearbeiten class=ui-button><i class="fas fa-edit"></i><span>Bearbeiten</span></a></li>
-					<li><a id=buttonDelete title=löschen class="ui-button risky-action"><i class="fas fa-trash-alt"></i><span>Löschen</span></a></li>
-					<li><a id=buttonScan title=scannen class="ui-button"><i class="fas fa-qrcode"></i><span>Scannen</span></a></li>
-				</ul>
-				<ul id=toolBar style="float:left;">
-					<li><a id=buttonOpenParent title="Übergeordneten Knoten öffnen" class="ui-button"><i class="fas fa-arrow-alt-circle-up"></i></a></li>
-					<li><a id=buttonOpenAbstractRoot title="Wurzelknoten öffnen" class="ui-button"><i class="fas fa-home"></i></a></li>
-					<li class=toolbar__item--max-width><input id=path type=text /></li>
-				</ul>
-
-				<div class=clear></div>
-				<div id=grid></div>
+		<div id=form class=form>
+			<div class=formBlock>
+				<h2></h2>
+				<div id=divType class=fieldBlock>
+					<input type=text id=textBoxGuid></input>
+					<a id=buttonScan title=scannen class=ui-button><i class="fas fa-qrcode"></i><span>Scannen</span></a>
+				</div>
+				<label id="labelStatusConsole">Auf das Videosignal kann nicht zugegriffen werden. Bitte stellen Sie sicher, dass eine WebCam aktiviert ist.</label>
+				<canvas id="canvasVideoScrean" hidden></canvas>
 			</div>
 		</div>
-		<div id=dialogDelete title=Löschen class=dialog></div>
 	</div>
 </body>
-
-</html>

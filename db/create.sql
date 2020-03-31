@@ -32,10 +32,12 @@ CREATE TABLE IF NOT EXISTS `Ablage` (
   `Bezeichnung` varchar(30) DEFAULT NULL,
   `Parent_Id` int(11) DEFAULT NULL,
   `Ebene` int(11) NOT NULL DEFAULT '0',
+  `Guid` varchar(36) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   KEY `AblageTyp_Id` (`Typ_Id`),
   KEY `Parent_Id` (`Parent_Id`),
-  KEY `IndexAblage` (`Bezeichnung`)
+  KEY `IndexAblage` (`Bezeichnung`),
+  UNIQUE KEY `IndexAblageGuid` (`Guid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

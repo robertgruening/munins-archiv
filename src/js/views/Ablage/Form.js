@@ -1,4 +1,4 @@
-// var _viewModelFormAblage = null;
+var _viewModelFormAblage = null;
 var _viewModelListAblageType = null;
 
 $(document).ready(function () {
@@ -20,6 +20,7 @@ $(document).ready(function () {
 	InitFieldCountOfChildren();
 	InitFieldCountOfFunde();
 	InitGridFunde();
+	InitFieldGuid();
 });
 
 function getPageName() {
@@ -317,6 +318,40 @@ function UpdateGridData(funde) {
 
 	$("#gridFunde").jsGrid({
 		data: entries
+	});
+}
+//#endregion
+
+//#region GUID
+function InitFieldGuid() {
+	_viewModelFormAblage.register("guid", new GuiClient(setGuid, null));
+}
+
+function setGuid(guid) {
+	console.info("setting value of 'GUID'");
+	console.debug("GUID is ", guid);
+	$("#labelGuid").text(guid);
+
+	$("#divQrCodeGuid").empty();
+	
+	if (guid == null ||
+		 guid == "")
+	{
+		return;
+	}
+	
+	/**
+	 * The GUID is 36 characters long.
+	 * Using error correction level 'H'
+	 * requires version 4 with 33x33 modules. 
+	 */
+	var modules = 33;
+	var qrCodeLength = modules * 3;	
+	
+	$("#divQrCodeGuid").qrcode({
+		text: guid,
+		height: qrCodeLength,
+		width: qrCodeLength
 	});
 }
 //#endregion

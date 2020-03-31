@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
-ini_set("display_errors", 1); 
-    
+ini_set("display_errors", 1);
+
 Main();
 
 function Main()
@@ -26,17 +26,17 @@ function Main()
     echo "Starte Upgrade von Version 1.1 auf Version 1.2.\r\n";
     echo "\r\n";
     echo "\r\n";
-    
+
     echo "1. Konfiguriere Parameter\r\n";
     echo "Im Folgenden müssen Sie Zugangsdaten und Einstellungen vornehmen, damit das Skript das Upgrade durchführen kann.\r\n";
     readline("Weiter mit [EINGABE] ...");
     echo "\r\n";
-    $config = FillConfig($config); 
-    echo "\r\n"; 
-    ListConfig($config);    
+    $config = FillConfig($config);
+    echo "\r\n";
+    ListConfig($config);
     readline("Weiter mit [EINGABE] ...");
     echo "\r\n";
-    
+
     echo "2. Datenbanksicherung\r\n";
     echo "Im Folgenden wird eine Sicherungsdatei mit dem Inhalt der Datenbank \"Munins_Archiv\" erzeugt.\r\n";
     readline("Weiter mit [EINGABE] ...");
@@ -52,6 +52,14 @@ function Main()
     UpgradeFundstellen($config);
     readline("Weiter mit [EINGABE] ...");
     echo "\r\n";
+
+    echo "Im Folgenden werden alle Ablagen um eine GUID (UUID) erweitert.\r\n";
+    readline("Weiter mit [EINGABE] ...");
+    echo "\r\n";
+    UpgradeAblagen($config);
+    readline("Weiter mit [EINGABE] ...");
+    echo "\r\n";
+
     echo "Beende Upgrade von Version 1.1 auf Version 1.2.\r\n";
 }
 
@@ -64,12 +72,12 @@ function FillConfig($config)
     echo "\r\n";
     echo "Geben Sie nachfolgend den Verzeichnispfad an, in dem die Sicherungsdateien für das Upgrade abgelegt werden sollen.\r\n";
     $config["DATABASE_BACKUP_FILE_PATH"] = readline("Pfad: ");
-    
+
     if (!endsWith($config["DATABASE_BACKUP_FILE_PATH"], "/"))
     {
         $config["DATABASE_BACKUP_FILE_PATH"] .= "/";
     }
-    
+
     return $config;
 }
 
@@ -86,20 +94,20 @@ function ListConfig($config)
 function startsWith($haystack, $needle)
 {
      $length = strlen($needle);
-     
+
      if ($length == 0)
      {
         return true;
      }
-          
+
      return (substr($haystack, 0, $length) === $needle);
 }
 
 function endsWith($haystack, $needle)
 {
     $length = strlen($needle);
-    
-    if ($length == 0) 
+
+    if ($length == 0)
     {
         return true;
     }
@@ -129,16 +137,38 @@ function DoesTableExist($config, $tableName)
     {
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
-	        SELECT COUNT(*) AS Anzahl 
+	        SELECT COUNT(*) AS Anzahl
 	        FROM information_schema.TABLES
-	        WHERE TABLE_SCHEMA = '".$config["MYSQL_DATENBANK"]."' AND 
+	        WHERE TABLE_SCHEMA = '".$config["MYSQL_DATENBANK"]."' AND
 	        TABLE_NAME = '".$tableName."';");
 	    $datensatz = $ergebnis->fetch_assoc();
 	    $doesTableExist = intval($datensatz["Anzahl"]) == 0 ? false : true;
     }
     $mysqli->close();
-    
+
     return $doesTableExist;
+}
+
+function DoesColumnExist($config, $tableName, $columnName)
+{
+    $doesColumnExist = false;
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+	    $ergebnis = $mysqli->query("
+	        SELECT COUNT(*) AS Anzahl
+	        FROM information_schema.COLUMNS
+	        WHERE TABLE_SCHEMA = '".$config["MYSQL_DATENBANK"]."' AND
+	        TABLE_NAME = '".$tableName."' AND
+	        COLUMN_NAME = '".$columnName."';");
+	    $datensatz = $ergebnis->fetch_assoc();
+	    $doesColumnExist = intval($datensatz["Anzahl"]) == 0 ? false : true;
+    }
+    $mysqli->close();
+
+    return $doesColumnExist;
 }
 
 function CreateTableFundstelle($config)
@@ -159,27 +189,98 @@ function CreateTableFundstelle($config)
   					`Id` int(11) NOT NULL,
   					`GeoPoint` point DEFAULT NULL,
   					PRIMARY KEY (`Id`)
-				);	
+				);
 	    	");
-	    	
+
 	    	if ($mysqli->errno)
 	    	{
 	    		echo "Beim Anlegen der Tabelle \"Fundstelle\" ist ein Fehler aufgetreten!\r\n";
-	    		echo $mysqli->errno.": ".$mysqli->error;
+	    		echo $mysqli->errno.": ".$mysqli->error."\r\n";
 	    	}
 	    	else
 	    	{
 	    		echo "Tabelle \"Fundstelle\" ist angelegt.\r\n";
 	    	}
     	}
-    
+
     	$mysqli->close();
     }
+}
+
+function CreateUniqueIndex($config, $tableName, $indexName, $columnName)
+{
+    $ergebnis = false;
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+	    $ergebnis = $mysqli->query("
+	        CREATE UNIQUE INDEX ".$indexName."
+            ON ".$tableName." (".$columnName.");");
+    }
+    $mysqli->close();
+
+    return $ergebnis;
 }
 #endregion
 #endregion
 
 #region data operations
+#region Ablage
+function GetAblage($config)
+{
+    $ablagen = array();
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+	    $ergebnis = $mysqli->query("
+        SELECT Id, Bezeichnung
+        FROM Ablage;");
+
+	    if (!$mysqli->errno)
+		{
+			while ($datensatz = $ergebnis->fetch_assoc())
+			{
+				$ablage["Id"] = intval($datensatz["Id"]);
+				$ablage["Bezeichnung"] = $datensatz["Bezeichnung"];
+				array_push($ablagen, $ablage);
+			}
+		}
+    }
+    $mysqli->close();
+
+    return $ablagen;
+}
+
+function InsertGuidToAblage($config, $ablage)
+{
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+	    $ergebnis = $mysqli->query("
+	        UPDATE Ablage
+	        SET Guid = UUID()
+	        WHERE Id = ".$ablage["Id"].";");
+
+	    if ($mysqli->errno)
+	    {
+	    	echo "Beim Hinzufügen der GUID für die Ablage (".$ablage["Id"].") ist ein Fehler aufgetreten!\r\n";
+	    	echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    }
+	    else
+	    {
+	    	echo "GUID wurde erfolgreich zu Ablage (".$ablage["Id"].") hinzugefügt.\r\n";
+	    }
+    }
+    $mysqli->close();
+}
+#endregion
+
 #region Kontext
 function GetKontexteByType($config, $kontextType)
 {
@@ -191,9 +292,9 @@ function GetKontexteByType($config, $kontextType)
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
 	        SELECT Kontext.Id AS Id, Kontext.Bezeichnung AS Bezeichnung
-	        FROM Kontext LEFT JOIN KontextTyp ON Kontext.Typ_Id = KontextTyp.Id	        
+	        FROM Kontext LEFT JOIN KontextTyp ON Kontext.Typ_Id = KontextTyp.Id
 	        WHERE KontextTyp.Bezeichnung = '".$kontextType."';");
-	        
+
 	    if (!$mysqli->errno)
 		{
 			while ($datensatz = $ergebnis->fetch_assoc())
@@ -205,7 +306,7 @@ function GetKontexteByType($config, $kontextType)
 		}
     }
     $mysqli->close();
-    
+
     return $kontexte;
 }
 
@@ -219,12 +320,12 @@ function InsertFundstelleToTableFundstelle($config, $fundstelle)
 	    $ergebnis = $mysqli->query("
 	        INSERT INTO Fundstelle(Id)
 	        VALUES(".$fundstelle["Id"].");");
-	        
-	   
+
+
 	    if ($mysqli->errno)
 	    {
 	    	echo "Beim Anlegen einer Fundstelle in der Tabelle \"Fundstelle\" ist ein Fehler aufgetreten!\r\n";
-	    	echo $mysqli->errno.": ".$mysqli->error;
+	    	echo $mysqli->errno.": ".$mysqli->error."\r\n";
 	    }
 	    else
 	    {
@@ -232,6 +333,38 @@ function InsertFundstelleToTableFundstelle($config, $fundstelle)
 	    }
     }
     $mysqli->close();
+}
+
+function InsertColumnGuidInTableAblage($config)
+{
+	if (DoesColumnExist($config, "Ablage", "Guid"))
+	{
+		echo "Die Spalte \"Guid\" existiert bereits inder Tabelle \"Ablage\".";
+	}
+	else
+	{
+   	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+   	if (!$mysqli->connect_errno)
+   	{
+	   	$mysqli->set_charset("utf8");
+	    	$ergebnis = $mysqli->query("
+	        ALTER TABLE `Ablage` ADD COLUMN `Guid` varchar(36) DEFAULT NULL;");
+
+	   	if ($mysqli->errno)
+	   	{
+	    		echo "Beim Anlegen der Spalte \"Guid\" in der Tabelle \"Ablage\" ist ein Fehler aufgetreten!\r\n";
+	    		echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    	}
+	    	else
+	    	{
+	    		echo "Spalte \"Guid\" wurde erfolgreich in Tabelle \"Ablage\" angelgt.\r\n";
+	    		CreateUniqueIndex($config, "Ablage", "IndexAblageGuid", "Guid");
+	    	}
+    	}
+
+   	$mysqli->close();
+	}
 }
 #endregion
 #endregion
@@ -242,11 +375,24 @@ function UpgradeFundstellen($config)
 {
 	CreateTableFundstelle($config);
 	$fundstellen = GetKontexteByType($config, "Fundstelle");
-	
+
 	for ($i = 0; $i < count($fundstellen); $i++)
 	{
 		InsertFundstelleToTableFundstelle($config, $fundstellen[$i]);
-	}  
+	}
+}
+#endregion
+
+#region extend "Ablagen" by "GUID"
+function UpgradeAblagen($config)
+{
+	InsertColumnGuidInTableAblage($config);
+	$ablagen = GetAblage($config);
+
+	for ($i = 0; $i < count($ablagen); $i++)
+	{
+		InsertGuidToAblage($config, $ablagen[$i]);
+	}
 }
 #endregion
 #endregion

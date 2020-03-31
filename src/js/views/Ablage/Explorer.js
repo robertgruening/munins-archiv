@@ -11,6 +11,7 @@ $(document).ready(function() {
     InitButtonDelete();
 	InitButtonOpenParent();
 	InitButtonOpenAbstractRoot();
+	InitButtonScan();
 
 	InitFieldPath();
 	InitGrid();
@@ -246,6 +247,12 @@ function DisableButtonOpenAbstractRoot() {
 	$("#buttonOpenAbstractRoot").removeAttr("href");
 	$("#buttonOpenAbstractRoot").addClass("disabled");
 	$("#buttonOpenAbstractRoot").prop("disabled", true);
+}
+//#endregion
+
+//#region scan
+function InitButtonScan() {
+	$("#buttonScan").attr("href", "/Munins Archiv/src/pages/Ablage/Scan.html");
 }
 //#endregion
 //#endregion

@@ -14,6 +14,7 @@ class Ablage implements iNode, iTypedNode, iTreeNode, iFundContainer
     public $Children;
     public $Path;
     public $Funde;
+    public $Guid;
     
     
     public function getId()
@@ -143,6 +144,16 @@ class Ablage implements iNode, iTypedNode, iTreeNode, iFundContainer
         return false;
     }
     
+    public function getGuid()
+    {
+        return $this->Guid;
+    }
+    
+    public function setGuid($guid)
+    {
+        $this->Guid = $guid;
+    }
+    
     function __construct()
     {
         $this->Id = -1;
@@ -153,5 +164,6 @@ class Ablage implements iNode, iTypedNode, iTreeNode, iFundContainer
         $this->Children = array();
         $this->Path = null;
         $this->Funde = array();
+        $this->Guid = null;
     }
 }

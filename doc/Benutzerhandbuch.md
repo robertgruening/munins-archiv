@@ -13,6 +13,7 @@
     1. [Ort](#25-ort)
 1. [Glossar](#3-glossar)
 1. [Quellenverzeichnis](#4-quellenverzeichnis)
+1. [Sonstiges](#5-sonstiges)
 
 ## 1. Betriebsumgebung
 
@@ -44,6 +45,34 @@ Abhängig vom Betriebssystem Ihres Servers gibt es unterschiedliche Möglichkeit
 
 1. Beliebigen Webserver für PHP einrichten (z. B. Apache Http Server oder Microsoft Internet Information Services)
 2. Inhalt des Ordners „src“ aus dem git-Repository als Wurzel der Website einrichten
+1. **URL-Weiterleitung** einrichten (Beispiel: Ubuntu mit Apache Http Server)
+	1. sudo a2enmod rewrite
+    1. sudo nano /etc/apache2/sites-available/000-default.conf
+		```
+    	<Directory "/var/www/html">
+    		AllowOverride All
+    	</Directory>
+		```
+	1. sudo service apache2 restart
+1. **HTTPS** einrichten (Beispiel: Ubuntu mit Apache Http Server)
+		1. sudo a2enmod ssl
+		1. sudo service apache2 restart
+		1. sudo mkdir /etc/apache2/ssl
+		1. sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+	    1. sudo nano /etc/apache2/sites-available/default-ssl.conf
+			```
+			SSLEngine on
+			SSLCertificateFile /etc/apache2/ssl/apache.crt
+			SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+			```
+		1. sudo a2enmod headers
+	    1. sudo nano /etc/apache2/sites-available/default-ssl.conf
+			```
+			<IfModule mod_headers.c>
+				Header always set Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"
+			</IfModule>
+			```
+		1. sudo service apache2 restart
 
 ## 2. Programmelemente
 
@@ -139,6 +168,10 @@ Sinnvollerweise werden die Ablagen so angelegt, dass sie sich auch tatsächlich 
 ![Beispiel für hierarchische Ablagestruktur](Ablagestruktur.jpg)  
 *Abbildung 8 - Beispiel für hierarchische Ablagestruktur*
 
+Das System erzeugt für jede Ablage eine sogenannte **GUID** ([Globally Unique Identifier](https://de.wikipedia.org/wiki/Globally_Unique_Identifier)), z. B. 936DA01F-9ABD-4D9D-80C7-02AF85C822A8. Diese Hexadezimalzahl mit 32 Stellen dient dazu, jede Ablage eindeutig zu identifizieren. Die Daten einer Ablage können mittels der zugehörigen GUID geladen werden.
+
+Um den zeitaufwändigen Eingabevorgang zu beschleunigen, kann der zu jeder GUID generierte **QR Code** verwendet werden. Ein [QR Code](https://de.wikipedia.org/wiki/QR-Code) ist eine zweidimensionale, maschinenlesbare Grafik, in der Daten abgelegt sind. Der QR Code kann ausgedruckt an der angebracht werden. Wird die Ablage-Scannseite auf einem Gerät mit Kamera (z. B. Smartphone) geöffnet, versucht die Seite den QR Code im Videosingal zu erkennen, die Daten auszulesen und im Fall einer gültigen GUID den Ablagedatensatz zu laden.
+
 ### 2.5. Ort
 
 Der Kontext „Begehungsfläche“ bei Begehung ist ein Ortskontext. Er gibt Antwort auf die Frage, wo Funde geborgen wurden. Dazu werden sie mit Ortselementen verknüpft, die politische oder topografische Gebiete bzw. Objekte repräsentieren.
@@ -186,3 +219,8 @@ Ortsdaten sind Teil der räumlichen Kontexte, z. B. Begehungsfläche (Begehung) 
 ### [Eggert, 2012]
 
 Prähistorische Archäologie; Konzepte und Methoden; Manfred K. H. Eggert; Narr Francke Attempo Verlag GmbH & Co. KG; 4. Auflage; 2012; ISBN 978-3-8252-3696-0
+
+## 5. Sonstiges
+
+"QR Code" is registered trademark of DENSO WAVE INCORPORATED.
+"QR Code" ist eine registrierte Handelsmarke der DENSO WAVE INCORPORATED.
