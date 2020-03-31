@@ -44,7 +44,7 @@ Abhängig vom Betriebssystem Ihres Servers gibt es unterschiedliche Möglichkeit
 #### 1.2.2. Website
 
 1. Beliebigen Webserver für PHP einrichten (z. B. Apache Http Server oder Microsoft Internet Information Services)
-2. Inhalt des Ordners „src“ aus dem git-Repository als Wurzel der Website einrichten
+1. Inhalt des Ordners „src“ aus dem git-Repository als Wurzel der Website einrichten
 1. **URL-Weiterleitung** einrichten (Beispiel: Ubuntu mit Apache Http Server)
 	1. sudo a2enmod rewrite
     1. sudo nano /etc/apache2/sites-available/000-default.conf
@@ -73,6 +73,13 @@ Abhängig vom Betriebssystem Ihres Servers gibt es unterschiedliche Möglichkeit
 			</IfModule>
 			```
 		1. sudo service apache2 restart
+1. Kartenkacheln Herunterladen
+	1. http://tools.geofabrik.de/calc/#type=geofabrik_standard&bbox=5,47,16,55&grid=1 öffnen
+	1. "+" klicken
+	1. Kacheln auswählen
+	1. tools/download-map-tiles.py öffnen
+	1. minimale und maximale X- und Y-Werte entsprechend unter Berücksichtigung der Zoomstufe eintragen
+	1. python3 download-map-tiles.py
 
 ## 2. Programmelemente
 
@@ -131,7 +138,7 @@ Aufgrund der unterschiedlichen Dokumentationsarten und -traditionen bei Grabunge
 
 #### 2.3.1. Fundstelle
 
-Der Kontexttyp Fundstelle dient der Registrierung von Grabungen und Begehungen. Die Zuordnung der Grabungen und Begehungen zu einer Fundstelle ist von der räumlichen Nähe und der individuellen Beurteilung abhängig. Von herausragender Tragweite ist das System, mit dem Fundstellen benannt bzw. identifiziert werden. Dieses Identifikationssystem sollte einheitlich und konsequent angewendet werden, zum Beispiel in Form einer lückenlosen Nummerierung beginnend mit „1“. In der Praxis finden jedoch Umstellungen von Identifikationssystem statt. Munins Archiv versucht, Systembrüche und -änderungen zu unterstützen, indem es keine Vorgaben bei der Benennung macht.
+Der Kontexttyp Fundstelle dient der Registrierung von Grabungen und Begehungen. Die Zuordnung der Grabungen und Begehungen zu einer Fundstelle ist von der räumlichen Nähe und der individuellen Beurteilung abhängig. Von herausragender Tragweite ist das System, mit dem Fundstellen benannt bzw. identifiziert werden. Dieses Identifikationssystem sollte einheitlich und konsequent angewendet werden, zum Beispiel in Form einer lückenlosen Nummerierung beginnend mit „1“. In der Praxis finden jedoch Umstellungen von Identifikationssystem statt. Munins Archiv versucht, Systembrüche und -änderungen zu unterstützen, indem es keine Vorgaben bei der Benennung macht. Jeder Fundstelle kann eine geografische Position zugeordnet werden, vergleichbar mit einer Stecknadel auf einer Landkarte. Entsprechend kann die Detailansicht jeder kartierten Fundstelle über die Kartenansicht aufgerufen werden.
 
 #### 2.3.2. Begehungsfläche
 
