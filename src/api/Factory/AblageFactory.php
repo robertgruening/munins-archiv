@@ -4,6 +4,7 @@ include_once(__DIR__."/AblageTypeFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/FundFactory.php");
+include_once(__DIR__."/KontextFactory.php");
 include_once(__DIR__."/../Model/Ablage.php");
 
 class AblageFactory extends Factory implements iTreeFactory
@@ -12,6 +13,7 @@ class AblageFactory extends Factory implements iTreeFactory
     private $_treeFactory = null;
     private $_ablageTypeFactory = null;
     private $_fundFactory = null;
+    private $_kontextFactory = null;
     #endregion
 
     #region properties
@@ -33,6 +35,16 @@ class AblageFactory extends Factory implements iTreeFactory
         }
 
         return $this->_fundFactory;
+    }
+
+    protected function getKontextFactory()
+    {
+        if ($this->_kontextFactory == null)
+        {
+            $this->_kontextFactory = new KontextFactory();
+        }
+
+        return $this->_kontextFactory;
     }
     #endregion
 
@@ -174,6 +186,44 @@ class AblageFactory extends Factory implements iTreeFactory
         return "SELECT Ablage_Id AS Id
         FROM ".$this->getFundFactory()->getTableName()."
         WHERE Id = ".$fund->getId().";";
+    }
+
+    public function loadByKontext($kontext)
+    {
+        global $logger;
+        $logger->debug("Lade Ablagen anhand Kontext (".$kontext->getId().")");
+
+        $ablagen = array();
+        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
+            $ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByKontext($kontext));
+
+            if ($mysqli->errno)
+            {
+                $logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+            }
+            else
+            {
+				while ($datensatz = $ergebnis->fetch_assoc())
+				{
+					array_push($ablagen, $this->loadById(intval($datensatz["Id"])));
+                }
+            }
+        }
+
+        $mysqli->close();
+
+        return $ablagen;
+    }
+
+    protected function getSQLStatementToLoadIdsByKontext($kontext)
+    {
+        return "SELECT DISTINCT Ablage_Id AS Id
+        FROM ".$this->getFundFactory()->getTableName()."
+        WHERE Kontext_Id = ".$kontext->getId().";";
     }
     #endregion
 
@@ -367,49 +417,6 @@ class AblageFactory extends Factory implements iTreeFactory
     }
     #endregion
 
-    #region Kontext
-    public function loadByKontext($kontext)
-    {
-        global $logger;
-        $logger->debug("Lade Ablage anhand Kontext (".$kontext->getId().")");
-
-        $elemente = array();
-        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-
-        if (!$mysqli->connect_errno)
-        {
-            $mysqli->set_charset("utf8");
-            $ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByKontext($kontext));
-
-            if ($mysqli->errno)
-            {
-                $logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
-            }
-            else
-            {
-                while ($datensatz = $ergebnis->fetch_assoc())
-                {
-					if ($datensatz["Id"] != null)
-					{
-                    	array_push($elemente, $this->loadById(intval($datensatz["Id"])));
-					}
-                }
-            }
-        }
-
-        $mysqli->close();
-
-        return $elemente;
-    }
-
-    protected function getSQLStatementToLoadIdsByKontext($kontext)
-    {
-        return "SELECT DISTINCT Ablage_Id AS Id
-        FROM Fund
-        WHERE Kontext_Id = ".$kontext->getId().";";
-    }
-    #endregion
-
     #region Fund
     public function loadFunde(iFundContainer $ablage)
     {
@@ -521,6 +528,15 @@ class AblageFactory extends Factory implements iTreeFactory
                 $ablage = $this->unlinkFund($ablage, $ablage->getFunde()[$i]);
             }
         }
+
+        return $ablage;
+    }
+    #endregion
+
+    #region Kontext
+    public function loadKontexte($ablage)
+    {
+        $ablage->setKontexte($this->getKontextFactory()->loadByAblage($ablage));
 
         return $ablage;
     }

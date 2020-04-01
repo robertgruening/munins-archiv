@@ -14,7 +14,8 @@ var ViewModelFormAblage = function (webServiceClient) {
 			children: new Array(),
 			path: new Array(),
 			funde: new Array(),
-			guid: new Array()
+			guid: new Array(),
+			kontexte: new Array()
 		};
 	};
 
@@ -27,6 +28,7 @@ var ViewModelFormAblage = function (webServiceClient) {
 		this._update("path", this._model.Path);
 		this._update("funde", this._model.Funde);
 		this._update("guid", this._model.Guid);
+		this._update("kontexte", this._model.Kontexte);
 	};
 
 	//#region properties
@@ -116,6 +118,12 @@ var ViewModelFormAblage = function (webServiceClient) {
 	//#region GUID
 	this.getGuid = function () {
 		return this._model.Guid;
+	};
+	//#endregion
+
+	//#region Kontexte
+	this.getKontexte = function () {
+		return this._model.Kontexte;
 	};
 	//#endregion
 	//#endregion

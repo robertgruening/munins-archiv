@@ -16,7 +16,8 @@ var ViewModelFormBegehung = function (webServiceClient) {
 			lfdNummern: new Array(),
 			datum: new Array(),
 			kommentar: new Array(),
-			funde: new Array()
+			funde: new Array(),
+			ablagen: new Array()
 		};
 	};
 
@@ -31,6 +32,7 @@ var ViewModelFormBegehung = function (webServiceClient) {
 		this._update("datum", this._model.Datum);
 		this._update("kommentar", this._model.Kommentar);
 		this._update("funde", this._model.Funde);
+		this._update("ablagen", this._model.Ablagen);
 	};
 
 	//#region properties
@@ -155,6 +157,12 @@ var ViewModelFormBegehung = function (webServiceClient) {
 		}
 		this._update("dataChanged");
 		this._update("funde", this._model.Funde);
+	};
+	//#endregion
+
+	//#region Ablagen
+	this.getAblagen = function () {
+		return this._model.Ablagen;
 	};
 	//#endregion
 	//#endregion

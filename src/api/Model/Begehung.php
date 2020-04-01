@@ -9,7 +9,7 @@ class Begehung extends Kontext implements iFundContainer
     public $Datum;
     public $Kommentar;
     public $Funde;
-    
+    public $Kontexte;    
     
     public function setParent($parent)
     {
@@ -93,6 +93,33 @@ class Begehung extends Kontext implements iFundContainer
         }
 
         return false;
+    }
+    
+    public function getAblagen()
+    {
+        return $this->Ablagen;
+    }
+    
+    public function setAblagen($ablagen)
+    {
+        $this->Ablagen = $ablagen;
+    }
+    
+    public function addKontext($ablage)
+    {
+        array_push($this->Ablagen, $ablage);
+    }
+    
+    public function removeKontext($ablage)
+    {
+        for ($i = 0; $i < count($this->Ablagen); $i++)
+        {
+            if ($this->Ablagen[$i]->getId() == $ablage->getId())
+            {
+                array_splice($this->Ablagen, $i, 1);
+                break;
+            }
+        }
     }
     
     function __construct()

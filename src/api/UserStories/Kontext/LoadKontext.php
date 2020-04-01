@@ -65,6 +65,7 @@ class LoadKontext extends UserStory
         if ($kontext instanceof iFundContainer)
         {
             $kontext = $kontextFactory->loadFunde($kontext);
+            $kontext = $kontextFactory->loadAblagen($kontext);
         }
 
         if ($kontext instanceof iOrtContainer)

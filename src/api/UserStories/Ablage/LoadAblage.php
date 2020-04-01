@@ -121,6 +121,7 @@ class LoadAblage extends UserStory
         $ablage = $ablageFactory->loadParent($ablage);
         $ablage = $ablageFactory->loadChildren($ablage);
         $ablage = $ablageFactory->loadFunde($ablage);
+        $ablage = $ablageFactory->loadKontexte($ablage);
         $this->setAblage($ablage);
 
         return true;
