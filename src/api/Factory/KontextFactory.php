@@ -6,6 +6,7 @@ include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/FundFactory.php");
 include_once(__DIR__."/OrtFactory.php");
 include_once(__DIR__."/LfdNummerFactory.php");
+include_once(__DIR__."/AblageFactory.php");
 include_once(__DIR__."/../Model/GeoPoint.php");
 include_once(__DIR__."/../Model/Kontext.php");
 include_once(__DIR__."/../Model/Fundstelle.php");
@@ -20,6 +21,7 @@ class KontextFactory extends Factory implements iTreeFactory
     private $_fundFactory = null;
     private $_ortFactory = null;
     private $_lfdNummerFactory = null;
+    private $_ablageFactory = null;
     #endregion
 
     #region properties
@@ -61,6 +63,16 @@ class KontextFactory extends Factory implements iTreeFactory
         }
 
         return $this->_lfdNummerFactory;
+    }
+
+    protected function getAblageFactory()
+    {
+        if ($this->_ablageFactory == null)
+        {
+            $this->_ablageFactory = new AblageFactory();
+        }
+
+        return $this->_ablageFactory;
     }
     #endregion
 
@@ -210,6 +222,44 @@ class KontextFactory extends Factory implements iTreeFactory
         return "SELECT Kontext_Id AS Id
         FROM ".$this->getFundFactory()->getTableName()."
         WHERE Id = ".$fund->getId().";";
+    }
+
+    public function loadByAblage($ablage)
+    {
+        global $logger;
+        $logger->debug("Lade Kontexte anhand Ablage (".$ablage->getId().")");
+
+        $kontexte = array();
+        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
+            $ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByAblage($ablage));
+
+            if ($mysqli->errno)
+            {
+                $logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+            }
+            else
+            {
+				while ($datensatz = $ergebnis->fetch_assoc())
+				{
+					array_push($kontexte, $this->loadById(intval($datensatz["Id"])));
+                }
+            }
+        }
+
+        $mysqli->close();
+
+        return $kontexte;
+    }
+
+    protected function getSQLStatementToLoadIdsByAblage($ablage)
+    {
+        return "SELECT DISTINCT Kontext_Id AS Id
+        FROM ".$this->getFundFactory()->getTableName()."
+        WHERE Ablage_Id = ".$ablage->getId().";";
     }
     #endregion
 
@@ -1130,6 +1180,15 @@ class KontextFactory extends Factory implements iTreeFactory
             $statement .= ";";
 
             return $statement;
+        }
+        #endregion
+
+        #region Ablage
+        public function loadAblagen($kontext)
+        {
+            $kontext->setAblagen($this->getAblageFactory()->loadByKontext($kontext));
+
+            return $kontext;
         }
         #endregion
         #endregion

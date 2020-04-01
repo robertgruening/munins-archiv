@@ -24,6 +24,7 @@ $(document).ready(function () {
 	InitFieldKommentar();
 	InitFieldCountOfFunde();
 	InitGridFunde();
+	InitFieldAblagen();
 });
 
 function getPageName() {
@@ -436,6 +437,40 @@ function UpdateGridData(funde) {
 	$("#gridFunde").jsGrid({
 		data: entries
 	});
+}
+//#endregion
+
+//#region Ablagen
+function InitFieldAblagen() {
+	_viewModelFormBegehung.register("ablagen", new GuiClient(setAblagen, showMessagesAblagen));
+}
+
+function setAblagen(ablagen) {
+	console.info("setting value of 'Ablagen'");
+	console.debug("Ablagen are ", ablagen);
+
+	$("#divAblagen div #divList").empty();
+
+	if (ablagen.length == 0) {
+		return;
+	}
+
+	$("#divAblagen div #divList").append($("<ul>"));
+
+	ablagen.forEach(ablage => {
+		var li = $("<li>");
+		
+		var linkAblage = $("<a>");
+		linkAblage.attr("href", "/Munins Archiv/src/pages/Ablage/Form.html?Id=" + ablage.Id);
+		linkAblage.text(ablage.Path);
+		li.append(linkAblage);
+
+		$("#divAblagen div #divList ul").append(li);
+	});
+}
+
+function showMessagesAblagen(messages) {
+	$("#divAblagen .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 //#endregion

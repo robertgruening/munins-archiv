@@ -15,6 +15,7 @@ class Ablage implements iNode, iTypedNode, iTreeNode, iFundContainer
     public $Path;
     public $Funde;
     public $Guid;
+    public $Kontexte;
     
     
     public function getId()
@@ -154,6 +155,33 @@ class Ablage implements iNode, iTypedNode, iTreeNode, iFundContainer
         $this->Guid = $guid;
     }
     
+    public function getKontexte()
+    {
+        return $this->Kontexte;
+    }
+    
+    public function setKontexte($kontexte)
+    {
+        $this->Kontexte = $kontexte;
+    }
+    
+    public function addKontext($kontext)
+    {
+        array_push($this->Kontexte, $kontext);
+    }
+    
+    public function removeKontext($kontext)
+    {
+        for ($i = 0; $i < count($this->Kontexte); $i++)
+        {
+            if ($this->Kontexte[$i]->getId() == $kontext->getId())
+            {
+                array_splice($this->Kontexte, $i, 1);
+                break;
+            }
+        }
+    }
+    
     function __construct()
     {
         $this->Id = -1;
@@ -165,5 +193,6 @@ class Ablage implements iNode, iTypedNode, iTreeNode, iFundContainer
         $this->Path = null;
         $this->Funde = array();
         $this->Guid = null;
+        $this->Kontexte = array();
     }
 }

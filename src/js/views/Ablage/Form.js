@@ -21,6 +21,7 @@ $(document).ready(function () {
 	InitFieldCountOfFunde();
 	InitGridFunde();
 	InitFieldGuid();
+	InitFieldKontexte();
 });
 
 function getPageName() {
@@ -353,6 +354,40 @@ function setGuid(guid) {
 		height: qrCodeLength,
 		width: qrCodeLength
 	});
+}
+//#endregion
+
+//#region Kontexte
+function InitFieldKontexte() {
+	_viewModelFormAblage.register("kontexte", new GuiClient(setKontexte, showMessagesKontexte));
+}
+
+function setKontexte(kontexte) {
+	console.info("setting value of 'Kontexte'");
+	console.debug("Kontexte are ", kontexte);
+
+	$("#divKontexte div #divList").empty();
+
+	if (kontexte.length == 0) {
+		return;
+	}
+
+	$("#divKontexte div #divList").append($("<ul>"));
+
+	kontexte.forEach(kontext => {
+		var li = $("<li>");
+
+		var linkKontext = $("<a>");
+		linkKontext.attr("href", "/Munins Archiv/src/pages/" + kontext.Type.Bezeichnung + "/Form.html?Id=" + kontext.Id);
+		linkKontext.text(kontext.Path);
+		li.append(linkKontext);
+
+		$("#divKontexte div #divList ul").append(li);
+	});
+}
+
+function showMessagesKontexte(messages) {
+	$("#divKontexte .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 //#endregion
