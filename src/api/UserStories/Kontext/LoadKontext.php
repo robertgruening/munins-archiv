@@ -61,11 +61,11 @@ class LoadKontext extends UserStory
         $kontext = $kontextFactory->loadParent($kontext);
         $kontext = $kontextFactory->loadChildren($kontext);
         $kontext = $kontextFactory->loadLfdNummern($kontext);
-        $kontext = $kontextFactory->loadAblagen($kontext);
 
         if ($kontext instanceof iFundContainer)
         {
             $kontext = $kontextFactory->loadFunde($kontext);
+            $kontext = $kontextFactory->loadAblagen($kontext);
         }
 
         if ($kontext instanceof iOrtContainer)
