@@ -47,33 +47,33 @@ Abhängig vom Betriebssystem Ihres Servers gibt es unterschiedliche Möglichkeit
 1. Inhalt des Ordners „src“ aus dem git-Repository als Wurzel der Website einrichten
 1. **URL-Weiterleitung** einrichten (Beispiel: Ubuntu mit Apache Http Server)
 	1. sudo a2enmod rewrite
-    1. sudo nano /etc/apache2/sites-available/000-default.conf
+	1. sudo nano /etc/apache2/sites-available/000-default.conf
 		```
-    	<Directory "/var/www/html">
-    		AllowOverride All
-    	</Directory>
+		<Directory "/var/www/html">
+			AllowOverride All
+		</Directory>
 		```
 	1. sudo service apache2 restart
 1. **HTTPS** einrichten (Beispiel: Ubuntu mit Apache Http Server)
-		1. sudo a2enmod ssl
-		1. sudo service apache2 restart
-		1. sudo mkdir /etc/apache2/ssl
-		1. sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
-	    1. sudo nano /etc/apache2/sites-available/default-ssl.conf
-			```
-			SSLEngine on
-			SSLCertificateFile /etc/apache2/ssl/apache.crt
-			SSLCertificateKeyFile /etc/apache2/ssl/apache.key
-			```
-		1. sudo a2enmod headers
-	    1. sudo nano /etc/apache2/sites-available/default-ssl.conf
-			```
-			<IfModule mod_headers.c>
-				Header always set Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"
-			</IfModule>
-			```
-		1. sudo service apache2 restart
-1. Kartenkacheln Herunterladen
+	1. sudo a2enmod ssl
+	1. sudo service apache2 restart
+	1. sudo mkdir /etc/apache2/ssl
+	1. sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+	1. sudo nano /etc/apache2/sites-available/default-ssl.conf
+		```
+		SSLEngine on
+		SSLCertificateFile /etc/apache2/ssl/apache.crt
+		SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+		```
+	1. sudo a2enmod headers
+	1. sudo nano /etc/apache2/sites-available/default-ssl.conf
+		```
+		<IfModule mod_headers.c>
+			Header always set Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"
+		</IfModule>
+		```
+	1. sudo service apache2 restart
+1. Kartenkacheln herunterladen
 	1. http://tools.geofabrik.de/calc/#type=geofabrik_standard&bbox=5,47,16,55&grid=1 öffnen
 	1. "+" klicken
 	1. Kacheln auswählen
