@@ -1,6 +1,7 @@
 <?php
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/OrtTypeFactory.php");
+include_once(__DIR__."/OrtCategoryFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/KontextFactory.php");
@@ -12,6 +13,7 @@ class OrtFactory extends Factory implements iTreeFactory
     #region variables
     private $_treeFactory = null;
     private $_ortsTypeFactory = null;
+    private $_ortsCategoryFactory = null;
     private $_kontextFactory = null;
     #endregion
 
@@ -24,6 +26,11 @@ class OrtFactory extends Factory implements iTreeFactory
     protected function getOrtsTypeFactory()
     {
         return $this->_ortsTypeFactory;
+    }
+
+    protected function getOrtsCategoryFactory()
+    {
+        return $this->_ortsCategoryFactory;
     }
 
     protected function getKontextFactory()
@@ -57,8 +64,19 @@ class OrtFactory extends Factory implements iTreeFactory
     #region load
     protected function getSQLStatementToLoadById($id)
     {
-        return "SELECT Id, Bezeichnung, Typ_Id, COUNT(*) AS CountOfKontexte
-                FROM ".$this->getTableName()." RIGHT JOIN Kontext_Ort ON ".$this->getTableName().".Id = Kontext_Ort.Ort_Id
+        return "SELECT
+                    Id,
+                    Bezeichnung,
+                    Typ_Id,
+                    Category_Id,
+                    (SELECT
+                        COUNT(*)
+                    FROM
+                        Kontext_Ort
+                    WHERE
+                        Ort_Id = ".$id.") AS CountOfKontexte
+                FROM 
+                    ".$this->getTableName()."
                 WHERE Id = ".$id.";";
     }
 
@@ -77,6 +95,7 @@ class OrtFactory extends Factory implements iTreeFactory
         $ort->setBezeichnung($dataSet["Bezeichnung"]);
         $ort->setPath($this->getPath($ort));
         $ort->setType($this->getOrtsTypeFactory()->loadById(intval($dataSet["Typ_Id"])));
+        $ort->setCategory($this->getOrtsCategoryFactory()->loadById(intval($dataSet["Category_Id"])));
         $ort->setCountOfKontexte(intval($dataSet["CountOfKontexte"]));
 
         return $ort;
@@ -86,15 +105,16 @@ class OrtFactory extends Factory implements iTreeFactory
     #region save
     protected function getSQLStatementToInsert(iNode $ort)
     {
-        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
-                VALUES ('".addslashes($ort->getBezeichnung())."', ".$ort->getType()->getId().");";
+        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, Category_Id)
+                VALUES ('".addslashes($ort->getBezeichnung())."', ".$ort->getType()->getId().", ".$ort->getCategory()->getId().");";
     }
 
     protected function getSQLStatementToUpdate(iNode $ort)
     {
         return "UPDATE ".$this->getTableName()."
                 SET Bezeichnung = '".addslashes($ort->getBezeichnung())."',
-                    Typ_Id = ".$ort->getType()->getId()."
+                    Typ_Id = ".$ort->getType()->getId().",
+                    Category_Id = ".$ort->getCategory()->getId()."
                 WHERE Id = ".$ort->getId().";";
     }
     #endregion
@@ -113,6 +133,7 @@ class OrtFactory extends Factory implements iTreeFactory
 
         $ort = new Ort();
         $ortsType = null;
+        $ortsCategory = null;
 
         if (isset($object["Id"]))
         {
@@ -138,14 +159,30 @@ class OrtFactory extends Factory implements iTreeFactory
         }
         
         if ($ortsType == null ||
-        		$ortsType->getId() == null ||
-        		$ortsType->getId() == "")
+            $ortsType->getId() == null ||
+            $ortsType->getId() == "")
         {
             $logger->warn("Typ ist nicht gesetzt!");
         }
         else
         {
         		$ort->setType($ortsType);
+        }
+
+        if (isset($object["Category"]))
+        {
+            $ortsCategory = $this->getOrtsCategoryFactory()->convertToInstance($object["Category"]);
+        }
+        
+        if ($ortsCategory == null ||
+            $ortsCategory->getId() == null ||
+            $ortsCategory->getId() == "")
+        {
+            $logger->warn("Kategory ist nicht gesetzt!");
+        }
+        else
+        {
+        		$ort->setCategory($ortsCategory);
         }
 
         if (isset($object["Parent"]))

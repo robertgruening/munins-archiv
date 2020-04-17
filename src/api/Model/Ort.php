@@ -9,6 +9,7 @@ class Ort implements iNode, iTypedNode, iTreeNode
     public $Bezeichnung;
     public $OrderNumber;
     public $Type;
+    public $Category;
     public $Parent;
     public $Children;
     public $Path;
@@ -53,6 +54,16 @@ class Ort implements iNode, iTypedNode, iTreeNode
     public function setType($type)
     {
         $this->Type = $type;
+    }
+    
+    public function getCategory()
+    {
+        return $this->Category;
+    }
+    
+    public function setCategory($category)
+    {
+        $this->Category = $category;
     }
     
     public function getParent()
@@ -118,6 +129,7 @@ class Ort implements iNode, iTypedNode, iTreeNode
         $this->Bezeichnung = null;
         $this->OrderNumber = null;
         $this->Type = null;
+        $this->Category = null;
         $this->Parent = null;
         $this->Children = array();
         $this->Path = null;
