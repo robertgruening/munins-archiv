@@ -3,8 +3,8 @@ import urllib.request
 import os
 
 def download_tiles(zoom, xmin, ymin, xmax, ymax):
-	serviceUrl = "http://tile.openstreetmap.org/!z/!x/!y.png"
-	attribution = 'Map data (c) OpenStreetMap'
+	serviceUrl = "http://!h.tile.openstreetmap.org/!z/!x/!y.png"
+	attribution = "Map data (c) OpenStreetMap"
 	downloadRootPath = "/var/www/html/Munins Archiv/src/api/Services/mapTiles/"
 	numberOfTiles = (xmax - xmin + 1) * (ymax - ymin + 1)
 	counterOfTiles = 0
@@ -26,7 +26,16 @@ def download_tiles(zoom, xmin, ymin, xmax, ymax):
 		for y in range(ymin, ymax+1):
 				counterOfTiles = counterOfTiles + 1
 				print(str(counterOfTiles) + " von " + str(numberOfTiles) + " (" + str(counterOfTiles * 100 / numberOfTiles) + ")")
-				tileUrl = serviceUrl.replace("!x", str(x)).replace("!y", str(y)).replace("!z", str(zoom))
+				hostName = ""
+
+				if (counterOfTiles % 3) == 0:
+					hostName = "c"
+				elif (counterOfTiles % 2) == 0:
+					hostName = "b"
+				else:
+					hostName = "a"
+
+				tileUrl = serviceUrl.replace("!h", hostName).replace("!x", str(x)).replace("!y", str(y)).replace("!z", str(zoom))
 				print(tileUrl)
 				try:
 					tileDirectoryPath = xDirectoryPath
@@ -57,19 +66,19 @@ def download_tiles(zoom, xmin, ymin, xmax, ymax):
 # More example code: https://egorikas.com/download-open-street-tiles-for-offline-using/
 
 # 1 : 4.000
-#download_tiles(17, 69298, 44734, 69540, 44846)
+#download_tiles(17, 69298, 44725, 69540, 44846)
 
 # 1 : 35.000
-download_tiles(13, 4331, 2795, 4346, 2802)
+#download_tiles(13, 4331, 2795, 4346, 2802)
 
 # 1 : 250.000
-download_tiles(11, 1082, 698, 1086, 700)
+#download_tiles(11, 1082, 698, 1086, 700)
 
 # Regionen: Fürth, Bad Windsheim, Erlangen
-download_tiles(10, 540, 348, 543, 350)
-download_tiles(9, 270, 174, 271, 175)
-download_tiles(8, 134, 86, 135, 87)
-download_tiles(7, 67, 43, 67, 43)
+#download_tiles(10, 540, 348, 543, 350)
+#download_tiles(9, 270, 174, 271, 175)
+#download_tiles(8, 134, 86, 135, 87)
+#download_tiles(7, 67, 43, 67, 43)
 
 # Deutschland
 download_tiles(6, 33, 20, 34, 22)

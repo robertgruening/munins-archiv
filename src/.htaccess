@@ -1,4 +1,8 @@
 RewriteEngine	On
+
+RewriteCond %{HTTPS} !=on
+RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
+
 RewriteRule "^api/Services/(\w+)/?$"                                    "api/Services/$1.php"                           [NC,L]
 RewriteRule "^api/Services/(\w+)/([\d]+)/?$"                            "api/Services/$1.php?Id=$2"                     [NC,L]
 RewriteRule "^api/Services/Ablage/([\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12})/?$"  "api/Services/Ablage.php?Guid=$1"                   [NC,L]

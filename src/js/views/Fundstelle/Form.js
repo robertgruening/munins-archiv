@@ -290,7 +290,7 @@ var _isGeoPointInEditMode = false;
 function InitGeoPoint() {
 	_map = L.map("divMap").setView([51.163375, 10.447683333333], 5);
 	_map.options.minZoom = 5;
-	_map.options.maxZoom = 13;
+	_map.options.maxZoom = 17;
 	L.control.scale().addTo(_map);
 	L.tileLayer("/Munins Archiv/src/api/Services/mapTiles/{z}/{x}/{y}.png").addTo(_map);
 
@@ -322,6 +322,11 @@ function setGeoPointMarker(geoPoint) {
 	{
 		_marker = L.marker([geoPoint.Latitude, geoPoint.Longitude]);
 		_marker.addTo(_map);
+
+		if (!_isGeoPointInEditMode)
+		{
+			_map.setView([geoPoint.Latitude, geoPoint.Longitude], 17);
+		}
 	}
 	
 	refreshMapMarkerStatusIcon();
@@ -343,7 +348,10 @@ function refreshMapMarkerStatusIcon()
 	
 	var iconFile = _isGeoPointInEditMode ? "marker-icon.png" : "marker-icon__disabled.png"
 	var icon = L.icon({
-		iconUrl : "/Munins Archiv/src/images/map/" + iconFile
+		iconUrl : "/Munins Archiv/src/images/map/" + iconFile,
+		iconSize: [25, 41],
+		iconAnchor: [13, 41],
+		popupAnchor: [0, -41]
 	});
 	
 	_marker.setIcon(icon);

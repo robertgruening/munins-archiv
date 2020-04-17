@@ -44,43 +44,91 @@
 
 #### 1.2.2. Website
 
-1. Beliebigen Webserver einrichten (z. B. Apache Http Server)
-1. git-Repository als Wurzel der Website einrichten ([http://localhost:80/Munins Archiv/src](http://localhost:80/Munins%20Archiv/src))
-1. **URL-Weiterleitung** einrichten (Beispiel: Ubuntu mit Apache Http Server)
-	1. sudo a2enmod rewrite
-	1. sudo nano /etc/apache2/sites-available/000-default.conf
-		```
-		<Directory "/var/www/html">
-			AllowOverride All
-		</Directory>
-		```
-	1. sudo service apache2 restart
-1. **HTTPS** einrichten (Beispiel: Ubuntu mit Apache Http Server)
-	1. sudo a2enmod ssl
-	1. sudo service apache2 restart
-	1. sudo mkdir /etc/apache2/ssl
-	1. sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
-	1. sudo nano /etc/apache2/sites-available/default-ssl.conf
-		```
-		SSLEngine on
-		SSLCertificateFile /etc/apache2/ssl/apache.crt
-		SSLCertificateKeyFile /etc/apache2/ssl/apache.key
-		```
-	1. sudo a2enmod headers
-	1. sudo nano /etc/apache2/sites-available/default-ssl.conf
-		```
-		<IfModule mod_headers.c>
-			Header always set Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"
-		</IfModule>
-		```
-	1. sudo service apache2 restart
+1. Webserver einrichten
+1. git-Repository einrichten
+1. URL-Weiterleitung einrichten
+1. HTTPS einrichten
+1. Kartenkacheln herunterladen
+
+Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [Ubuntu-Betriebssystem](https://ubuntu.com/) und dem [Apache HTTP Server](https://www.apache.org/).
+
+1. Apache Http Server installieren
+	```
+	sudo apt-get install apache2 php php-curl libapache2-mod-php php-mysql
+	```
+1. git-Repository einrichten
+	```
+	cd /var/www/html/
+	git clone https://github.com/robertgruening/Munins-Archiv.git
+	mv "/var/www/html/Munins-Archiv/" "/var/www/html/Munins Archiv/"
+	```
+1. URL-Weiterleitung einrichten
+	```
+	sudo a2enmod rewrite
+	sudo nano /etc/apache2/sites-available/000-default.conf
+	```
+	Eintrag vornehmen:
+	```
+	<Directory "/var/www/html">
+		AllowOverride All
+	</Directory>
+	```
+	```
+	sudo service apache2 restart
+	```
+1. HTTPS einrichten
+	```
+	sudo a2enmod ssl
+	sudo service apache2 restart
+	sudo mkdir /etc/apache2/ssl
+	sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+	sudo nano /etc/apache2/sites-available/default-ssl.conf
+	```
+	Eintrag vornehmen:
+	```
+	SSLEngine on
+	SSLCertificateFile /etc/apache2/ssl/apache.crt
+	SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+	```
+	```
+	sudo a2ensite default-ssl.conf
+	sudo a2enmod headers
+	sudo nano /etc/apache2/sites-available/default-ssl.conf
+	```
+	Eintrag nach *ServerAdmin* vornehmen:
+	```
+	<IfModule mod_headers.c>
+		Header always set Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"
+	</IfModule>
+	```
+	```
+	sudo service apache2 restart
+	sudo a2enmod rewrite
+	sudo nano /etc/apache2/sites-available/default-ssl.conf
+	```
+	Eintrag vornehmen:
+	```
+	<Directory "/var/www/html">
+		AllowOverride All
+	</Directory>
+	```
+	```
+	sudo service apache2 restart
+	```
 1. Kartenkacheln herunterladen
 	1. http://tools.geofabrik.de/calc/#type=geofabrik_standard&bbox=5,47,16,55&grid=1 öffnen
 	1. "+" klicken
 	1. Kacheln auswählen
-	1. tools/download-map-tiles.py öffnen
+	1. Skript anpassen
+		```
+		cd "/var/www/html/Munins Archiv/tools/"
+		nano download-map-tiles.py
+		```		
 	1. minimale und maximale X- und Y-Werte entsprechend unter Berücksichtigung der Zoomstufe eintragen
-	1. python3 download-map-tiles.py
+	1. Skript ausführen
+		```
+		python3 download-map-tiles.py
+		```
 
 ## 2. Verzeichnisstruktur
 

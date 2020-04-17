@@ -20,7 +20,7 @@ function InitMap()
 {
 	_map = L.map("divMap").setView([51.163375, 10.447683333333], 5);
 	_map.options.minZoom = 5;
-	_map.options.maxZoom = 13;
+	_map.options.maxZoom = 17;
 	L.control.scale().addTo(_map);
 	L.tileLayer("/Munins Archiv/src/api/Services/mapTiles/{z}/{x}/{y}.png").addTo(_map);
 
@@ -49,7 +49,10 @@ function setGeoPointMarkers(children) {
 			countOfChildrenWithGeoPoint++;
 
 			var icon = L.icon({
-				iconUrl : "/Munins Archiv/src/images/map/marker-icon.png"
+				iconUrl : "/Munins Archiv/src/images/map/marker-icon.png",
+				iconSize: [25, 41],
+    			iconAnchor: [13, 41],
+				popupAnchor: [0, -41]
 			});
 			
 			var marker = L.marker([children[i].GeoPoint.Latitude, children[i].GeoPoint.Longitude]);
