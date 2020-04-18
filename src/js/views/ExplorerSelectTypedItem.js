@@ -2,12 +2,14 @@ var _htmlContainerElement = null;
 var _viewModelExplorer = null;
 var _iconCssClasses = null;
 var _selectedItem = null;
+var _isCategorized = false;
 
-function esti_initExplorerSelectTypedItem(htmlContainerElement, viewModelExplorer, iconCssClasses) {
+function esti_initExplorerSelectTypedItem(htmlContainerElement, viewModelExplorer, iconCssClasses, isCategorized) {
 	_htmlContainerElement = htmlContainerElement;
 	_viewModelExplorer = viewModelExplorer;
 	_iconCssClasses = iconCssClasses;
 	_selectedItem = null;
+	_isCategorized = (isCategorized === undefined || isCategorized === null) ? false : isCategorized;
 
     esti_registerToViewModel();
 	esti_initButtonOpen();
@@ -218,6 +220,13 @@ function esti_initGrid()
 				sorting: false
 			},
 			{
+				title: "Kategorie",
+				name: "CategoryBezeichnung",
+				type: "text",
+				sorting: true,
+				visible: _isCategorized
+			},
+			{
 				title: "Typ",
 				name: "TypeBezeichnung",
 				type: "text",
@@ -260,6 +269,11 @@ function esti_updateGridDataChildren(children) {
 		var copy = JSON.parse(JSON.stringify(child));
 		copy.Icon = _iconCssClasses == null ? IconConfig.getCssClasses(child.Type.Bezeichnung) : _iconCssClasses;
 		copy.TypeBezeichnung = child.Type.Bezeichnung;
+
+		if (_isCategorized) {
+			copy.CategoryBezeichnung = child.Category.Bezeichnung;
+		}
+
 		entries.push(copy);
 	});
 

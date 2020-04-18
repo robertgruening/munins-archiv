@@ -1,10 +1,31 @@
 var _viewModelFormOrt = null;
 var _viewModelListOrtType = null;
+var _viewModelListOrtCategory = null;
+var _semaphore = 0;
+
+function increaseSemaphore()
+{
+	_semaphore++;
+}
+
+function decreaseSemaphore()
+{
+	_semaphore--;
+}
+
+function isSemaphoreResetted()
+{
+	return _semaphore <= 0;
+}
 
 $(document).ready(function () {
 	var viewModelFactory = new ViewModelFactory();
 	_viewModelFormOrt = viewModelFactory.getViewModelFormOrt();
 	_viewModelListOrtType = viewModelFactory.getViewModelListOrtType();
+	_viewModelListOrtCategory = viewModelFactory.getViewModelListOrtCategory();
+
+	increaseSemaphore();
+	increaseSemaphore();
 
 	InitStatusChanged();
 	InitButtonNew();
@@ -15,6 +36,7 @@ $(document).ready(function () {
 
 	InitFieldId();
 	InitFieldType();
+	InitFieldCategory();
 	InitFieldBezeichnung();
 	InitFieldPath();
 	InitFieldCountOfChildren();
@@ -31,6 +53,11 @@ function getPageName() {
 }
 
 function loadForm() {
+	if (!isSemaphoreResetted())
+	{
+		return;
+	}	
+	
 	console.info("loading form");
 
 	if (getUrlParameterValue("Id")) {
@@ -137,6 +164,7 @@ function fillSelectionOrtType(ortTypes) {
 		$("#selectType").append("<option value=" + ortType.Id + ">" + ortType.Bezeichnung + "</option>");
 	});
 
+	decreaseSemaphore();
 	loadForm();
 }
 
@@ -148,6 +176,58 @@ function setType(type) {
 
 function showMessagesType(messages) {
 	$("#divType .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
+//#region Category
+function InitFieldCategory() {
+	console.info("initialising field 'Ort category'");
+
+	_viewModelFormOrt.register("category", new GuiClient(setCategory, showMessagesCategory));
+
+	_viewModelListOrtCategory.register("loadAll", new GuiClient(fillSelectionOrtCategory, showMessagesCategory));
+	_viewModelListOrtCategory.loadAll();
+
+	$("#selectCategory").change(function () {
+
+		if ($("#selectCategory").val() == undefined ||
+			 $("#selectCategory").val() == null ||
+			 $("#selectCategory").val().length == 0)
+		{
+			_viewModelFormOrt.setCategory(null);
+			return;
+		}
+
+		var ortCategory = new OrtCategory();
+		ortCategory.Id = $("#selectCategory").val();
+		ortCategory.Bezeichnung = $("#selectCategory option:selected").text();
+
+		_viewModelFormOrt.setCategory(ortCategory);
+	});
+}
+
+function fillSelectionOrtCategory(ortCategories) {
+	console.info("setting values of field 'Ort category'");
+	console.debug("values of 'Ort category'", ortCategories);
+	$("#selectCategory").empty();
+	$("#selectCategory").append("<option value='' >Bitte wählen</option>");
+
+	ortCategories.forEach(ortCategory => {
+		$("#selectCategory").append("<option value=" + ortCategory.Id + ">" + ortCategory.Bezeichnung + "</option>");
+	});
+
+	decreaseSemaphore();
+	loadForm();
+}
+
+function setCategory(category) {
+	console.info("setting value of 'category'");
+	console.debug("category is ", category);
+	$("#selectCategory option[value='" + category.Id + "']").attr("selected","selected");
+}
+
+function showMessagesCategory(messages) {
+	$("#divCategory .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 

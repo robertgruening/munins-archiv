@@ -10,6 +10,7 @@ var ViewModelFormOrt = function (webServiceClient) {
 			id: new Array(),
 			bezeichnung: new Array(),
 			type: new Array(),
+			category: new Array(),
 			parent: new Array(),
 			children: new Array(),
 			path: new Array(),
@@ -21,6 +22,7 @@ var ViewModelFormOrt = function (webServiceClient) {
 		this._update("id", this._model.Id);
 		this._update("bezeichnung", this._model.Bezeichnung);
 		this._update("type", this._model.Type);
+		this._update("category", this._model.Category);
 		this._update("parent", this._model.Parent);
 		this._update("children", this._model.Children);
 		this._update("path", this._model.Path);
@@ -52,6 +54,17 @@ var ViewModelFormOrt = function (webServiceClient) {
 
 	this.setType = function (type) {
 		this._model.Type = type;
+		this._update("dataChanged");
+	};
+	//#endregion
+
+	//#region Category
+	this.getCategory = function () {
+		return this._model.Category;
+	};
+
+	this.setCategory = function (category) {
+		this._model.Category = category;
 		this._update("dataChanged");
 	};
 	//#endregion

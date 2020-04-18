@@ -25,16 +25,19 @@
 	<!-- model -->
 	<script type="text/javascript" src="../../js/models/Ort.js"></script>
 	<script type="text/javascript" src="../../js/models/OrtType.js"></script>
+	<script type="text/javascript" src="../../js/models/OrtCategory.js"></script>
 	<!-- web service client -->
 	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClient.js"></script>
 	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientOrt.js"></script>
 	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientOrtType.js"></script>
+	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientOrtCategory.js"></script>
 	<script type="text/javascript" src="../../js/factories/webServiceClientFactory.js"></script>
 	<!-- view model -->
 	<script type="text/javascript" src="../../js/viewModels/ViewModelForm.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelFormOrt.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelList.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelListOrtType.js"></script>
+	<script type="text/javascript" src="../../js/viewModels/ViewModelListOrtCategory.js"></script>
 	<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
 	<!-- view -->
 	<script type="text/javascript" src="../../js/views/Ort/Form.js"></script>
@@ -79,6 +82,16 @@
 					<div class=fieldValue>
 						<div name="messages"></div>
 						<select id=selectType class=field ></select>
+					</div>
+				</div>
+				<div id=divCategory class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Kategorie des Ortes. Die Kateorie ist für alle Knoten ab dem Wurzelknoten immer die selbe."></i>
+						<label>Kategorie: </label>
+					</div>
+					<div class=fieldValue>
+						<div name="messages"></div>
+						<select id=selectCategory class=field ></select>
 					</div>
 				</div>
 				<div id=divBezeichnung class=fieldBlock>

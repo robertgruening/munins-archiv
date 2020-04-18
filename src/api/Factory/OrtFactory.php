@@ -49,6 +49,7 @@ class OrtFactory extends Factory implements iTreeFactory
     {
         $this->_treeFactory = new TreeFactory($this);
         $this->_ortsTypeFactory = new OrtTypeFactory();
+			$this->_ortsCategoryFactory = new OrtCategoryFactory();
     }
     #endregion
 

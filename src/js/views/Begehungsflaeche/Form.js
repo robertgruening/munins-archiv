@@ -308,7 +308,8 @@ function ShowFormSelectOrt() {
 	var viewModelFactory = new ViewModelFactory();
 	var viewModelExplorer = viewModelFactory.getViewModelExplorerOrt();
 	var iconCssClasses =  IconConfig.getCssClasses("Ort");
-	esti_initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
+	var isCategorized = true;
+	esti_initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses, isCategorized);
 
 	$("#dialogSelect").dialog("open");
 }
