@@ -42,9 +42,9 @@ class OrtCategoryFactory extends Factory implements iListFactory
                 SELECT
                     COUNT(*)
                 FROM
-                    OrtTree LEFT JOIN Ort ON OrtTree.Id = Ort.Tree_Id
+                    Ort
                 WHERE
-                OrtTree.Category_Id = ".$id."
+                	Category_Id = ".$id."
             ) AS CountOfOrten
         FROM
             ".$this->getTableName()."
