@@ -137,7 +137,10 @@ var ViewModelForm = function (webServiceClient) {
 	this._getPropertyNameAsInMessage = function (propertyName) {
 		switch (propertyName) {
 			case "type" : {
-				return "typ";
+				return "Typ";
+			}
+			case "category" : {
+				return "Kategorie";
 			}
 			default : {
 				return propertyName;

@@ -137,6 +137,15 @@ var ViewModelFactory = function () {
         return viewModel;
     };
 
+    this.getViewModelListOrtCategory = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelListOrtCategory(webServiceClientFactory.getWebServiceClientOrtCategory());
+        viewModel.init();
+
+        return viewModel;
+    };
+
     this.getViewModelListLfdNummer = function()
     {
         var webServiceClientFactory = new WebServiceClientFactory();

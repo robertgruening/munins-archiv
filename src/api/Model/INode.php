@@ -8,6 +8,6 @@ interface iNode
     public function getBezeichnung();
     public function setBezeichnung($bezeichnung);
     
-    public function getOrderNumber();
-    public function setOrderNumber($orderNumber);
+    //public function getOrderNumber();
+    //public function setOrderNumber($orderNumber);
 }

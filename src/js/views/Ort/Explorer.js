@@ -303,6 +303,12 @@ function InitGrid()
 				sorting: false
 			},
 			{
+				title: "Kategorie",
+				name: "CategoryBezeichnung",
+				type: "text",
+				sorting: true
+			},
+			{
 				title: "Typ",
 				name: "TypeBezeichnung",
 				type: "text",
@@ -345,6 +351,7 @@ function UpdateGridDataChildren(children) {
 		var copy = JSON.parse(JSON.stringify(child));
 		copy.Icon = IconConfig.getCssClasses("Ort");
 		copy.TypeBezeichnung = child.Type.Bezeichnung;
+		copy.CategoryBezeichnung = child.Category.Bezeichnung;
 		entries.push(copy);
 	});
 
@@ -354,5 +361,6 @@ function UpdateGridDataChildren(children) {
 
 	$("#grid").jsGrid("sort", "Bezeichnung");
 	$("#grid").jsGrid("sort", "TypeBezeichnung");
+	$("#grid").jsGrid("sort", "CategoryBezeichnung");
 }
 //#endregion

@@ -78,4 +78,12 @@ var WebServiceClientFactory = function () {
 
         return webServiceClient;
     };
+
+    this.getWebServiceClientOrtCategory = function()
+    {
+        var webServiceClient = new WebServiceClientOrtCategory();
+        webServiceClient.init();
+
+        return webServiceClient;
+    };
 };

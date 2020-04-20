@@ -60,6 +60,13 @@ function Main()
     readline("Weiter mit [EINGABE] ...");
     echo "\r\n";
 
+    echo "Im Folgenden werden alle Orte gelöscht. Orte werden um eine Kategorie erweitert.\r\n";
+    readline("Weiter mit [EINGABE] ...");
+    echo "\r\n";
+    UpgradeOrte($config);
+    readline("Weiter mit [EINGABE] ...");
+    echo "\r\n";
+
     echo "Beende Upgrade von Version 1.1 auf Version 1.2.\r\n";
 }
 
@@ -207,6 +214,42 @@ function CreateTableFundstelle($config)
     }
 }
 
+function CreateTableOrtCategory($config)
+{
+    if (DoesTableExist($config, "OrtCategory"))
+    {
+        echo "Die Tabelle \"OrtCategory\" existiert bereits.\r\n";
+    }
+    else
+    {
+    	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    	if (!$mysqli->connect_errno)
+    	{
+	    	$mysqli->set_charset("utf8");
+	    	$ergebnis = $mysqli->query("
+				CREATE TABLE IF NOT EXISTS `OrtCategory` (
+  					`Id` int(11) NOT NULL AUTO_INCREMENT,
+  					`Bezeichnung` varchar(30) NOT NULL UNIQUE,
+                    PRIMARY KEY (`Id`)
+				);
+	    	");
+
+	    	if ($mysqli->errno)
+	    	{
+	    		echo "Beim Anlegen der Tabelle \"OrtCategory\" ist ein Fehler aufgetreten!\r\n";
+	    		echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    	}
+	    	else
+	    	{
+	    		echo "Tabelle \"OrtCategory\" ist angelegt.\r\n";
+	    	}
+    	}
+
+    	$mysqli->close();
+    }
+}
+
 function CreateUniqueIndex($config, $tableName, $indexName, $columnName)
 {
     $ergebnis = false;
@@ -339,7 +382,7 @@ function InsertColumnGuidInTableAblage($config)
 {
 	if (DoesColumnExist($config, "Ablage", "Guid"))
 	{
-		echo "Die Spalte \"Guid\" existiert bereits inder Tabelle \"Ablage\".";
+		echo "Die Spalte \"Guid\" existiert bereits in der Tabelle \"Ablage\".";
 	}
 	else
 	{
@@ -364,6 +407,143 @@ function InsertColumnGuidInTableAblage($config)
     	}
 
    	$mysqli->close();
+	}
+}
+#endregion
+
+#region Ort
+function DeleteLinkedDataToTableOrt($config)
+{
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+	    $ergebnis = $mysqli->query("
+            DELETE
+            FROM Kontext_Ort;");
+
+
+	    if ($mysqli->errno)
+	    {
+	    	echo "Beim Löschen aller Verknüpfungen zwischen Orten und Kontexten ist ein Fehler aufgetreten!\r\n";
+	    	echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    }
+	    else
+	    {
+	    	echo "Alle Verknüpfungen zwischen Orten und Kontexten sind erfolgreich gelöscht.\r\n";
+	    }
+    }
+    $mysqli->close();
+}
+
+function DeleteDataInTableOrt($config)
+{
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+        $mysqli->autocommit(false);
+        $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+
+        $passed = true;
+        $passed = $mysqli->query("SET FOREIGN_KEY_CHECKS=0;") && $passed;
+
+        if ($passed)
+        {
+            $passed = $mysqli->query("DELETE FROM Ort;") && $passed;
+        }
+
+        if ($passed)
+        {
+            $passed = $mysqli->query("SET FOREIGN_KEY_CHECKS=1;") && $passed;
+        }
+
+        if ($passed)
+        {
+            $mysqli->commit();
+        }
+        else
+        {
+            $mysqli->rollback();
+        }
+
+	    if ($mysqli->errno)
+	    {
+	    	echo "Beim Löschen Orte ist ein Fehler aufgetreten!\r\n";
+	    	echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    }
+	    else
+	    {
+	    	echo "Alle Orte sind erfolgreich gelöscht.\r\n";
+	    }
+    }
+    $mysqli->close();
+}
+
+function InsertOrtCategoriesToTableOrtCategory($config)
+{
+    $ortCategoryBezeichnung = array("Kartasterdatum", "Gebietskörperschaft", "Flurname");
+
+    for ($i = 0; $i < count($ortCategoryBezeichnung); $i++)
+    {
+        InsertOrtCategoryToTableOrtCategory($config, $ortCategoryBezeichnung[$i]);
+    }
+}
+
+function InsertOrtCategoryToTableOrtCategory($config, $ortCategoryBezeichnung)
+{
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+	    $ergebnis = $mysqli->query("
+	        INSERT INTO OrtCategory(Bezeichnung)
+	        VALUES('".$ortCategoryBezeichnung."');");
+
+	    if ($mysqli->errno)
+	    {
+	    	echo "Beim Anlegen einer Ortskategorie in der Tabelle \"OrtCategory\" ist ein Fehler aufgetreten!\r\n";
+	    	echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    }
+	    else
+	    {
+	    	echo "Ortskategorie (".$ortCategoryBezeichnung.") ist erfolgreich in der Tabelle \"OrtCategory\" angelgt.\r\n";
+	    }
+    }
+    $mysqli->close();
+}
+
+function InsertColumnCategoryIdInTableOrt($config)
+{
+	if (DoesColumnExist($config, "Ort", "Category_Id"))
+	{
+		echo "Die Spalte \"Category_Id\" existiert bereits in der Tabelle \"Ort\".";
+	}
+	else
+	{
+        $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
+    
+            $ergebnis = $mysqli->query("ALTER TABLE `Ort` ADD COLUMN `Category_Id` int NOT NULL, ADD FOREIGN KEY (`Category_Id`) REFERENCES `OrtCategory` (`Id`);");
+        
+            if ($mysqli->errno)
+            {
+                    echo "Beim Anlegen der Spalte \"Category_Id\" in der Tabelle \"Ort\" ist ein Fehler aufgetreten!\r\n";
+                    echo $mysqli->errno.": ".$mysqli->error."\r\n";
+            }
+            else
+            {
+                echo "Spalte \"Category_Id\" wurde erfolgreich in Tabelle \"Ort\" angelgt.\r\n";
+            }
+        }
+
+        $mysqli->close();
 	}
 }
 #endregion
@@ -393,6 +573,20 @@ function UpgradeAblagen($config)
 	{
 		InsertGuidToAblage($config, $ablagen[$i]);
 	}
+}
+#endregion
+
+#region extent "Orte" by "Category"
+function UpgradeOrte($config)
+{
+    DeleteLinkedDataToTableOrt($config);
+    DeleteDataInTableOrt($config);
+
+    CreateTableOrtCategory($config);
+    CreateUniqueIndex($config, "OrtCategory", "IndexOrtCategoryBezeichnung", "Bezeichnung");
+    InsertOrtCategoriesToTableOrtCategory($config);
+
+    InsertColumnCategoryIdInTableOrt($config);    
 }
 #endregion
 #endregion

@@ -57,6 +57,14 @@ class SaveOrt extends UserStory
             $areParametersValid = false;
         }
 
+        if ($ort->getCategory() == null)
+        {
+            global $logger;
+            $logger->warn("Kategorie ist nicht gesetzt!");
+            $this->addMessage("Kategorie ist nicht gesetzt!");
+            $areParametersValid = false;
+        }
+
         if (OrtFactory::isNodeInCircleCondition($ort))
         {
             global $logger;
