@@ -12,6 +12,7 @@ $(document).ready(function() {
 	InitButtonOpenParent();
 	InitButtonOpenAbstractRoot();
 	InitButtonScan();
+	InitButtonPrintLabels();
 
 	InitFieldPath();
 	InitGrid();
@@ -253,6 +254,12 @@ function DisableButtonOpenAbstractRoot() {
 //#region scan
 function InitButtonScan() {
 	$("#buttonScan").attr("href", "/Munins Archiv/src/pages/Ablage/Scan.html");
+}
+//#endregion
+
+//#region print labels
+function InitButtonPrintLabels() {
+	$("#buttonPrintLabels").attr("href", "/Munins Archiv/src/pages/Ablage/PrintLabels.html");
 }
 //#endregion
 //#endregion

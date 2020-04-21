@@ -1,0 +1,10 @@
+.content,
+.form,
+.formBlock {
+	padding:0px;
+}
+
+.ablage-print-label {	
+	padding: 2mm;
+	border: none;
+}
