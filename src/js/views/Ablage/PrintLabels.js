@@ -1,36 +1,85 @@
 var _viewModelFormAblage = null;
+var _printLabelIndex = 0;
 
 $(document).ready(function () {
 	var viewModelFactory = new ViewModelFactory();
 	_viewModelFormAblage = viewModelFactory.getViewModelFormAblage();
 
 	InitStatusChanged();
+	InitButtonsSelectAblage();
 
 	InitFieldBezeichnung();
 	InitFieldGuid();
-
-	loadForm();
 });
 
 function getPageName() {
 	return "AblagePrintLabels";
 }
 
-function loadForm() {
-	console.info("loading form");
-
-	if (getUrlParameterValue("Id")) {
-		console.debug("Ablage is requested by ID", getUrlParameterValue("Id"));
-		_viewModelFormAblage.load(getUrlParameterValue("Id"));
-	}
-	else {
-		console.debug("there is no Ablage requested");
-	}
-}
-
 function InitStatusChanged() {
 	_viewModelFormAblage.register("load", new GuiClient(showMessageLoaded, showErrorMessages));
 }
+
+//#region button select Ablage
+function InitButtonsSelectAblage() {
+	$("#buttonSelectAblage0").click(function() {
+		_printLabelIndex = 0;
+		ShowFormSelectAblage();
+	});
+	$("#buttonSelectAblage1").click(function() {
+		_printLabelIndex = 1;
+		ShowFormSelectAblage();
+	});
+	$("#buttonSelectAblage2").click(function() {
+		_printLabelIndex = 2;
+		ShowFormSelectAblage();
+	});
+	$("#buttonSelectAblage3").click(function() {
+		_printLabelIndex = 3;
+		ShowFormSelectAblage();
+	});
+	$("#buttonSelectAblage4").click(function() {
+		_printLabelIndex = 4;
+		ShowFormSelectAblage();
+	});
+	$("#buttonSelectAblage5").click(function() {
+		_printLabelIndex = 5;
+		ShowFormSelectAblage();
+	});
+	$("#buttonSelectAblage6").click(function() {
+		_printLabelIndex = 6;
+		ShowFormSelectAblage();
+	});
+	$("#buttonSelectAblage7").click(function() {
+		_printLabelIndex = 7;
+		ShowFormSelectAblage();
+	});
+}
+
+function ShowFormSelectAblage() {
+	$("#dialogSelect").dialog({
+		height: "auto",
+		title: "Ablage auswählen",
+		modal: true,
+		buttons: {
+			"Speichern": function () {
+				_viewModelFormAblage.load(esti_getSelectedItem().Id);
+				$(this).dialog("close");
+			},
+			"Abbrechen": function () {
+				$(this).dialog("close");
+			}
+		}
+	});
+
+	var viewModelFactory = new ViewModelFactory();
+	var viewModelExplorer = viewModelFactory.getViewModelExplorerAblage();
+	var iconCssClasses =  IconConfig.getCssClasses("Ablage");
+	esti_initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
+
+	$("#dialogSelect").dialog("open");
+}
+//#endregion
 
 //#region messages
 function showMessageLoaded(element) {
@@ -46,7 +95,7 @@ function InitFieldBezeichnung() {
 
 function setBezeichnung(bezeichnung) {
 	console.log("setting value of 'Bezeichnung' to " + bezeichnung);
-	$("#labelBezeichnung").text(bezeichnung);
+	$("#printLabel" + _printLabelIndex + " #labelBezeichnung").text(bezeichnung);
 }
 //#endregion
 
@@ -59,7 +108,7 @@ function setGuid(guid) {
 	console.info("setting value of 'GUID'");
 	console.debug("GUID is ", guid);
 
-	$("#divQrCodeGuid").empty();
+	$("#printLabel" + _printLabelIndex + " #divQrCodeGuid").empty();
 	
 	if (guid == null ||
 		 guid == "")
@@ -67,15 +116,7 @@ function setGuid(guid) {
 		return;
 	}
 	
-	/**
-	 * The GUID is 36 characters long.
-	 * Using error correction level 'H'
-	 * requires version 4 with 33x33 modules. 
-	 */
-	var modules = 33;
-	var qrCodeLength = modules * 2;	
-	
-	$("#divQrCodeGuid").qrcode({
+	$("#printLabel" + _printLabelIndex + " #divQrCodeGuid").qrcode({
 		text: guid
 	});
 }
