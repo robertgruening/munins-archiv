@@ -11,6 +11,7 @@ $(document).ready(function () {
 	InitButtonSave();
 	InitButtonDelete();
 	InitButtonUndo();
+	InitButtonPrintLabel();
 	InitButtonToOverview();
 
 	InitFieldId();
@@ -505,6 +506,33 @@ function DisableButtonUndo() {
 
 function ResetPropertiesMessages() {
 	$(".fieldValue div[name=messages]").empty();
+}
+//#endregion
+
+//#region print label
+function InitButtonPrintLabel() {
+	DisableButtonPrintLabel();
+	_viewModelFormAblage.register("id", new GuiClient(EnableButtonPrintLabel, showErrorMessages));
+}
+
+function EnableButtonPrintLabel(id) {
+	if (id === undefined ||
+		id === null)
+	{
+		DisableButtonPrintLabel();
+	}
+	else {
+		$("#buttonPrintLabel").attr("href", "/Munins Archiv/src/pages/Ablage/PrintLabel.html?Id=" + id, "_self");
+	}
+
+	$("#buttonPrintLabel").removeClass("disabled");
+	$("#buttonPrintLabel").prop("disabled", false);
+}
+
+function DisableButtonPrintLabel() {
+	$("#buttonPrintLabel").removeAttr("href");
+	$("#buttonPrintLabel").addClass("disabled");
+	$("#buttonPrintLabel").prop("disabled", true);
 }
 //#endregion
 

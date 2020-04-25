@@ -1,0 +1,56 @@
+.ablage-print-label-page {
+	padding: 0mm;
+	margin: 0mm;
+	height: 297mm;
+	width: 210mm;
+}
+
+.ablage-print-label {	
+	padding: 1mm;
+	margin: 0mm;
+	height: 70mm; /* 74mm - 2x padding (1mm) - 2x border (1mm) */
+	width: 101mm; /* 105mm - 2x padding (1mm) - 2x border (1mm) */
+	border: 1mm dashed darkgray;
+	float: left;
+}
+
+.ablage-print-label__head-line {
+	padding: 0mm;
+	margin: 0mm;
+	line-height: 18mm;
+	font-size: 16mm;
+	font-family: Times New Roman, Liberation Serif;
+}
+
+.ablage-print-label__qr-code {
+	padding: 0mm;
+	padding-top: 1mm;
+	margin: 0mm;
+	height: 20mm;
+	width: 20mm;
+	float: right;
+}
+
+.ablage-print-label__qr-code canvas {
+	padding: 0mm;
+	margin: 0mm;
+	height: 20mm;
+	width: 20mm;
+}
+
+.ablage-print-label__free-text-line,
+.ablage-print-label__free-text-line--small {
+	padding: 0mm;
+	padding-top: 2mm;
+	margin: 0mm;
+	line-height: 8mm;
+	font-size: 5mm;
+	font-family: Liberation Sans;
+	border: none !important;
+	border-bottom: 1px solid darkgray !important;
+	width: 100%;
+}
+
+.ablage-print-label__free-text-line--small {
+	width: 80mm;
+}

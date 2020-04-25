@@ -112,6 +112,18 @@
 				"visible" : false
 			},
 			{
+				"Title" : "Ablagenschilder",
+				"URL" : "/Munins Archiv/src/pages/Ablage/PrintLabels.html",
+				"PageName" : "AblagePrintLabels",
+				"visible" : false
+			},
+			{
+				"Title" : "Ablageschild",
+				"URL" : "/Munins Archiv/src/pages/Ablage/PrintLabel.html",
+				"PageName" : "AblagePrintLabel",
+				"visible" : false
+			},
+			{
 				"Title" : "Ablage anlegen",
 				"URL" : "/Munins Archiv/src/pages/Ablage/Form.html",
 				"PageName" : "AblageFormNew",
