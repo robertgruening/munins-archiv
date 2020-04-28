@@ -104,7 +104,7 @@ class AblageFactory extends Factory implements iTreeFactory
     {
         return "SELECT Id, Bezeichnung, Typ_Id, Guid
         FROM ".$this->getTableName()."
-        WHERE Guid = ".$guid.";";
+        WHERE Guid = '".$guid."';";
     }
 
     /**

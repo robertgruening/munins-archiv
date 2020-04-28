@@ -157,7 +157,7 @@ function Get()
 	{
         $logger->info("Ablage-anhand-GUID-laden gestartet");
         $loadAblage = new LoadAblage();
-        $loadAblage->setGuid(intval($_GET["Guid"]));
+        $loadAblage->setGuid($_GET["Guid"]);
 
         if ($loadAblage->run())
         {

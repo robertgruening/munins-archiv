@@ -86,7 +86,6 @@ function tick() {
 			if (isGuidFormat(code.data))
 			{
 				$("#textBoxGuid").val(code.data);
-				loadByGuid(code.data);
 			}
 		}
 	}

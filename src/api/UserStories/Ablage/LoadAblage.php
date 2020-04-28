@@ -5,7 +5,7 @@ require_once(__DIR__."/../../Factory/AblageFactory.php");
 class LoadAblage extends UserStory
 {
     #region variables
-    private $_id = 0;
+    private $_id = null;
 	private $_guid = null;
     private $_ablage = null;
     #endregion
@@ -76,7 +76,7 @@ class LoadAblage extends UserStory
 		if ($this->getGuid() != null &&
 			$this->getGuid() != "")
 		{
-			if (preg_match("/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/i", $this->getGuid()))
+			if (!preg_match("/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/i", $this->getGuid()))
 			{
             	$logger->warn("GUID muss eine Hexadezimalzahl im Format XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX sein!");
             	$this->addMessage("GUID muss eine Hexadezimalzahl im Format XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX sein!");
