@@ -13,7 +13,7 @@ $(document).ready(function () {
 	_canvas = _canvasElement.getContext("2d");
 
 	InitStatusChanged();
-	InitButtonScan();
+	InitButtonOpen();
 	startScanning();
 });
 
@@ -27,8 +27,8 @@ function InitStatusChanged() {
 
 //#region form actions
 //#region scan
-function InitButtonScan() {
-	$("#buttonScan").click(function() {
+function InitButtonOpen() {
+	$("#buttonOpen").click(function() {
 		loadByGuid($("#textBoxGuid").val());
 	});
 }
