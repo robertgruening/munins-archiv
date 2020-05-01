@@ -222,7 +222,7 @@ function ShowFormSelectLfdNummer() {
 		title: "Lfd-Nummer auswählen",
 		modal: true,
 		buttons: {
-			"Speichern": function () {
+			"Auswählen": function () {
 				_viewModelFormFundstelle.addLfdNummer(GetSelectedLfdNummerNode());
 				$(this).dialog("close");
 			},

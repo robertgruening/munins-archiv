@@ -62,7 +62,7 @@ function ShowFormSelectAblage() {
 		title: "Ablage auswählen",
 		modal: true,
 		buttons: {
-			"Speichern": function () {
+			"Auswählen": function () {
 				_viewModelFormAblage.load(esti_getSelectedItem().Id);
 				$(this).dialog("close");
 			},

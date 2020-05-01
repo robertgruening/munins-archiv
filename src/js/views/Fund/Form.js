@@ -219,7 +219,7 @@ function ShowFormSelectFundAttribut() {
 		title: "Fundattribut auswählen",
 		modal: true,
 		buttons: {
-			"Speichern": function () {
+			"Auswählen": function () {
 				_viewModelFormFund.addFundAttribut(esti_getSelectedItem());
 				setKontext(_viewModelFormFund.getKontext());
 				$(this).dialog("close");
@@ -390,7 +390,7 @@ function ShowFormSelectAblage() {
 		title: "Ablage auswählen",
 		modal: true,
 		buttons: {
-			"Speichern": function () {
+			"Auswählen": function () {
 				_viewModelFormFund.setAblage(esti_getSelectedItem());
 				setAblage(_viewModelFormFund.getAblage());
 				$(this).dialog("close");
@@ -440,7 +440,7 @@ function ShowFormSelectKontext() {
 		title: "Kontext auswählen",
 		modal: true,
 		buttons: {
-			"Speichern": function () {
+			"Auswählen": function () {
 				_viewModelFormFund.setKontext(esti_getSelectedItem());
 				setKontext(_viewModelFormFund.getKontext());
 				$(this).dialog("close");

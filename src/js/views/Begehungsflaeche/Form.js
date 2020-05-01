@@ -220,7 +220,7 @@ function ShowFormSelectLfdNummer() {
 		title: "Lfd-Nummer auswählen",
 		modal: true,
 		buttons: {
-			"Speichern": function () {
+			"Auswählen": function () {
 				_viewModelFormBegehungsflaeche.addLfdNummer(GetSelectedLfdNummerNode());
 				$(this).dialog("close");
 			},
@@ -295,7 +295,7 @@ function ShowFormSelectOrt() {
 		title: "Ort auswählen",
 		modal: true,
 		buttons: {
-			"Speichern": function () {
+			"Auswählen": function () {
 				_viewModelFormBegehungsflaeche.addOrt(esti_getSelectedItem());
 				$(this).dialog("close");
 			},
