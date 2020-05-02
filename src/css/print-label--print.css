@@ -4,7 +4,11 @@
 	padding: 0;
 }
 
-.ablage-print-label {	
-	padding: 2mm;
+.ablage-print-label-page {
+	height: 297mm;
+	width: 210mm;
+}
+
+.ablage-print-label {
 	border: none;
 }
