@@ -1,32 +1,21 @@
 <?php
 include_once(__DIR__."/Factory.php");
-include_once(__DIR__."/../Model/Fund.php");
-include_once(__DIR__."/IListFactory.php");
-include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
-include_once(__DIR__."/ListFactory.php");
+include_once(__DIR__."/../Model/RatedFund.php");
 include_once(__DIR__."/FundAttributFactory.php");
 include_once(__DIR__."/AblageFactory.php");
 include_once(__DIR__."/KontextFactory.php");
 include_once(__DIR__."/UserFactory.php");
-include_once(__DIR__."/UserFundFactory.php");
 
-class FundFactory extends Factory implements iListFactory
+class FundFactory extends Factory
 {
     #region variables
-    private $_listFactory = null;
     private $_fundAttributFactory = null;
     private $_ablageFactory = null;
     private $_kontextFactory = null;
     private $_userFactory = null;
-	private $_userFundRatingFactory = null;
     #endregion
 
     #region properties
-    protected function getListFactory()
-    {
-        return $this->_listFactory;
-    }
-
     protected function getFundAttributFactory()
     {
         return $this->_fundAttributFactory;
@@ -61,22 +50,11 @@ class FundFactory extends Factory implements iListFactory
 
 	    return $this->_userFactory;
     }
-
-	protected function getUserFundRatingFactory()
-	{
-		if ($this->_userFundRatingFactory == null)
-		{
-			$this->_userFundRatingFactory = new UserFundRatingFactory();
-		}
-
-		return $this->_userFundRatingFactory;
-	}
     #endregion
 
     #region constructors
     function __construct()
     {
-        $this->_listFactory = new ListFactory($this);
         $this->_fundAttributFactory = new FundAttributFactory();
     }
     #endregion
@@ -91,144 +69,11 @@ class FundFactory extends Factory implements iListFactory
     }
 
     #region load
-	/**
-	* Returns the SQL SELECT statement to load Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3 and Masse as string.
-	*/
-	protected function getSQLStatementToLoad()
-	{
-		return "SELECT Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3, Masse, FileName, FolderName, Rating
-			FROM ".$this->getTableName();
-	}
-    
-	/**
-	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, HasAblage, Ablage_Id, HasKontext, Kontext_Id, HasFundAttribute and FundAttribut_Ids.
-	*
-	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
-	*/
-	protected function getSqlSearchConditionStrings($searchConditions)
-	{
-		if ($searchConditions == null ||
-			count($searchConditions) == 0)
-		{
-			return array();
-		}
-        
-		$sqlSearchConditionStrings = array();
-		
-		if (isset($searchConditions["HasAblage"]))
-		{
-			if ($searchConditions["HasAblage"] === true)
-			{
-				array_push($sqlSearchConditionStrings, "Ablage_Id IS NOT NULL");
-			}
-			else
-			{
-				array_push($sqlSearchConditionStrings, "Ablage_Id IS NULL");
-			}		
-		}
-		
-		if (isset($searchConditions["Ablage_Id"]))
-		{
-			array_push($sqlSearchConditionStrings, "Ablage_Id = ".$searchConditions["Ablage_Id"]);
-		}
-		
-		if (isset($searchConditions["Ablage_Ids"]))
-		{
-            array_push($sqlSearchConditionStrings, "Ablage_Id IN (".$searchConditions["Ablage_Ids"].")");
-		}
-
-		if (isset($searchConditions["HasKontext"]))
-		{
-			if ($searchConditions["HasKontext"] === true)
-			{
-				array_push($sqlSearchConditionStrings, "Kontext_Id IS NOT NULL");
-			}
-			else
-			{
-				array_push($sqlSearchConditionStrings, "Kontext_Id IS NULL");
-			}		
-		}
-		
-		if (isset($searchConditions["Kontext_Id"]))
-		{
-			array_push($sqlSearchConditionStrings, "Kontext_Id = ".$searchConditions["Kontext_Id"]);
-		}
-		
-		if (isset($searchConditions["Kontext_Ids"]))
-		{
-            array_push($sqlSearchConditionStrings, "Kontext_Id IN (".$searchConditions["Kontext_Ids"].")");
-		}
-		
-		if (isset($searchConditions["HasFundAttribute"]))
-		{
-			if ($searchConditions["HasFundAttribute"] === true)
-			{
-				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getTableName()."_".$this->getFundAttributFactory()->getTableName()." WHERE ".$this->getTableName()."_".$this->getFundAttributFactory()->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
-			}
-			else
-			{
-				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getTableName()."_".$this->getFundAttributFactory()->getTableName()." WHERE ".$this->getTableName()."_".$this->getFundAttributFactory()->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
-			}		
-		}
-		
-		if (isset($searchConditions["FundAttribut_Ids"]))
-		{
-			$fundAttributIds = explode(",", $searchConditions["FundAttribut_Ids"]);
-
-			foreach($fundAttributIds as $fundAttributId)
-			{
-				if (is_numeric($fundAttributId))
-				{
-					array_push($sqlSearchConditionStrings, "Id IN (SELECT ".$this->getTableName()."_".$this->getFundAttributFactory()->getTableName().".Fund_Id FROM ".$this->getTableName()."_".$this->getFundAttributFactory()->getTableName()." WHERE ".$this->getTableName()."_".$this->getFundAttributFactory()->getTableName().".".$this->getFundAttributFactory()->getTableName()."_Id = ".$fundAttributId.")");
-				}
-			}
-		}
-
-		if (isset($searchConditions["HasFileName"]))
-		{
-			if ($searchConditions["HasFileName"] === true)
-			{
-				array_push($sqlSearchConditionStrings, "FileName IS NOT NULL");
-				array_push($sqlSearchConditionStrings, "FileName NOT LIKE ''");
-			}
-			else
-			{
-				array_push($sqlSearchConditionStrings, "FileName IS NULL OR FileName LIKE ''");
-			}		
-		}
-
-		if (isset($searchConditions["ContainsFileName"]))
-		{
-			array_push($sqlSearchConditionStrings, "FileName LIKE '%".$searchConditions["ContainsFileName"]."%'");
-		}
-
-		if (isset($searchConditions["FileName"]))
-		{
-			array_push($sqlSearchConditionStrings, "FileName LIKE '".$searchConditions["FileName"]."'");
-		}
-		
-		if (isset($searchConditions["Rating"]))
-		{
-			array_push($sqlSearchConditionStrings, "Rating = ".$searchConditions["Rating"]);
-		}
-		
-		if (isset($searchConditions["MinRating"]))
-		{
-			array_push($sqlSearchConditionStrings, "Rating >= ".$searchConditions["MinRating"]);
-		}
-		
-		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
-		{
-			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getListFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
-		}
-
-		return $sqlSearchConditionStrings;
-	}
-
-    public function loadAll()
+    protected function getSQLStatementToLoadById($id)
     {
-        return $this->getListFactory()->loadAll();
+        return "SELECT Id, Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse
+        FROM Fund
+        WHERE Id = ".$id.";";
     }
 
     protected function fill($dataSet)
@@ -254,13 +99,10 @@ class FundFactory extends Factory implements iListFactory
         $fund->setDimension1($dataSet["Dimension1"]);
         $fund->setDimension2($dataSet["Dimension2"]);
         $fund->setDimension3($dataSet["Dimension3"]);
-		$fund->setMasse($dataSet["Masse"]);
+        $fund->setMasse($dataSet["Masse"]);
         $fund->setAblage($this->getAblageFactory()->loadByFund($fund));
         $fund->setKontext($this->getKontextFactory()->loadByFund($fund));
-		$fund->setFundAttribute($this->getFundAttributFactory()->loadByFund($fund));
-		$fund->setFileName($dataSet["FileName"]);
-		$fund->setFolderName($dataSet["FolderName"]);
-		$fund->setRating($dataSet["Rating"]);
+        $fund->setFundAttribute($this->getFundAttributFactory()->loadByFund($fund));
 
         return $fund;
     }
@@ -271,17 +113,14 @@ class FundFactory extends Factory implements iListFactory
     {
         $anzahl = intval(str_replace(">", "-", $element->getAnzahl()));
 
-        return "INSERT INTO ".$this->getTableName()." (Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse, Kontext_Id, Ablage_Id, FileName, FolderName, Rating)
+        return "INSERT INTO ".$this->getTableName()." (Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse, Kontext_Id, Ablage_Id)
         VALUES (".$anzahl.", '".addslashes($element->getBezeichnung())."',
         ".($element->getDimension1() === null ? "NULL" : $element->getDimension1()).",
         ".($element->getDimension2() === null ? "NULL" : $element->getDimension2()).",
         ".($element->getDimension3() === null ? "NULL" : $element->getDimension3()).",
         ".($element->getMasse() === null ? "NULL" : $element->getMasse()).",
         ".($element->getKontext() === null ? "NULL" : $element->getKontext()->getId()).",
-		".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId()).",
-		".($element->getFileName() === null ? "NULL" : "'".addslashes($element->getFileName())."'").",
-		".($element->getFolderName() === null ? "NULL" : "'".addslashes($element->getFolderName())."'").",
-		".$element->getRating().");";
+        ".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId()).");";
     }
 
     protected function getSQLStatementToUpdate(iNode $element)
@@ -296,10 +135,7 @@ class FundFactory extends Factory implements iListFactory
         Dimension3 = ".($element->getDimension3() === null ? "NULL" : $element->getDimension3()).",
         Masse = ".($element->getMasse() === null ? "NULL" : $element->getMasse()).",
         Kontext_Id = ".($element->getKontext() === null ? "NULL" : $element->getKontext()->getId()).",
-		Ablage_Id = ".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId()).",
-		FileName = ".($element->getFileName() === null ? "NULL" : "'".addslashes($element->getFileName())."'").",
-		FolderName = ".($element->getFolderName() === null ? "NULL" : "'".addslashes($element->getFolderName())."'").",
-		Rating = ".$element->getRating()."
+        Ablage_Id = ".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId())."
         WHERE Id = ".$element->getId().";";
     }
     #endregion
@@ -409,33 +245,6 @@ class FundFactory extends Factory implements iListFactory
         else
         {
             $logger->warn("Kontext ist nicht gesetzt!");
-        }
-
-        if (isset($object["FileName"]))
-        {
-            $fund->setFileName($object["FileName"]);
-        }
-        else
-        {
-            $logger->debug("FileName ist nicht gesetzt!");
-        }
-
-        if (isset($object["FolderName"]))
-        {
-            $fund->setFolderName($object["FolderName"]);
-        }
-        else
-        {
-            $logger->debug("FolderName ist nicht gesetzt!");
-        }
-
-        if (isset($object["Rating"]))
-        {
-            $fund->setRating($object["Rating"]);
-        }
-        else
-        {
-            $logger->debug("Rating ist nicht gesetzt!");
         }
 
         return $fund;

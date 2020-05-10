@@ -139,6 +139,46 @@ class Fund implements iNode
         return false;
     }
     
+	public function getUserRatings()
+    {
+        return $this->UserRatings;
+    }
+    
+    public function setUserRatings($userRatings)
+    {
+        $this->UerRatings = $userRatings;
+    }
+    
+    public function addUserRating($userRating)
+    {
+        array_push($this->UserRatings, $userRating);
+    }
+    
+    public function removeUserRating($userRating)
+    {
+        for ($i = 0; $i < count($this->UserRatings); $i++)
+        {
+            if ($this->UserRatings[$i]->getUser()->getId() == $userRating->getUser()->getId())
+            {
+                array_splice($this->UserRatings, $i, 1);
+                break;
+            }
+        }
+    }
+    
+    public function containsUserRating($userRating)
+    {
+        for ($i = 0; $i < count($this->UserRatings); $i++)
+        {
+            if ($this->UserRatings[$i]->getUser()->getId() == $userRating->getUser()->->getId())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
     public function getAblage()
     {
         return $this->Ablage;
