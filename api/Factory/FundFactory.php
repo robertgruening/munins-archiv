@@ -8,7 +8,6 @@ include_once(__DIR__."/FundAttributFactory.php");
 include_once(__DIR__."/AblageFactory.php");
 include_once(__DIR__."/KontextFactory.php");
 include_once(__DIR__."/UserFactory.php");
-include_once(__DIR__."/UserFundFactory.php");
 
 class FundFactory extends Factory implements iListFactory
 {
@@ -18,7 +17,6 @@ class FundFactory extends Factory implements iListFactory
     private $_ablageFactory = null;
     private $_kontextFactory = null;
     private $_userFactory = null;
-	private $_userFundRatingFactory = null;
     #endregion
 
     #region properties
@@ -61,16 +59,6 @@ class FundFactory extends Factory implements iListFactory
 
 	    return $this->_userFactory;
     }
-
-	protected function getUserFundRatingFactory()
-	{
-		if ($this->_userFundRatingFactory == null)
-		{
-			$this->_userFundRatingFactory = new UserFundRatingFactory();
-		}
-
-		return $this->_userFundRatingFactory;
-	}
     #endregion
 
     #region constructors
@@ -817,41 +805,37 @@ class FundFactory extends Factory implements iListFactory
         }
 	#endregion
 
-        #region User (Funde are rated)
-        public function loadByUserAsRated($user)
+    #region Ratings
+    protected function loadRatings(iNode $fund)
+    {
+        $ratings = array();
+        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+
+        if (!$mysqli->connect_errno)
         {
-            $funde = array();
-            $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+            $mysqli->set_charset("utf8");
+            $ergebnis = $mysqli->query($this->getSQLStatementToLoadRatings($fund));
 
-            if (!$mysqli->connect_errno)
+            if (!$mysqli->errno)
             {
-                $mysqli->set_charset("utf8");
-                $ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByUserAsRated($user));
-
-                if (!$mysqli->errno)
+                while ($datensatz = $ergebnis->fetch_assoc())
                 {
-                    while ($datensatz = $ergebnis->fetch_assoc())
-                    {
-						if ($datensatz["Id"] != null)
-						{
-                        	array_push($funde, $this->loadById(intval($datensatz["Id"])));
-						}
-                    }
+                    array_push($ratings, intval($datensatz["Rating"]));
                 }
             }
-
-            $mysqli->close();
-
-            return $funde;
         }
 
-        protected function getSQLStatementToLoadIdsByUserAsRated($user)
-        {
-            return "SELECT ".$this->getTableName()."_Id AS Id
-	    FROM ".$this->getUserFactory->getTableName()."_".$this->getTabeName()."IsRated
-            WHERE ".$this->getUserFactory()->getTableName()."_Id = ".$user->getId().";";
-        }
-        #endregion
+        $mysqli->close();
 
+        return $ratings;
+    }
+
+    protected function getSQLStatementToLoadRatingsByFund(iNode $fund)
+    {
+        return "SELECT Rating
+        FROM ".$this->getUserFactory()->getTableName()."_Rated".$this->getTableName()."
+        WHERE ".$this->getFundFactory()->getTableName()."_Id = ".$fund->getId().";";
+    }
+	#endregion
     #endregion
 }

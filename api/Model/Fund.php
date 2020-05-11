@@ -139,17 +139,18 @@ class Fund implements iNode
         return false;
     }
     
-	public function getUserRatings()
+	public function getRatings()
     {
-        return $this->UserRatings;
+        return $this->Ratings;
     }
     
-    public function setUserRatings($userRatings)
+    public function setRatings($ratings)
     {
-        $this->UerRatings = $userRatings;
+	    $this->Ratings = $ratings;
+	    $this->Rating = $this->calculateAverage($this->Ratings);
     }
-    
-    public function addUserRating($userRating)
+
+    public function getRating()
     {
         array_push($this->UserRatings, $userRating);
     }
@@ -179,24 +180,24 @@ class Fund implements iNode
         return false;
     }
     
-    public function getAblage()
+    public function getFolderName()
     {
-        return $this->Ablage;
+        return $this->FolderName;
     }
     
-    public function setAblage($ablage)
+    public function setFolderName($folderName)
     {
-        $this->Ablage = $ablage;
+        $this->FolderName = $folderName;
     }
     
-    public function getKontext()
+    public function getRating()
     {
-        return $this->Kontext;
+        return $this->Rating;
     }
     
-    public function setKontext($kontext)
+    public function setRating($rating)
     {
-        $this->Kontext = $kontext;
+        $this->Rating = $rating;
     }
     
     public function getFileName()
