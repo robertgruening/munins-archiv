@@ -3,7 +3,8 @@
 		
 		"Title" : "Home",
 		"Icon" : "fa-home",
-		"URL" : "/Munins Archiv/src/pages/Home.html"
+		"URL" : "/Munins Archiv/src/pages/administration/Home.html",
+		"PageName" : "Home"
 	},
 	{
 		"Title" : "Kontexte",
