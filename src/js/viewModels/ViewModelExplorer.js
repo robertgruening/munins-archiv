@@ -39,7 +39,18 @@ var ViewModelExplorer = function (webServiceClient) {
 
 		if (id == undefined)
 		{
-			this._webServiceClient.LoadAll("loadRoots");
+			if (this._webServiceClient.LoadBySearchConditions != undefined)
+			{
+				var searchConditions = new Object();
+				searchConditions.hasParent = false;
+
+				this._webServiceClient.LoadBySearchConditions(searchConditions, "loadRoots");
+			}
+			else
+			{
+				this._webServiceClient.LoadAll("loadRoots");
+			}
+			
 		}
 		else
 		{

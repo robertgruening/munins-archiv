@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
 require_once("../UserStories/Ablage/LoadAblage.php");
+require_once("../UserStories/Ablage/LoadAblagen.php");
 require_once("../UserStories/Ablage/LoadRootAblagen.php");
 require_once("../UserStories/Ablage/SaveAblage.php");
 require_once("../UserStories/Ablage/DeleteAblage.php");
@@ -173,19 +174,40 @@ function Get()
 	}
     else
     {
-        $logger->info("Root-Ablagen-laden gestartet");
-        $loadRootAblagen = new LoadRootAblagen();
+	$logger->info("Ablagen-suchen gestartet");
 
-        if ($loadRootAblagen->run())
+	$loadAblagen = new LoadAblagen();
+
+	if (isset($_GET["hasParent"]))
+	{
+		$loadAblagen->addSearchCondition("HasParent", $_GET["hasParent"] === "true");
+	}
+
+	if (isset($_GET["hasChildren"]))
+	{
+		$loadAblagen->addSearchCondition("HasChildren", $_GET["hasChildren"] === "true");
+	}
+
+	if (isset($_GET["hasFunde"]))
+	{
+		$loadAblagen->addSearchCondition("HasFunde", $_GET["hasFunde"] === "true");
+	}
+
+	if (isset($_GET["bezeichnung"]))
+	{
+		$loadAblagen->addSearchCondition("Bezeichnung", $_GET["bezeichnung"]);
+	}
+
+        if ($loadAblagen->run())
         {
-            echo json_encode($loadRootAblagen->getRootAblagen());
+            echo json_encode($loadAblagen->getAblagen());
         }
         else
         {
             http_response_code(500);
-            echo json_encode($loadRootAblagen->getMessages());
+            echo json_encode($loadAblagen->getMessages());
         }
 
-        $logger->info("Root-Ablagen-laden beendet");
+        $logger->info("Ablagen-suchen beendet");
     }
 }

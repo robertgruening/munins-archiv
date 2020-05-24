@@ -1,0 +1,11 @@
+.widget {
+	max-width: 300px;
+	max-height: 300px;
+	overflow: scroll;
+	border: 1px solid lightgray;
+	padding: 10px;
+}
+
+.widget h3 {
+	margin-top: 0px;
+}

@@ -120,6 +120,101 @@ class AblageFactory extends Factory implements iTreeFactory
         WHERE Id = ".$id.";";
     }
 
+	public function loadBySearchConditions($searchConditions)
+	{
+		
+		global $logger;
+		$logger->debug("Lade Elemente anhand von Suchkriterien ".json_encode($searchConditions));
+
+		$elemente = array();
+		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->getSQLStatementToLoadBySearchConditions($searchConditions));
+
+			if ($mysqli->errno)
+			{
+				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+			}
+			else
+			{
+				while ($datensatz = $ergebnis->fetch_assoc())
+				{
+					array_push($elemente, $this->loadById(intval($datensatz["Id"])));
+				}
+			}
+		}
+
+		$mysqli->close();
+
+		return $elemente;
+	}
+
+	protected function getSQLStatementToLoadBySearchConditions($searchConditions)
+	{
+		global $logger;
+
+		$sqlStatement = "SELECT Id
+			FROM ".$this->getTableName();
+
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return $sqlStatement;
+		}
+
+		$searchConditionsStrings = array();
+
+		if (isset($searchConditions["HasParent"]))
+		{
+			if ($searchConditions["HasParent"] === true)
+			{
+				array_push($searchConditionsStrings, "Parent_Id IS NOT NULL");
+			}
+			else
+			{
+				array_push($searchConditionsStrings, "Parent_Id IS NULL");
+			}		
+		}
+
+		if (isset($searchConditions["HasChildren"]))
+		{
+			if ($searchConditions["HasChildren"] === true)
+			{
+				array_push($searchConditionsStrings, "EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($searchConditionsStrings, "NOT EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
+			}
+		}
+
+		if (isset($searchConditions["HasFunde"]))
+		{
+			if ($searchConditions["HasFunde"] === true)
+			{
+				array_push($searchConditionsStrings, "EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()." AS fund WHERE fund.".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($searchConditionsStrings, "NOT EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()." AS fund WHERE fund.".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+		}
+
+		if (isset($searchConditions["Bezeichnung"]))
+		{
+			array_push($searchConditionsStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+		}
+
+		$sqlStatement .= " WHERE ".implode(" AND ", $searchConditionsStrings);
+
+		$logger->debug($sqlStatement);
+		
+		return $sqlStatement;
+	}
+
     /**
     * Creates an Ablage instance and fills
     * the ID, Bezeichnung and GUID by the given
