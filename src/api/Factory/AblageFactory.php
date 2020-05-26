@@ -74,43 +74,19 @@ class AblageFactory extends Factory implements iTreeFactory
 	
 	public function loadByGuid($guid)
 	{
-		global $logger;
-		$logger->debug("Lade Element (".$guid.")");
-
-		$element = null;
-		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-
-		if (!$mysqli->connect_errno)
+		$searchConditions = array();
+		$searchConditions["Guid"] = $guid;
+		
+		$elements = $this->loadBySearchConditions($searchConditions);
+		
+		if ($elements == null ||
+			count($elements) == 0)
 		{
-			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->getSQLStatementToLoadByGuid($guid));
-
-			if ($mysqli->errno)
-			{
-				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
-			}
-			else
-			{
-				$element = $this->fill($ergebnis->fetch_assoc());
-			}
+			return null;
 		}
 
-		$mysqli->close();
-
-		return $element;
+		return $elements[0];
 	}
-
-    /**
-    * Returns the SQL statement to load ID, Bezeichnung, Ablage type ID and GUID
-    * by Ablage GUID.
-    *
-    * @param $guid GUID of the Ablage to load.
-    */
-    protected function getSQLStatementToLoadByGuid($guid)
-    {
-        return $this->getSqlStatementToLoad()."
-        	WHERE Guid = '".$guid."';";
-    }
 
     /**
     * Returns the SQL statement to load ID, Bezeichnung, Ablage type ID and GUID
@@ -136,7 +112,7 @@ class AblageFactory extends Factory implements iTreeFactory
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->getSQLStatementToLoadBySearchConditions($searchConditions));
+			$ergebnis = $mysqli->query($this->getSqlStatementToLoadBySearchConditions($searchConditions));
 
 			if ($mysqli->errno)
 			{
@@ -146,7 +122,7 @@ class AblageFactory extends Factory implements iTreeFactory
 			{
 				while ($datensatz = $ergebnis->fetch_assoc())
 				{
-					array_push($elemente, $this->loadById(intval($datensatz["Id"])));
+					array_push($elemente, $this->fill($datensatz));
 				}
 			}
 		}
@@ -156,7 +132,7 @@ class AblageFactory extends Factory implements iTreeFactory
 		return $elemente;
 	}
 
-	protected function getSQLStatementToLoadBySearchConditions($searchConditions)
+	protected function getSqlStatementToLoadBySearchConditions($searchConditions)
 	{
 		global $logger;
 
