@@ -66,6 +66,12 @@ class AblageFactory extends Factory implements iTreeFactory
     }
 
     #region load
+	protected function getSqlStatementToLoad()
+	{		
+        	return "SELECT Id, Bezeichnung, Typ_Id, Guid
+        		FROM ".$this->getTableName().";
+	}
+	
 	public function loadByGuid($guid)
 	{
 		global $logger;
@@ -102,9 +108,8 @@ class AblageFactory extends Factory implements iTreeFactory
     */
     protected function getSQLStatementToLoadByGuid($guid)
     {
-        return "SELECT Id, Bezeichnung, Typ_Id, Guid
-        FROM ".$this->getTableName()."
-        WHERE Guid = '".$guid."';";
+        return $this->getSqlStatementToLoad()."
+        	WHERE Guid = '".$guid."';";
     }
 
     /**
@@ -115,9 +120,8 @@ class AblageFactory extends Factory implements iTreeFactory
     */
     protected function getSQLStatementToLoadById($id)
     {
-        return "SELECT Id, Bezeichnung, Typ_Id, Guid
-        FROM ".$this->getTableName()."
-        WHERE Id = ".$id.";";
+        return $this->getSqlStatementToLoad()."
+        	WHERE Id = ".$id.";";
     }
 
 	public function loadBySearchConditions($searchConditions)
@@ -156,8 +160,7 @@ class AblageFactory extends Factory implements iTreeFactory
 	{
 		global $logger;
 
-		$sqlStatement = "SELECT Id
-			FROM ".$this->getTableName();
+		$sqlStatement = $this->getSqlStatementToLoad();
 
 		if ($searchConditions == null ||
 			count($searchConditions) == 0)
@@ -166,6 +169,26 @@ class AblageFactory extends Factory implements iTreeFactory
 		}
 
 		$searchConditionsStrings = array();
+		
+		if (isset($searchConditions["Id"]))
+		{
+			array_push($searchConditionsStrings, "Id = ".$searchConditions["Id"]);
+		}
+
+		if (isset($searchConditions["Bezeichnung"]))
+		{
+			array_push($searchConditionsStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+		}
+		
+		if (isset($searchConditions["Typ_Id"]))
+		{
+			array_push($searchConditionsStrings, "Typ_Id = ".$searchConditions["Typ_Id"]);
+		}
+		
+		if (isset($searchConditions["Guid"]))
+		{
+			array_push($searchConditionsStrings, "Guid = '".$searchConditions["Id"]."'");
+		}
 
 		if (isset($searchConditions["HasParent"]))
 		{
@@ -201,11 +224,6 @@ class AblageFactory extends Factory implements iTreeFactory
 			{
 				array_push($searchConditionsStrings, "NOT EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()." AS fund WHERE fund.".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
 			}
-		}
-
-		if (isset($searchConditions["Bezeichnung"]))
-		{
-			array_push($searchConditionsStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
 		}
 
 		$sqlStatement .= " WHERE ".implode(" AND ", $searchConditionsStrings);
