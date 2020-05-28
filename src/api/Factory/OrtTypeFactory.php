@@ -2,18 +2,30 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
+include_once(__DIR__."/OrtFactory.php");
 include_once(__DIR__."/../Model/OrtType.php");
 
 class OrtTypeFactory extends Factory implements iListFactory
 {
     #region variables
     private $_listFactory = null;
+    private $_ortFactory = null;
     #endregion
 
     #region properties
     protected function getListFactory()
     {
         return $this->_listFactory;
+    }
+    
+    protected function getOrtFactory()
+    {
+        if ($this->$_ortFactory == null)
+        {
+            $this->$_ortFactory = new OrtFactory();
+        }
+
+        return $this->$_ortFactory;
     }
     #endregion
 
@@ -35,21 +47,42 @@ class OrtTypeFactory extends Factory implements iListFactory
     }
 
     #region load
-    protected function getSQLStatementToLoadById($id)
+    /**
+     * Returns the SQL SELECT statement to load ID, Bezeichnung and count of referenced Orte as string.
+     */
+    protected function getSqlStatementToLoad()
     {
-        return "SELECT
-        Id, Bezeichnung, (
-            SELECT
-            COUNT(*)
-            FROM
-            Ort
-            WHERE
-            Typ_Id = ".$id."
-        ) AS CountOfOrten
-        FROM
-        ".$this->getTableName()."
-        WHERE
-        Id = ".$id.";";
+        return "SELECT Id, Bezeichnung, COUNT(*) AS CountOfOrten
+            FROM ".$this->getTableName()." RIGHT JOIN ".$this->getOrtFactory()->getTableName()." ON ".$this->getTableName().".Id = ".$this->getOrtFactory()->getTableName().".".$this->getTableName()."_Id";
+    }
+
+    /**
+     * Returns the SQL statement search conditions as string by the given search conditions.
+     * Search condition keys are: Id and Bezeichnung.
+     *
+     * @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+     */
+    protected function getSqlSearchConditionStrings($searchConditions)
+    {
+        if ($searchConditions == null ||
+            count($searchConditions) == 0)
+        {
+            return $sqlStatement;
+        }
+
+        $sqlSearchConditionStrings = array();
+
+        if (isset($searchConditions["Id"]))
+        {
+            array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
+        }
+
+        if (isset($searchConditions["Bezeichnung"]))
+        {
+            array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+        }
+
+        return $sqlSearchConditionStrings;
     }
 
     public function loadAll()
