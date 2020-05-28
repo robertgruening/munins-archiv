@@ -67,7 +67,7 @@ class AblageFactory extends Factory implements iTreeFactory
 
     #region load
 	/**
-	* Returns the SQL SELECT statement with columns and table as string.
+	* Returns the SQL SELECT statement to load ID, Bezeichnung, ID of type and GUID as string.
 	*/
 	protected function getSqlStatementToLoad()
 	{		
