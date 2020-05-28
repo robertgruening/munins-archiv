@@ -34,27 +34,80 @@ class FundAttributFactory extends Factory implements iTreeFactory
     #endregion
 
     #region methods
-    /**
-     * Returns the name of the database table.
-     */
-    public function getTableName()
-    {
-        return "FundAttribut";
-    }
+	/**
+	* Returns the name of the database table.
+	*/
+	public function getTableName()
+	{
+		return "FundAttribut";
+	}
 
-    #region load
-    /**
-     * Returns the SQL statement to load ID, Bezeichnung, Fundattribut type ID and count of Funde
-     * by Fundattribut ID.
-     *
-     * @param $id ID of the Fundattribut to load.
-     */
-    protected function getSQLStatementToLoadById($id)
-    {
-        return "SELECT Id, Bezeichnung, Typ_Id, COUNT(*) AS CountOfFunde
-                FROM FundAttribut RIGHT JOIN Fund_FundAttribut ON FundAttribut.Id = Fund_FundAttribut.FundAttribut_Id
-                WHERE Id = ".$id.";";
-    }
+	#region load
+	/**
+	* Returns the SQL SELECT statement to load ID, Bezeichnung, Fundattribut type ID and count of Funde.
+	*/
+	protected function getSQLStatementToLoad()
+	{
+		return "SELECT Id, Bezeichnung, Typ_Id, COUNT(*) AS CountOfFunde
+			FROM ".$this->getTableName()." RIGHT JOIN Fund_".$this->getTableName()." ON ".$this->getTableName().".Id = Fund_".$this->getTableName().".".$this->getTableName()."_Id";
+	}
+
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return $sqlStatement;
+		}
+
+		$sqlSearchConditionStrings = array();
+		
+		if (isset($searchConditions["Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
+		}
+
+		if (isset($searchConditions["Bezeichnung"]))
+		{
+			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+		}
+		
+		if (isset($searchConditions["Typ_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Typ_Id = ".$searchConditions["Typ_Id"]);
+		}
+
+		if (isset($searchConditions["HasParent"]))
+		{
+			if ($searchConditions["HasParent"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "Parent_Id IS NOT NULL");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "Parent_Id IS NULL");
+			}		
+		}
+
+		if (isset($searchConditions["HasChildren"]))
+		{
+			if ($searchConditions["HasChildren"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
+			}
+		}
+		
+		return $sqlSearchConditionStrings;
+	}
 
     /**
      * Creates an Fundattribut instance and fills
