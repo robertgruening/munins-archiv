@@ -35,7 +35,10 @@ class FundAttributTypeFactory extends Factory implements iListFactory
     }
 
     #region load
-    protected function getSQLStatementToLoadById($id)
+    /**
+	* Returns the SQL SELECT statement to load ID, Bezeichnung and count of referenced Fundattribute as string.
+	*/
+    protected function getSqlStatementToLoad()
     {
         return "SELECT
         Id, Bezeichnung, (
@@ -47,10 +50,39 @@ class FundAttributTypeFactory extends Factory implements iListFactory
             Typ_Id = ".$id."
         ) AS CountOfFundAttributen
         FROM
-        ".$this->getTableName()."
-        WHERE
-        Id = ".$id.";";
+        ".$this->getTableName();
     }
+    
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+    * Search condition keys are:
+    * - Id
+    * - Bezeichnung
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return $sqlStatement;
+		}
+        
+		$sqlSearchConditionStrings = array();
+		
+		if (isset($searchConditions["Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
+		}
+        
+		if (isset($searchConditions["Bezeichnung"]))
+		{
+			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+		}
+		
+		return $sqlSearchConditionStrings;
+	}
 
     public function loadAll()
     {
