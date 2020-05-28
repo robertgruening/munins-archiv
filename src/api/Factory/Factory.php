@@ -10,6 +10,11 @@ abstract class Factory
 	abstract public function getTableName();
 
 	#region load
+	/**
+	* Returns all elements matching the given search conditions.
+	*
+	* @param $searchConditions List (key, value) of search conditions.
+	*/
 	public function loadBySearchConditions($searchConditions)
 	{
 		global $logger;
@@ -40,10 +45,15 @@ abstract class Factory
 		return $elemente;
 	}
 	
+	/**
+	* Returns the SQL SELECT statement with search conditions as string.
+	*
+	* @param $searchConditions List (key, value) of search conditions.
+	*/
 	protected function getSqlStatementToLoadBySearchConditions($searchConditions)
 	{
 		$sqlStatement = $this->getSqlStatementToLoad();		
-		$searchConditionStrings = $this->getSqlConditionStrings($searchConditions);
+		$searchConditionStrings = $this->getSqlSearchConditionStrings($searchConditions);
 		
 		if ($searchConditionStrings == null ||
 		   count($searchConditionStrings) == 0)
@@ -57,7 +67,7 @@ abstract class Factory
 	}
 	
 	abstract protected function getSqlStatementToLoad();
-	abstract protected function getSqlConditionStrings($searchConditions);
+	abstract protected function getSqlSearchConditionStrings($searchConditions);
 	
 	public function loadById($id)
 	{
