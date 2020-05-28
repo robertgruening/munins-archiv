@@ -93,6 +93,7 @@ class AblageFactory extends Factory implements iTreeFactory
 
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id, Bezeichnung, Typ_Id, HasParent, HasChildren and HasFunde.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
