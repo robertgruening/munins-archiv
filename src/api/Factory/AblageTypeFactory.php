@@ -35,13 +35,10 @@ class AblageTypeFactory extends Factory implements iListFactory
     }
 
     #region load
-    /**
-    * Returns the SQL statement to load ID and Bezeichnung
-    * by AblageType ID.
-    *
-    * @param $id ID of the AblageType to load.
-    */
-    protected function getSQLStatementToLoadById($id)
+	/**
+	* Returns the SQL SELECT statement to load ID, Bezeichnung and count of referenced Ablagen as string.
+	*/
+    protected function getSqlStatementToLoad()
     {
         return "SELECT
         Id, Bezeichnung, (
@@ -53,10 +50,36 @@ class AblageTypeFactory extends Factory implements iListFactory
             Typ_Id = ".$id."
         ) AS CountOfAblagen
         FROM
-        ".$this->getTableName()."
-        WHERE
-        Id = ".$id.";";
+        ".$this->getTableName();
     }
+    
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return $sqlStatement;
+		}
+        
+		$sqlSearchConditionStrings = array();
+		
+		if (isset($searchConditions["Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
+		}
+        
+		if (isset($searchConditions["Bezeichnung"]))
+		{
+			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+		}
+		
+		return $sqlSearchConditionStrings;
+	}
 
     public function loadAll()
     {
