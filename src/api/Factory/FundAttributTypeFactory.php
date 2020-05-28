@@ -2,12 +2,14 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
+include_once(__DIR__."/FundAttributFactory.php");
 include_once(__DIR__."/../Model/FundAttributType.php");
 
 class FundAttributTypeFactory extends Factory implements iListFactory
 {
     #region variables
     private $_listFactory = null;
+    private $_fundAttributFactory = null;
     #endregion
 
     #region properties
@@ -15,6 +17,16 @@ class FundAttributTypeFactory extends Factory implements iListFactory
     {
         return $this->_listFactory;
     }
+
+	protected function getFundAttributFactory()
+	{
+		if ($this->$_fundAttributFactory == null)
+		{
+			$this->$_fundAttributFactory = new FundAttributFactory();
+		}
+
+		return $this->$_fundAttributFactory;
+	}
     #endregion
 
     #region constructors
@@ -40,17 +52,8 @@ class FundAttributTypeFactory extends Factory implements iListFactory
 	*/
 	protected function getSqlStatementToLoad()
 	{
-		return "SELECT
-			Id, Bezeichnung, (
-				SELECT
-				COUNT(*)
-				FROM
-				FundAttribut
-				WHERE
-				Typ_Id = ".$id."
-			) AS CountOfFundAttributen
-			FROM
-			".$this->getTableName();
+		return "SELECT Id, Bezeichnung, COUNT(*) AS CountOfFundAttributen
+			FROM ".$this->getTableName()." RIGHT JOIN ".$this->getFundAttributFactory()->getTableName()." ON ".$this->getTableName().".Id = ".$this->getFundAttributFactory()->getTableName().".".$this->getTableName()."_Id";
 	}
     
 	/**
