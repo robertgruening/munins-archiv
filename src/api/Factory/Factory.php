@@ -10,6 +10,55 @@ abstract class Factory
 	abstract public function getTableName();
 
 	#region load
+	public function loadBySearchConditions($searchConditions)
+	{
+		global $logger;
+		$logger->debug("Lade Elemente anhand von Suchkriterien ".json_encode($searchConditions));
+		$elemente = array();
+		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->getSqlStatementToLoadBySearchConditions($searchConditions));
+			
+			if ($mysqli->errno)
+			{
+				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+			}
+			else
+			{
+				while ($datensatz = $ergebnis->fetch_assoc())
+				{
+					array_push($elemente, $this->fill($datensatz));
+				}
+			}
+		}
+		
+		$mysqli->close();
+		
+		return $elemente;
+	}
+	
+	protected function getSqlStatementToLoadBySearchConditions($searchConditions)
+	{
+		$sqlStatement = $this->getSqlStatementToLoad();		
+		$searchConditionStrings = $this->getSqlConditionStrings($searchConditions);
+		
+		if ($searchConditionStrings == null ||
+		   count($searchConditionStrings) == 0)
+		{
+			return $sqlStatement;
+		}
+		
+		$sqlStatement .= " WHERE ".implode(" AND ", $searchConditionStrings);
+		
+		return $sqlStatement;
+	}
+	
+	abstract protected function getSqlStatementToLoad();
+	abstract protected function getSqlConditionStrings($searchConditions);
+	
 	public function loadById($id)
 	{
 		global $logger;
