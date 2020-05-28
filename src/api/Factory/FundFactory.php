@@ -57,12 +57,43 @@ class FundFactory extends Factory
     }
 
     #region load
-    protected function getSQLStatementToLoadById($id)
-    {
-        return "SELECT Id, Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse
-        FROM Fund
-        WHERE Id = ".$id.";";
-    }
+	/**
+	* Returns the SQL SELECT statement to load ID, Bezeichnung, Dimension 1, Dimension 2, Dimension 3 and Masse as string.
+	*/
+	protected function getSQLStatementToLoad()
+	{
+		return "SELECT Id, Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse
+			FROM ".$this->getTableName();
+	}
+    
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id and Bezeichnung.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return $sqlStatement;
+		}
+        
+		$sqlSearchConditionStrings = array();
+		
+		if (isset($searchConditions["Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
+		}
+        
+		if (isset($searchConditions["Bezeichnung"]))
+		{
+			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+		}
+		
+		return $sqlSearchConditionStrings;
+	}
 
     protected function fill($dataSet)
     {
