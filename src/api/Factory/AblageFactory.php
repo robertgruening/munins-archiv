@@ -72,7 +72,7 @@ class AblageFactory extends Factory implements iTreeFactory
 	protected function getSqlStatementToLoad()
 	{		
         	return "SELECT Id, Bezeichnung, Typ_Id, Guid
-        		FROM ".$this->getTableName().";
+        		FROM ".$this->getTableName();
 	}
 	
 	public function loadByGuid($guid)
