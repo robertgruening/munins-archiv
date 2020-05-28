@@ -35,29 +35,27 @@ class FundAttributTypeFactory extends Factory implements iListFactory
     }
 
     #region load
-    /**
+	/**
 	* Returns the SQL SELECT statement to load ID, Bezeichnung and count of referenced Fundattribute as string.
 	*/
-    protected function getSqlStatementToLoad()
-    {
-        return "SELECT
-        Id, Bezeichnung, (
-            SELECT
-            COUNT(*)
-            FROM
-            FundAttribut
-            WHERE
-            Typ_Id = ".$id."
-        ) AS CountOfFundAttributen
-        FROM
-        ".$this->getTableName();
-    }
+	protected function getSqlStatementToLoad()
+	{
+		return "SELECT
+			Id, Bezeichnung, (
+				SELECT
+				COUNT(*)
+				FROM
+				FundAttribut
+				WHERE
+				Typ_Id = ".$id."
+			) AS CountOfFundAttributen
+			FROM
+			".$this->getTableName();
+	}
     
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-    * Search condition keys are:
-    * - Id
-    * - Bezeichnung
+	* Search condition keys are: Id and Bezeichnung.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
