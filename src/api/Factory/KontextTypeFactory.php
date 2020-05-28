@@ -48,7 +48,7 @@ class KontextTypeFactory extends Factory implements iListFactory
 				Kontext
 				WHERE
 				Typ_Id = ".$id."
-			) AS CountOfAblagen
+			) AS CountOfKontexte
 			FROM
 			".$this->getTableName();
 	}
@@ -125,6 +125,8 @@ class KontextTypeFactory extends Factory implements iListFactory
         $kontextType = new KontextType();
         $kontextType->setId(intval($dataSet["Id"]));
         $kontextType->setBezeichnung($dataSet["Bezeichnung"]);
+	// Note: setCountOfKontexte() not implemented
+        //$kontextType->setCountOfKontexte($dataSet["CountOfKontexte"]);
 
         return $kontextType;
     }
