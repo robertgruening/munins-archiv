@@ -71,33 +71,19 @@ abstract class Factory
 	
 	public function loadById($id)
 	{
-		global $logger;
-		$logger->debug("Lade Element (".$id.")");
-
-		$element = null;
-		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-
-		if (!$mysqli->connect_errno)
+		$searchConditions = array();
+		$searchConditions["Id"] = $id;
+		
+		$elements = $this->loadBySearchConditions($searchConditions);
+		
+		if ($elements == null ||
+			count($elements) == 0)
 		{
-			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->getSQLStatementToLoadById($id));
-
-			if ($mysqli->errno)
-			{
-				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
-			}
-			else
-			{
-				$element = $this->fill($ergebnis->fetch_assoc());
-			}
+			return null;
 		}
-
-		$mysqli->close();
-
-		return $element;
+		return $elements[0];
 	}
 
-	abstract protected function getSQLStatementToLoadById($id);
 	abstract protected function fill($dataSet);
 	#endregion
 
