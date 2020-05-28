@@ -38,23 +38,24 @@ class AblageTypeFactory extends Factory implements iListFactory
 	/**
 	* Returns the SQL SELECT statement to load ID, Bezeichnung and count of referenced Ablagen as string.
 	*/
-    protected function getSqlStatementToLoad()
-    {
-        return "SELECT
-        Id, Bezeichnung, (
-            SELECT
-            COUNT(*)
-            FROM
-            Ablage
-            WHERE
-            Typ_Id = ".$id."
-        ) AS CountOfAblagen
-        FROM
-        ".$this->getTableName();
-    }
+	protected function getSqlStatementToLoad()
+	{
+		return "SELECT
+			Id, Bezeichnung, (
+				SELECT
+				COUNT(*)
+				FROM
+				Ablage
+				WHERE
+				Typ_Id = ".$id."
+			) AS CountOfAblagen
+			FROM
+			".$this->getTableName();
+	}
     
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id and Bezeichnung.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
