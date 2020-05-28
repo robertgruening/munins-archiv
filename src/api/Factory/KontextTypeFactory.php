@@ -2,12 +2,14 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
+include_once(__DIR__."/KontextFactory.php");
 include_once(__DIR__."/../Model/KontextType.php");
 
 class KontextTypeFactory extends Factory implements iListFactory
 {
     #region variables
     private $_listFactory = null;
+    private $_kontextFactory = null;
     #endregion
 
     #region properties
@@ -15,6 +17,16 @@ class KontextTypeFactory extends Factory implements iListFactory
     {
         return $this->_listFactory;
     }
+
+	protected function getKontextFactory()
+	{
+		if ($this->$_kontextFactory == null)
+		{
+			$this->$_kontextFactory = new KontextFactory();
+		}
+
+		return $this->$_kontextFactory;
+	}
     #endregion
 
     #region constructors
@@ -40,17 +52,8 @@ class KontextTypeFactory extends Factory implements iListFactory
 	*/
 	protected function getSqlStatementToLoad()
 	{
-		return "SELECT
-			Id, Bezeichnung, (
-				SELECT
-				COUNT(*)
-				FROM
-				Kontext
-				WHERE
-				Typ_Id = ".$id."
-			) AS CountOfKontexte
-			FROM
-			".$this->getTableName();
+		return "SELECT Id, Bezeichnung, COUNT(*) AS CountOfKontexte
+			FROM ".$this->getTableName()." RIGHT JOIN ".$this->getKontextFactory()->getTableName()." ON ".$this->getTableName().".Id = ".$this->getKontextFactory()->getTableName().".".$this->getTableName()."_Id";
 	}
     
 	/**
