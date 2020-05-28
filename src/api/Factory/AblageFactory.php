@@ -66,6 +66,9 @@ class AblageFactory extends Factory implements iTreeFactory
     }
 
     #region load
+	/**
+	* Returns the SQL SELECT statement with columns and table as string.
+	*/
 	protected function getSqlStatementToLoad()
 	{		
         	return "SELECT Id, Bezeichnung, Typ_Id, Guid
@@ -88,19 +91,12 @@ class AblageFactory extends Factory implements iTreeFactory
 		return $elements[0];
 	}
 
-    /**
-    * Returns the SQL statement to load ID, Bezeichnung, Ablage type ID and GUID
-    * by Ablage ID.
-    *
-    * @param $id ID of the Ablage to load.
-    */
-    protected function getSQLStatementToLoadById($id)
-    {
-        return $this->getSqlStatementToLoad()."
-        	WHERE Id = ".$id.";";
-    }
-
-	protected function getSqlConditionStrings($searchConditions)
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
 	{
 		if ($searchConditions == null ||
 			count($searchConditions) == 0)
@@ -108,37 +104,37 @@ class AblageFactory extends Factory implements iTreeFactory
 			return $sqlStatement;
 		}
 
-		$searchConditionStrings = array();
+		$sqlSearchConditionStrings = array();
 		
 		if (isset($searchConditions["Id"]))
 		{
-			array_push($searchConditionStrings, "Id = ".$searchConditions["Id"]);
+			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
 		}
 
 		if (isset($searchConditions["Bezeichnung"]))
 		{
-			array_push($searchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
 		}
 		
 		if (isset($searchConditions["Typ_Id"]))
 		{
-			array_push($searchConditionStrings, "Typ_Id = ".$searchConditions["Typ_Id"]);
+			array_push($sqlSearchConditionStrings, "Typ_Id = ".$searchConditions["Typ_Id"]);
 		}
 		
 		if (isset($searchConditions["Guid"]))
 		{
-			array_push($searchConditionStrings, "Guid = '".$searchConditions["Id"]."'");
+			array_push($sqlSearchConditionStrings, "Guid = '".$searchConditions["Id"]."'");
 		}
 
 		if (isset($searchConditions["HasParent"]))
 		{
 			if ($searchConditions["HasParent"] === true)
 			{
-				array_push($searchConditionStrings, "Parent_Id IS NOT NULL");
+				array_push($sqlSearchConditionStrings, "Parent_Id IS NOT NULL");
 			}
 			else
 			{
-				array_push($searchConditionStrings, "Parent_Id IS NULL");
+				array_push($sqlSearchConditionStrings, "Parent_Id IS NULL");
 			}		
 		}
 
@@ -146,11 +142,11 @@ class AblageFactory extends Factory implements iTreeFactory
 		{
 			if ($searchConditions["HasChildren"] === true)
 			{
-				array_push($searchConditionStrings, "EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
 			}
 			else
 			{
-				array_push($searchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
 			}
 		}
 
@@ -158,15 +154,15 @@ class AblageFactory extends Factory implements iTreeFactory
 		{
 			if ($searchConditions["HasFunde"] === true)
 			{
-				array_push($searchConditionStrings, "EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()." AS fund WHERE fund.".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()." AS fund WHERE fund.".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
 			}
 			else
 			{
-				array_push($searchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()." AS fund WHERE fund.".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()." AS fund WHERE fund.".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
 			}
 		}
 		
-		return $searchConditionStrings;
+		return $sqlSearchConditionStrings;
 	}
 
     /**
