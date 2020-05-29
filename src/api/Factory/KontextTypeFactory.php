@@ -48,12 +48,12 @@ class KontextTypeFactory extends Factory implements iListFactory
 
     #region load
 	/**
-	* Returns the SQL SELECT statement to load ID, Bezeichnung and count of referenced Kontexte as string.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung and CountOfKontexte as string.
 	*/
 	protected function getSqlStatementToLoad()
 	{
-		return "SELECT Id, Bezeichnung, COUNT(*) AS CountOfKontexte
-			FROM ".$this->getTableName()." RIGHT JOIN ".$this->getKontextFactory()->getTableName()." ON ".$this->getTableName().".Id = ".$this->getKontextFactory()->getTableName().".".$this->getTableName()."_Id";
+		return "SELECT Id, Bezeichnung, (SELECT COUNT(*) FROM ".$this->getKontextFactory()->getTableName()." WHERE ".$this->getKontextFactory()->getTableName().".Typ_Id = ".$this->getTableName().".Id) AS CountOfKontexte
+			FROM ".$this->getTableName();
 	}
     
 	/**
@@ -128,7 +128,7 @@ class KontextTypeFactory extends Factory implements iListFactory
         $kontextType = new KontextType();
         $kontextType->setId(intval($dataSet["Id"]));
         $kontextType->setBezeichnung($dataSet["Bezeichnung"]);
-	// Note: setCountOfKontexte() not implemented
+		// Note: setCountOfKontexte() not implemented
         //$kontextType->setCountOfKontexte($dataSet["CountOfKontexte"]);
 
         return $kontextType;

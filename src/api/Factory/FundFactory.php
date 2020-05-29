@@ -58,17 +58,17 @@ class FundFactory extends Factory
 
     #region load
 	/**
-	* Returns the SQL SELECT statement to load ID, Bezeichnung, Dimension 1, Dimension 2, Dimension 3 and Masse as string.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3 and Masse as string.
 	*/
 	protected function getSQLStatementToLoad()
 	{
-		return "SELECT Id, Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse
+		return "SELECT Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3, Masse
 			FROM ".$this->getTableName();
 	}
     
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id and Bezeichnung.
+	* Search condition keys are: Id, Bezeichnung, HasAblage, Ablage_Id, HasKontext and Kontext_Id.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
@@ -90,6 +90,40 @@ class FundFactory extends Factory
 		if (isset($searchConditions["Bezeichnung"]))
 		{
 			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+		}
+
+		if (isset($searchConditions["HasAblage"]))
+		{
+			if ($searchConditions["HasAblage"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "Ablage_Id IS NOT NULL");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "Ablage_Id IS NULL");
+			}		
+		}
+		
+		if (isset($searchConditions["Ablage_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Ablage_Id = ".$searchConditions["Ablage_Id"]);
+		}
+
+		if (isset($searchConditions["HasKontext"]))
+		{
+			if ($searchConditions["HasKontext"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "Kontext_Id IS NOT NULL");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "Kontext_Id IS NULL");
+			}		
+		}
+		
+		if (isset($searchConditions["Kontext_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Kontext_Id = ".$searchConditions["Kontext_Id"]);
 		}
 		
 		return $sqlSearchConditionStrings;

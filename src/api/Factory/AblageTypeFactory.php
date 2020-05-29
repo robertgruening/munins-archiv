@@ -2,12 +2,14 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
+include_once(__DIR__."/AblageFactory.php");
 include_once(__DIR__."/../Model/AblageType.php");
 
 class AblageTypeFactory extends Factory implements iListFactory
 {
     #region variables
     private $_listFactory = null;
+    private $_ablageFactory = null;
     #endregion
 
     #region properties
@@ -15,6 +17,16 @@ class AblageTypeFactory extends Factory implements iListFactory
     {
         return $this->_listFactory;
     }
+
+	protected function getAblageFactory()
+	{
+		if ($this->$_ablageFactory == null)
+		{
+			$this->$_ablageFactory = new AblageFactory();
+		}
+
+		return $this->$_ablageFactory;
+	}
     #endregion
 
     #region constructors
@@ -36,21 +48,12 @@ class AblageTypeFactory extends Factory implements iListFactory
 
     #region load
 	/**
-	* Returns the SQL SELECT statement to load ID, Bezeichnung and count of referenced Ablagen as string.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung and CountOfAblagen as string.
 	*/
 	protected function getSqlStatementToLoad()
 	{
-		return "SELECT
-			Id, Bezeichnung, (
-				SELECT
-				COUNT(*)
-				FROM
-				Ablage
-				WHERE
-				Typ_Id = ".$id."
-			) AS CountOfAblagen
-			FROM
-			".$this->getTableName();
+		return "SELECT Id, Bezeichnung, (SELECT COUNT(*) FROM ".$this->getAblageFactory()->getTableName()." WHERE ".$this->getAblageFactory()->getTableName().".Typ_Id = ".$this->getTableName().".Id) AS CountOfAblagen
+			FROM ".$this->getTableName();
 	}
     
 	/**

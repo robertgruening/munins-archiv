@@ -23,6 +23,16 @@ class FundAttributFactory extends Factory implements iTreeFactory
     {
         return $this->_fundAttributTypeFactory;
     }
+
+    protected function getFundFactory()
+    {
+        if ($this->_fundFactory == null)
+        {
+            $this->_fundFactory = new FundFactory();
+        }
+
+        return $this->_fundFactory;
+    }
     #endregion
 
     #region constructors
@@ -44,12 +54,12 @@ class FundAttributFactory extends Factory implements iTreeFactory
 
 	#region load
 	/**
-	* Returns the SQL SELECT statement to load ID, Bezeichnung, Fundattribut type ID and count of Funde.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id and CountOfFunde as string.
 	*/
 	protected function getSQLStatementToLoad()
 	{
-		return "SELECT Id, Bezeichnung, Typ_Id, COUNT(*) AS CountOfFunde
-			FROM ".$this->getTableName()." RIGHT JOIN Fund_".$this->getTableName()." ON ".$this->getTableName().".Id = Fund_".$this->getTableName().".".$this->getTableName()."_Id";
+		return "SELECT Id, Bezeichnung, Typ_Id, (SELECT COUNT(*) FROM ".$this->getFundFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getFundFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id) AS CountOfFunde
+			FROM ".$this->getTableName();
 	}
 
 	/**

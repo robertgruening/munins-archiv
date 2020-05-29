@@ -47,17 +47,17 @@ class LfdNummerFactory extends Factory implements iListFactory
 
     #region load
 	/**
-	* Returns the SQL SELECT statement to load ID, Bezeichnung and count of referenced Kontexte as string.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung and CountOfKontexte as string.
 	*/
 	protected function getSqlStatementToLoad()
 	{
-		return "SELECT Id, Bezeichnung, COUNT(*) AS CountOfKontexte
-			FROM ".$this->getTableName()." RIGHT JOIN ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." ON ".$this->getTableName().".Id = ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id";
+		return "SELECT Id, Bezeichnung, (SELECT COUNT(*) FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id) AS CountOfKontexte
+			FROM ".$this->getTableName();
 	}
 
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id and Bezeichnung.
+	* Search condition keys are: Id, Bezeichnung and HasKontexte.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
@@ -79,6 +79,18 @@ class LfdNummerFactory extends Factory implements iListFactory
 		if (isset($searchConditions["Bezeichnung"]))
 		{
 			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+		}
+
+		if (isset($searchConditions["HasKontexte"]))
+		{
+			if ($searchConditions["HasKontexte"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
 		}
 		
 		return $sqlSearchConditionStrings;

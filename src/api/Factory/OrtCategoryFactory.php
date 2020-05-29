@@ -2,18 +2,30 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
+include_once(__DIR__."/OrtFactory.php");
 include_once(__DIR__."/../Model/OrtCategory.php");
 
 class OrtCategoryFactory extends Factory implements iListFactory
 {
     #region variables
     private $_listFactory = null;
+    private $_ortFactory = null;
     #endregion
 
     #region properties
     protected function getListFactory()
     {
         return $this->_listFactory;
+    }
+    
+    protected function getOrtFactory()
+    {
+        if ($this->$_ortFactory == null)
+        {
+            $this->$_ortFactory = new OrtFactory();
+        }
+
+        return $this->$_ortFactory;
     }
     #endregion
 
@@ -34,22 +46,43 @@ class OrtCategoryFactory extends Factory implements iListFactory
         return "OrtCategory";
     }
 
-    #region load
-    protected function getSQLStatementToLoadById($id)
+	#region load
+	/**
+	 * Returns the SQL SELECT statement to load Id, Bezeichnung and CountOfOrten as string.
+     */
+    protected function getSqlStatementToLoad()
+	{
+		return "SELECT Id, Bezeichnung, (SELECT COUNT(*) FROM ".$this->getOrtFactory()->getTableName()." WHERE ".$this->getOrtFactory()->getTableName().".Category_Id = ".$this->getTableName().".Id) AS CountOfOrten
+			FROM ".$this->getTableName();
+	}
+
+    /**
+     * Returns the SQL statement search conditions as string by the given search conditions.
+     * Search condition keys are: Id and Bezeichnung.
+     *
+     * @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+     */
+    protected function getSqlSearchConditionStrings($searchConditions)
     {
-        return "SELECT
-            Id, Bezeichnung, (
-                SELECT
-                    COUNT(*)
-                FROM
-                    Ort
-                WHERE
-                	Category_Id = ".$id."
-            ) AS CountOfOrten
-        FROM
-            ".$this->getTableName()."
-        WHERE
-            Id = ".$id.";";
+        if ($searchConditions == null ||
+            count($searchConditions) == 0)
+        {
+            return $sqlStatement;
+        }
+
+        $sqlSearchConditionStrings = array();
+
+        if (isset($searchConditions["Id"]))
+        {
+            array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
+        }
+
+        if (isset($searchConditions["Bezeichnung"]))
+        {
+            array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+        }
+
+        return $sqlSearchConditionStrings;
     }
 
     public function loadAll()

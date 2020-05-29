@@ -67,33 +67,17 @@ class AblageFactory extends Factory implements iTreeFactory
 
     #region load
 	/**
-	* Returns the SQL SELECT statement to load ID, Bezeichnung, ID of type and GUID as string.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Guid and Typ_Id as string.
 	*/
 	protected function getSqlStatementToLoad()
 	{		
-        	return "SELECT Id, Bezeichnung, Typ_Id, Guid
+        	return "SELECT Id, Bezeichnung, Guid, Typ_Id
         		FROM ".$this->getTableName();
-	}
-	
-	public function loadByGuid($guid)
-	{
-		$searchConditions = array();
-		$searchConditions["Guid"] = $guid;
-		
-		$elements = $this->loadBySearchConditions($searchConditions);
-		
-		if ($elements == null ||
-			count($elements) == 0)
-		{
-			return null;
-		}
-
-		return $elements[0];
 	}
 
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, Bezeichnung, Typ_Id, HasParent, HasChildren and HasFunde.
+	* Search condition keys are: Id, Bezeichnung, Typ_Id, Guid, HasParent, HasChildren and HasFunde.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
@@ -164,6 +148,22 @@ class AblageFactory extends Factory implements iTreeFactory
 		}
 		
 		return $sqlSearchConditionStrings;
+	}
+	
+	public function loadByGuid($guid)
+	{
+		$searchConditions = array();
+		$searchConditions["Guid"] = $guid;
+		
+		$elements = $this->loadBySearchConditions($searchConditions);
+		
+		if ($elements == null ||
+			count($elements) == 0)
+		{
+			return null;
+		}
+
+		return $elements[0];
 	}
 
     /**

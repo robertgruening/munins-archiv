@@ -48,13 +48,13 @@ class OrtTypeFactory extends Factory implements iListFactory
 
     #region load
     /**
-     * Returns the SQL SELECT statement to load ID, Bezeichnung and count of referenced Orte as string.
+     * Returns the SQL SELECT statement to load Id, Bezeichnung and CountOfOrten as string.
      */
     protected function getSqlStatementToLoad()
-    {
-        return "SELECT Id, Bezeichnung, COUNT(*) AS CountOfOrten
-            FROM ".$this->getTableName()." RIGHT JOIN ".$this->getOrtFactory()->getTableName()." ON ".$this->getTableName().".Id = ".$this->getOrtFactory()->getTableName().".".$this->getTableName()."_Id";
-    }
+	{
+		return "SELECT Id, Bezeichnung, (SELECT COUNT(*) FROM ".$this->getOrtFactory()->getTableName()." WHERE ".$this->getOrtFactory()->getTableName().".Typ_Id = ".$this->getTableName().".Id) AS CountOfOrten
+			FROM ".$this->getTableName();
+	}
 
     /**
      * Returns the SQL statement search conditions as string by the given search conditions.

@@ -48,12 +48,12 @@ class FundAttributTypeFactory extends Factory implements iListFactory
 
     #region load
 	/**
-	* Returns the SQL SELECT statement to load ID, Bezeichnung and count of referenced Fundattribute as string.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung and CountOfFundAttributen as string.
 	*/
 	protected function getSqlStatementToLoad()
 	{
-		return "SELECT Id, Bezeichnung, COUNT(*) AS CountOfFundAttributen
-			FROM ".$this->getTableName()." RIGHT JOIN ".$this->getFundAttributFactory()->getTableName()." ON ".$this->getTableName().".Id = ".$this->getFundAttributFactory()->getTableName().".".$this->getTableName()."_Id";
+		return "SELECT Id, Bezeichnung, (SELECT COUNT(*) FROM ".$this->getFundAttributFactory()->getTableName()." WHERE ".$this->getFundAttributFactory()->getTableName().".Typ_Id = ".$this->getTableName().".Id) AS CountOfFundAttributen
+			FROM ".$this->getTableName();
 	}
     
 	/**

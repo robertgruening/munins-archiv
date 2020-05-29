@@ -63,23 +63,77 @@ class OrtFactory extends Factory implements iTreeFactory
     }
 
     #region load
-    protected function getSQLStatementToLoadById($id)
-    {
-        return "SELECT
-                    Id,
-                    Bezeichnung,
-                    Typ_Id,
-                    Category_Id,
-                    (SELECT
-                        COUNT(*)
-                    FROM
-                        Kontext_Ort
-                    WHERE
-                        Ort_Id = ".$id.") AS CountOfKontexte
-                FROM 
-                    ".$this->getTableName()."
-                WHERE Id = ".$id.";";
-    }
+    /**
+     * Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id, Category_Id and CountOfKontexte as string.
+     */
+    protected function getSqlStatementToLoad()
+	{
+		return "SELECT Id, Bezeichnung, Typ_Id, Category_Id, (SELECT COUNT(*) FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id) AS CountOfKontexte
+			FROM ".$this->getTableName();
+	}
+
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id, Bezeichnung, Typ_Id, Category_Id, HasParent and HasChildren.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return $sqlStatement;
+		}
+
+		$sqlSearchConditionStrings = array();
+		
+		if (isset($searchConditions["Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
+		}
+
+		if (isset($searchConditions["Bezeichnung"]))
+		{
+			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+		}
+		
+		if (isset($searchConditions["Typ_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Typ_Id = ".$searchConditions["Typ_Id"]);
+		}
+		
+		if (isset($searchConditions["Category_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Category_Id = ".$searchConditions["Category_Id"]);
+		}
+
+		if (isset($searchConditions["HasParent"]))
+		{
+			if ($searchConditions["HasParent"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "Parent_Id IS NOT NULL");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "Parent_Id IS NULL");
+			}		
+		}
+
+		if (isset($searchConditions["HasChildren"]))
+		{
+			if ($searchConditions["HasChildren"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
+			}
+		}
+		
+		return $sqlSearchConditionStrings;
+	}
 
     protected function fill($dataSet)
     {
