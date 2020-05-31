@@ -1,8 +1,9 @@
 <?php
 include_once(__DIR__."/config.php");
 include_once(__DIR__."/ITreeFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
 
-class TreeFactory implements iTreeFactory
+class TreeFactory implements iTreeFactory, iSqlSearchConditionStringsProvider
 {
 	#region variables
 	private $_modelFactory = null;
@@ -16,9 +17,9 @@ class TreeFactory implements iTreeFactory
 	#endregion
 	
 	#region constructors
-    function __construct($modelFactory)
-    {
-        $this->_modelFactory = $modelFactory;
+	function __construct($modelFactory)
+	{
+		$this->_modelFactory = $modelFactory;
 	}
 	#endregion
 
@@ -31,39 +32,87 @@ class TreeFactory implements iTreeFactory
 	 * 
 	 * @param iTreeNode $node Node to set the parent to.
 	 */
-    public function loadParent(iTreeNode $node)
-    {
-        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-		
-		if (!$mysqli->connect_errno)
+	public function loadParent(iTreeNode $node)
+	{
+		$searchConditions = array();
+		$searchConditions["Child_Id"] = $node->getId();
+
+		$elements = $this->getModelFactory()->loadBySearchConditions($searchConditions);
+
+		if ($elements == null ||
+			count($elements) == 0)
 		{
-			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->getSQLStatementToLoadParentId($node));
-			
-			if (!$mysqli->errno)
-			{
-			    $parentId = $ergebnis->fetch_assoc()["Parent_Id"];
-			    
-			    if ($parentId != null)
-			    {
-					$parent = $this->getModelFactory()->loadById(intval($parentId));
-					$node->setParent($parent);
-			    }				
-			}
+			return $node;
 		}
-		
-		$mysqli->close();
+
+		$node->setParent($elements[0]);
 		
 		return $node;
-    }
-    
-    private function getSQLStatementToLoadParentId(iTreeNode $node)
-    {
-        return "SELECT Parent_Id
-                FROM ".$this->getModelFactory()->getTableName()."
-                WHERE Id = ".$node->getId().";";
 	}
-	
+
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id, Bezeichnung, HasParent, Parent_Id, HasChildren and Child_Id.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	public function getSqlSearchConditionStringsBySearchConditions($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return $sqlStatement;
+		}
+
+		$sqlSearchConditionStrings = array();
+
+		if (isset($searchConditions["Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
+		}
+
+		if (isset($searchConditions["Bezeichnung"]))
+		{
+			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+		}
+		
+		if (isset($searchConditions["HasParent"]))
+		{
+			if ($searchConditions["HasParent"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "Parent_Id IS NOT NULL");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "Parent_Id IS NULL");
+			}		
+		}
+
+		if (isset($searchConditions["Parent_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Parent_Id = ".$searchConditions["Parent_Id"]);
+		}
+
+		if (isset($searchConditions["HasChildren"]))
+		{
+			if ($searchConditions["HasChildren"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
+			}
+		}
+
+		if (isset($searchConditions["Child_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Id = (SELECT Parent_Id FROM ".$this->getModelFactory()->getTableName()." WHERE Id = ".$searchConditions["Child_Id"].")");
+		}
+
+		return $sqlSearchConditionStrings;
+	}
+
 	public function linkParent(iTreeNode $node, iTreeNode $parent)
 	{
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
@@ -137,41 +186,24 @@ class TreeFactory implements iTreeFactory
 	 * 
 	 * @param iTreeNode $node Node to fill with its children.
 	 */
-    public function loadChildren(iTreeNode $node)
-    {
-        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-		
-		if (!$mysqli->connect_errno)
+	public function loadChildren(iTreeNode $node)
+	{
+		$searchConditions = array();
+		$searchConditions["Parent_Id"] = $node->getId();
+
+		$elements = $this->getModelFactory()->loadBySearchConditions($searchConditions);
+
+		if ($elements == null ||
+			count($elements) == 0)
 		{
-			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->getSQLStatementToLoadChildrenIds($node));
-			
-			if (!$mysqli->errno)
-			{
-				while ($datensatz = $ergebnis->fetch_assoc())
-				{
-					$child = $this->getModelFactory()->loadById(intval($datensatz["Id"]));
-					
-					if ($child != null)
-					{
-    					$node->addChild($child);
-					}
-				}				
-			}
-		}
-		
-		$mysqli->close();
-		
+			return $node;
+		)
+
+		$node->setChidlren($elements);
+
 		return $node;
-    }
-    
-    private function getSQLStatementToLoadChildrenIds(iTreeNode $node)
-    {
-        return "SELECT Id
-                FROM ".$this->getModelFactory()->getTableName()."
-                WHERE Parent_Id = ".$node->getId();
 	}
-	
+    
 	public function linkChild(iTreeNode $node, iTreeNode $child)
 	{
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
@@ -374,40 +406,12 @@ class TreeFactory implements iTreeFactory
         return $path;
     }
     
-    public function loadRoots()
-    {
-        $roots = array();
-        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-		
-		if (!$mysqli->connect_errno)
-		{
-			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->getSQLStatementToLoadRootIds());
-			
-			if (!$mysqli->errno)
-			{
-				while ($datensatz = $ergebnis->fetch_assoc())
-				{
-					$root = $this->getModelFactory()->loadById(intval($datensatz["Id"]));
-					
-					if ($root != null)
-					{
-    					array_push($roots, $root);
-					}
-				}				
-			}
-		}
-		
-		$mysqli->close();
-		
-		return $roots;
-    }
-    
-    private function getSQLStatementToLoadRootIds()
-    {
-        return "SELECT Id
-                FROM ".$this->getModelFactory()->getTableName()."
-                WHERE Parent_Id IS NULL;";
+	public function loadRoots()
+	{
+		$searchConditions = array();
+		$searchConditions["HasParent"] = false;
+
+		return $this->getModelFactory()->loadBySearchConditions($searchConditions);
 	}
 	#endregion
 

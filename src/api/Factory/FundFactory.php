@@ -1,6 +1,9 @@
 <?php
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/../Model/Fund.php");
+include_once(__DIR__."/IListFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
+include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/FundAttributFactory.php");
 include_once(__DIR__."/AblageFactory.php");
 include_once(__DIR__."/KontextFactory.php");
@@ -8,12 +11,18 @@ include_once(__DIR__."/KontextFactory.php");
 class FundFactory extends Factory
 {
     #region variables
+    private $_listFactory = null;
     private $_fundAttributFactory = null;
     private $_ablageFactory = null;
     private $_kontextFactory = null;
     #endregion
 
     #region properties
+    protected function getListFactory()
+    {
+        return $this->_listFactory;
+    }
+
     protected function getFundAttributFactory()
     {
         return $this->_fundAttributFactory;
@@ -43,6 +52,7 @@ class FundFactory extends Factory
     #region constructors
     function __construct()
     {
+        $this->_listFactory = new ListFactory($this);
         $this->_fundAttributFactory = new FundAttributFactory();
     }
     #endregion
@@ -82,16 +92,6 @@ class FundFactory extends Factory
         
 		$sqlSearchConditionStrings = array();
 		
-		if (isset($searchConditions["Id"]))
-		{
-			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
-		}
-        
-		if (isset($searchConditions["Bezeichnung"]))
-		{
-			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
-		}
-
 		if (isset($searchConditions["HasAblage"]))
 		{
 			if ($searchConditions["HasAblage"] === true)
@@ -125,7 +125,14 @@ class FundFactory extends Factory
 		{
 			array_push($sqlSearchConditionStrings, "Kontext_Id = ".$searchConditions["Kontext_Id"]);
 		}
+
+		// TODO: add condition 'FundAttribute_Ids' - get Funde width all the given FundAttribute IDs (array)
 		
+		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
+		{
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getListFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
+		}
+
 		return $sqlSearchConditionStrings;
 	}
 

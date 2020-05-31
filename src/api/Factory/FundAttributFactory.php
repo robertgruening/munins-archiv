@@ -2,6 +2,7 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/FundAttributTypeFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/FundFactory.php");
 include_once(__DIR__."/../Model/FundAttribut.php");
@@ -64,7 +65,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
 
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, Bezeichnung, Typ_Id, HasParent and HasChildren.
+	* Search condition keys are: Id, Bezeichnung, Typ_Id, HasParent, Parent_Id, HasChildren and Child_Id.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
@@ -78,45 +79,18 @@ class FundAttributFactory extends Factory implements iTreeFactory
 
 		$sqlSearchConditionStrings = array();
 		
-		if (isset($searchConditions["Id"]))
-		{
-			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
-		}
-
-		if (isset($searchConditions["Bezeichnung"]))
-		{
-			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
-		}
-		
 		if (isset($searchConditions["Typ_Id"]))
 		{
 			array_push($sqlSearchConditionStrings, "Typ_Id = ".$searchConditions["Typ_Id"]);
 		}
 
-		if (isset($searchConditions["HasParent"]))
+		// TODO: add search condition 'IsUsed' - Fundattribut is used by a Fund or not
+
+		if ($this->getTreeFactory() instanceof iSqlSearchConditionStringsProvider)
 		{
-			if ($searchConditions["HasParent"] === true)
-			{
-				array_push($sqlSearchConditionStrings, "Parent_Id IS NOT NULL");
-			}
-			else
-			{
-				array_push($sqlSearchConditionStrings, "Parent_Id IS NULL");
-			}		
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getTreeFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
 		}
 
-		if (isset($searchConditions["HasChildren"]))
-		{
-			if ($searchConditions["HasChildren"] === true)
-			{
-				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
-			}
-			else
-			{
-				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
-			}
-		}
-		
 		return $sqlSearchConditionStrings;
 	}
 
