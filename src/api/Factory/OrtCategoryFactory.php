@@ -1,7 +1,8 @@
 <?php
 include_once(__DIR__."/Factory.php");
-include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
+include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/OrtFactory.php");
 include_once(__DIR__."/../Model/OrtCategory.php");
 
@@ -58,7 +59,7 @@ class OrtCategoryFactory extends Factory implements iListFactory
 
     /**
      * Returns the SQL statement search conditions as string by the given search conditions.
-     * Search condition keys are: Id and Bezeichnung.
+     * Search condition keys are: Id, Bezeichnung and IsUsed.
      *
      * @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
      */
@@ -72,15 +73,22 @@ class OrtCategoryFactory extends Factory implements iListFactory
 
         $sqlSearchConditionStrings = array();
 
-        if (isset($searchConditions["Id"]))
-        {
-            array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
-        }
+		if (isset($searchConditions["IsUsed"]))
+		{
+			if ($searchConditions["IsUsed"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getOrtFactory()->getTableName()." AS reference WHERE reference.Category_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getOrtFactory()->getTableName()." AS reference WHERE reference.Category_Id = ".$this->getTableName().".Id)");
+			}
+		}
 
-        if (isset($searchConditions["Bezeichnung"]))
-        {
-            array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
-        }
+		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
+		{
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getListFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
+		}
 
         return $sqlSearchConditionStrings;
     }
