@@ -87,7 +87,7 @@ class FundFactory extends Factory
 		if ($searchConditions == null ||
 			count($searchConditions) == 0)
 		{
-			return $sqlStatement;
+			return array();
 		}
         
 		$sqlSearchConditionStrings = array();

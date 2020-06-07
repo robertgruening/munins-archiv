@@ -74,7 +74,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
 		if ($searchConditions == null ||
 			count($searchConditions) == 0)
 		{
-			return $sqlStatement;
+			return array();
 		}
 
 		$sqlSearchConditionStrings = array();

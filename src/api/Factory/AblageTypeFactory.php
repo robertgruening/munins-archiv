@@ -21,12 +21,12 @@ class AblageTypeFactory extends Factory implements iListFactory
 
 	protected function getAblageFactory()
 	{
-		if ($this->$_ablageFactory == null)
+		if ($this->_ablageFactory == null)
 		{
-			$this->$_ablageFactory = new AblageFactory();
+			$this->_ablageFactory = new AblageFactory();
 		}
 
-		return $this->$_ablageFactory;
+		return $this->_ablageFactory;
 	}
     #endregion
 
@@ -68,7 +68,7 @@ class AblageTypeFactory extends Factory implements iListFactory
 		if ($searchConditions == null ||
 			count($searchConditions) == 0)
 		{
-			return $sqlStatement;
+			return array();
 		}
         
 		$sqlSearchConditionStrings = array();

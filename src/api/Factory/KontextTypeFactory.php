@@ -68,7 +68,7 @@ class KontextTypeFactory extends Factory implements iListFactory
 		if ($searchConditions == null ||
 			count($searchConditions) == 0)
 		{
-			return $sqlStatement;
+			return array();
 		}
         
 		$sqlSearchConditionStrings = array();
@@ -98,8 +98,8 @@ class KontextTypeFactory extends Factory implements iListFactory
 		return $sqlSearchConditionStrings;
 	}
 
-    public function loadByNodeId($nodeId)
-    {
+	public function loadByNodeId($nodeId)
+	{
 		$searchConditions = array();
 		$searchConditions["TypedNode_Id"] = $nodeId;
 		
@@ -112,12 +112,7 @@ class KontextTypeFactory extends Factory implements iListFactory
 		}
 
 		return $elements[0];
-        }
-
-        $mysqli->close();
-
-        return $element;
-    }
+	}
 
     public function loadAll()
     {
