@@ -3,6 +3,7 @@ include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/OrtTypeFactory.php");
 include_once(__DIR__."/OrtCategoryFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/KontextFactory.php");
 include_once(__DIR__."/../Model/Ort.php");
@@ -74,7 +75,7 @@ class OrtFactory extends Factory implements iTreeFactory
 
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, Bezeichnung, Typ_Id, Category_Id, HasParent and HasChildren.
+	* Search condition keys are: Id, Bezeichnung, Typ_Id, Category_Id, HasKontexte, Kontext_Id, HasParent, Parent_Id, HasChildren and Child_Id.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
@@ -88,16 +89,6 @@ class OrtFactory extends Factory implements iTreeFactory
 
 		$sqlSearchConditionStrings = array();
 		
-		if (isset($searchConditions["Id"]))
-		{
-			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
-		}
-
-		if (isset($searchConditions["Bezeichnung"]))
-		{
-			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
-		}
-		
 		if (isset($searchConditions["Typ_Id"]))
 		{
 			array_push($sqlSearchConditionStrings, "Typ_Id = ".$searchConditions["Typ_Id"]);
@@ -108,28 +99,26 @@ class OrtFactory extends Factory implements iTreeFactory
 			array_push($sqlSearchConditionStrings, "Category_Id = ".$searchConditions["Category_Id"]);
 		}
 
-		if (isset($searchConditions["HasParent"]))
+		if (isset($searchConditions["HasKontexte"]))
 		{
-			if ($searchConditions["HasParent"] === true)
+			if ($searchConditions["HasKontexte"] === true)
 			{
-				array_push($sqlSearchConditionStrings, "Parent_Id IS NOT NULL");
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
 			}
 			else
 			{
-				array_push($sqlSearchConditionStrings, "Parent_Id IS NULL");
-			}		
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
 		}
 
-		if (isset($searchConditions["HasChildren"]))
+		if (isset($searchConditions["Kontext_Id"]))
 		{
-			if ($searchConditions["HasChildren"] === true)
-			{
-				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
-			}
-			else
-			{
-				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
-			}
+			array_push($sqlSearchConditionStrings, "Id IN (SELECT ".$this->getTableName()."_Id FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getKontextFactory()->getTableName()."_Id = ".$searchConditions["Kontext_Id"].")");
+		}
+
+		if ($this->getTreeFactory() instanceof iSqlSearchConditionStringsProvider)
+		{
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getTreeFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
 		}
 		
 		return $sqlSearchConditionStrings;
