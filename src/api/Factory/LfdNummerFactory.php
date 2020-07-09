@@ -58,7 +58,7 @@ class LfdNummerFactory extends Factory implements iListFactory
 
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, HasKontexte and IsUsed.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, HasKontexte, Kontext_Id and IsUsed.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
@@ -67,7 +67,7 @@ class LfdNummerFactory extends Factory implements iListFactory
 		if ($searchConditions == null ||
 			count($searchConditions) == 0)
 		{
-			return $sqlStatement;
+			return array();
 		}
         
 		$sqlSearchConditionStrings = array();
@@ -83,7 +83,12 @@ class LfdNummerFactory extends Factory implements iListFactory
 				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
 			}
 		}
-		
+	
+		if (isset($searchConditions["Kontext_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Id IN (SELECT ".$this->getTableName()."_Id FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getKontextFactory()->getTableName()."_Id = ".$searchConditions["Kontext_Id"].")");
+		}
+	
 		if (isset($searchConditions["IsUsed"]))
 		{
 			if ($searchConditions["IsUsed"] === true)

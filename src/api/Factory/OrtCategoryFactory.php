@@ -65,13 +65,13 @@ class OrtCategoryFactory extends Factory implements iListFactory
      */
     protected function getSqlSearchConditionStrings($searchConditions)
     {
-		if ($searchConditions == null ||
-			count($searchConditions) == 0)
-		{
-			return $sqlStatement;
-		}
-        
-		$sqlSearchConditionStrings = array();
+        if ($searchConditions == null ||
+            count($searchConditions) == 0)
+        {
+            return array();
+        }
+
+        $sqlSearchConditionStrings = array();
 
 		if (isset($searchConditions["IsUsed"]))
 		{
@@ -94,7 +94,7 @@ class OrtCategoryFactory extends Factory implements iListFactory
 		{
 			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getListFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
 		}
-		
+
 		return $sqlSearchConditionStrings;
     }
 

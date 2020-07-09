@@ -75,7 +75,7 @@ class OrtFactory extends Factory implements iTreeFactory
 
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, Typ_Id, Category_Id, HasParent, HasChildren and Child_Id.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, Typ_Id, Category_Id, HasKontexte, Kontext_Id, HasParent, Parent_Id, HasChildren and Child_Id.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
@@ -84,7 +84,7 @@ class OrtFactory extends Factory implements iTreeFactory
 		if ($searchConditions == null ||
 			count($searchConditions) == 0)
 		{
-			return $sqlStatement;
+			return array();
 		}
 
 		$sqlSearchConditionStrings = array();
@@ -97,6 +97,23 @@ class OrtFactory extends Factory implements iTreeFactory
 		if (isset($searchConditions["Category_Id"]))
 		{
 			array_push($sqlSearchConditionStrings, "Category_Id = ".$searchConditions["Category_Id"]);
+		}
+
+		if (isset($searchConditions["HasKontexte"]))
+		{
+			if ($searchConditions["HasKontexte"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+		}
+
+		if (isset($searchConditions["Kontext_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Id IN (SELECT ".$this->getTableName()."_Id FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getKontextFactory()->getTableName()."_Id = ".$searchConditions["Kontext_Id"].")");
 		}
 
 		if ($this->getTreeFactory() instanceof iSqlSearchConditionStringsProvider)

@@ -68,7 +68,7 @@ class AblageTypeFactory extends Factory implements iListFactory
 		if ($searchConditions == null ||
 			count($searchConditions) == 0)
 		{
-			return $sqlStatement;
+			return array();
 		}
         
 		$sqlSearchConditionStrings = array();

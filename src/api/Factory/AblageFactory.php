@@ -87,7 +87,7 @@ class AblageFactory extends Factory implements iTreeFactory
 		if ($searchConditions == null ||
 			count($searchConditions) == 0)
 		{
-			return $sqlStatement;
+			return array();
 		}
 
 		$sqlSearchConditionStrings = array();
@@ -112,6 +112,11 @@ class AblageFactory extends Factory implements iTreeFactory
 			{
 				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()." AS fund WHERE fund.".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
 			}
+		}
+
+		if (isset($searchConditions["Fund_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Id = (SELECT ".$this->getFundFactory()->getTableName().".".$this->getTableName()."_Id FROM ".$this->getFundFactory()->getTableName()." WHERE ".$this->getFundFactory()->getTableName().".Id = ".$searchConditions["Fund_Id"].")");
 		}
 
 		if ($this->getTreeFactory() instanceof iSqlSearchConditionStringsProvider)

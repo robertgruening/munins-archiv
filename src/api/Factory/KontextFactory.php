@@ -2,6 +2,7 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/KontextTypeFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/FundFactory.php");
 include_once(__DIR__."/OrtFactory.php");
@@ -95,7 +96,7 @@ class KontextFactory extends Factory implements iTreeFactory
 
     #region load
 	/**
-	* Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id, GeoPointLatitude, GeoPointLongitude, Datum and Kommentar as string.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id, GeoPointLatitude (for Fundstelle), GeoPointLongitude (for Fundstelle), Datum (for Begehung) and Kommentar (for Begehung) as string.
 	*/
 	protected function getSqlStatementToLoad()
 	{		
@@ -122,7 +123,7 @@ class KontextFactory extends Factory implements iTreeFactory
 		if ($searchConditions == null ||
 			count($searchConditions) == 0)
 		{
-			return $sqlStatement;
+			return array();
 		}
 
 		$sqlSearchConditionStrings = array();
@@ -131,7 +132,7 @@ class KontextFactory extends Factory implements iTreeFactory
 		{
 			array_push($sqlSearchConditionStrings, "Typ_Id = ".$searchConditions["Typ_Id"]);
 		}
-
+		
 		if (isset($searchConditions["HasFunde"]))
 		{
 			if ($searchConditions["HasFunde"] === true)
