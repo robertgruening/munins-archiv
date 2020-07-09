@@ -65,7 +65,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
 
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, Bezeichnung, Typ_Id, HasParent, Parent_Id, HasChildren and Child_Id.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, Typ_Id, HasParent, Parent_Id, HasChildren and Child_Id.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
@@ -83,8 +83,18 @@ class FundAttributFactory extends Factory implements iTreeFactory
 		{
 			array_push($sqlSearchConditionStrings, "Typ_Id = ".$searchConditions["Typ_Id"]);
 		}
-
-		// TODO: add search condition 'IsUsed' - Fundattribut is used by a Fund or not
+		
+		if (isset($searchConditions["IsUsed"]))
+		{
+			if ($searchConditions["IsUsed"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getFundFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getFundFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+		}
 
 		if ($this->getTreeFactory() instanceof iSqlSearchConditionStringsProvider)
 		{

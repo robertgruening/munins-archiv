@@ -21,12 +21,12 @@ class FundAttributTypeFactory extends Factory implements iListFactory
 
 	protected function getFundAttributFactory()
 	{
-		if ($this->$_fundAttributFactory == null)
+		if ($this->_fundAttributFactory == null)
 		{
-			$this->$_fundAttributFactory = new FundAttributFactory();
+			$this->_fundAttributFactory = new FundAttributFactory();
 		}
 
-		return $this->$_fundAttributFactory;
+		return $this->_fundAttributFactory;
 	}
     #endregion
 
@@ -59,7 +59,7 @@ class FundAttributTypeFactory extends Factory implements iListFactory
     
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, Bezeichnung and IsUsed.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, IsUsed and TypedNode_Id.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
@@ -83,6 +83,11 @@ class FundAttributTypeFactory extends Factory implements iListFactory
 			{
 				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getFundAttributFactory()->getTableName()." AS reference WHERE reference.Typ_Id = ".$this->getTableName().".Id)");
 			}
+		}
+
+		if (isset($searchConditions["TypedNode_Id"]))
+		{
+			array_push($searchConditions, "Id = (SELECT Typ_Id FROM ".$this->getFundAttributFactory()->getTableName()." WHERE Id = ".$searchConditions["TypedNode_Id"].")");
 		}
 
 		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)

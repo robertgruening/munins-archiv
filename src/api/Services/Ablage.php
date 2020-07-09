@@ -174,29 +174,29 @@ function Get()
 	}
     else
     {
-	$logger->info("Ablagen-suchen gestartet");
+		$logger->info("Ablagen-suchen gestartet");
 
-	$loadAblagen = new LoadAblagen();
+		$loadAblagen = new LoadAblagen();
 
-	if (isset($_GET["hasParent"]))
-	{
-		$loadAblagen->addSearchCondition("HasParent", $_GET["hasParent"] === "true");
-	}
+		if (isset($_GET["hasParent"]))
+		{
+			$loadAblagen->addSearchCondition("HasParent", $_GET["hasParent"] === "true");
+		}
 
-	if (isset($_GET["hasChildren"]))
-	{
-		$loadAblagen->addSearchCondition("HasChildren", $_GET["hasChildren"] === "true");
-	}
+		if (isset($_GET["hasChildren"]))
+		{
+			$loadAblagen->addSearchCondition("HasChildren", $_GET["hasChildren"] === "true");
+		}
 
-	if (isset($_GET["hasFunde"]))
-	{
-		$loadAblagen->addSearchCondition("HasFunde", $_GET["hasFunde"] === "true");
-	}
+		if (isset($_GET["hasFunde"]))
+		{
+			$loadAblagen->addSearchCondition("HasFunde", $_GET["hasFunde"] === "true");
+		}
 
-	if (isset($_GET["bezeichnung"]))
-	{
-		$loadAblagen->addSearchCondition("Bezeichnung", $_GET["bezeichnung"]);
-	}
+		if (isset($_GET["bezeichnung"]))
+		{
+			$loadAblagen->addSearchCondition("Bezeichnung", $_GET["bezeichnung"]);
+		}
 
         if ($loadAblagen->run())
         {

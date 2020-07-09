@@ -52,7 +52,7 @@ class TreeFactory implements iTreeFactory, iSqlSearchConditionStringsProvider
 
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, Bezeichnung, HasParent, Parent_Id, HasChildren and Child_Id.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, HasParent, Parent_Id, HasChildren and Child_Id.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
@@ -71,9 +71,14 @@ class TreeFactory implements iTreeFactory, iSqlSearchConditionStringsProvider
 			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
 		}
 
+		if (isset($searchConditions["ContainsBezeichnung"]))
+		{
+			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["ContainsBezeichnung"]."%'");
+		}
+
 		if (isset($searchConditions["Bezeichnung"]))
 		{
-			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '".$searchConditions["Bezeichnung"]."'");
 		}
 		
 		if (isset($searchConditions["HasParent"]))
@@ -97,11 +102,11 @@ class TreeFactory implements iTreeFactory, iSqlSearchConditionStringsProvider
 		{
 			if ($searchConditions["HasChildren"] === true)
 			{
-				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getModelFactory()->getTableName()." AS child WHERE child.Parent_Id = ".$this->getModelFactory()->getTableName().".Id)");
 			}
 			else
 			{
-				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getModelFactory()->getTableName()." AS child WHERE child.Parent_Id = ".$this->getModelFactory()->getTableName().".Id)");
 			}
 		}
 
@@ -197,7 +202,7 @@ class TreeFactory implements iTreeFactory, iSqlSearchConditionStringsProvider
 			count($elements) == 0)
 		{
 			return $node;
-		)
+		}
 
 		$node->setChidlren($elements);
 

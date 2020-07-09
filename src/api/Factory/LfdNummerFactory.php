@@ -58,7 +58,7 @@ class LfdNummerFactory extends Factory implements iListFactory
 
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, Bezeichnung, HasKontexte and IsUsed.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, HasKontexte and IsUsed.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/

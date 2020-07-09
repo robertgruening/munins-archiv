@@ -32,7 +32,7 @@ class ListFactory implements iListFactory, iSqlSearchConditionStringsProvider
 
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id and Bezeichnung.
+	* Search condition keys are: Id, ContainsBezeichnung and Bezeichnung.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
@@ -51,9 +51,14 @@ class ListFactory implements iListFactory, iSqlSearchConditionStringsProvider
 			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
 		}
 
+		if (isset($searchConditions["ContainsBezeichnung"]))
+		{
+			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["ContainsBezeichnung"]."%'");
+		}
+
 		if (isset($searchConditions["Bezeichnung"]))
 		{
-			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
+			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '".$searchConditions["Bezeichnung"]."'");
 		}
 
 		return $sqlSearchConditionStrings;

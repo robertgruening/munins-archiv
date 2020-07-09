@@ -21,12 +21,12 @@ class KontextTypeFactory extends Factory implements iListFactory
 
 	protected function getKontextFactory()
 	{
-		if ($this->$_kontextFactory == null)
+		if ($this->_kontextFactory == null)
 		{
-			$this->$_kontextFactory = new KontextFactory();
+			$this->_kontextFactory = new KontextFactory();
 		}
 
-		return $this->$_kontextFactory;
+		return $this->_kontextFactory;
 	}
     #endregion
 
@@ -59,7 +59,7 @@ class KontextTypeFactory extends Factory implements iListFactory
     
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, Bezeichnung, IsUsed and TypedNode_Id.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, IsUsed and TypedNode_Id.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
@@ -87,7 +87,7 @@ class KontextTypeFactory extends Factory implements iListFactory
 
 		if (isset($searchConditions["TypedNode_Id"]))
 		{
-			array_push($searchConditions, "Id = (SELECT Typ_Id FROM ".$this->getKontextFactory()-getTableName()." WHERE Id = ".$searchConditions["Ablage_Id"].")");
+			array_push($searchConditions, "Id = (SELECT Typ_Id FROM ".$this->getKontextFactory()->getTableName()." WHERE Id = ".$searchConditions["TypedNode_Id"].")");
 		}
 
 		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
@@ -111,13 +111,10 @@ class KontextTypeFactory extends Factory implements iListFactory
 			return null;
 		}
 
-		return $elements[0];
-        }
-
         $mysqli->close();
 
-        return $element;
-    }
+		return $elements[0];
+	}
 
     public function loadAll()
     {

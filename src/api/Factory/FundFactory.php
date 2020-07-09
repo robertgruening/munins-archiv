@@ -78,7 +78,7 @@ class FundFactory extends Factory
     
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, Bezeichnung, HasAblage, Ablage_Id, HasKontext and Kontext_Id.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, HasAblage, Ablage_Id, HasKontext and Kontext_Id.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/

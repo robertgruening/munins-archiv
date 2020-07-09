@@ -1,8 +1,9 @@
 <?php
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/OrtTypeFactory.php");
-include_once(__DIR__."/OrtCategoryFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
+include_once(__DIR__."/OrtCategoryFactory.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/KontextFactory.php");
 include_once(__DIR__."/../Model/Ort.php");
@@ -74,7 +75,7 @@ class OrtFactory extends Factory implements iTreeFactory
 
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, Bezeichnung, Typ_Id, Category_Id, HasParent and HasChildren.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, Typ_Id, Category_Id, HasParent, HasChildren and Child_Id.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
@@ -88,16 +89,6 @@ class OrtFactory extends Factory implements iTreeFactory
 
 		$sqlSearchConditionStrings = array();
 		
-		if (isset($searchConditions["Id"]))
-		{
-			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
-		}
-
-		if (isset($searchConditions["Bezeichnung"]))
-		{
-			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["Bezeichnung"]."%'");
-		}
-		
 		if (isset($searchConditions["Typ_Id"]))
 		{
 			array_push($sqlSearchConditionStrings, "Typ_Id = ".$searchConditions["Typ_Id"]);
@@ -108,33 +99,21 @@ class OrtFactory extends Factory implements iTreeFactory
 			array_push($sqlSearchConditionStrings, "Category_Id = ".$searchConditions["Category_Id"]);
 		}
 
-		if (isset($searchConditions["HasParent"]))
+		if ($this->getTreeFactory() instanceof iSqlSearchConditionStringsProvider)
 		{
-			if ($searchConditions["HasParent"] === true)
-			{
-				array_push($sqlSearchConditionStrings, "Parent_Id IS NOT NULL");
-			}
-			else
-			{
-				array_push($sqlSearchConditionStrings, "Parent_Id IS NULL");
-			}		
-		}
-
-		if (isset($searchConditions["HasChildren"]))
-		{
-			if ($searchConditions["HasChildren"] === true)
-			{
-				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
-			}
-			else
-			{
-				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getTableName()." AS child WHERE child.Parent_Id = ".$this->getTableName().".Id)");
-			}
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getTreeFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
 		}
 		
 		return $sqlSearchConditionStrings;
 	}
 
+    /**
+    * Creates an Ablage instance and fills
+    * the ID, Bezeichnung and GUID by the given
+    * dataset.
+    *
+    * @param $dataset Dataset from Ablage table.
+    */
     protected function fill($dataSet)
     {
         if ($dataSet == null)
@@ -158,12 +137,22 @@ class OrtFactory extends Factory implements iTreeFactory
     #endregion
 
     #region save
+    /**
+    * Returns the SQL statement to insert Bezeichnung, Ort type ID and Ort category ID.
+    *
+    * @param iNode $ort Ort to be inserted.
+    */
     protected function getSQLStatementToInsert(iNode $ort)
     {
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, Category_Id)
                 VALUES ('".addslashes($ort->getBezeichnung())."', ".$ort->getType()->getId().", ".$ort->getCategory()->getId().");";
     }
 
+    /**
+    * Returns the SQL statement to update Bezeichnung, Ort type ID and Ort category ID.
+    *
+    * @param iNode $ort Ort to be updated.
+    */
     protected function getSQLStatementToUpdate(iNode $ort)
     {
         return "UPDATE ".$this->getTableName()."

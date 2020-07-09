@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
 require_once("../UserStories/Kontext/LoadKontext.php");
+require_once("../UserStories/Kontext/LoadKontexte.php");
 require_once("../UserStories/Kontext/LoadRootKontexte.php");
 require_once("../UserStories/Kontext/SaveKontext.php");
 require_once("../UserStories/Kontext/DeleteKontext.php");
@@ -153,21 +154,42 @@ function Get()
 
 		$logger->info("Kontext-anhand-ID-laden beendet");
 	}
-	else
-	{
-        $logger->info("Root-Kontexte-laden gestartet");
-		$loadRootKontexte = new LoadRootKontexte();
+    else
+    {
+		$logger->info("Kontext-suchen gestartet");
 
-		if ($loadRootKontexte->run())
+		$loadKontexte = new LoadKontexte();
+
+		if (isset($_GET["hasParent"]))
 		{
-			echo json_encode($loadRootKontexte->getRootKontexte());
+			$loadKontexte->addSearchCondition("HasParent", $_GET["hasParent"] === "true");
 		}
-		else
+
+		if (isset($_GET["hasChildren"]))
 		{
+			$loadKontexte->addSearchCondition("HasChildren", $_GET["hasChildren"] === "true");
+		}
+
+		if (isset($_GET["hasFunde"]))
+		{
+			$loadKontexte->addSearchCondition("HasFunde", $_GET["hasFunde"] === "true");
+		}
+
+		if (isset($_GET["bezeichnung"]))
+		{
+			$loadKontexte->addSearchCondition("Bezeichnung", $_GET["bezeichnung"]);
+		}
+
+        if ($loadKontexte->run())
+        {
+            echo json_encode($loadKontexte->getKontexte());
+        }
+        else
+        {
             http_response_code(500);
-			echo json_encode($loadRootKontexte->getMessages());
-		}
+            echo json_encode($loadKontexte->getMessages());
+        }
 
-        $logger->info("Root-Kontexte-laden beendet");
-	}
+        $logger->info("Kontext-suchen beendet");
+    }
 }
