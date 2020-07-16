@@ -4,7 +4,6 @@ ini_set("display_errors", 1);
 
 require_once("../UserStories/Ablage/LoadAblage.php");
 require_once("../UserStories/Ablage/LoadAblagen.php");
-require_once("../UserStories/Ablage/LoadRootAblagen.php");
 require_once("../UserStories/Ablage/SaveAblage.php");
 require_once("../UserStories/Ablage/DeleteAblage.php");
 
@@ -181,6 +180,10 @@ function Get()
 		if (isset($_GET["hasParent"]))
 		{
 			$loadAblagen->addSearchCondition("HasParent", $_GET["hasParent"] === "true");
+		}
+		else
+		{
+			$loadAblagen->addSearchCondition("HasParent", false);
 		}
 
 		if (isset($_GET["hasChildren"]))

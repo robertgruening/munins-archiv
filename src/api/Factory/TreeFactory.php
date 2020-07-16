@@ -204,7 +204,7 @@ class TreeFactory implements iTreeFactory, iSqlSearchConditionStringsProvider
 			return $node;
 		}
 
-		$node->setChidlren($elements);
+		$node->setChildren($elements);
 
 		return $node;
 	}

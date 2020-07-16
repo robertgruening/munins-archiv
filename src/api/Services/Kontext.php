@@ -4,7 +4,6 @@ ini_set("display_errors", 1);
 
 require_once("../UserStories/Kontext/LoadKontext.php");
 require_once("../UserStories/Kontext/LoadKontexte.php");
-require_once("../UserStories/Kontext/LoadRootKontexte.php");
 require_once("../UserStories/Kontext/SaveKontext.php");
 require_once("../UserStories/Kontext/DeleteKontext.php");
 
@@ -163,6 +162,10 @@ function Get()
 		if (isset($_GET["hasParent"]))
 		{
 			$loadKontexte->addSearchCondition("HasParent", $_GET["hasParent"] === "true");
+		}
+		else
+		{
+			$loadKontexte->addSearchCondition("HasParent", false);
 		}
 
 		if (isset($_GET["hasChildren"]))

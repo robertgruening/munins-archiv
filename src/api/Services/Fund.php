@@ -220,6 +220,14 @@ function Get()
 			$loadFunde->addSearchCondition("FundAttribut_Ids", $_GET["fundAttribut_Ids"]);
 		}
 
+		if (isset($_GET["pageIndexElementId"]))
+		{
+			$pagingConditions = array();
+			$pagingConditions["PageSize"] = 11;
+			$pagingConditions["PageIndexElementId"] = $_GET["pageIndexElementId"];
+			$loadFunde->setPagingConditions($pagingConditions);
+		}
+
         if ($loadFunde->run())
         {
             echo json_encode($loadFunde->getFunde());

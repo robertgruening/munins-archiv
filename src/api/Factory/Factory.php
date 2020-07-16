@@ -13,19 +13,21 @@ abstract class Factory
 	/**
 	* Returns all elements matching the given search conditions.
 	*
-	* @param $searchConditions List (key, value) of search conditions.
+	* @param $searchConditions List (key, value) of search conditions. Default is array().
+	* @param $pagingConditions List (key, value) with paging conditions. Default is null.
 	*/
-	public function loadBySearchConditions($searchConditions)
+	public function loadBySearchConditions($searchConditions = array(), $pagingConditions = null)
 	{
 		global $logger;
 		$logger->debug("Lade Elemente anhand von Suchkriterien ".json_encode($searchConditions));
+		$logger->debug("Lade Elemente mittels Seitenkriterien ".json_encode($pagingConditions));
 		$elemente = array();
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->getSqlStatementToLoadBySearchConditions($searchConditions));
+			$ergebnis = $mysqli->query($this->getSqlStatementToLoadBySearchConditions($searchConditions, $pagingConditions));
 			
 			if ($mysqli->errno)
 			{
@@ -48,20 +50,44 @@ abstract class Factory
 	/**
 	* Returns the SQL SELECT statement with search conditions as string.
 	*
-	* @param $searchConditions List (key, value) of search conditions.
+	* @param $searchConditions List (key, value) of search conditions. Default is array().
+	* @param $pagingConditions List (key, value) with paging conditions. Default is null.
 	*/
-	protected function getSqlStatementToLoadBySearchConditions($searchConditions)
+	protected function getSqlStatementToLoadBySearchConditions($searchConditions = array(), $pagingConditions = null)
 	{
 		$sqlStatement = $this->getSqlStatementToLoad();		
 		$searchConditionStrings = $this->getSqlSearchConditionStrings($searchConditions);
 		
-		if ($searchConditionStrings == null ||
-		   count($searchConditionStrings) == 0)
+		if (count($searchConditionStrings) == 0)
 		{
+			if ($pagingConditions != null)
+			{
+				if (isset($pagingConditions["PageIndexElementId"]) &&
+					is_numeric($pagingConditions["PageIndexElementId"]))
+				{
+					$sqlStatement .= " WHERE ".$this->getTableName().".Id >= ".$pagingConditions["PageIndexElementId"];
+				}
+
+				$sqlStatement .= " ORDER BY ".$this->getTableName().".Id";
+				$sqlStatement .= " LIMIT ".$pagingConditions["PageSize"];
+			}
+
 			return $sqlStatement;
 		}
-		
+
 		$sqlStatement .= " WHERE ".implode(" AND ", $searchConditionStrings);
+
+		if ($pagingConditions != null)
+		{
+			if (isset($pagingConditions["PageIndexElementId"]) &&
+				is_numeric($pagingConditions["PageIndexElementId"]))
+			{
+				$sqlStatement .= " AND ".$this->getTableName().".Id >= ".$pagingConditions["PageIndexElementId"];
+			}
+			
+			$sqlStatement .= " ORDER BY ".$this->getTableName().".Id";
+			$sqlStatement .= " LIMIT ".$pagingConditions["PageSize"];
+		}
 		
 		return $sqlStatement;
 	}
