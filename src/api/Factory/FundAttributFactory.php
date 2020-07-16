@@ -10,7 +10,8 @@ include_once(__DIR__."/../Model/FundAttribut.php");
 class FundAttributFactory extends Factory implements iTreeFactory
 {
     #region variables
-    private $_treeFactory = null;
+	private $_treeFactory = null;
+	private $_fundFactory = null;
     private $_fundAttributTypeFactory = null;
     #endregion
 

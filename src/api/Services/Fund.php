@@ -4,6 +4,7 @@ ini_set("display_errors", 1);
 
 require_once("../UserStories/Fund/ConvertFund.php");
 require_once("../UserStories/Fund/LoadFund.php");
+require_once("../UserStories/Fund/LoadFunde.php");
 require_once("../UserStories/Fund/SaveFund.php");
 require_once("../UserStories/Fund/DeleteFund.php");
 
@@ -173,12 +174,64 @@ function Get()
 			echo json_encode($loadFund->getMessages());
 		}
 	}
-	else
-	{
-		http_response_code(500);
-		echo json_encode(array("Es wurde keine ID übergeben!"));
-		$logger->warn("Es wurde keine ID übergeben!");
-	}
+    else
+    {
+		$logger->info("Funde-suchen gestartet");
+
+		$loadFunde = new LoadFunde();
+
+		if (isset($_GET["containsBezeichnung"]))
+		{
+			$loadFunde->addSearchCondition("ContainsBezeichnung", $_GET["containsBezeichnung"]);
+		}
+
+		if (isset($_GET["bezeichnung"]))
+		{
+			$loadFunde->addSearchCondition("Bezeichnung", $_GET["bezeichnung"]);
+		}
+
+		if (isset($_GET["hasAblage"]))
+		{
+			$loadFunde->addSearchCondition("HasAblage", $_GET["hasAblage"] === "true");
+		}
+
+		if (isset($_GET["ablage_Id"]))
+		{
+			$loadFunde->addSearchCondition("Ablage_Id", $_GET["ablage_Id"]);
+		}
+
+		if (isset($_GET["hasKontext"]))
+		{
+			$loadFunde->addSearchCondition("HasKontext", $_GET["hasKontext"] === "true");
+		}
+
+		if (isset($_GET["kontext_Id"]))
+		{
+			$loadFunde->addSearchCondition("Kontext_Id", $_GET["kontext_Id"]);
+		}
+
+		if (isset($_GET["hasFundAttribute"]))
+		{
+			$loadFunde->addSearchCondition("HasFundAttribute", $_GET["hasFundAttribute"] === "true");
+		}
+
+		if (isset($_GET["fundAttribut_Ids"]))
+		{
+			$loadFunde->addSearchCondition("FundAttribut_Ids", $_GET["fundAttribut_Ids"]);
+		}
+
+        if ($loadFunde->run())
+        {
+            echo json_encode($loadFunde->getFunde());
+        }
+        else
+        {
+            http_response_code(500);
+            echo json_encode($loadFunde->getMessages());
+        }
+
+        $logger->info("Funde-suchen beendet");
+    }
 
 	$logger->info("Fund-laden beendet");
 }

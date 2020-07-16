@@ -81,6 +81,7 @@ abstract class Factory
 		{
 			return null;
 		}
+
 		return $elements[0];
 	}
 

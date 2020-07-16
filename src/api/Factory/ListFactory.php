@@ -48,17 +48,17 @@ class ListFactory implements iListFactory, iSqlSearchConditionStringsProvider
 
 		if (isset($searchConditions["Id"]))
 		{
-			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
+			array_push($sqlSearchConditionStrings, $this->getModelFactory()->getTableName().".Id = ".$searchConditions["Id"]);
 		}
 
 		if (isset($searchConditions["ContainsBezeichnung"]))
 		{
-			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["ContainsBezeichnung"]."%'");
+			array_push($sqlSearchConditionStrings, $this->getModelFactory()->getTableName().".Bezeichnung LIKE '%".$searchConditions["ContainsBezeichnung"]."%'");
 		}
 
 		if (isset($searchConditions["Bezeichnung"]))
 		{
-			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '".$searchConditions["Bezeichnung"]."'");
+			array_push($sqlSearchConditionStrings, $this->getModelFactory()->getTableName().".Bezeichnung LIKE '".$searchConditions["Bezeichnung"]."'");
 		}
 
 		return $sqlSearchConditionStrings;

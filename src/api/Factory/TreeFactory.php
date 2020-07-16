@@ -68,34 +68,34 @@ class TreeFactory implements iTreeFactory, iSqlSearchConditionStringsProvider
 
 		if (isset($searchConditions["Id"]))
 		{
-			array_push($sqlSearchConditionStrings, "Id = ".$searchConditions["Id"]);
+			array_push($sqlSearchConditionStrings, $this->getModelFactory()->getTableName().".Id = ".$searchConditions["Id"]);
 		}
 
 		if (isset($searchConditions["ContainsBezeichnung"]))
 		{
-			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '%".$searchConditions["ContainsBezeichnung"]."%'");
+			array_push($sqlSearchConditionStrings, $this->getModelFactory()->getTableName().".Bezeichnung LIKE '%".$searchConditions["ContainsBezeichnung"]."%'");
 		}
 
 		if (isset($searchConditions["Bezeichnung"]))
 		{
-			array_push($sqlSearchConditionStrings, "Bezeichnung LIKE '".$searchConditions["Bezeichnung"]."'");
+			array_push($sqlSearchConditionStrings, $this->getModelFactory()->getTableName().".Bezeichnung LIKE '".$searchConditions["Bezeichnung"]."'");
 		}
 		
 		if (isset($searchConditions["HasParent"]))
 		{
 			if ($searchConditions["HasParent"] === true)
 			{
-				array_push($sqlSearchConditionStrings, "Parent_Id IS NOT NULL");
+				array_push($sqlSearchConditionStrings, $this->getModelFactory()->getTableName().".Parent_Id IS NOT NULL");
 			}
 			else
 			{
-				array_push($sqlSearchConditionStrings, "Parent_Id IS NULL");
+				array_push($sqlSearchConditionStrings, $this->getModelFactory()->getTableName().".Parent_Id IS NULL");
 			}		
 		}
 
 		if (isset($searchConditions["Parent_Id"]))
 		{
-			array_push($sqlSearchConditionStrings, "Parent_Id = ".$searchConditions["Parent_Id"]);
+			array_push($sqlSearchConditionStrings, $this->getModelFactory()->getTableName().".Parent_Id = ".$searchConditions["Parent_Id"]);
 		}
 
 		if (isset($searchConditions["HasChildren"]))
@@ -112,7 +112,7 @@ class TreeFactory implements iTreeFactory, iSqlSearchConditionStringsProvider
 
 		if (isset($searchConditions["Child_Id"]))
 		{
-			array_push($sqlSearchConditionStrings, "Id = (SELECT Parent_Id FROM ".$this->getModelFactory()->getTableName()." WHERE Id = ".$searchConditions["Child_Id"].")");
+			array_push($sqlSearchConditionStrings, $this->getModelFactory()->getTableName().".Id = (SELECT Parent_Id FROM ".$this->getModelFactory()->getTableName()." WHERE Id = ".$searchConditions["Child_Id"].")");
 		}
 
 		return $sqlSearchConditionStrings;
