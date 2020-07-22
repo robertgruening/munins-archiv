@@ -307,8 +307,16 @@ function InitGrid()
         inserting: false,
         editing: false,
         sorting: true,
-        paging: false,
+        paging: true,
 		autoload: false,
+
+		pageSize: 10,
+		pageButtonCount: 5,
+		pagerFormat: "Seiten: {first} {prev} {pages} {next} {last}",
+		pagePrevText: "Zurück",
+		pageNextText: "Weiter",
+		pageFirstText: "Anfang",
+		pageLastText: "Ende",
 
 		fields: [
 			{
