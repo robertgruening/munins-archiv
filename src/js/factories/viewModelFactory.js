@@ -193,4 +193,15 @@ var ViewModelFactory = function () {
         return viewModel;
     };
     //#endregion
+
+    //#region search result lists
+    this.getViewModelSearchResultListFund = function()
+    {
+        var webServiceClientFactory = new WebServiceClientFactory();
+        var viewModel = new ViewModelSearchResultListFund(webServiceClientFactory.getWebServiceClientFund());
+        viewModel.init();
+
+        return viewModel;
+    };
+    //#endregion
 };

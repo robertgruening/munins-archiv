@@ -5,6 +5,7 @@ var WebServiceClient = function () {
 		save: new Array(),
 		load: new Array(),
 		loadAll: new Array(),
+		search: new Array(),
 		delete: new Array()
 	};
 

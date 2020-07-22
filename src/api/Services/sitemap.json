@@ -162,10 +162,10 @@
 				"Visible" : false
 			},
 			{
-				"Title" : "suchen",
+				"Title" : "Funde suchen",
 				"URL" : "/Munins Archiv/src/pages/Fund/Search.html",
 				"PageName" : "FundSearch",
-				"Enabled" : false
+				"Enabled" : true
 			}
 		]
 	},

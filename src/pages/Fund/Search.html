@@ -1,52 +1,92 @@
 <!doctype html>
 <html>
+
 <head>
 	<meta charset="utf-8">
-	<script src="../../js/jquery.min.js"></script>
-	<script src="../../js/controls/control.Navigation.js"></script>
-	<script src="../../js/ui/jquery-ui/jquery-ui.js"></script>
-	<script src="../../js/ui/controls/control.MultiDropdown.js"></script>
-	<script src="../../js/page.js"></script>
-	<script src="../../js/Fund/Search.html.js"></script>
-	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css">
-	<link rel="stylesheet" type="text/css" href="../../css/page.css">
-	<link rel="stylesheet" type="text/css" href="../../css/navigation.css">
-	<link rel="stylesheet" type="text/css" href="../../css/clipboard.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<!-- javascript frameworks etc. -->
+	<script type="text/javascript" src="../../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../js/ui/jquery-ui/jquery-ui.js"></script>
+	<script type="text/javascript" src="../../js/solid.min.js"></script>
+	<!-- controls -->
+	<script type="text/javascript" src="../../js/controls/jsgrid/jsgrid.min.js"></script>
+	<script type="text/javascript" src="../../js/controls/jsgrid/i18n/jsgrid-de.js"></script>
+	<script type="text/javascript" src="../../js/controls/jquery.toast.min.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.Navigation.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.Headline.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.MessageBox.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.ErrorMessageBox.js"></script>
+	<!-- basic page functions -->
+	<script type="text/javascript" src="../../js/page.js"></script>
+	<script type="text/javascript" src="../../js/ui/IconConfig.js"></script>
+	<!-- observer pattern data structure -->
+	<script type="text/javascript" src="../../js/ui/GuiClient.js"></script>
+	<!-- web service client -->
+	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClient.js"></script>
+	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientFund.js"></script>
+	<script type="text/javascript" src="../../js/factories/webServiceClientFactory.js"></script>
+	<!-- view model -->
+	<script type="text/javascript" src="../../js/viewModels/ViewModelSearchResultList.js"></script>
+	<script type="text/javascript" src="../../js/viewModels/ViewModelSearchResultListFund.js"></script>
+	<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
+	<!-- view -->
+	<script type="text/javascript" src="../../js/views/Fund/Search.js"></script>
+
+	<!-- javascript frameworks etc. -->
+	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/solid.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/fontawesome.min.css" />
+	<!-- page -->
+	<link rel="stylesheet" type="text/css" href="../../css/page.css" />
+	<!-- controls -->
+	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid-theme.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/grid.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/jquery.toast.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/form.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/navigation.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/clipboard.css" />
+	<!-- print -->
 	<link rel="stylesheet" type="text/css" href="../../css/print.css" media="print" />
 	<link rel=icon type="image/png" href="../../images/system/IconMunin_001.png">
-	<title>Fund</title>
+	<title>Fund-Suche</title>
 </head>
+
 <body>
 	<div id=navigation class="notToPrint"></div>
 	<div id=content>
-	    <div class=form>
-		    <div class=formBlock>
-			    <h2>Suche</h2>
+		<div class=form>
+			<div class=formBlock>
+				<h2>Suche</h2>
 			    <div id=divFilter>
 				    <div class=fieldDescription>
 					    <label>Beschriftung: </label>
 				    </div>
 				    <div class=fieldValue>
 					    <input id=textboxFilterBeschriftung type=text class=field></input>
+						<input type=radio name=choiceFilterBeschriftung value=exact><label for=exact>exakt</label></input>
+						<input type=radio name=choiceFilterBeschriftung value=contains checked=true><label for=contains>enthält</label></input>
 				    </div>
 				    <div class=fieldDescription>
-					    <label>Ablage (ID): </label>
+					    <label>hat Ablage: </label>
 				    </div>
 				    <div class=fieldValue>
-					    <input id=textboxFilterAblageId type=text class=field></input>
+						<input type=radio name=choiceFilterHasAblage value=yes><label for=yes>ja</label></input>
+						<input type=radio name=choiceFilterHasAblage value=no><label for=no>nein</label></input>
+						<input type=radio name=choiceFilterHasAblage value=any checked=true><label for=any>egal</label></input>
 				    </div>
 				    <div class=fieldDescription>
-					    <label>Kontext (ID): </label>
+					    <label>hat Kontext: </label>
 				    </div>
 				    <div class=fieldValue>
-					    <input id=textboxFilterKontextId type=text class=field></input>
+						<input type=radio name=choiceFilterHasKontext value=yes><label for=yes>ja</label></input>
+						<input type=radio name=choiceFilterHasKontext value=no><label for=no>nein</label></input>
+						<input type=radio name=choiceFilterHasKontext value=any checked=true><label for=any>egal</label></input>
 				    </div>
 			    </div>
 			    <input type=button id=buttonSearch value=Suche class="field notToPrint formButton"></input>
-			    <div id=divErgebnisse class=fieldBlock></div>
-		    </div>
-	    </div>
-    </div>
-	<div id=clipboard class="notToPrint"></div>
+				<div id=gridContainer></div>
+			</div>
+		</div>
+	</div>
 </body>
-</html>
