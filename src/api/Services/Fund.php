@@ -230,7 +230,11 @@ function Get()
 
         if ($loadFunde->run())
         {
-            echo json_encode($loadFunde->getFunde());
+			$data = array();
+			$data["data"] = $loadFunde->getFunde();
+			$data["count"] = $loadFunde->getCount();
+
+            echo json_encode($data);
         }
         else
         {

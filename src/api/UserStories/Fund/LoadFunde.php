@@ -5,7 +5,8 @@ require_once(__DIR__."/../../Factory/FundFactory.php");
 class LoadFunde extends UserStory
 {
     #region variables
-    private $_funde = array();
+	private $_funde = array();
+	private $_count = 0;
 	private $_searchConditions = array();
 	private $_pagingConditions = null;
     #endregion
@@ -42,6 +43,16 @@ class LoadFunde extends UserStory
     private function setFunde($funde)
     {
         $this->_funde = $funde;
+	}
+	
+    public function getCount()
+    {
+        return $this->_count;
+    }
+
+    private function setCount($count)
+    {
+        $this->_count = $count;
     }
     #endregion
     #endregion
@@ -68,7 +79,8 @@ class LoadFunde extends UserStory
     {
         $fundFactory = new FundFactory();
         $funde = $fundFactory->loadBySearchConditions($this->getSearchConditions(), $this->getPagingConditions());
-        $this->setFunde($funde);
+		$this->setFunde($funde);
+		$this->setCount($fundFactory->countBySearchConditions($this->getSearchConditions()));
 
         return true;
     }

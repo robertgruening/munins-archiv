@@ -18,6 +18,7 @@ function getPageName() {
 function RegisterToViewModel() {
 	_viewModelSearchResultListFund.register("dataChanged", new GuiClient(UpdateGridData, UpdateGridData));
 	_viewModelSearchResultListFund.register("search", new GuiClient(ShowMessageSearchResultDisplayed, showErrorMessages));
+	_viewModelSearchResultListFund.register("count", new GuiClient(setLabelCount, resetLabelCount));
 }
 
 function clearSelectedItemHighlighting() {
@@ -226,4 +227,12 @@ function InitButtonSearch() {
 			_viewModelSearchResultListFund.search(searchConditions);
 		}
 	);
+}
+
+function setLabelCount(count) {
+	$("#labelCount").text("Trefferanzahl: " + count);
+}
+
+function resetLabelCount() {
+	$("#labelCount").text("Trefferanzahl: ?");
 }

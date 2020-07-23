@@ -10,6 +10,53 @@ abstract class Factory
 	abstract public function getTableName();
 
 	#region load
+	public function countBySearchConditions($searchConditions = array())
+	{
+		global $logger;
+		$logger->debug("Zähle Elemente anhand von Suchkriterien ".json_encode($searchConditions));
+		$count = 0;
+		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->getSqlStatementToCountBySearchConditions($searchConditions));
+			
+			if ($mysqli->errno)
+			{
+				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+			}
+			else if ($datensatz = $ergebnis->fetch_assoc())
+			{
+				$count = intval($datensatz["Count"]);
+			}
+		}
+		
+		$mysqli->close();
+		
+		return $count;
+	}
+
+	protected function getSqlStatementToCountBySearchConditions($searchConditions = array())
+	{
+		$sqlStatement = $this->getSqlStatementToCount();		
+		$searchConditionStrings = $this->getSqlSearchConditionStrings($searchConditions);
+		
+		if (count($searchConditionStrings) == 0)
+		{
+			return $sqlStatement;
+		}
+
+		$sqlStatement .= " WHERE ".implode(" AND ", $searchConditionStrings);
+		
+		return $sqlStatement;
+	}
+	
+	private function getSqlStatementToCount()
+	{
+		return "SELECT COUNT(*) AS Count FROM ".$this->getTableName();
+	}
+
 	/**
 	* Returns all elements matching the given search conditions.
 	*

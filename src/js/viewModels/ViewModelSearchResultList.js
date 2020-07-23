@@ -1,13 +1,19 @@
 var ViewModelSearchResultList = function (webServiceClient) {
 	//#region variables
 	this._models = new Array();
+	this._count = 0;
 	this._selectedItem = null;
 	this._webServiceClient = webServiceClient;
 	this._listeners = {
-		search: new Array(),
-		dataChanged: new Array(),
-		itemSelected : new Array(),
-		selectionCleared : new Array()
+		actions: {
+			search: new Array(),
+			dataChanged: new Array(),
+			itemSelected : new Array(),
+			selectionCleared : new Array()
+		},
+		properties: {
+			count: new Array()
+		}
 	};
 	//#endregion
 
@@ -94,11 +100,13 @@ var ViewModelSearchResultList = function (webServiceClient) {
 		}
 	};
 
-	this._showSearchResult = function(elements) {
-		this._models = elements;
+	this._showSearchResult = function(data) {
+		this._models = data.data;
+		this._count = data.count;
 		this._update("dataChanged", this._models);
 		this.clearSelection();
 		this._update("search", this._models);
+		this._update("count", this._count);
 	}
 
 	/**
@@ -121,32 +129,66 @@ var ViewModelSearchResultList = function (webServiceClient) {
 	//#region observable subject methods
 	this.register = function (eventName, listener) {
 		if (listener == undefined ||
-			listener == null ||
-			this._listeners[eventName] == undefined) {
+			listener == null) {
 			return;
 		}
 
-		this._listeners[eventName].push(listener);
+		if (this._isActionListener(eventName)) {
+			this._listeners.actions[eventName].push(listener);
+		}
+		else if (this._isPropertyListener(eventName)) {
+			this._listeners.properties[eventName].push(listener);
+		}
 	};
 
 	this._update = function (eventName, data) {
-		if (this._listeners[eventName] == undefined) {
-			return;
+		if (this._isActionListener(eventName)) {
+			this._listeners.actions[eventName].forEach(function (item) {
+				item.Update(data);
+			});
 		}
-
-		this._listeners[eventName].forEach(function (item) {
-			item.Update(data);
-		});
+		else if (this._isPropertyListener(eventName)) {
+			this._listeners.properties[eventName].forEach(function (item) {
+				item.Update(data);
+			});
+		}
 	};
 
 	this._fail = function (eventName, messages) {
-		if (this._listeners[eventName] == undefined) {
-			return;
+		if (this._isActionListener(eventName)) {
+			this._listeners.actions[eventName].forEach(function (item) {
+				item.Fail(messages);
+			});
 		}
+		else if (this._isPropertyListener(eventName)) {
+			this._listeners.properties[eventName].forEach(function (item) {
+				item.Fail(messages);
+			});
+		}
+	};
 
-		this._listeners[eventName].forEach(function (item) {
-			item.Fail(messages);
-		});
+	this._isActionListener = function (eventName) {
+		var actionListenerNames = Object.keys(this._listeners.actions);
+
+		for (var i = 0; i < actionListenerNames.length; i++) {
+			if (actionListenerNames[i] === eventName) {
+				return true;
+			}
+		};
+
+		return false;
+	};
+
+	this._isPropertyListener = function (eventName) {
+		var propertyListenerNames = Object.keys(this._listeners.properties);
+
+		for (var i = 0; i < propertyListenerNames.length; i++) {
+			if (propertyListenerNames[i] === eventName) {
+				return true;
+			}
+		};
+
+		return false;
 	};
 	//#endregion
 	//#endregion
