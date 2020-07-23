@@ -181,10 +181,6 @@ function Get()
 		{
 			$loadAblagen->addSearchCondition("HasParent", $_GET["hasParent"] === "true");
 		}
-		else
-		{
-			$loadAblagen->addSearchCondition("HasParent", false);
-		}
 
 		if (isset($_GET["hasChildren"]))
 		{

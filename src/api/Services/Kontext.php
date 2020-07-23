@@ -163,10 +163,6 @@ function Get()
 		{
 			$loadKontexte->addSearchCondition("HasParent", $_GET["hasParent"] === "true");
 		}
-		else
-		{
-			$loadKontexte->addSearchCondition("HasParent", false);
-		}
 
 		if (isset($_GET["hasChildren"]))
 		{
