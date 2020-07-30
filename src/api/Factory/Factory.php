@@ -62,19 +62,21 @@ abstract class Factory
 	*
 	* @param $searchConditions List (key, value) of search conditions. Default is array().
 	* @param $pagingConditions List (key, value) with paging conditions. Default is null.
+	* @param $sortingConditions List (key, value) with sorting conditions. Default is null.
 	*/
-	public function loadBySearchConditions($searchConditions = array(), $pagingConditions = null)
+	public function loadBySearchConditions($searchConditions = array(), $pagingConditions = null, $sortingConditions = null)
 	{
 		global $logger;
 		$logger->debug("Lade Elemente anhand von Suchkriterien ".json_encode($searchConditions));
 		$logger->debug("Lade Elemente mittels Seitenkriterien ".json_encode($pagingConditions));
+		$logger->debug("Lade Elemente mittels Sortierkriterien ".json_encode($sortingConditions));
 		$elemente = array();
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
 		
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->getSqlStatementToLoadBySearchConditions($searchConditions, $pagingConditions));
+			$ergebnis = $mysqli->query($this->getSqlStatementToLoadBySearchConditions($searchConditions, $pagingConditions, $sortingConditions));
 			
 			if ($mysqli->errno)
 			{
@@ -99,12 +101,14 @@ abstract class Factory
 	*
 	* @param $searchConditions List (key, value) of search conditions. Default is array().
 	* @param $pagingConditions List (key, value) with paging conditions. Default is null.
+	* @param $sortingConditions List (key, value) with sorting conditions. Default is null.
 	*/
-	protected function getSqlStatementToLoadBySearchConditions($searchConditions = array(), $pagingConditions = null)
+	protected function getSqlStatementToLoadBySearchConditions($searchConditions = array(), $pagingConditions = null, $sortingConditions = null)
 	{
+		global $logger;
 		$sqlStatement = $this->getSqlStatementToLoad();		
 		$searchConditionStrings = $this->getSqlSearchConditionStrings($searchConditions);
-		
+
 		if (count($searchConditionStrings) == 0)
 		{
 			if ($pagingConditions != null)
@@ -112,12 +116,16 @@ abstract class Factory
 				if (isset($pagingConditions["PageIndexElementId"]) &&
 					is_numeric($pagingConditions["PageIndexElementId"]))
 				{
-					$sqlStatement .= " WHERE ".$this->getTableName().".Id >= ".$pagingConditions["PageIndexElementId"];
+					$sqlStatement .= " WHERE ".$this->getSqlPageIndexCondition($pagingConditions, $sortingConditions);
 				}
 
-				$sqlStatement .= " ORDER BY ".$this->getTableName().".Id";
+				$sqlStatement .= " ".$this->getSqlPageOrderConditionString($pagingConditions, $sortingConditions);
 				$sqlStatement .= " LIMIT ".$pagingConditions["PageSize"];
 			}
+
+			$sqlStatement = "(".$sqlStatement.") ORDER BY Id ASC";
+
+			$logger->debug("SQL: ".$sqlStatement);
 
 			return $sqlStatement;
 		}
@@ -129,18 +137,94 @@ abstract class Factory
 			if (isset($pagingConditions["PageIndexElementId"]) &&
 				is_numeric($pagingConditions["PageIndexElementId"]))
 			{
-				$sqlStatement .= " AND ".$this->getTableName().".Id >= ".$pagingConditions["PageIndexElementId"];
+				$sqlStatement .= " AND ".$this->getSqlPageIndexCondition($pagingConditions, $sortingConditions);
 			}
 			
-			$sqlStatement .= " ORDER BY ".$this->getTableName().".Id";
+			$sqlStatement .= " ".$this->getSqlPageOrderConditionString($pagingConditions, $sortingConditions);
 			$sqlStatement .= " LIMIT ".$pagingConditions["PageSize"];
 		}
+
+		$sqlStatement = "(".$sqlStatement.") ORDER BY Id ASC";
+
+		$logger->debug("SQL: ".$sqlStatement);
 		
 		return $sqlStatement;
 	}
 	
 	abstract protected function getSqlStatementToLoad();
 	abstract protected function getSqlSearchConditionStrings($searchConditions);
+
+	/**
+	 * 
+	 * 
+	 * @param $pagingConditions List (key, value) with paging conditions. Default is null.
+	 * @param $sortingConditions List (key, value) with sorting conditions. Default is null.
+	 */
+	protected function getSqlPageIndexCondition($pagingConditions = null, $sortingConditions = null)
+	{
+		if (($this->isSortingDirectionAscending($sortingConditions) &&
+			 $this->isPagingDirectionForward($pagingConditions)) ||
+			(!$this->isSortingDirectionAscending($sortingConditions) &&
+			 !$this->isPagingDirectionForward($pagingConditions)))
+		{
+			return $this->getTableName().".Id >= ".$pagingConditions["PageIndexElementId"];			
+		}		
+
+		return $this->getTableName().".Id <= ".$pagingConditions["PageIndexElementId"];
+	}
+
+	protected function isSortingDirectionAscending($sortingConditions = null)
+	{
+		if ($sortingConditions == null ||
+			!isset($sortingConditions["SortingOrder"]) ||
+			strtoupper($sortingConditions["SortingOrder"]) == "ASC")
+		{
+			return true;	
+		}
+
+		if (strtoupper($sortingConditions["SortingOrder"]) == "DESC")
+		{
+			return false;
+		}
+
+		throw new InvalidArgumentException("Value of 'SortingOrder' (".$sortingConditions["SortingOrder"].") is not supported!");
+	}
+
+	protected function isPagingDirectionForward($pagingConditions = null)
+	{
+		if ($pagingConditions == null ||
+			!isset($pagingConditions["PagingDirection"]) ||
+			strtolower($pagingConditions["PagingDirection"]) == "forward")
+		{
+			return true;	
+		}
+
+		if (strtolower($pagingConditions["PagingDirection"]) == "backward")
+		{
+			return false;
+		}
+
+		throw new InvalidArgumentException("Value of 'PagingDirection' (".$pagingConditions["PagingDirection"].") is not supported!");
+	}
+
+	/**
+	 * 
+	 * 
+	 * @param $pagingConditions List (key, value) with paging conditions. Default is null.
+	 * @param $sortingConditions List (key, value) with sorting conditions. Default is null.
+	 */
+	protected function getSqlPageOrderConditionString($pagingConditions = null, $sortingConditions = null)
+	{
+		if (($this->isSortingDirectionAscending($sortingConditions) &&
+			 $this->isPagingDirectionForward($pagingConditions)) ||
+			(!$this->isSortingDirectionAscending($sortingConditions) &&
+			 !$this->isPagingDirectionForward($pagingConditions)))
+		{
+			return "ORDER BY ".$this->getTableName().".Id ASC";
+		}
+		
+		return "ORDER BY ".$this->getTableName().".Id DESC";
+	}
 	
 	public function loadById($id)
 	{

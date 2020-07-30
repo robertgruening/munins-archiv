@@ -1,6 +1,10 @@
 var ViewModelSearchResultList = function (webServiceClient) {
 	//#region variables
+	this._searchConditions = new Array();
+	this._sortingConditions = new Array();
 	this._models = new Array();
+	this._currentPagerIndexElement = null;
+	this._nextPagerIndexElement = null;
 	this._count = 0;
 	this._selectedItem = null;
 	this._webServiceClient = webServiceClient;
@@ -19,9 +23,37 @@ var ViewModelSearchResultList = function (webServiceClient) {
 
 	//#region methods
 	//#region web service methods
-	this.search = function (searchConditions, pageIndexElementId) {
-		this._webServiceClient.search(searchConditions, pageIndexElementId, "search");
+	this.search = function (searchConditions) {
+		this._searchConditions = searchConditions;
+		this._webServiceClient.search(searchConditions, null, null, "search");
 	};
+
+	this.goToFirstPage = function() {
+		this._webServiceClient.search(this._searchConditions, null, null, "search");
+	}
+
+	this.goToPreviousPage = function() {
+		pagingConditions = new Array();
+		pagingConditions.push({ "key" : "pageIndexElementId", "value" : this._currentPagerIndexElement == null ? null : this._currentPagerIndexElement.Id });
+		pagingConditions.push({ "key" : "pagingDirection", "value" : "backward" });
+
+		this._webServiceClient.search(this._searchConditions, pagingConditions, null, "search");
+	}
+
+	this.goToNextPage = function() {
+		pagingConditions = new Array();
+		pagingConditions.push({ "key" : "pageIndexElementId", "value" : this._nextPagerIndexElement == null ? null : this._nextPagerIndexElement.Id });
+		pagingConditions.push({ "key" : "pagingDirection", "value" : "forward" });
+
+		this._webServiceClient.search(this._searchConditions, pagingConditions, null, "search");
+	}
+
+	this.goToLastPage = function() {
+		pagingConditions = new Array();
+		pagingConditions.push({ "key" : "pagingDirection", "value" : "backward" });
+
+		this._webServiceClient.search(this._searchConditions, pagingConditions, null, "search");
+	}
 	//#endregion
 
 	/**
@@ -101,7 +133,22 @@ var ViewModelSearchResultList = function (webServiceClient) {
 	};
 
 	this._showSearchResult = function(data) {
-		this._models = data.data;
+		this._nextPagerIndexElement = null;
+		this._currentPagerIndexElement = null;
+		this._models = new Array();
+
+		if (data.data.length >= 1) {
+			this._currentPagerIndexElement = data.data[0];
+		}
+
+		if (data.data.length == 11) {
+			this._nextPagerIndexElement = data.data[10];
+		}
+
+		for (let i = 0; i < data.data.length && i < 10; i++) {
+			this._models.push(data.data[i]);
+		}
+
 		this._count = data.count;
 		this._update("dataChanged", this._models);
 		this.clearSelection();

@@ -220,12 +220,30 @@ function Get()
 			$loadFunde->addSearchCondition("FundAttribut_Ids", $_GET["fundAttribut_Ids"]);
 		}
 
+		$pagingConditions = array();
+
+		if (isset($_GET["pagingDirection"]))
+		{
+			$pagingConditions["PagingDirection"] = $_GET["pagingDirection"];
+		}
+
+		if (isset($_GET["pageSize"]))
+		{
+			$pagingConditions["PageSize"] = $_GET["pageSize"];
+		}
+
 		if (isset($_GET["pageIndexElementId"]))
 		{
-			$pagingConditions = array();
-			$pagingConditions["PageSize"] = 11;
 			$pagingConditions["PageIndexElementId"] = $_GET["pageIndexElementId"];
-			$loadFunde->setPagingConditions($pagingConditions);
+		}
+
+		$loadFunde->setPagingConditions($pagingConditions);
+
+		if (isset($_GET["sortingOrder"]))
+		{
+			$sortingConditions = array();
+			$sortingConditions["SortingOrder"] = $_GET["sortingOrder"];
+			$loadFunde->setSortingConditions($sortingConditions);
 		}
 
         if ($loadFunde->run())

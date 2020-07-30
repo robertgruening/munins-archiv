@@ -3,7 +3,7 @@ var WebServiceClientFund = function () {
 		this._modelName = "Fund";
 	};
 
-	this.search = function (searchConditions, pageIndexElementId, sender) {
+	this.search = function (searchConditions, paginConditions, sortingConditions, sender) {
 		var controller = this;
 
 		let urlParameters = new Array();
@@ -17,16 +17,28 @@ var WebServiceClientFund = function () {
 			}
 		}
 
-		if (pageIndexElementId != undefined &&
-			pageIndexElementId != null)
+		if (paginConditions != undefined &&
+			paginConditions != null)
 		{
-			urlParameters.push("pageIndexElementId=" + pageIndexElementId);
-		}		
+			for (let i = 0; i < paginConditions.length; i++)
+			{
+				urlParameters.push(paginConditions[i].key + "=" + paginConditions[i].value);
+			}
+		}
+
+		if (sortingConditions != undefined &&
+			sortingConditions != null)
+		{
+			for (let i = 0; i < sortingConditions.length; i++)
+			{
+				urlParameters.push(sortingConditions[i].key + "=" + sortingConditions[i].value);
+			}
+		}
 
 		$.ajax(
 			{
 				type: "GET",
-				url: "../../api/Services/" + this.getModelName() + "/?" + urlParameters.join("&"),
+				url: "../../api/Services/" + this.getModelName() + "?" + urlParameters.join("&"),
 				dataType: "json",
 				success: function (data, textStatus, jqXHR) {
 					controller.Update("search", data, sender);

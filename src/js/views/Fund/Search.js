@@ -7,6 +7,10 @@ $(document).ready(function () {
     RegisterToViewModel();
 
 	InitButtonSearch();
+	initButtonGoToFirstPage();
+	initButtonGoToPreviousPage();
+	initButtonGoToNextPage();
+	initButtonGoToLastPage();
 
     InitGrid();
 });
@@ -17,6 +21,10 @@ function getPageName() {
 
 function RegisterToViewModel() {
 	_viewModelSearchResultListFund.register("dataChanged", new GuiClient(UpdateGridData, UpdateGridData));
+	_viewModelSearchResultListFund.register("count", new GuiClient(enableButtonGoToFirstPage, disableButtonGoToFirstPage));
+	_viewModelSearchResultListFund.register("count", new GuiClient(enableButtonGoToPreviousPage, disableButtonGoToPreviousPage));
+	_viewModelSearchResultListFund.register("count", new GuiClient(enableButtonGoToNextPage, disableButtonGoToNextPage));
+	_viewModelSearchResultListFund.register("count", new GuiClient(enableButtonGoToLastPage, disableButtonGoToLastPage));
 	_viewModelSearchResultListFund.register("search", new GuiClient(ShowMessageSearchResultDisplayed, showErrorMessages));
 	_viewModelSearchResultListFund.register("count", new GuiClient(setLabelCount, resetLabelCount));
 }
@@ -189,44 +197,48 @@ function ShowMessageSearchResultDisplayed(elements) {
 }
 
 function InitButtonSearch() {
-	$("#buttonSearch").click(
-		function() {
-			let searchConditions  = new Array();
+	$("#buttonSearch").click(search);
+}
 
-			if ($("#textboxFilterBeschriftung").val() != "")
-			{
-				if ($("[name='choiceFilterBeschriftung']:checked").val() == "exact")
-				{
-					searchConditions.push({ "key" : "bezeichnung", "value" : $("#textboxFilterBeschriftung").val() });
-				}
-				else if ($("[name='choiceFilterBeschriftung']:checked").val() == "contains")
-				{
-					searchConditions.push({ "key" : "containsBezeichnung", "value" : $("#textboxFilterBeschriftung").val() });
-				}
-				searchConditions.push({ "key" : "containsBezeichnung", "value" : $("#textboxFilterBeschriftung").val() });
-			}
+function getSearchConditions() {
+	let searchConditions  = new Array();
 
-			if ($("[name='choiceFilterHasAblage']:checked").val() == "yes")
-			{
-				searchConditions.push({ "key" : "hasAblage", "value" : "true" });
-			}
-			else if ($("[name='choiceFilterHasAblage']:checked").val() == "no")
-			{
-				searchConditions.push({ "key" : "hasAblage", "value" : "false" });
-			}
-
-			if ($("[name='choiceFilterHasKontext']:checked").val() == "yes")
-			{
-				searchConditions.push({ "key" : "hasKontext", "value" : "true" });
-			}
-			else if ($("[name='choiceFilterHasKontext']:checked").val() == "no")
-			{
-				searchConditions.push({ "key" : "hasKontext", "value" : "false" });
-			}
-
-			_viewModelSearchResultListFund.search(searchConditions);
+	if ($("#textboxFilterBeschriftung").val() != "")
+	{
+		if ($("[name='choiceFilterBeschriftung']:checked").val() == "exact")
+		{
+			searchConditions.push({ "key" : "bezeichnung", "value" : $("#textboxFilterBeschriftung").val() });
 		}
-	);
+		else if ($("[name='choiceFilterBeschriftung']:checked").val() == "contains")
+		{
+			searchConditions.push({ "key" : "containsBezeichnung", "value" : $("#textboxFilterBeschriftung").val() });
+		}
+		searchConditions.push({ "key" : "containsBezeichnung", "value" : $("#textboxFilterBeschriftung").val() });
+	}
+
+	if ($("[name='choiceFilterHasAblage']:checked").val() == "yes")
+	{
+		searchConditions.push({ "key" : "hasAblage", "value" : "true" });
+	}
+	else if ($("[name='choiceFilterHasAblage']:checked").val() == "no")
+	{
+		searchConditions.push({ "key" : "hasAblage", "value" : "false" });
+	}
+
+	if ($("[name='choiceFilterHasKontext']:checked").val() == "yes")
+	{
+		searchConditions.push({ "key" : "hasKontext", "value" : "true" });
+	}
+	else if ($("[name='choiceFilterHasKontext']:checked").val() == "no")
+	{
+		searchConditions.push({ "key" : "hasKontext", "value" : "false" });
+	}
+
+	return searchConditions;
+}
+
+function search() {
+	_viewModelSearchResultListFund.search(getSearchConditions());
 }
 
 function setLabelCount(count) {
@@ -235,4 +247,96 @@ function setLabelCount(count) {
 
 function resetLabelCount() {
 	$("#labelCount").text("Trefferanzahl: ?");
+}
+
+function initButtonGoToFirstPage() {
+	disableButtonGoToFirstPage();
+}
+
+function enableButtonGoToFirstPage(count) {
+	if (count == 0) 
+	{
+		disableButtonGoToFirstPage();
+		return;
+	}
+
+	$("#buttonGoToFirstPage").off("click");
+	$("#buttonGoToFirstPage").click(function () { _viewModelSearchResultListFund.goToFirstPage(); });
+	$("#buttonGoToFirstPage").removeClass("disabled");
+	$("#buttonGoToFirstPage").prop("disabled", false);
+}
+
+function disableButtonGoToFirstPage() {
+	$("#buttonGoToFirstPage").off("click");
+	$("#buttonGoToFirstPage").addClass("disabled");
+	$("#buttonGoToFirstPage").prop("disabled", true);
+}
+
+function initButtonGoToPreviousPage() {
+	disableButtonGoToPreviousPage();
+}
+
+function enableButtonGoToPreviousPage(count) {
+	if (count == 0) 
+	{
+		disableButtonGoToPreviousPage();
+		return;
+	}
+
+	$("#buttonGoToPreviousPage").off("click");
+	$("#buttonGoToPreviousPage").click(function () { _viewModelSearchResultListFund.goToPreviousPage(); });
+	$("#buttonGoToPreviousPage").removeClass("disabled");
+	$("#buttonGoToPreviousPage").prop("disabled", false);
+}
+
+function disableButtonGoToPreviousPage() {
+	$("#buttonGoToPreviousPage").off("click");
+	$("#buttonGoToPreviousPage").addClass("disabled");
+	$("#buttonGoToPreviousPage").prop("disabled", true);
+}
+
+function initButtonGoToNextPage() {
+	disableButtonGoToNextPage();
+}
+
+function enableButtonGoToNextPage(count) {
+	if (count == 0) 
+	{
+		disableButtonGoToNextPage();
+		return;
+	}
+
+	$("#buttonGoToNextPage").off("click");
+	$("#buttonGoToNextPage").click(function () { _viewModelSearchResultListFund.goToNextPage(); });
+	$("#buttonGoToNextPage").removeClass("disabled");
+	$("#buttonGoToNextPage").prop("disabled", false);
+}
+
+function disableButtonGoToNextPage() {
+	$("#buttonGoToNextPage").off("click");
+	$("#buttonGoToNextPage").addClass("disabled");
+	$("#buttonGoToNextPage").prop("disabled", true);
+}
+
+function initButtonGoToLastPage() {
+	disableButtonGoToLastPage();
+}
+
+function enableButtonGoToLastPage(count) {
+	if (count == 0) 
+	{
+		disableButtonGoToLastPage();
+		return;
+	}
+
+	$("#buttonGoToLastPage").off("click");
+	$("#buttonGoToLastPage").click(function () { _viewModelSearchResultListFund.goToLastPage(); });
+	$("#buttonGoToLastPage").removeClass("disabled");
+	$("#buttonGoToLastPage").prop("disabled", false);
+}
+
+function disableButtonGoToLastPage() {
+	$("#buttonGoToLastPage").off("click");
+	$("#buttonGoToLastPage").addClass("disabled");
+	$("#buttonGoToLastPage").prop("disabled", true);
 }
