@@ -12,7 +12,14 @@
 	{
 		$(htmlElement).empty();
 		var h = $("<h3></h3>");
-		h.text("Fehlerhafter Kontext");
+
+		let icon = $("<i></i>");
+		icon.attr("class", "fas fa-flag");
+		$(h).append(icon);
+
+		let span = $("<span></span>");
+		span.text("Fehlerhafter Kontext");
+		$(h).append(span);
 
 		$(htmlElement).append(h);
 

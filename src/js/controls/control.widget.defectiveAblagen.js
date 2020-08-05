@@ -12,7 +12,14 @@
 	{
 		$(htmlElement).empty();
 		var h = $("<h3></h3>");
-		h.text("Fehlerhafte Ablage");
+
+		let icon = $("<i></i>");
+		icon.attr("class", "fas fa-box");
+		$(h).append(icon);
+
+		let span = $("<span></span>");
+		span.text("Fehlerhafte Ablage");
+		$(h).append(span);
 
 		$(htmlElement).append(h);
 

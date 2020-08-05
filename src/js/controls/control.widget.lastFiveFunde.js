@@ -12,7 +12,14 @@
 	{
 		$(htmlElement).empty();
 		var h = $("<h3></h3>");
-		h.text("Letzten 5 Funde");
+
+		let icon = $("<i></i>");
+		icon.attr("class", "fas fa-puzzle-piece");
+		$(h).append(icon);
+
+		let span = $("<span></span>");
+		span.text("Letzten 5 Funde");
+		$(h).append(span);
 
 		$(htmlElement).append(h);
 
