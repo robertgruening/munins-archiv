@@ -2,6 +2,7 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/FundAttributTypeFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/FundFactory.php");
 include_once(__DIR__."/../Model/FundAttribut.php");
@@ -9,7 +10,8 @@ include_once(__DIR__."/../Model/FundAttribut.php");
 class FundAttributFactory extends Factory implements iTreeFactory
 {
     #region variables
-    private $_treeFactory = null;
+	private $_treeFactory = null;
+	private $_fundFactory = null;
     private $_fundAttributTypeFactory = null;
     #endregion
 
@@ -23,6 +25,16 @@ class FundAttributFactory extends Factory implements iTreeFactory
     {
         return $this->_fundAttributTypeFactory;
     }
+
+    protected function getFundFactory()
+    {
+        if ($this->_fundFactory == null)
+        {
+            $this->_fundFactory = new FundFactory();
+        }
+
+        return $this->_fundFactory;
+    }
     #endregion
 
     #region constructors
@@ -34,27 +46,64 @@ class FundAttributFactory extends Factory implements iTreeFactory
     #endregion
 
     #region methods
-    /**
-     * Returns the name of the database table.
-     */
-    public function getTableName()
-    {
-        return "FundAttribut";
-    }
+	/**
+	* Returns the name of the database table.
+	*/
+	public function getTableName()
+	{
+		return "FundAttribut";
+	}
 
-    #region load
-    /**
-     * Returns the SQL statement to load ID, Bezeichnung, Fundattribut type ID and count of Funde
-     * by Fundattribut ID.
-     *
-     * @param $id ID of the Fundattribut to load.
-     */
-    protected function getSQLStatementToLoadById($id)
-    {
-        return "SELECT Id, Bezeichnung, Typ_Id, COUNT(*) AS CountOfFunde
-                FROM FundAttribut RIGHT JOIN Fund_FundAttribut ON FundAttribut.Id = Fund_FundAttribut.FundAttribut_Id
-                WHERE Id = ".$id.";";
-    }
+	#region load
+	/**
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id and CountOfFunde as string.
+	*/
+	protected function getSQLStatementToLoad()
+	{
+		return "SELECT Id, Bezeichnung, Typ_Id, (SELECT COUNT(*) FROM ".$this->getFundFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getFundFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id) AS CountOfFunde
+			FROM ".$this->getTableName();
+	}
+
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, Typ_Id, HasParent, Parent_Id, HasChildren and Child_Id.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return array();
+		}
+
+		$sqlSearchConditionStrings = array();
+		
+		if (isset($searchConditions["Typ_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Typ_Id = ".$searchConditions["Typ_Id"]);
+		}
+		
+		if (isset($searchConditions["IsUsed"]))
+		{
+			if ($searchConditions["IsUsed"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getFundFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getFundFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+		}
+
+		if ($this->getTreeFactory() instanceof iSqlSearchConditionStringsProvider)
+		{
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getTreeFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
+		}
+
+		return $sqlSearchConditionStrings;
+	}
 
     /**
      * Creates an Fundattribut instance and fills

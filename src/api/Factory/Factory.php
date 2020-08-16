@@ -10,35 +10,238 @@ abstract class Factory
 	abstract public function getTableName();
 
 	#region load
-	public function loadById($id)
+	public function countBySearchConditions($searchConditions = array())
 	{
 		global $logger;
-		$logger->debug("Lade Element (".$id.")");
-
-		$element = null;
+		$logger->debug("Zähle Elemente anhand von Suchkriterien ".json_encode($searchConditions));
+		$count = 0;
 		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-
+		
 		if (!$mysqli->connect_errno)
 		{
 			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->getSQLStatementToLoadById($id));
+			$ergebnis = $mysqli->query($this->getSqlStatementToCountBySearchConditions($searchConditions));
+			
+			if ($mysqli->errno)
+			{
+				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+			}
+			else if ($datensatz = $ergebnis->fetch_assoc())
+			{
+				$count = intval($datensatz["Count"]);
+			}
+		}
+		
+		$mysqli->close();
+		
+		return $count;
+	}
 
+	protected function getSqlStatementToCountBySearchConditions($searchConditions = array())
+	{
+		$sqlStatement = $this->getSqlStatementToCount();		
+		$searchConditionStrings = $this->getSqlSearchConditionStrings($searchConditions);
+		
+		if (count($searchConditionStrings) == 0)
+		{
+			return $sqlStatement;
+		}
+
+		$sqlStatement .= " WHERE ".implode(" AND ", $searchConditionStrings);
+		
+		return $sqlStatement;
+	}
+	
+	private function getSqlStatementToCount()
+	{
+		return "SELECT COUNT(*) AS Count FROM ".$this->getTableName();
+	}
+
+	/**
+	* Returns all elements matching the given search conditions.
+	*
+	* @param $searchConditions List (key, value) of search conditions. Default is array().
+	* @param $pagingConditions List (key, value) with paging conditions. Default is null.
+	* @param $sortingConditions List (key, value) with sorting conditions. Default is null.
+	*/
+	public function loadBySearchConditions($searchConditions = array(), $pagingConditions = null, $sortingConditions = null)
+	{
+		global $logger;
+		$logger->debug("Lade Elemente anhand von Suchkriterien ".json_encode($searchConditions));
+		$logger->debug("Lade Elemente mittels Seitenkriterien ".json_encode($pagingConditions));
+		$logger->debug("Lade Elemente mittels Sortierkriterien ".json_encode($sortingConditions));
+		$elemente = array();
+		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$ergebnis = $mysqli->query($this->getSqlStatementToLoadBySearchConditions($searchConditions, $pagingConditions, $sortingConditions));
+			
 			if ($mysqli->errno)
 			{
 				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
 			}
 			else
 			{
-				$element = $this->fill($ergebnis->fetch_assoc());
+				while ($datensatz = $ergebnis->fetch_assoc())
+				{
+					array_push($elemente, $this->fill($datensatz));
+				}
 			}
 		}
-
+		
 		$mysqli->close();
+		
+		return $elemente;
+	}
+	
+	/**
+	* Returns the SQL SELECT statement with search conditions as string.
+	*
+	* @param $searchConditions List (key, value) of search conditions. Default is array().
+	* @param $pagingConditions List (key, value) with paging conditions. Default is null.
+	* @param $sortingConditions List (key, value) with sorting conditions. Default is null.
+	*/
+	protected function getSqlStatementToLoadBySearchConditions($searchConditions = array(), $pagingConditions = null, $sortingConditions = null)
+	{
+		global $logger;
+		$sqlStatement = $this->getSqlStatementToLoad();		
+		$searchConditionStrings = $this->getSqlSearchConditionStrings($searchConditions);
 
-		return $element;
+		if (count($searchConditionStrings) == 0)
+		{
+			if ($pagingConditions != null)
+			{
+				if (isset($pagingConditions["PageIndexElementId"]) &&
+					is_numeric($pagingConditions["PageIndexElementId"]))
+				{
+					$sqlStatement .= " WHERE ".$this->getSqlPageIndexCondition($pagingConditions, $sortingConditions);
+				}
+
+				$sqlStatement .= " ".$this->getSqlPageOrderConditionString($pagingConditions, $sortingConditions);
+				$sqlStatement .= " LIMIT ".$pagingConditions["PageSize"];
+			}
+
+			$sqlStatement = "(".$sqlStatement.") ORDER BY Id ASC";
+
+			$logger->debug("SQL: ".$sqlStatement);
+
+			return $sqlStatement;
+		}
+
+		$sqlStatement .= " WHERE ".implode(" AND ", $searchConditionStrings);
+
+		if ($pagingConditions != null)
+		{
+			if (isset($pagingConditions["PageIndexElementId"]) &&
+				is_numeric($pagingConditions["PageIndexElementId"]))
+			{
+				$sqlStatement .= " AND ".$this->getSqlPageIndexCondition($pagingConditions, $sortingConditions);
+			}
+			
+			$sqlStatement .= " ".$this->getSqlPageOrderConditionString($pagingConditions, $sortingConditions);
+			$sqlStatement .= " LIMIT ".$pagingConditions["PageSize"];
+		}
+
+		$sqlStatement = "(".$sqlStatement.") ORDER BY Id ASC";
+
+		$logger->debug("SQL: ".$sqlStatement);
+		
+		return $sqlStatement;
+	}
+	
+	abstract protected function getSqlStatementToLoad();
+	abstract protected function getSqlSearchConditionStrings($searchConditions);
+
+	/**
+	 * 
+	 * 
+	 * @param $pagingConditions List (key, value) with paging conditions. Default is null.
+	 * @param $sortingConditions List (key, value) with sorting conditions. Default is null.
+	 */
+	protected function getSqlPageIndexCondition($pagingConditions = null, $sortingConditions = null)
+	{
+		if (($this->isSortingDirectionAscending($sortingConditions) &&
+			 $this->isPagingDirectionForward($pagingConditions)) ||
+			(!$this->isSortingDirectionAscending($sortingConditions) &&
+			 !$this->isPagingDirectionForward($pagingConditions)))
+		{
+			return $this->getTableName().".Id >= ".$pagingConditions["PageIndexElementId"];			
+		}		
+
+		return $this->getTableName().".Id <= ".$pagingConditions["PageIndexElementId"];
 	}
 
-	abstract protected function getSQLStatementToLoadById($id);
+	protected function isSortingDirectionAscending($sortingConditions = null)
+	{
+		if ($sortingConditions == null ||
+			!isset($sortingConditions["SortingOrder"]) ||
+			strtoupper($sortingConditions["SortingOrder"]) == "ASC")
+		{
+			return true;	
+		}
+
+		if (strtoupper($sortingConditions["SortingOrder"]) == "DESC")
+		{
+			return false;
+		}
+
+		throw new InvalidArgumentException("Value of 'SortingOrder' (".$sortingConditions["SortingOrder"].") is not supported!");
+	}
+
+	protected function isPagingDirectionForward($pagingConditions = null)
+	{
+		if ($pagingConditions == null ||
+			!isset($pagingConditions["PagingDirection"]) ||
+			strtolower($pagingConditions["PagingDirection"]) == "forward")
+		{
+			return true;	
+		}
+
+		if (strtolower($pagingConditions["PagingDirection"]) == "backward")
+		{
+			return false;
+		}
+
+		throw new InvalidArgumentException("Value of 'PagingDirection' (".$pagingConditions["PagingDirection"].") is not supported!");
+	}
+
+	/**
+	 * 
+	 * 
+	 * @param $pagingConditions List (key, value) with paging conditions. Default is null.
+	 * @param $sortingConditions List (key, value) with sorting conditions. Default is null.
+	 */
+	protected function getSqlPageOrderConditionString($pagingConditions = null, $sortingConditions = null)
+	{
+		if (($this->isSortingDirectionAscending($sortingConditions) &&
+			 $this->isPagingDirectionForward($pagingConditions)) ||
+			(!$this->isSortingDirectionAscending($sortingConditions) &&
+			 !$this->isPagingDirectionForward($pagingConditions)))
+		{
+			return "ORDER BY ".$this->getTableName().".Id ASC";
+		}
+		
+		return "ORDER BY ".$this->getTableName().".Id DESC";
+	}
+	
+	public function loadById($id)
+	{
+		$searchConditions = array();
+		$searchConditions["Id"] = $id;
+		
+		$elements = $this->loadBySearchConditions($searchConditions);
+		
+		if ($elements == null ||
+			count($elements) == 0)
+		{
+			return null;
+		}
+
+		return $elements[0];
+	}
+
 	abstract protected function fill($dataSet);
 	#endregion
 

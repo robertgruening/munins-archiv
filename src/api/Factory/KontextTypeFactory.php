@@ -1,13 +1,16 @@
 <?php
 include_once(__DIR__."/Factory.php");
-include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
+include_once(__DIR__."/ListFactory.php");
+include_once(__DIR__."/KontextFactory.php");
 include_once(__DIR__."/../Model/KontextType.php");
 
 class KontextTypeFactory extends Factory implements iListFactory
 {
     #region variables
     private $_listFactory = null;
+    private $_kontextFactory = null;
     #endregion
 
     #region properties
@@ -15,6 +18,16 @@ class KontextTypeFactory extends Factory implements iListFactory
     {
         return $this->_listFactory;
     }
+
+	protected function getKontextFactory()
+	{
+		if ($this->_kontextFactory == null)
+		{
+			$this->_kontextFactory = new KontextFactory();
+		}
+
+		return $this->_kontextFactory;
+	}
     #endregion
 
     #region constructors
@@ -35,40 +48,71 @@ class KontextTypeFactory extends Factory implements iListFactory
     }
 
     #region load
-    protected function getSQLStatementToLoadById($id)
-    {
-        return "SELECT Id, Bezeichnung
-        FROM ".$this->getTableName()."
-        WHERE Id = ".$id.";";
-    }
+	/**
+	* Returns the SQL SELECT statement to load Id, Bezeichnung and CountOfKontexte as string.
+	*/
+	protected function getSqlStatementToLoad()
+	{
+		return "SELECT Id, Bezeichnung, (SELECT COUNT(*) FROM ".$this->getKontextFactory()->getTableName()." WHERE ".$this->getKontextFactory()->getTableName().".Typ_Id = ".$this->getTableName().".Id) AS CountOfKontexte
+			FROM ".$this->getTableName();
+	}
+    
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, IsUsed and TypedNode_Id.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return array();
+		}
+        
+		$sqlSearchConditionStrings = array();
+		
+		if (isset($searchConditions["IsUsed"]))
+		{
+			if ($searchConditions["IsUsed"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()." AS reference WHERE reference.Typ_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()." AS reference WHERE reference.Typ_Id = ".$this->getTableName().".Id)");
+			}
+		}
 
-    public function loadByNodeId($nodeId)
-    {
-        $element = null;
-        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		if (isset($searchConditions["TypedNode_Id"]))
+		{
+			array_push($searchConditions, "Id = (SELECT Typ_Id FROM ".$this->getKontextFactory()->getTableName()." WHERE Id = ".$searchConditions["TypedNode_Id"].")");
+		}
 
-        if (!$mysqli->connect_errno)
-        {
-            $mysqli->set_charset("utf8");
-            $ergebnis = $mysqli->query($this->getSQLStatementToLoadByNodeId($nodeId));
+		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
+		{
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getListFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
+		}
 
-            if (!$mysqli->errno)
-            {
-                $element = $this->fill($ergebnis->fetch_assoc());
-            }
-        }
+		return $sqlSearchConditionStrings;
+	}
 
-        $mysqli->close();
+	public function loadByNodeId($nodeId)
+	{
+		$searchConditions = array();
+		$searchConditions["TypedNode_Id"] = $nodeId;
+		
+		$elements = $this->loadBySearchConditions($searchConditions);
+		
+		if ($elements == null ||
+			count($elements) == 0)
+		{
+			return null;
+		}
 
-        return $element;
-    }
-
-    protected function getSQLStatementToLoadByNodeId($nodeId)
-    {
-        return "SELECT ".$this->getTableName().".Id AS Id, ".$this->getTableName().".Bezeichnung AS Bezeichnung
-        FROM ".$this->getTableName()." LEFT JOIN Kontext ON ".$this->getTableName().".Id = Kontext.Typ_Id
-        WHERE Kontext.Id = ".$nodeId.";";
-    }
+		return $elements[0];
+	}
 
     public function loadAll()
     {
@@ -85,6 +129,8 @@ class KontextTypeFactory extends Factory implements iListFactory
         $kontextType = new KontextType();
         $kontextType->setId(intval($dataSet["Id"]));
         $kontextType->setBezeichnung($dataSet["Bezeichnung"]);
+		// Note: setCountOfKontexte() not implemented
+        //$kontextType->setCountOfKontexte($dataSet["CountOfKontexte"]);
 
         return $kontextType;
     }

@@ -1,13 +1,16 @@
 <?php
 include_once(__DIR__."/Factory.php");
-include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
+include_once(__DIR__."/ListFactory.php");
+include_once(__DIR__."/AblageFactory.php");
 include_once(__DIR__."/../Model/AblageType.php");
 
 class AblageTypeFactory extends Factory implements iListFactory
 {
     #region variables
     private $_listFactory = null;
+    private $_ablageFactory = null;
     #endregion
 
     #region properties
@@ -15,6 +18,16 @@ class AblageTypeFactory extends Factory implements iListFactory
     {
         return $this->_listFactory;
     }
+
+	protected function getAblageFactory()
+	{
+		if ($this->_ablageFactory == null)
+		{
+			$this->_ablageFactory = new AblageFactory();
+		}
+
+		return $this->_ablageFactory;
+	}
     #endregion
 
     #region constructors
@@ -35,28 +48,55 @@ class AblageTypeFactory extends Factory implements iListFactory
     }
 
     #region load
-    /**
-    * Returns the SQL statement to load ID and Bezeichnung
-    * by AblageType ID.
-    *
-    * @param $id ID of the AblageType to load.
-    */
-    protected function getSQLStatementToLoadById($id)
-    {
-        return "SELECT
-        Id, Bezeichnung, (
-            SELECT
-            COUNT(*)
-            FROM
-            Ablage
-            WHERE
-            Typ_Id = ".$id."
-        ) AS CountOfAblagen
-        FROM
-        ".$this->getTableName()."
-        WHERE
-        Id = ".$id.";";
-    }
+	/**
+	* Returns the SQL SELECT statement to load Id, Bezeichnung and CountOfAblagen as string.
+	*/
+	protected function getSqlStatementToLoad()
+	{
+		return "SELECT Id, Bezeichnung, (SELECT COUNT(*) FROM ".$this->getAblageFactory()->getTableName()." WHERE ".$this->getAblageFactory()->getTableName().".Typ_Id = ".$this->getTableName().".Id) AS CountOfAblagen
+			FROM ".$this->getTableName();
+	}
+    
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, IsUsed and TypedNode_Id.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return array();
+		}
+        
+		$sqlSearchConditionStrings = array();
+
+		if (isset($searchConditions["IsUsed"]))
+		{
+			if ($searchConditions["IsUsed"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getAblageFactory()->getTableName()." AS reference WHERE reference.Typ_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getAblageFactory()->getTableName()." AS reference WHERE reference.Typ_Id = ".$this->getTableName().".Id)");
+			}
+		}
+
+		if (isset($searchConditions["TypedNode_Id"]))
+		{
+			array_push($searchConditions, "Id = (SELECT Typ_Id FROM ".$this->getAblageFactory()->getTableName()." WHERE Id = ".$searchConditions["TypedNode_Id"].")");
+		}
+
+		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
+		{
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getListFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
+		}
+		
+		return $sqlSearchConditionStrings;
+	}
 
     public function loadAll()
     {

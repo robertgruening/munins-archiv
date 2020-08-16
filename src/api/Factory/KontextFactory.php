@@ -2,6 +2,7 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/KontextTypeFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/FundFactory.php");
 include_once(__DIR__."/OrtFactory.php");
@@ -94,39 +95,63 @@ class KontextFactory extends Factory implements iTreeFactory
     }
 
     #region load
-    protected function getSQLStatementToLoadById($id)
-    {
-        $kontextType = $this->getKontextTypeFactory()->loadByNodeId($id);
+	/**
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id, GeoPointLatitude (for Fundstelle), GeoPointLongitude (for Fundstelle), Datum (for Begehung) and Kommentar (for Begehung) as string.
+	*/
+	protected function getSqlStatementToLoad()
+	{		
+			return "SELECT ".$this->getTableName().".Id AS Id,
+			 ".$this->getTableName().".Bezeichnung AS Bezeichnung, 
+			 ".$this->getTableName().".Typ_Id AS Typ_Id, 
+			 ST_X(Fundstelle.GeoPoint) AS GeoPointLatitude, 
+			 ST_Y(Fundstelle.GeoPoint) AS GeoPointLongitude,
+			 Begehung.Datum AS Datum, 
+			 Begehung.Kommentar AS Kommentar
+			FROM ".$this->getTableName()."
+			 LEFT JOIN Fundstelle ON ".$this->getTableName().".Id = Fundstelle.Id
+			 LEFT JOIN Begehung ON ".$this->getTableName().".Id = Begehung.Id";
+	}
 
-        if ($kontextType == null)
-        {
-            throw new Exception("Der Kontexttyp ist nicht gesetzt!");
-        }
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, Typ_Id, HasFunde, HasParent, Parent_Id, HasChildren and Child_Id.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return array();
+		}
 
-        switch ($kontextType->getBezeichnung())
-        {
-            case "Fundstelle":
-            {
-                return "SELECT ".$this->getTableName().".Id AS Id, ".$this->getTableName().".Bezeichnung AS Bezeichnung, ".$this->getTableName().".Typ_Id AS Typ_Id, ST_X(Fundstelle.GeoPoint) AS GeoPointLatitude, ST_Y(Fundstelle.GeoPoint) AS GeoPointLongitude
-                FROM ".$this->getTableName()." LEFT JOIN Fundstelle ON ".$this->getTableName().".Id = Fundstelle.Id
-                WHERE ".$this->getTableName().".Id = ".$id.";";
-            }
-            case "Begehungsfläche":
-            {
-                return "SELECT Id, Bezeichnung, Typ_Id
-                FROM ".$this->getTableName()."
-                WHERE Id = ".$id.";";
-            }
-            case "Begehung":
-            {
-                return "SELECT ".$this->getTableName().".Id AS Id, ".$this->getTableName().".Bezeichnung AS Bezeichnung, ".$this->getTableName().".Typ_Id AS Typ_Id, Begehung.Datum AS Datum, Begehung.Kommentar AS Kommentar
-                FROM ".$this->getTableName()." LEFT JOIN Begehung ON ".$this->getTableName().".Id = Begehung.Id
-                WHERE ".$this->getTableName().".Id = ".$id.";";
-            }
-        }
+		$sqlSearchConditionStrings = array();
+		
+		if (isset($searchConditions["Typ_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Typ_Id = ".$searchConditions["Typ_Id"]);
+		}
+		
+		if (isset($searchConditions["HasFunde"]))
+		{
+			if ($searchConditions["HasFunde"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()." AS fund WHERE fund.".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()." AS fund WHERE fund.".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+		}
 
-        throw new Exception("Der Kontexttyp ist nicht implementiert!");
-    }
+		if ($this->getTreeFactory() instanceof iSqlSearchConditionStringsProvider)
+		{
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getTreeFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
+		}
+		
+		return $sqlSearchConditionStrings;
+	}
 
     protected function fill($dataSet)
     {

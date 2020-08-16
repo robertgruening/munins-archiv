@@ -2,6 +2,7 @@
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/AblageTypeFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/FundFactory.php");
 include_once(__DIR__."/KontextFactory.php");
@@ -66,59 +67,81 @@ class AblageFactory extends Factory implements iTreeFactory
     }
 
     #region load
-	public function loadByGuid($guid)
+	/**
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Guid and Typ_Id as string.
+	*/
+	protected function getSqlStatementToLoad()
+	{		
+        	return "SELECT Id, Bezeichnung, Guid, Typ_Id
+        		FROM ".$this->getTableName();
+	}
+
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, Typ_Id, Guid, HasFunde, HasParent, Parent_Id, HasChildren and Child_Id.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
 	{
-		global $logger;
-		$logger->debug("Lade Element (".$guid.")");
-
-		$element = null;
-		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-
-		if (!$mysqli->connect_errno)
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
 		{
-			$mysqli->set_charset("utf8");
-			$ergebnis = $mysqli->query($this->getSQLStatementToLoadByGuid($guid));
+			return array();
+		}
 
-			if ($mysqli->errno)
+		$sqlSearchConditionStrings = array();
+		
+		if (isset($searchConditions["Typ_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Typ_Id = ".$searchConditions["Typ_Id"]);
+		}
+		
+		if (isset($searchConditions["Guid"]))
+		{
+			array_push($sqlSearchConditionStrings, "Guid = '".$searchConditions["Id"]."'");
+		}
+
+		if (isset($searchConditions["HasFunde"]))
+		{
+			if ($searchConditions["HasFunde"] === true)
 			{
-				$logger->error("Datenbankfehler: ".$mysqli->errno." ".$mysqli->error);
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()." AS fund WHERE fund.".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
 			}
 			else
 			{
-				$element = $this->fill($ergebnis->fetch_assoc());
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()." AS fund WHERE fund.".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
 			}
 		}
 
-		$mysqli->close();
+		if (isset($searchConditions["Fund_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Id = (SELECT ".$this->getFundFactory()->getTableName().".".$this->getTableName()."_Id FROM ".$this->getFundFactory()->getTableName()." WHERE ".$this->getFundFactory()->getTableName().".Id = ".$searchConditions["Fund_Id"].")");
+		}
 
-		return $element;
+		if ($this->getTreeFactory() instanceof iSqlSearchConditionStringsProvider)
+		{
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getTreeFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
+		}
+		
+		return $sqlSearchConditionStrings;
 	}
+	
+	public function loadByGuid($guid)
+	{
+		$searchConditions = array();
+		$searchConditions["Guid"] = $guid;
+		
+		$elements = $this->loadBySearchConditions($searchConditions);
+		
+		if ($elements == null ||
+			count($elements) == 0)
+		{
+			return null;
+		}
 
-    /**
-    * Returns the SQL statement to load ID, Bezeichnung, Ablage type ID and GUID
-    * by Ablage GUID.
-    *
-    * @param $guid GUID of the Ablage to load.
-    */
-    protected function getSQLStatementToLoadByGuid($guid)
-    {
-        return "SELECT Id, Bezeichnung, Typ_Id, Guid
-        FROM ".$this->getTableName()."
-        WHERE Guid = '".$guid."';";
-    }
-
-    /**
-    * Returns the SQL statement to load ID, Bezeichnung, Ablage type ID and GUID
-    * by Ablage ID.
-    *
-    * @param $id ID of the Ablage to load.
-    */
-    protected function getSQLStatementToLoadById($id)
-    {
-        return "SELECT Id, Bezeichnung, Typ_Id, Guid
-        FROM ".$this->getTableName()."
-        WHERE Id = ".$id.";";
-    }
+		return $elements[0];
+	}
 
     /**
     * Creates an Ablage instance and fills

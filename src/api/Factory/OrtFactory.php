@@ -1,8 +1,9 @@
 <?php
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/OrtTypeFactory.php");
-include_once(__DIR__."/OrtCategoryFactory.php");
 include_once(__DIR__."/ITreeFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
+include_once(__DIR__."/OrtCategoryFactory.php");
 include_once(__DIR__."/TreeFactory.php");
 include_once(__DIR__."/KontextFactory.php");
 include_once(__DIR__."/../Model/Ort.php");
@@ -63,24 +64,73 @@ class OrtFactory extends Factory implements iTreeFactory
     }
 
     #region load
-    protected function getSQLStatementToLoadById($id)
-    {
-        return "SELECT
-                    Id,
-                    Bezeichnung,
-                    Typ_Id,
-                    Category_Id,
-                    (SELECT
-                        COUNT(*)
-                    FROM
-                        Kontext_Ort
-                    WHERE
-                        Ort_Id = ".$id.") AS CountOfKontexte
-                FROM 
-                    ".$this->getTableName()."
-                WHERE Id = ".$id.";";
-    }
+    /**
+     * Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id, Category_Id and CountOfKontexte as string.
+     */
+    protected function getSqlStatementToLoad()
+	{
+		return "SELECT Id, Bezeichnung, Typ_Id, Category_Id, (SELECT COUNT(*) FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id) AS CountOfKontexte
+			FROM ".$this->getTableName();
+	}
 
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, Typ_Id, Category_Id, HasKontexte, Kontext_Id, HasParent, Parent_Id, HasChildren and Child_Id.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return array();
+		}
+
+		$sqlSearchConditionStrings = array();
+		
+		if (isset($searchConditions["Typ_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Typ_Id = ".$searchConditions["Typ_Id"]);
+		}
+		
+		if (isset($searchConditions["Category_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Category_Id = ".$searchConditions["Category_Id"]);
+		}
+
+		if (isset($searchConditions["HasKontexte"]))
+		{
+			if ($searchConditions["HasKontexte"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+		}
+
+		if (isset($searchConditions["Kontext_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Id IN (SELECT ".$this->getTableName()."_Id FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getKontextFactory()->getTableName()."_Id = ".$searchConditions["Kontext_Id"].")");
+		}
+
+		if ($this->getTreeFactory() instanceof iSqlSearchConditionStringsProvider)
+		{
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getTreeFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
+		}
+		
+		return $sqlSearchConditionStrings;
+	}
+
+    /**
+    * Creates an Ablage instance and fills
+    * the ID, Bezeichnung and GUID by the given
+    * dataset.
+    *
+    * @param $dataset Dataset from Ablage table.
+    */
     protected function fill($dataSet)
     {
         if ($dataSet == null)
@@ -104,12 +154,22 @@ class OrtFactory extends Factory implements iTreeFactory
     #endregion
 
     #region save
+    /**
+    * Returns the SQL statement to insert Bezeichnung, Ort type ID and Ort category ID.
+    *
+    * @param iNode $ort Ort to be inserted.
+    */
     protected function getSQLStatementToInsert(iNode $ort)
     {
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, Category_Id)
                 VALUES ('".addslashes($ort->getBezeichnung())."', ".$ort->getType()->getId().", ".$ort->getCategory()->getId().");";
     }
 
+    /**
+    * Returns the SQL statement to update Bezeichnung, Ort type ID and Ort category ID.
+    *
+    * @param iNode $ort Ort to be updated.
+    */
     protected function getSQLStatementToUpdate(iNode $ort)
     {
         return "UPDATE ".$this->getTableName()."

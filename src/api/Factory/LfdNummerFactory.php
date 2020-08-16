@@ -1,6 +1,7 @@
 <?php
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/IListFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
 include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/KontextFactory.php");
 include_once(__DIR__."/../Model/LfdNummer.php");
@@ -46,12 +47,67 @@ class LfdNummerFactory extends Factory implements iListFactory
     }
 
     #region load
-    protected function getSQLStatementToLoadById($id)
-    {
-        return "SELECT Id, Bezeichnung, COUNT(*) AS CountOfKontexte
-                FROM ".$this->getTableName()." RIGHT JOIN Kontext_LfdNummer ON ".$this->getTableName().".Id = Kontext_LfdNummer.LfdNummer_Id
-                WHERE Id = ".$id.";";
-    }
+	/**
+	* Returns the SQL SELECT statement to load Id, Bezeichnung and CountOfKontexte as string.
+	*/
+	protected function getSqlStatementToLoad()
+	{
+		return "SELECT Id, Bezeichnung, (SELECT COUNT(*) FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id) AS CountOfKontexte
+			FROM ".$this->getTableName();
+	}
+
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, HasKontexte, Kontext_Id and IsUsed.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return array();
+		}
+        
+		$sqlSearchConditionStrings = array();
+		
+		if (isset($searchConditions["HasKontexte"]))
+		{
+			if ($searchConditions["HasKontexte"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+		}
+	
+		if (isset($searchConditions["Kontext_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Id IN (SELECT ".$this->getTableName()."_Id FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getKontextFactory()->getTableName()."_Id = ".$searchConditions["Kontext_Id"].")");
+		}
+	
+		if (isset($searchConditions["IsUsed"]))
+		{
+			if ($searchConditions["IsUsed"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+		}
+
+		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
+		{
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getListFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
+		}
+
+		return $sqlSearchConditionStrings;
+	}
 
     public function loadAll()
     {

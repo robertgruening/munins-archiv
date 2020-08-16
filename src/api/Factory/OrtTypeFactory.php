@@ -1,19 +1,32 @@
 <?php
 include_once(__DIR__."/Factory.php");
-include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
+include_once(__DIR__."/ListFactory.php");
+include_once(__DIR__."/OrtFactory.php");
 include_once(__DIR__."/../Model/OrtType.php");
 
 class OrtTypeFactory extends Factory implements iListFactory
 {
     #region variables
     private $_listFactory = null;
+    private $_ortFactory = null;
     #endregion
 
     #region properties
     protected function getListFactory()
     {
         return $this->_listFactory;
+    }
+    
+    protected function getOrtFactory()
+    {
+        if ($this->_ortFactory == null)
+        {
+            $this->_ortFactory = new OrtFactory();
+        }
+
+        return $this->_ortFactory;
     }
     #endregion
 
@@ -35,22 +48,55 @@ class OrtTypeFactory extends Factory implements iListFactory
     }
 
     #region load
-    protected function getSQLStatementToLoadById($id)
-    {
-        return "SELECT
-        Id, Bezeichnung, (
-            SELECT
-            COUNT(*)
-            FROM
-            Ort
-            WHERE
-            Typ_Id = ".$id."
-        ) AS CountOfOrten
-        FROM
-        ".$this->getTableName()."
-        WHERE
-        Id = ".$id.";";
-    }
+    /**
+     * Returns the SQL SELECT statement to load Id, Bezeichnung and CountOfOrten as string.
+     */
+    protected function getSqlStatementToLoad()
+	{
+		return "SELECT Id, Bezeichnung, (SELECT COUNT(*) FROM ".$this->getOrtFactory()->getTableName()." WHERE ".$this->getOrtFactory()->getTableName().".Typ_Id = ".$this->getTableName().".Id) AS CountOfOrten
+			FROM ".$this->getTableName();
+	}
+    
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, IsUsed and TypedNode_Id.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return array();
+		}
+
+		$sqlSearchConditionStrings = array();
+
+		if (isset($searchConditions["IsUsed"]))
+		{
+			if ($searchConditions["IsUsed"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getOrtFactory()->getTableName()." AS reference WHERE reference.Typ_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getOrtFactory()->getTableName()." AS reference WHERE reference.Typ_Id = ".$this->getTableName().".Id)");
+			}
+		}
+
+		if (isset($searchConditions["TypedNode_Id"]))
+		{
+			array_push($searchConditions, "Id = (SELECT Typ_Id FROM ".$this->getOrtFactory()->getTableName()." WHERE Id = ".$searchConditions["TypedNode_Id"].")");
+		}
+
+		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
+		{
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getListFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
+		}
+		
+		return $sqlSearchConditionStrings;
+	}
 
     public function loadAll()
     {
@@ -64,6 +110,9 @@ class OrtTypeFactory extends Factory implements iListFactory
             return null;
         }
 
+        global $logger;
+        $logger->debug("Fülle Ortstyp (".intval($dataset["Id"]).") mit Daten");
+
         $ortType = new OrtType();
         $ortType->setId(intval($dataset["Id"]));
         $ortType->setBezeichnung($dataset["Bezeichnung"]);
@@ -74,12 +123,24 @@ class OrtTypeFactory extends Factory implements iListFactory
     #endregion
 
     #region save
+    /**
+    * Returns the SQL statement to insert Bezeichnung
+    * of the given OrtType.
+    *
+    * @param iNode $element OrtType to insert.
+    */
     protected function getSQLStatementToInsert(iNode $element)
     {
         return "INSERT INTO ".$this->getTableName()." (Bezeichnung)
         VALUES ('".addslashes($element->getBezeichnung())."');";
     }
 
+    /**
+    * Returns the SQL statement to update Bezeichnung
+    * of the given OrtType.
+    *
+    * @param iNode $element OrtType to update.
+    */
     protected function getSQLStatementToUpdate(iNode $element)
     {
         return "UPDATE ".$this->getTableName()."

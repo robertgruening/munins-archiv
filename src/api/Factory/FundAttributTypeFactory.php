@@ -1,13 +1,16 @@
 <?php
 include_once(__DIR__."/Factory.php");
-include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/IListFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
+include_once(__DIR__."/ListFactory.php");
+include_once(__DIR__."/FundAttributFactory.php");
 include_once(__DIR__."/../Model/FundAttributType.php");
 
 class FundAttributTypeFactory extends Factory implements iListFactory
 {
     #region variables
     private $_listFactory = null;
+    private $_fundAttributFactory = null;
     #endregion
 
     #region properties
@@ -15,6 +18,16 @@ class FundAttributTypeFactory extends Factory implements iListFactory
     {
         return $this->_listFactory;
     }
+
+	protected function getFundAttributFactory()
+	{
+		if ($this->_fundAttributFactory == null)
+		{
+			$this->_fundAttributFactory = new FundAttributFactory();
+		}
+
+		return $this->_fundAttributFactory;
+	}
     #endregion
 
     #region constructors
@@ -35,22 +48,55 @@ class FundAttributTypeFactory extends Factory implements iListFactory
     }
 
     #region load
-    protected function getSQLStatementToLoadById($id)
-    {
-        return "SELECT
-        Id, Bezeichnung, (
-            SELECT
-            COUNT(*)
-            FROM
-            FundAttribut
-            WHERE
-            Typ_Id = ".$id."
-        ) AS CountOfFundAttributen
-        FROM
-        ".$this->getTableName()."
-        WHERE
-        Id = ".$id.";";
-    }
+	/**
+	* Returns the SQL SELECT statement to load Id, Bezeichnung and CountOfFundAttributen as string.
+	*/
+	protected function getSqlStatementToLoad()
+	{
+		return "SELECT Id, Bezeichnung, (SELECT COUNT(*) FROM ".$this->getFundAttributFactory()->getTableName()." WHERE ".$this->getFundAttributFactory()->getTableName().".Typ_Id = ".$this->getTableName().".Id) AS CountOfFundAttributen
+			FROM ".$this->getTableName();
+	}
+    
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, IsUsed and TypedNode_Id.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return array();
+		}
+        
+		$sqlSearchConditionStrings = array();
+		
+		if (isset($searchConditions["IsUsed"]))
+		{
+			if ($searchConditions["IsUsed"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getFundAttributFactory()->getTableName()." AS reference WHERE reference.Typ_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getFundAttributFactory()->getTableName()." AS reference WHERE reference.Typ_Id = ".$this->getTableName().".Id)");
+			}
+		}
+
+		if (isset($searchConditions["TypedNode_Id"]))
+		{
+			array_push($searchConditions, "Id = (SELECT Typ_Id FROM ".$this->getFundAttributFactory()->getTableName()." WHERE Id = ".$searchConditions["TypedNode_Id"].")");
+		}
+
+		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
+		{
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getListFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
+		}
+		
+		return $sqlSearchConditionStrings;
+	}
 
     public function loadAll()
     {

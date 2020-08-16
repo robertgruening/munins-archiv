@@ -12,6 +12,7 @@ $(document).ready(function () {
 	InitButtonSelectFundAttribut();
 	InitButtonSelectKontext();
 	InitButtonSelectAblage();
+	InitButtonToSearch();
 
 	InitFieldId();
 	InitFieldBeschriftung();
@@ -162,6 +163,28 @@ function DisableButtonUndo() {
 
 function ResetPropertiesMessages() {
 	$(".fieldValue div[name=messages]").empty();
+}
+//#endregion
+
+//#region open search
+function InitButtonToSearch() {
+	EnableButtonToSearch();
+}
+
+function EnableButtonToSearch() {
+	$("#buttonToSearch").off("click");
+	$("#buttonToSearch").click( function() {
+        console.log("button 'to search' clicked");
+		window.open("/Munins Archiv/src/pages/Fund/Search.html", "_self");
+	});
+	$("#buttonToSearch").removeClass("disabled");
+	$("#buttonToSearch").prop("disabled", false);
+}
+
+function DisableButtonToSearch() {
+	$("#buttonToSearch").off("click");
+	$("#buttonToSearch").addClass("disabled");
+	$("#buttonToSearch").prop("disabled", true);
 }
 //#endregion
 //#endregion

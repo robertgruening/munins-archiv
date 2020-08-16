@@ -1,19 +1,28 @@
 <?php
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/../Model/Fund.php");
+include_once(__DIR__."/IListFactory.php");
+include_once(__DIR__."/ISqlSearchConditionStringsProvider.php");
+include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/FundAttributFactory.php");
 include_once(__DIR__."/AblageFactory.php");
 include_once(__DIR__."/KontextFactory.php");
 
-class FundFactory extends Factory
+class FundFactory extends Factory implements iListFactory
 {
     #region variables
+    private $_listFactory = null;
     private $_fundAttributFactory = null;
     private $_ablageFactory = null;
     private $_kontextFactory = null;
     #endregion
 
     #region properties
+    protected function getListFactory()
+    {
+        return $this->_listFactory;
+    }
+
     protected function getFundAttributFactory()
     {
         return $this->_fundAttributFactory;
@@ -43,6 +52,7 @@ class FundFactory extends Factory
     #region constructors
     function __construct()
     {
+        $this->_listFactory = new ListFactory($this);
         $this->_fundAttributFactory = new FundAttributFactory();
     }
     #endregion
@@ -57,11 +67,101 @@ class FundFactory extends Factory
     }
 
     #region load
-    protected function getSQLStatementToLoadById($id)
+	/**
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3 and Masse as string.
+	*/
+	protected function getSQLStatementToLoad()
+	{
+		return "SELECT Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3, Masse
+			FROM ".$this->getTableName();
+	}
+    
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, HasAblage, Ablage_Id, HasKontext, Kontext_Id, HasFundAttribute and FundAttribut_Ids.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return array();
+		}
+        
+		$sqlSearchConditionStrings = array();
+		
+		if (isset($searchConditions["HasAblage"]))
+		{
+			if ($searchConditions["HasAblage"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "Ablage_Id IS NOT NULL");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "Ablage_Id IS NULL");
+			}		
+		}
+		
+		if (isset($searchConditions["Ablage_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Ablage_Id = ".$searchConditions["Ablage_Id"]);
+		}
+
+		if (isset($searchConditions["HasKontext"]))
+		{
+			if ($searchConditions["HasKontext"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "Kontext_Id IS NOT NULL");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "Kontext_Id IS NULL");
+			}		
+		}
+		
+		if (isset($searchConditions["Kontext_Id"]))
+		{
+			array_push($sqlSearchConditionStrings, "Kontext_Id = ".$searchConditions["Kontext_Id"]);
+		}
+		
+		if (isset($searchConditions["HasFundAttribute"]))
+		{
+			if ($searchConditions["HasFundAttribute"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "EXISTS (SELECT * FROM ".$this->getTableName()."_".$this->getFundAttributFactory()->getTableName()." WHERE ".$this->getTableName()."_".$this->getFundAttributFactory()->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getTableName()."_".$this->getFundAttributFactory()->getTableName()." WHERE ".$this->getTableName()."_".$this->getFundAttributFactory()->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
+			}		
+		}
+		
+		if (isset($searchConditions["FundAttribut_Ids"]))
+		{
+			$fundAttributIds = explode(",", $searchConditions["FundAttribut_Ids"]);
+
+			foreach($fundAttributIds as $fundAttributId)
+			{
+				if (is_numeric($fundAttributId))
+				{
+					array_push($sqlSearchConditionStrings, "Id IN (SELECT ".$this->getTableName()."_".$this->getFundAttributFactory()->getTableName().".Fund_Id FROM ".$this->getTableName()."_".$this->getFundAttributFactory()->getTableName()." WHERE ".$this->getTableName()."_".$this->getFundAttributFactory()->getTableName().".".$this->getFundAttributFactory()->getTableName()."_Id = ".$fundAttributId.")");
+				}
+			}
+		}
+		
+		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
+		{
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getListFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
+		}
+
+		return $sqlSearchConditionStrings;
+	}
+
+    public function loadAll()
     {
-        return "SELECT Id, Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse
-        FROM Fund
-        WHERE Id = ".$id.";";
+        return $this->getListFactory()->loadAll();
     }
 
     protected function fill($dataSet)
@@ -87,7 +187,7 @@ class FundFactory extends Factory
         $fund->setDimension1($dataSet["Dimension1"]);
         $fund->setDimension2($dataSet["Dimension2"]);
         $fund->setDimension3($dataSet["Dimension3"]);
-        $fund->setMasse($dataSet["Masse"]);
+		$fund->setMasse($dataSet["Masse"]);
         $fund->setAblage($this->getAblageFactory()->loadByFund($fund));
         $fund->setKontext($this->getKontextFactory()->loadByFund($fund));
         $fund->setFundAttribute($this->getFundAttributFactory()->loadByFund($fund));

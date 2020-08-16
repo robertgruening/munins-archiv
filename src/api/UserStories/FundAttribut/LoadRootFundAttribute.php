@@ -29,8 +29,8 @@ class LoadRootFundAttribute extends UserStory
 
     protected function execute()
     {
-        $lfdNummerFactory = new FundAttributFactory();
-        $roots = $lfdNummerFactory->loadRoots();
+        $fundAttributFactory = new FundAttributFactory();
+        $roots = $fundAttributFactory->loadRoots();
         $this->setRootFundAttribute($roots);
 
         return true;
