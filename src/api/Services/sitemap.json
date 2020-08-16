@@ -147,13 +147,14 @@
 	{
 		"Title" : "Funde",
 		"Icon" : "fa-puzzle-piece",
-		"URL" : "/Munins Archiv/src/pages/Fund/Form.html",
+		"URL" : "/Munins Archiv/src/pages/Fund/Search.html",
 		"Children" :
 		[
 			{
 				"Title" : "Fund anlegen",
 				"URL" : "/Munins Archiv/src/pages/Fund/Form.html",
-				"PageName" : "FundFormNew"
+				"PageName" : "FundFormNew",
+				"Visible" : false
 			},
 			{
 				"Title" : "Fund bearbeiten",
@@ -165,7 +166,8 @@
 				"Title" : "Funde suchen",
 				"URL" : "/Munins Archiv/src/pages/Fund/Search.html",
 				"PageName" : "FundSearch",
-				"Enabled" : true
+				"Enabled" : true,
+				"Visible" : true
 			}
 		]
 	},

@@ -5,6 +5,7 @@ $(document).ready(function () {
 	_viewModelSearchResultListFund = viewModelFactory.getViewModelSearchResultListFund();
 
     RegisterToViewModel();
+	InitButtonNew();
 
 	InitButtonSearch();
 	initButtonGoToFirstPage();
@@ -28,6 +29,26 @@ function RegisterToViewModel() {
 	_viewModelSearchResultListFund.register("search", new GuiClient(ShowMessageSearchResultDisplayed, showErrorMessages));
 	_viewModelSearchResultListFund.register("count", new GuiClient(setLabelCount, resetLabelCount));
 }
+//#region form actions
+//#region new
+function InitButtonNew() {
+	EnableButtonNew();
+	$("#buttonNew").attr("href", "/Munins Archiv/src/pages/Fund/Form.html");
+}
+
+function EnableButtonNew() {
+	$("#buttonNew").attr("href", "/Munins Archiv/src/pages/Fund/Form.html");
+	$("#buttonNew").removeClass("disabled");
+	$("#buttonNew").prop("disabled", false);
+}
+
+function DisableButtonNew() {
+	$("#buttonNew").removeAttr("href");
+	$("#buttonNew").addClass("disabled");
+	$("#buttonNew").prop("disabled", true);
+}
+//#endregion
+//#endregion
 
 function clearSelectedItemHighlighting() {
     $(".jsgrid-row, .jsgrid-alt-row").each(function(index){
@@ -214,6 +235,15 @@ function getSearchConditions() {
 			searchConditions.push({ "key" : "containsBezeichnung", "value" : $("#textboxFilterBeschriftung").val() });
 		}
 		searchConditions.push({ "key" : "containsBezeichnung", "value" : $("#textboxFilterBeschriftung").val() });
+	}
+
+	if ($("[name='choiceFilterHasFundAttribute']:checked").val() == "yes")
+	{
+		searchConditions.push({ "key" : "hasFundAttribute", "value" : "true" });
+	}
+	else if ($("[name='choiceFilterHasFundAttribute']:checked").val() == "no")
+	{
+		searchConditions.push({ "key" : "hasFundAttribute", "value" : "false" });
 	}
 
 	if ($("[name='choiceFilterHasAblage']:checked").val() == "yes")

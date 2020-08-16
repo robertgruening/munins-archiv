@@ -58,6 +58,9 @@
 		<div class=form>
 			<div class=formBlock>
 				<h2>Suche</h2>
+				<ul id=toolBar>
+					<li><a id=buttonNew title=anlegen class=ui-button><i class="fas fa-plus"></i><span>Anlegen</span></a></li>
+				</ul>
 			    <div id=divFilter>
 				    <div class=fieldDescription>
 					    <label>Beschriftung: </label>
@@ -66,6 +69,14 @@
 					    <input id=textboxFilterBeschriftung type=text class=field></input>
 						<input type=radio name=choiceFilterBeschriftung value=exact><label for=exact>exakt</label></input>
 						<input type=radio name=choiceFilterBeschriftung value=contains checked=true><label for=contains>enthält</label></input>
+				    </div>
+				    <div class=fieldDescription>
+					    <label>hat Fundattribute: </label>
+				    </div>
+				    <div class=fieldValue>
+						<input type=radio name=choiceFilterHasFundAttribute value=yes><label for=yes>ja</label></input>
+						<input type=radio name=choiceFilterHasFundAttribute value=no><label for=no>nein</label></input>
+						<input type=radio name=choiceFilterHasFundAttribute value=any checked=true><label for=any>egal</label></input>
 				    </div>
 				    <div class=fieldDescription>
 					    <label>hat Ablage: </label>
