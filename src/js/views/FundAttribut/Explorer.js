@@ -327,14 +327,14 @@ function InitGrid()
         rowClick: function(args) {
 			console.info("row clicked");
 			console.debug("clicked item", args.item);
-			markSelectedChildItem(args.itemIndex);
+			markSelectedChildItem(this.paging ? args.itemIndex % this.pageSize : args.itemIndex);
 			_viewModelExplorerFundAttribut.selectChildItem(args.item);
         },
 
 		rowDoubleClick: function(args) {
 			console.info("row double clicked");
 			console.debug("clicked item", args.item);
-			markSelectedChildItem(args.itemIndex);
+			markSelectedChildItem(this.paging ? args.itemIndex % this.pageSize : args.itemIndex);
 			console.warn("view model will not be informed about double clicked grid item");
 			window.open("/Munins Archiv/src/pages/FundAttribut/Explorer.html?Id=" + args.item.Id, "_self");
 		}

@@ -121,7 +121,7 @@ function InitGrid()
         rowClick: function(args) {
 			console.info("row clicked");
 			console.debug("clicked item", args.item);
-			markSelectedItem(args.itemIndex);
+			markSelectedItem(this.paging ? args.itemIndex % this.pageSize : args.itemIndex);
 			_viewModelListLfdNummer.selectItem(args.item);
         }
     });

@@ -119,7 +119,8 @@ var ViewModelExplorer = function (webServiceClient) {
 				this._selectedChildItem = this._model.Children[i];
 				var args = {
 					SelectedItem : this._selectedChildItem,
-					Index : i
+					Index : i,
+					PageSize : 10
 				};
 				this._update("childItemSelected", args);
 				return;

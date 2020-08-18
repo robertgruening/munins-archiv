@@ -77,7 +77,8 @@ var ViewModelList = function (webServiceClient) {
 				this._selectedItem = this._models[i];
 				var args = {
 					SelectedItem : this._selectedItem,
-					Index : i
+					Index : i,
+					PageSize : 10
 				};
 				this._update("itemSelected", args);
 				break;

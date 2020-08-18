@@ -3,7 +3,7 @@
 	max-width: 300px;
 	height: 250px;
 	max-height: 250px;
-	overflow: scroll;
+	overflow-y: scroll;
 	border: 1px solid lightgray;
 	padding: 10px;
 	margin-right: 10px;

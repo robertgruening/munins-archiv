@@ -208,8 +208,16 @@ function esti_initGrid()
         inserting: false,
         editing: false,
         sorting: true,
-        paging: false,
+        paging: true,
 		autoload: false,
+
+		pageSize: 10,
+		pageButtonCount: 5,
+		pagerFormat: "Seiten: {first} {prev} {pages} {next} {last}",
+		pagePrevText: "Zurück",
+		pageNextText: "Weiter",
+		pageFirstText: "Anfang",
+		pageLastText: "Ende",
 
 		fields: [
 			{
@@ -243,14 +251,14 @@ function esti_initGrid()
         rowClick: function(args) {
 			console.info("row clicked");
 			console.debug("clicked item", args.item);
-			esti_markSelectedChildItem(args.itemIndex);
+			esti_markSelectedChildItem(this.paging ? args.itemIndex % this.pageSize : args.itemIndex);
 			_viewModelExplorer.selectChildItem(args.item);
         },
 
 		rowDoubleClick: function(args) {
 			console.info("row double clicked");
 			console.debug("clicked item", args.item);
-			esti_markSelectedChildItem(args.itemIndex);
+			esti_markSelectedChildItem(this.paging ? args.itemIndex % this.pageSize : args.itemIndex);
 			console.warn("view model will not be informed about double clicked grid item");
 			_viewModelExplorer.load(args.item.Id);
 		}
@@ -276,6 +284,8 @@ function esti_updateGridDataChildren(children) {
 
 		entries.push(copy);
 	});
+
+	$("#explorerSelect", _htmlContainerElement).jsGrid("openPage", 1);
 
 	$("#explorerSelect", _htmlContainerElement).jsGrid({
 		data: entries
