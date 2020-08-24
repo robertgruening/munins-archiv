@@ -99,7 +99,7 @@ class AblageFactory extends Factory implements iTreeFactory
 		
 		if (isset($searchConditions["Guid"]))
 		{
-			array_push($sqlSearchConditionStrings, "Guid = '".$searchConditions["Id"]."'");
+			array_push($sqlSearchConditionStrings, "Guid = '".$searchConditions["Guid"]."'");
 		}
 
 		if (isset($searchConditions["HasFunde"]))
