@@ -13,7 +13,9 @@ class Fund implements iNode
     public $Masse;
     public $FundAttribute;
     public $Ablage;
-    public $Kontext;
+	public $Kontext;
+	public $FileName;
+	public $FolderName;
     
     
     public function getId()
@@ -156,6 +158,26 @@ class Fund implements iNode
         $this->Kontext = $kontext;
     }
     
+    public function getFileName()
+    {
+        return $this->FileName;
+    }
+    
+    public function setFileName($fileName)
+    {
+        $this->FileName = $fileName;
+    }
+    
+    public function getFolderName()
+    {
+        return $this->FolderName;
+    }
+    
+    public function setFolderName($folderName)
+    {
+        $this->FolderName = $folderName;
+    }
+    
     function __construct()
     {
         $this->Id = -1;
@@ -168,6 +190,8 @@ class Fund implements iNode
         $this->Masse = null;
         $this->FundAttribute = array();
         $this->Ablage = null;
-        $this->Kontext = null;
+		$this->Kontext = null;
+		$this->FileName = null;
+		$this->FolderName = null;
     }
 }

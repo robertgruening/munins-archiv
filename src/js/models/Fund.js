@@ -9,4 +9,6 @@ function Fund()
     this.Masse = null;
 	this.Kontext = null;
 	this.Ablage = null;
+	this.FileName = null;
+	this.FolderName = null;
 }

@@ -253,6 +253,20 @@ class ConvertFund extends UserStory
         }
         #endregion
 
+        #region FileName
+        if (isset($multidimensionalArray["FileName"]))
+        {
+            $fund->setFileName($multidimensionalArray["FileName"]);
+        }
+        #endregion
+
+        #region FolderName
+        if (isset($multidimensionalArray["FolderName"]))
+        {
+            $fund->setFolderName($multidimensionalArray["FolderName"]);
+        }
+        #endregion
+
         $this->setFund($fund);
 
         return (count($this->getMessages()) == 0);

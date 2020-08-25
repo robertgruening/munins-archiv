@@ -24,6 +24,8 @@ $(document).ready(function () {
 	InitFieldMasse();
 	InitFieldAblage();
 	InitFieldKontext();
+	InitFieldFileName();
+	InitFieldFolderName();
 
 	if (getUrlParameterValue("Id")) {
 		_viewModelFormFund.load(getUrlParameterValue("Id"));
@@ -484,6 +486,40 @@ function ShowFormSelectKontext() {
 
 function showMessagesKontext(messages) {
 	$("#divKontext .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
+//#region FileName
+function InitFieldFileName() {
+	_viewModelFormFund.register("fileName", new GuiClient(setFileName, showMessagesFileName));
+	$("#textboxFileName").change(function () {
+		_viewModelFormFund.setFileName($("#textboxFileName").val())
+	});
+}
+
+function setFileName(masse) {
+	$("#textboxFileName").val(masse);
+}
+
+function showMessagesFileName(messages) {
+	$("#divFileName .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
+//#region FolderName
+function InitFieldFolderName() {
+	_viewModelFormFund.register("folderName", new GuiClient(setFolderName, showMessagesFolderName));
+	$("#textboxFolderName").change(function () {
+		_viewModelFormFund.setFolderName($("#textboxFolderName").val())
+	});
+}
+
+function setFolderName(masse) {
+	$("#textboxFolderName").val(masse);
+}
+
+function showMessagesFolderName(messages) {
+	$("#divFolderName .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 
