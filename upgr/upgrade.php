@@ -65,7 +65,14 @@ function Main()
     echo "\r\n";
     UpgradeOrte($config);
     readline("Weiter mit [EINGABE] ...");
-    echo "\r\n";
+	echo "\r\n";
+	
+	echo "Im Folgenden werden Funde um Datei- und Ordnernamen erweitert.\r\n";
+	readline("Weiter mit [EINGABE] ...");
+	echo "\r\n";
+	UpgradeFunde($config);
+	readline("Weiter mit [EINGABE] ...");
+	echo "\r\n";
 
     echo "Beende Upgrade von Version 1.1 auf Version 1.2.\r\n";
 }
@@ -547,6 +554,70 @@ function InsertColumnCategoryIdInTableOrt($config)
 	}
 }
 #endregion
+
+#region Fund
+function InsertColumnFileNameInTableFund($config)
+{
+	if (DoesColumnExist($config, "Fund", "FileName"))
+	{
+		echo "Die Spalte \"FileName\" existiert bereits in der Tabelle \"Fund\".";
+	}
+	else
+	{
+        $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
+    
+            $ergebnis = $mysqli->query("ALTER TABLE `Fund` ADD COLUMN `FileName` varchar(255) DEFAULT NULL;");
+        
+            if ($mysqli->errno)
+            {
+                    echo "Beim Anlegen der Spalte \"FileName\" in der Tabelle \"Fund\" ist ein Fehler aufgetreten!\r\n";
+                    echo $mysqli->errno.": ".$mysqli->error."\r\n";
+            }
+            else
+            {
+                echo "Spalte \"FileName\" wurde erfolgreich in Tabelle \"Fund\" angelgt.\r\n";
+            }
+        }
+
+        $mysqli->close();
+	}
+}
+
+function InsertColumnFolderNameInTableFund($config)
+{
+	if (DoesColumnExist($config, "Fund", "FolderName"))
+	{
+		echo "Die Spalte \"FolderName\" existiert bereits in der Tabelle \"Fund\".";
+	}
+	else
+	{
+        $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
+    
+            $ergebnis = $mysqli->query("ALTER TABLE `Fund` ADD COLUMN `FolderName` varchar(255) DEFAULT NULL;");
+        
+            if ($mysqli->errno)
+            {
+                    echo "Beim Anlegen der Spalte \"FolderName\" in der Tabelle \"Fund\" ist ein Fehler aufgetreten!\r\n";
+                    echo $mysqli->errno.": ".$mysqli->error."\r\n";
+            }
+            else
+            {
+                echo "Spalte \"FolderName\" wurde erfolgreich in Tabelle \"Fund\" angelgt.\r\n";
+            }
+        }
+
+        $mysqli->close();
+	}
+}
+#endregion
 #endregion
 
 #region tasks
@@ -587,6 +658,14 @@ function UpgradeOrte($config)
     InsertOrtCategoriesToTableOrtCategory($config);
 
     InsertColumnCategoryIdInTableOrt($config);    
+}
+#endregion
+
+#region extent "Funde" by file and folder name
+function UpgradeFunde($config)
+{
+	InsertColumnFileNameInTableFund($config);
+	InsertColumnFolderNameInTableFund($config);
 }
 #endregion
 #endregion

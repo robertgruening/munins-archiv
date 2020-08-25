@@ -40,9 +40,34 @@ class SaveFund extends UserStory
         {
             $this->addMessage("Bezeichnung darf nicht länger als 30 Zeichen sein!");
             return false;
-        }
+		}
 
-        return true;
+		$areParametersValid = true;
+		
+		if ($fund->getFileName() != null &&
+			strlen($fund->getFileName()) > 255)
+		{
+            $this->addMessage("Dateiname darf nicht länger als 255 Zeichen sein!");
+            $areParametersValid = false;
+		}
+		
+		if ($fund->getFolderName() != null &&
+			strlen($fund->getFolderName()) > 255)
+		{
+            $this->addMessage("Ordnername darf nicht länger als 255 Zeichen sein!");
+            $areParametersValid = false;
+		}
+
+		if ($fund->getFileName() != null &&
+			strlen($fund->getFileName()) >= 1 &&
+			$fund->getFolderName() != null &&
+			strlen($fund->getFolderName()) >= 1)
+		{
+            $this->addMessage("Dateiname und Ordnername dürfen nicht gleichzeitig angegeben sein!");
+            $areParametersValid = false;
+		}
+
+        return $areParametersValid;
     }
 
     protected function execute()

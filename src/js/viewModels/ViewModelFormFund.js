@@ -16,7 +16,9 @@ var ViewModelFormFund = function (webServiceClient) {
 			dimension3: new Array(),
 			masse: new Array(),
 			kontext: new Array(),
-			ablage: new Array()
+			ablage: new Array(),
+			fileName: new Array(),
+			folderName: new Array()
 		};
 	};
 
@@ -31,6 +33,8 @@ var ViewModelFormFund = function (webServiceClient) {
 		this._update("masse", this._model.Masse);
 		this._update("kontext", this._model.Kontext);
 		this._update("ablage", this._model.Ablage);
+		this._update("fileName", this._model.FileName);
+		this._update("folderName", this._model.FolderName);
 	};
 
 	//#region properties
@@ -137,6 +141,28 @@ var ViewModelFormFund = function (webServiceClient) {
 
 	this.setKontext = function (kontext) {
 		this._model.Kontext = kontext;
+		this._update("dataChanged");
+	};
+	//#endregion
+
+	//#region FileName
+	this.getFileName = function () {
+		return this._model.FileName;
+	};
+
+	this.setFileName = function (fileName) {
+		this._model.FileName = fileName;
+		this._update("dataChanged");
+	};
+	//#endregion
+
+	//#region FolderName
+	this.getFolderName = function () {
+		return this._model.FolderName;
+	};
+
+	this.setFolderName = function (folderName) {
+		this._model.FolderName = folderName;
 		this._update("dataChanged");
 	};
 	//#endregion

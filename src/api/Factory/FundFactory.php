@@ -72,7 +72,7 @@ class FundFactory extends Factory implements iListFactory
 	*/
 	protected function getSQLStatementToLoad()
 	{
-		return "SELECT Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3, Masse
+		return "SELECT Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3, Masse, FileName, FolderName
 			FROM ".$this->getTableName();
 	}
     
@@ -190,7 +190,9 @@ class FundFactory extends Factory implements iListFactory
 		$fund->setMasse($dataSet["Masse"]);
         $fund->setAblage($this->getAblageFactory()->loadByFund($fund));
         $fund->setKontext($this->getKontextFactory()->loadByFund($fund));
-        $fund->setFundAttribute($this->getFundAttributFactory()->loadByFund($fund));
+		$fund->setFundAttribute($this->getFundAttributFactory()->loadByFund($fund));
+		$fund->setFileName($dataSet["FileName"]);
+		$fund->setFolderName($dataSet["FolderName"]);
 
         return $fund;
     }
@@ -201,14 +203,16 @@ class FundFactory extends Factory implements iListFactory
     {
         $anzahl = intval(str_replace(">", "-", $element->getAnzahl()));
 
-        return "INSERT INTO ".$this->getTableName()." (Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse, Kontext_Id, Ablage_Id)
+        return "INSERT INTO ".$this->getTableName()." (Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse, Kontext_Id, Ablage_Id, FileName, FolderName)
         VALUES (".$anzahl.", '".addslashes($element->getBezeichnung())."',
         ".($element->getDimension1() === null ? "NULL" : $element->getDimension1()).",
         ".($element->getDimension2() === null ? "NULL" : $element->getDimension2()).",
         ".($element->getDimension3() === null ? "NULL" : $element->getDimension3()).",
         ".($element->getMasse() === null ? "NULL" : $element->getMasse()).",
         ".($element->getKontext() === null ? "NULL" : $element->getKontext()->getId()).",
-        ".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId()).");";
+		".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId()).",
+		".($element->getFileName() === null ? "NULL" : "'".addslashes($element->getFileName())."'").",
+		".($element->getFolderName() === null ? "NULL" : "'".addslashes($element->getFolderName())."'").");";
     }
 
     protected function getSQLStatementToUpdate(iNode $element)
@@ -223,7 +227,9 @@ class FundFactory extends Factory implements iListFactory
         Dimension3 = ".($element->getDimension3() === null ? "NULL" : $element->getDimension3()).",
         Masse = ".($element->getMasse() === null ? "NULL" : $element->getMasse()).",
         Kontext_Id = ".($element->getKontext() === null ? "NULL" : $element->getKontext()->getId()).",
-        Ablage_Id = ".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId())."
+		Ablage_Id = ".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId()).",
+		FileName = ".($element->getFileName() === null ? "NULL" : "'".addslashes($element->getFileName())."'").",
+		FolderName = ".($element->getFolderName() === null ? "NULL" : "'".addslashes($element->getFolderName())."'")."
         WHERE Id = ".$element->getId().";";
     }
     #endregion
@@ -333,6 +339,24 @@ class FundFactory extends Factory implements iListFactory
         else
         {
             $logger->warn("Kontext ist nicht gesetzt!");
+        }
+
+        if (isset($object["FileName"]))
+        {
+            $fund->setFileName($object["FileName"]);
+        }
+        else
+        {
+            $logger->debug("FileName ist nicht gesetzt!");
+        }
+
+        if (isset($object["FolderName"]))
+        {
+            $fund->setFolderName($object["FolderName"]);
+        }
+        else
+        {
+            $logger->debug("FolderName ist nicht gesetzt!");
         }
 
         return $fund;
