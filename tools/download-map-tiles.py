@@ -5,7 +5,7 @@ import os
 def download_tiles(zoom, xmin, ymin, xmax, ymax):
 	serviceUrl = "http://!h.tile.openstreetmap.org/!z/!x/!y.png"
 	attribution = "Map data (c) OpenStreetMap"
-	downloadRootPath = "/var/www/html/Munins Archiv/src/api/Services/mapTiles/"
+	downloadRootPath = "/var/www/html/openstreetmap/mapTiles/"
 	numberOfTiles = (xmax - xmin + 1) * (ymax - ymin + 1)
 	counterOfTiles = 0
 

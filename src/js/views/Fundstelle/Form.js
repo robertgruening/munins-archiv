@@ -292,7 +292,7 @@ function InitGeoPoint() {
 	_map.options.minZoom = 5;
 	_map.options.maxZoom = 17;
 	L.control.scale().addTo(_map);
-	L.tileLayer("/Munins Archiv/src/api/Services/mapTiles/{z}/{x}/{y}.png").addTo(_map);
+	L.tileLayer("/openstreetmap/mapTiles/{z}/{x}/{y}.png").addTo(_map);
 
 	_viewModelFormFundstelle.register("geoPoint", new GuiClient(setGeoPointMarker, showErrorMessages));
 }
