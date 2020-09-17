@@ -72,7 +72,7 @@ class FundFactory extends Factory implements iListFactory
 	*/
 	protected function getSQLStatementToLoad()
 	{
-		return "SELECT Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3, Masse, FileName, FolderName
+		return "SELECT Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3, Masse, FileName, FolderName, Rating
 			FROM ".$this->getTableName();
 	}
     
@@ -193,6 +193,7 @@ class FundFactory extends Factory implements iListFactory
 		$fund->setFundAttribute($this->getFundAttributFactory()->loadByFund($fund));
 		$fund->setFileName($dataSet["FileName"]);
 		$fund->setFolderName($dataSet["FolderName"]);
+		$fund->setRating($dataSet["Rating"]);
 
         return $fund;
     }
@@ -203,7 +204,7 @@ class FundFactory extends Factory implements iListFactory
     {
         $anzahl = intval(str_replace(">", "-", $element->getAnzahl()));
 
-        return "INSERT INTO ".$this->getTableName()." (Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse, Kontext_Id, Ablage_Id, FileName, FolderName)
+        return "INSERT INTO ".$this->getTableName()." (Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse, Kontext_Id, Ablage_Id, FileName, FolderName, Rating)
         VALUES (".$anzahl.", '".addslashes($element->getBezeichnung())."',
         ".($element->getDimension1() === null ? "NULL" : $element->getDimension1()).",
         ".($element->getDimension2() === null ? "NULL" : $element->getDimension2()).",
@@ -212,7 +213,8 @@ class FundFactory extends Factory implements iListFactory
         ".($element->getKontext() === null ? "NULL" : $element->getKontext()->getId()).",
 		".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId()).",
 		".($element->getFileName() === null ? "NULL" : "'".addslashes($element->getFileName())."'").",
-		".($element->getFolderName() === null ? "NULL" : "'".addslashes($element->getFolderName())."'").");";
+		".($element->getFolderName() === null ? "NULL" : "'".addslashes($element->getFolderName())."'").",
+		".$element->getRating().");";
     }
 
     protected function getSQLStatementToUpdate(iNode $element)
@@ -229,7 +231,8 @@ class FundFactory extends Factory implements iListFactory
         Kontext_Id = ".($element->getKontext() === null ? "NULL" : $element->getKontext()->getId()).",
 		Ablage_Id = ".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId()).",
 		FileName = ".($element->getFileName() === null ? "NULL" : "'".addslashes($element->getFileName())."'").",
-		FolderName = ".($element->getFolderName() === null ? "NULL" : "'".addslashes($element->getFolderName())."'")."
+		FolderName = ".($element->getFolderName() === null ? "NULL" : "'".addslashes($element->getFolderName())."',
+		Rating = ".$element->getRating()."
         WHERE Id = ".$element->getId().";";
     }
     #endregion
@@ -357,6 +360,15 @@ class FundFactory extends Factory implements iListFactory
         else
         {
             $logger->debug("FolderName ist nicht gesetzt!");
+        }
+
+        if (isset($object["Rating"]))
+        {
+            $fund->setRating($object["Rating"]);
+        }
+        else
+        {
+            $logger->debug("Rating ist nicht gesetzt!");
         }
 
         return $fund;
