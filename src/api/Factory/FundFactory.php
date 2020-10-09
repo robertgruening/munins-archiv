@@ -150,6 +150,29 @@ class FundFactory extends Factory implements iListFactory
 				}
 			}
 		}
+
+		if (isset($searchConditions["HasFileName"]))
+		{
+			if ($searchConditions["HasFileName"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "FileName IS NOT NULL");
+				array_push($sqlSearchConditionStrings, "FileName NOT LIKE ''");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "FileName IS NULL OR FileName LIKE ''");
+			}		
+		}
+
+		if (isset($searchConditions["ContainsFileName"]))
+		{
+			array_push($sqlSearchConditionStrings, "FileName LIKE '%".$searchConditions["ContainsFileName"]."%'");
+		}
+
+		if (isset($searchConditions["FileName"]))
+		{
+			array_push($sqlSearchConditionStrings, "FileName LIKE '".$searchConditions["FileName"]."'");
+		}
 		
 		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
 		{

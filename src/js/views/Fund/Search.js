@@ -264,6 +264,28 @@ function getSearchConditions() {
 		searchConditions.push({ "key" : "hasKontext", "value" : "false" });
 	}
 
+	if ($("[name='choiceFilterHasFileName']:checked").val() == "yes")
+	{
+		searchConditions.push({ "key" : "hasFileName", "value" : "true" });
+	}
+	else if ($("[name='choiceFilterHasFileName']:checked").val() == "no")
+	{
+		searchConditions.push({ "key" : "hasFileName", "value" : "false" });
+	}
+
+	if ($("#textboxFilterFileName").val() != "")
+	{
+		if ($("[name='choiceFilterFileName']:checked").val() == "exact")
+		{
+			searchConditions.push({ "key" : "fileName", "value" : $("#textboxFilterFileName").val() });
+		}
+		else if ($("[name='choiceFilterFileName']:checked").val() == "contains")
+		{
+			searchConditions.push({ "key" : "containsFileName", "value" : $("#textboxFilterFileName").val() });
+		}
+		searchConditions.push({ "key" : "containsFileName", "value" : $("#textboxFilterFileName").val() });
+	}
+
 	return searchConditions;
 }
 
