@@ -151,6 +151,11 @@ class FundFactory extends Factory implements iListFactory
 			}
 		}
 		
+		if (isset($searchConditions["Rating"]))
+		{
+			array_push($sqlSearchConditionStrings, "Rating = ".$searchConditions["Rating"]);
+		}
+		
 		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
 		{
 			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getListFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
@@ -231,7 +236,7 @@ class FundFactory extends Factory implements iListFactory
         Kontext_Id = ".($element->getKontext() === null ? "NULL" : $element->getKontext()->getId()).",
 		Ablage_Id = ".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId()).",
 		FileName = ".($element->getFileName() === null ? "NULL" : "'".addslashes($element->getFileName())."'").",
-		FolderName = ".($element->getFolderName() === null ? "NULL" : "'".addslashes($element->getFolderName())."',
+		FolderName = ".($element->getFolderName() === null ? "NULL" : "'".addslashes($element->getFolderName())."'").",
 		Rating = ".$element->getRating()."
         WHERE Id = ".$element->getId().";";
     }

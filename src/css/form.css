@@ -37,6 +37,10 @@
 	font-size: 16px;
 }
 
+.formBlock .fieldBlock select {
+	padding: 5px 0px 5px 0px;
+}
+
 .clear {
     clear: both;
 }

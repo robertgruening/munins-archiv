@@ -73,8 +73,10 @@ a {
 	border-color: #cccccc;
 }
 
-input[type=text] {
+input[type=text],
+select {
 	border: 1px solid #cccccc;
+	background-color: white;
 }
 
 /**************/

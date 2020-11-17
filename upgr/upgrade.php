@@ -67,7 +67,7 @@ function Main()
     readline("Weiter mit [EINGABE] ...");
 	echo "\r\n";
 	
-	echo "Im Folgenden werden Funde um Datei- und Ordnernamen erweitert.\r\n";
+	echo "Im Folgenden werden Funde um Datei- und Ordnernamen und Bewertungen erweitert.\r\n";
 	readline("Weiter mit [EINGABE] ...");
 	echo "\r\n";
 	UpgradeFunde($config);
@@ -617,6 +617,37 @@ function InsertColumnFolderNameInTableFund($config)
         $mysqli->close();
 	}
 }
+
+function InsertColumnRatingInTableFund($config)
+{
+	if (DoesColumnExist($config, "Fund", "Rating"))
+	{
+		echo "Die Spalte \"Rating\" existiert bereits in der Tabelle \"Fund\".";
+	}
+	else
+	{
+        $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
+    
+            $ergebnis = $mysqli->query("ALTER TABLE `Fund` ADD COLUMN `Rating` TINYINT NOT NULL DEFAULT 0;");
+        
+            if ($mysqli->errno)
+            {
+                    echo "Beim Anlegen der Spalte \"FolderName\" in der Tabelle \"Fund\" ist ein Fehler aufgetreten!\r\n";
+                    echo $mysqli->errno.": ".$mysqli->error."\r\n";
+            }
+            else
+            {
+                echo "Spalte \"FolderName\" wurde erfolgreich in Tabelle \"Fund\" angelgt.\r\n";
+            }
+        }
+
+        $mysqli->close();
+	}
+}
 #endregion
 #endregion
 
@@ -661,11 +692,12 @@ function UpgradeOrte($config)
 }
 #endregion
 
-#region extent "Funde" by file and folder name
+#region extent "Funde" by file and folder name and rating
 function UpgradeFunde($config)
 {
 	InsertColumnFileNameInTableFund($config);
 	InsertColumnFolderNameInTableFund($config);
+	InsertColumnRatingInTableFund($config);
 }
 #endregion
 #endregion

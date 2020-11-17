@@ -220,6 +220,11 @@ function Get()
 			$loadFunde->addSearchCondition("FundAttribut_Ids", $_GET["fundAttribut_Ids"]);
 		}
 
+		if (isset($_GET["rating"]))
+		{
+			$loadFunde->addSearchCondition("Rating", $_GET["rating"]);
+		}
+
 		$pagingConditions = array();
 
 		if (isset($_GET["pagingDirection"]))

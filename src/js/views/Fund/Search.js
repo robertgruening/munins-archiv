@@ -105,12 +105,39 @@ LinkToFundFormField.prototype = new jsGrid.Field({
 		return link;
 	}
 });
+var RatingField = function(config) {
+	jsGrid.Field.call(this, config);
+}
+
+RatingField.prototype = new jsGrid.Field({
+	itemTemplate: function(value) {
+		let div = $("<div>")
+			.attr("title", value);
+
+		for (let i = 1; i <= 5; i++) {
+
+			if (i <= value) {
+				div.append($("<i>")
+					.addClass("fas fa-star")
+					.attr("style", "color:orange;"));
+			}
+			else {
+				div.append($("<i>")
+					.addClass("fas fa-star")
+					.attr("style", "color:black;"));
+			}
+		}
+
+		return div;
+	}
+});
 
 function InitGrid()
 {
     jsGrid.locale("de");
     jsGrid.fields.icon = IconField;
 	jsGrid.fields.linkToFundFormField = LinkToFundFormField;
+	jsGrid.fields.rating = RatingField;
 
     $("#gridContainer").jsGrid({
         width: "100%",
@@ -157,6 +184,11 @@ function InitGrid()
 				title: "Fundattribute",
 				name: "FundAttributAnzeigeTexte",
 				type: "text"
+			},
+			{
+				title: "Bewertung",
+				name: "Rating",
+				type: "rating"
 			}
         ],
 
@@ -262,6 +294,11 @@ function getSearchConditions() {
 	else if ($("[name='choiceFilterHasKontext']:checked").val() == "no")
 	{
 		searchConditions.push({ "key" : "hasKontext", "value" : "false" });
+	}
+
+	if ($("#choiceFilterRating").val() != "any")
+	{
+		searchConditions.push({ "key" : "rating", "value" : $("#choiceFilterRating").val() });
 	}
 
 	return searchConditions;
