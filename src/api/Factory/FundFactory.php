@@ -156,6 +156,11 @@ class FundFactory extends Factory implements iListFactory
 			array_push($sqlSearchConditionStrings, "Rating = ".$searchConditions["Rating"]);
 		}
 		
+		if (isset($searchConditions["MinRating"]))
+		{
+			array_push($sqlSearchConditionStrings, "Rating >= ".$searchConditions["MinRating"]);
+		}
+		
 		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
 		{
 			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getListFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));

@@ -224,6 +224,10 @@ function Get()
 		{
 			$loadFunde->addSearchCondition("Rating", $_GET["rating"]);
 		}
+		else if (isset($_GET["minRating"]))
+		{
+			$loadFunde->addSearchCondition("MinRating", $_GET["minRating"]);
+		}
 
 		$pagingConditions = array();
 

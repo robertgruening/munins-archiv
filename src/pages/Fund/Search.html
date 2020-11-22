@@ -107,12 +107,11 @@
 			    </div>
 				<div class=fieldBlock>
 				    <div class=fieldDescription>
-						<i class="help notToPrint fas fa-question-circle" title="Es kann nach Funden gesucht werden, die eine Bewertung von genau 0, 1, 2, 3, 4, oder 5 Sternen haben. Mit 'egal' wird das Kriterium ignoriert."></i>
+						<i class="help notToPrint fas fa-question-circle" title="Es kann nach Funden gesucht werden, die eine Bewertung von genau 0, 1, 2, 3, 4, oder 5 Sternen haben. Mit der Zusatzeinstellung 'mindestens' wird auch nach höheren Bewertungen gesucht."></i>
 					    <label>Bewertung: </label>
 				    </div>
 				    <div class=fieldValue>
 						<select id=choiceFilterRating class="selectmenu field">
-							<option value=any>egal</option>
 							<option value=0>0</option>
 							<option value=1>1</option>
 							<option value=2>2</option>
@@ -120,6 +119,8 @@
 							<option value=4>4</option>
 							<option value=5>5</option>
 						</select>
+						<input type=radio name=choiceFilterRatingPrecision value=exact><label for=exact>exakt</label></input>
+						<input type=radio name=choiceFilterRatingPrecision value=min checked=true><label for=min>mindestens</label></input>
 				    </div>
 			    </div>
 				<input type=button id=buttonSearch value=Suche class="field notToPrint formButton"></input>

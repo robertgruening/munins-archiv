@@ -296,9 +296,14 @@ function getSearchConditions() {
 		searchConditions.push({ "key" : "hasKontext", "value" : "false" });
 	}
 
-	if ($("#choiceFilterRating").val() != "any")
+	if ($("[name='choiceFilterRatingPrecision']:checked").val() == "exact")
 	{
 		searchConditions.push({ "key" : "rating", "value" : $("#choiceFilterRating").val() });
+	}
+	
+	if ($("[name='choiceFilterRatingPrecision']:checked").val() == "min")
+	{
+		searchConditions.push({ "key" : "minRating", "value" : $("#choiceFilterRating").val() });
 	}
 
 	return searchConditions;
