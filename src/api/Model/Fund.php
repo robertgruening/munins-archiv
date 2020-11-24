@@ -16,6 +16,7 @@ class Fund implements iNode
 	public $Kontext;
 	public $FileName;
 	public $FolderName;
+	public $Rating;
     
     
     public function getId()
@@ -178,6 +179,16 @@ class Fund implements iNode
         $this->FolderName = $folderName;
     }
     
+    public function getRating()
+    {
+        return $this->Rating;
+    }
+    
+    public function setRating($rating)
+    {
+        $this->Rating = $rating;
+    }
+    
     function __construct()
     {
         $this->Id = -1;
@@ -193,5 +204,6 @@ class Fund implements iNode
 		$this->Kontext = null;
 		$this->FileName = null;
 		$this->FolderName = null;
+		$this->Rating = 0;
     }
 }

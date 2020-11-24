@@ -11,4 +11,5 @@ function Fund()
 	this.Ablage = null;
 	this.FileName = null;
 	this.FolderName = null;
+	this.Rating = null;
 }

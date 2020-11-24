@@ -18,7 +18,8 @@ var ViewModelFormFund = function (webServiceClient) {
 			kontext: new Array(),
 			ablage: new Array(),
 			fileName: new Array(),
-			folderName: new Array()
+			folderName: new Array(),
+			rating: new Array()
 		};
 	};
 
@@ -35,6 +36,7 @@ var ViewModelFormFund = function (webServiceClient) {
 		this._update("ablage", this._model.Ablage);
 		this._update("fileName", this._model.FileName);
 		this._update("folderName", this._model.FolderName);
+		this._update("rating", this._model.Rating);
 	};
 
 	//#region properties
@@ -163,6 +165,17 @@ var ViewModelFormFund = function (webServiceClient) {
 
 	this.setFolderName = function (folderName) {
 		this._model.FolderName = folderName;
+		this._update("dataChanged");
+	};
+	//#endregion
+
+	//#region Bewertung
+	this.getRating = function () {
+		return this._model.Rating;
+	};
+
+	this.setRating = function (rating) {
+		this._model.Rating = rating;
 		this._update("dataChanged");
 	};
 	//#endregion

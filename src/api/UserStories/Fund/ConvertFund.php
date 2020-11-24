@@ -234,7 +234,7 @@ class ConvertFund extends UserStory
             }
             else
             {
-                $fund->setMasse(intval($multidimensionalArray["Anzahl"]));
+                $fund->setMasse(intval($multidimensionalArray["Masse"]));
             }
         }
         #endregion
@@ -265,6 +265,25 @@ class ConvertFund extends UserStory
         {
             $fund->setFolderName($multidimensionalArray["FolderName"]);
         }
+        #endregion
+
+        #region Rating
+        if (isset($multidimensionalArray["Rating"]) &&
+			!empty($multidimensionalArray["Rating"]))
+		{
+			if (!is_numeric($multidimensionalArray["Rating"]))
+			{
+				$this->addMessage("Bewertung muss eine Zahl sein!");
+			}
+			else if (intval($multidimensionalArray["Rating"]) < 0)
+			{
+				$this->addMessage("Bewertung muss mindestens Null (0) sein!");
+			}
+			else
+			{
+				$fund->setRating(intval($multidimensionalArray["Rating"]));
+			}
+		}
         #endregion
 
         $this->setFund($fund);

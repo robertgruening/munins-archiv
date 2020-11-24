@@ -26,6 +26,7 @@ $(document).ready(function () {
 	InitFieldKontext();
 	InitFieldFileName();
 	InitFieldFolderName();
+	InitFieldRating();
 
 	if (getUrlParameterValue("Id")) {
 		_viewModelFormFund.load(getUrlParameterValue("Id"));
@@ -520,6 +521,23 @@ function setFolderName(masse) {
 
 function showMessagesFolderName(messages) {
 	$("#divFolderName .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
+//#region Bewertung
+function InitFieldRating() {
+	_viewModelFormFund.register("rating", new GuiClient(setRating, showMessagesRating));
+	$("#selectRating").change(function () {
+		_viewModelFormFund.setRating($("#selectRating").val())
+	});
+}
+
+function setRating(rating) {
+	$("#selectRating").val(rating);
+}
+
+function showMessagesRating(messages) {
+	$("#divRating .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 
