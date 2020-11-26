@@ -79,6 +79,14 @@ select {
 	background-color: white;
 }
 
+.rating-star {
+	color: #dddddd;
+}
+
+.rating-star--checked {
+	color: #f6a828;
+}
+
 /**************/
 /* visibility */
 /**************/
