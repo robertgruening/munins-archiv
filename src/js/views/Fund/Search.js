@@ -118,13 +118,11 @@ RatingField.prototype = new jsGrid.Field({
 
 			if (i <= value) {
 				div.append($("<i>")
-					.addClass("fas fa-star")
-					.attr("style", "color:orange;"));
+					.addClass("fas fa-star rating-star--checked"));
 			}
 			else {
 				div.append($("<i>")
-					.addClass("fas fa-star")
-					.attr("style", "color:black;"));
+					.addClass("fas fa-star rating-star"));
 			}
 		}
 
