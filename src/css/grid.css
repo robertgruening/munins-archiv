@@ -15,3 +15,12 @@
     border-color: #f6a828;
     color: #ffffff;
 }
+
+.selected-row > .jsgrid-cell .rating-star {
+    color: #ffffff;
+}
+
+
+.selected-row > .jsgrid-cell .rating-star--checked {
+    color: #e78f08;
+}
