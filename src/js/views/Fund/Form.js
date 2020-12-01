@@ -495,10 +495,26 @@ function InitFieldFileName() {
 	$("#textboxFileName").change(function () {
 		_viewModelFormFund.setFileName($("#textboxFileName").val())
 	});
+
+	$("img.preview").click(function ()
+	{
+		imageModal_open(this);
+	});
 }
 
-function setFileName(masse) {
-	$("#textboxFileName").val(masse);
+function setFileName(fileName) {
+	$("#textboxFileName").val(fileName);
+	let kontext = _viewModelFormFund.getKontext();
+	let kontextPath = kontext == null ? null : kontext.Path;
+	let relativeFilePath = kontextPath == null ? null : kontextPath + "/" + fileName;
+
+	let previewFileName = fileName.substr(0, fileName.lastIndexOf(".")) + ".preview" + fileName.substr(fileName.lastIndexOf("."));
+	let relativePreviewFilePath = kontextPath == null ? null : kontextPath + "/" + previewFileName;
+
+	if (relativeFilePath != null)  {
+		$("img.preview").attr("src", "https://localhost/munins-archiv-file-service/file.php?relativePath=/" +
+ relativePreviewFilePath);		
+	}
 }
 
 function showMessagesFileName(messages) {
