@@ -16,6 +16,7 @@
 	<script type="text/javascript" src="../../js/controls/control.Headline.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.MessageBox.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.ErrorMessageBox.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.ImageModal.js"></script>
 	<!-- basic page functions -->
 	<script type="text/javascript" src="../../js/page.js"></script>
 	<script type="text/javascript" src="../../js/ui/IconConfig.js"></script>
@@ -34,8 +35,9 @@
 
 	<!-- javascript frameworks etc. -->
 	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/solid.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/w3.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/fontawesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/solid.css" />
 	<!-- page -->
 	<link rel="stylesheet" type="text/css" href="../../css/page.css" />
 	<!-- controls -->
@@ -53,6 +55,11 @@
 </head>
 
 <body>
+	<div class="w3-container">
+		<div class="w3-modal image-modal w3-animate-zoom" onclick="$(this).hide()">
+			<img class="w3-modal-content" src="">
+		</div>
+	</div>
 	<div id=navigation class="notToPrint"></div>
 	<div id=content>
 		<div class=form>

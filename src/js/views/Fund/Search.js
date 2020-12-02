@@ -81,13 +81,21 @@ function markSelectedItem(selectedItemIndex) {
 	    row.addClass("selected-row");
 	}
 }
-var IconField = function(config) {
+
+var ImageField = function(config) {
 	jsGrid.Field.call(this, config);
 }
 
-IconField.prototype = new jsGrid.Field({
+ImageField.prototype = new jsGrid.Field({
 	itemTemplate: function(value) {
-		return $("<i>").addClass(value);
+		if (value == null) {
+			return "kein Bild vorhanden";
+		}
+
+		return $("<img>")
+			.attr("src", value)
+			.attr("width", "70px")
+			.attr("onclick", "imageModal_open(this)");
 	}
 });
 
@@ -109,7 +117,7 @@ LinkToFundFormField.prototype = new jsGrid.Field({
 function InitGrid()
 {
     jsGrid.locale("de");
-    jsGrid.fields.icon = IconField;
+    jsGrid.fields.image = ImageField;
 	jsGrid.fields.linkToFundFormField = LinkToFundFormField;
 
     $("#gridContainer").jsGrid({
@@ -130,9 +138,9 @@ function InitGrid()
 			},
 			{
 				title: "",
-				name: "Icon",
-				type: "icon",
-				width: 27
+				name: "PreviewImage",
+				type: "image",
+				width: 50
 			},
 			{
 				name: "Anzahl",
@@ -173,7 +181,7 @@ function InitGrid()
 
 			window.open("/Munins Archiv/src/pages/Fund/Form.html?Id=" + args.item.Id, "_self");
 		}
-    });
+	});
 }
 
 function UpdateGridData(funde) {
@@ -185,7 +193,16 @@ function UpdateGridData(funde) {
 
 	funde.forEach(fund => {
 		var copy = JSON.parse(JSON.stringify(fund));
-		copy.Icon = IconConfig.getCssClasses("Fund");
+
+		if (fund.Kontext != null &&
+			fund.FileName != null) {
+
+			let kontextPath = fund.Kontext.Path;
+			let previewFileName = fund.FileName.substr(0, fund.FileName.lastIndexOf(".")) + ".preview" + fund.FileName.substr(fund.FileName.lastIndexOf("."));
+			let relativePreviewFilePath = kontextPath + "/" + previewFileName;
+			copy.PreviewImage = "https://localhost/munins-archiv-file-service/file.php?relativePath=/" + relativePreviewFilePath;
+		}
+
 		copy.Anzahl = fund.Anzahl.replace("-", ">");
 		copy.FundAttributAnzeigeTexte = "<ul>"
 
