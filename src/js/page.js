@@ -70,3 +70,13 @@ function openFormNewElement()
 {
 	window.open(window.location.href.replace(window.location.search, ""), "_self");
 }
+
+function getServerUrl()
+{
+	return "https://192.168.0.10";
+}
+
+function getFileServiceUrl()
+{
+	return getServerUrl() + "/munins-archiv-file-service"
+}

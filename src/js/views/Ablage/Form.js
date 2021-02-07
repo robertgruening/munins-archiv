@@ -320,7 +320,7 @@ function UpdateGridData(funde) {
 			let kontextPath = fund.Kontext.Path;
 			let previewFileName = fund.FileName.substr(0, fund.FileName.lastIndexOf(".")) + ".preview" + fund.FileName.substr(fund.FileName.lastIndexOf("."));
 			let relativePreviewFilePath = kontextPath + "/" + previewFileName;
-			copy.PreviewImage = "https://localhost/munins-archiv-file-service/file.php?relativePath=/" + relativePreviewFilePath;
+			copy.PreviewImage = getFileServiceUrl() + "/file.php?relativePath=/" + relativePreviewFilePath;
 		}
 
 		copy.Anzahl = fund.Anzahl.replace("-", ">");
