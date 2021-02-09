@@ -81,13 +81,21 @@ function markSelectedItem(selectedItemIndex) {
 	    row.addClass("selected-row");
 	}
 }
-var IconField = function(config) {
+
+var ImageField = function(config) {
 	jsGrid.Field.call(this, config);
 }
 
-IconField.prototype = new jsGrid.Field({
+ImageField.prototype = new jsGrid.Field({
 	itemTemplate: function(value) {
-		return $("<i>").addClass(value);
+		if (value == null) {
+			return "kein Bild vorhanden";
+		}
+
+		return $("<img>")
+			.attr("src", value)
+			.attr("width", "70px")
+			.attr("onclick", "imageModal_open(this)");
 	}
 });
 
@@ -133,7 +141,7 @@ RatingField.prototype = new jsGrid.Field({
 function InitGrid()
 {
     jsGrid.locale("de");
-    jsGrid.fields.icon = IconField;
+    jsGrid.fields.image = ImageField;
 	jsGrid.fields.linkToFundFormField = LinkToFundFormField;
 	jsGrid.fields.rating = RatingField;
 
@@ -155,9 +163,9 @@ function InitGrid()
 			},
 			{
 				title: "",
-				name: "Icon",
-				type: "icon",
-				width: 27
+				name: "PreviewImage",
+				type: "image",
+				width: 50
 			},
 			{
 				name: "Anzahl",
@@ -203,7 +211,7 @@ function InitGrid()
 
 			window.open("/Munins Archiv/src/pages/Fund/Form.html?Id=" + args.item.Id, "_self");
 		}
-    });
+	});
 }
 
 function UpdateGridData(funde) {
@@ -215,7 +223,16 @@ function UpdateGridData(funde) {
 
 	funde.forEach(fund => {
 		var copy = JSON.parse(JSON.stringify(fund));
-		copy.Icon = IconConfig.getCssClasses("Fund");
+
+		if (fund.Kontext != null &&
+			fund.FileName != null) {
+
+			let kontextPath = fund.Kontext.Path;
+			let previewFileName = fund.FileName.substr(0, fund.FileName.lastIndexOf(".")) + ".preview" + fund.FileName.substr(fund.FileName.lastIndexOf("."));
+			let relativePreviewFilePath = kontextPath + "/" + previewFileName;
+			copy.PreviewImage = getMuninsArchivFileServiceBaseUrl() + "/file.php?relativePath=/" + relativePreviewFilePath;
+		}
+
 		copy.Anzahl = fund.Anzahl.replace("-", ">");
 		copy.FundAttributAnzeigeTexte = "<ul>"
 
@@ -302,6 +319,28 @@ function getSearchConditions() {
 	if ($("[name='choiceFilterRatingPrecision']:checked").val() == "min")
 	{
 		searchConditions.push({ "key" : "minRating", "value" : $("#choiceFilterRating").val() });
+	}
+	
+	if ($("[name='choiceFilterHasFileName']:checked").val() == "yes")
+	{
+		searchConditions.push({ "key" : "hasFileName", "value" : "true" });
+	}
+	else if ($("[name='choiceFilterHasFileName']:checked").val() == "no")
+	{
+		searchConditions.push({ "key" : "hasFileName", "value" : "false" });
+	}
+
+	if ($("#textboxFilterFileName").val() != "")
+	{
+		if ($("[name='choiceFilterFileName']:checked").val() == "exact")
+		{
+			searchConditions.push({ "key" : "fileName", "value" : $("#textboxFilterFileName").val() });
+		}
+		else if ($("[name='choiceFilterFileName']:checked").val() == "contains")
+		{
+			searchConditions.push({ "key" : "containsFileName", "value" : $("#textboxFilterFileName").val() });
+		}
+		searchConditions.push({ "key" : "containsFileName", "value" : $("#textboxFilterFileName").val() });
 	}
 
 	return searchConditions;

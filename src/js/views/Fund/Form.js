@@ -496,10 +496,25 @@ function InitFieldFileName() {
 	$("#textboxFileName").change(function () {
 		_viewModelFormFund.setFileName($("#textboxFileName").val())
 	});
+
+	$("img.preview").click(function()
+	{
+		imageModal_open(this);
+	});
 }
 
-function setFileName(masse) {
-	$("#textboxFileName").val(masse);
+function setFileName(fileName) {
+	$("#textboxFileName").val(fileName);
+
+	if (_viewModelFormFund.getKontext() != null &&
+		fileName != null) {
+
+		let kontextPath = _viewModelFormFund.getKontext().Path;
+		let previewFileName = fileName.substr(0, fileName.lastIndexOf(".")) + ".preview" + fileName.substr(fileName.lastIndexOf("."));
+		let relativePreviewFilePath = kontextPath + "/" + previewFileName;
+		$("img.preview").attr("src", getMuninsArchivFileServiceBaseUrl() + "/file.php?relativePath=/" +
+ relativePreviewFilePath);		
+	}
 }
 
 function showMessagesFileName(messages) {

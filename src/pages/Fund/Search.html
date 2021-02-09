@@ -16,6 +16,7 @@
 	<script type="text/javascript" src="../../js/controls/control.Headline.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.MessageBox.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.ErrorMessageBox.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.ImageModal.js"></script>
 	<!-- basic page functions -->
 	<script type="text/javascript" src="../../js/page.js"></script>
 	<script type="text/javascript" src="../../js/ui/IconConfig.js"></script>
@@ -34,8 +35,9 @@
 
 	<!-- javascript frameworks etc. -->
 	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/solid.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/w3.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/fontawesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/solid.css" />
 	<!-- page -->
 	<link rel="stylesheet" type="text/css" href="../../css/page.css" />
 	<!-- controls -->
@@ -53,6 +55,13 @@
 </head>
 
 <body>
+	<div class="w3-container">
+		<div class="w3-modal image-modal" onclick="$(this).hide()">
+			<div class="w3-modal-content w3-animate-zoom">
+				<img class="w3-modal-content" src="">
+			</div>
+		</div>
+	</div>
 	<div id=navigation class="notToPrint"></div>
 	<div id=content>
 		<div class=form>
@@ -123,6 +132,28 @@
 						<input type=radio name=choiceFilterRatingPrecision value=min checked=true><label for=min>mindestens</label></input>
 				    </div>
 			    </div>
+				<div class=fieldBlock>
+				    <div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Es kann nach Funden gesucht werden, denen eine oder keine Dateiresource zugeordnet ist. Mit 'egal' wird das Kriterium ignoriert."></i>
+					    <label>hat Dateiname: </label>
+				    </div>
+				    <div class=fieldValue>
+						<input type=radio name=choiceFilterHasFileName value=yes><label for=yes>ja</label></input>
+						<input type=radio name=choiceFilterHasFileName value=no><label for=no>nein</label></input>
+						<input type=radio name=choiceFilterHasFileName value=any checked=true><label for=any>egal</label></input>
+				    </div>
+				</div>
+			    <div class=fieldBlock>
+				    <div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Es kann nach Funden gesucht werden, die eine Dateiresource mit dem exakten Dateinamen aufweisen oder den gesuchten Text im Dtaeinamen enthalten. Ohne Dateinamenstext und mit der Einstellung 'enthält' wird das Kriterium ignoriert."></i>
+					    <label>Dateiname: </label>
+				    </div>
+				    <div class=fieldValue>
+					    <input id=textboxFilterFileName type=text class=field></input>
+						<input type=radio name=choiceFilterFileName value=exact><label for=exact>exakt</label></input>
+						<input type=radio name=choiceFilterFileName value=contains checked=true><label for=contains>enthält</label></input>
+					</div>
+				</div>
 				<input type=button id=buttonSearch value=Suche class="field notToPrint formButton"></input>
 				<label id=labelCount></label>
 				<input type=button id=buttonGoToFirstPage value=Anfang />

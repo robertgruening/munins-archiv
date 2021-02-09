@@ -16,6 +16,7 @@
 	<script type="text/javascript" src="../../js/controls/control.MessageBox.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.ErrorMessageBox.js"></script>
 	<script type="text/javascript" src="../../js/ui/controls/control.List.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.ImageModal.js"></script>
 	<!-- basic page functions -->
 	<script type="text/javascript" src="../../js/page.js"></script>
 	<script type="text/javascript" src="../../js/ui/IconConfig.js"></script>
@@ -45,6 +46,7 @@
 
 	<!-- javascript frameworks etc. -->
 	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/w3.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/fontawesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/solid.css" />
 	<!-- page -->
@@ -67,6 +69,13 @@
 </head>
 
 <body>
+	<div class="w3-container">
+		<div class="w3-modal image-modal" onclick="$(this).hide()">
+			<div class="w3-modal-content w3-animate-zoom">
+				<img class="w3-modal-content" src="">
+			</div>
+		</div>
+	</div>
 	<div id=navigation class="notToPrint"></div>
 	<!--<div id=leftSidebar class="notToPrint">
 		<div id=shortView></div>
@@ -183,6 +192,7 @@
 					<div class=fieldValue>
 						<div name="messages"></div>
 						<input type=text id=textboxFileName class=field />
+						<img src="" class="preview w3-hover-opacity"/>
 					</div>
 				</div>
 				<div id=divFolderName class=fieldBlock>

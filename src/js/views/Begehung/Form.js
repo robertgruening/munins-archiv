@@ -332,13 +332,20 @@ function setCountOfFunde(funde) {
 //#endregion
 
 //#region Funde
-var IconField = function(config) {
+var ImageField = function(config) {
 	jsGrid.Field.call(this, config);
 }
 
-IconField.prototype = new jsGrid.Field({
+ImageField.prototype = new jsGrid.Field({
 	itemTemplate: function(value) {
-		return $("<i>").addClass(value);
+		if (value == null) {
+			return "kein Bild vorhanden";
+		}
+
+		return $("<img>")
+			.attr("src", value)
+			.attr("width", "70px")
+			.attr("onclick", "imageModal_open(this)");
 	}
 });
 
@@ -387,7 +394,7 @@ function InitGridFunde()
 	_viewModelFormBegehung.register("funde", new GuiClient(UpdateGridData, showErrorMessages));
 
 	jsGrid.locale("de");
-	jsGrid.fields.icon = IconField;
+    jsGrid.fields.image = ImageField;
 	jsGrid.fields.linkToFundFormField = LinkToFundFormField;
 	jsGrid.fields.rating = RatingField;
 
@@ -409,9 +416,9 @@ function InitGridFunde()
 			},
 			{
 				title: "",
-				name: "Icon",
-				type: "icon",
-				width: 27
+				name: "PreviewImage",
+				type: "image",
+				width: 50
 			},
 			{
 				name: "Anzahl",
@@ -452,7 +459,16 @@ function UpdateGridData(funde) {
 
 	funde.forEach(fund => {
 		var copy = JSON.parse(JSON.stringify(fund));
-		copy.Icon = IconConfig.getCssClasses("Fund");
+
+		if (fund.Kontext != null &&
+			fund.FileName != null) {
+
+			let kontextPath = fund.Kontext.Path;
+			let previewFileName = fund.FileName.substr(0, fund.FileName.lastIndexOf(".")) + ".preview" + fund.FileName.substr(fund.FileName.lastIndexOf("."));
+			let relativePreviewFilePath = kontextPath + "/" + previewFileName;
+			copy.PreviewImage = getMuninsArchivFileServiceBaseUrl() + "/file.php?relativePath=/" + relativePreviewFilePath;
+		}
+
 		copy.Anzahl = fund.Anzahl.replace("-", ">");
 		copy.FundAttributAnzeigeTexte = "<ul>"
 

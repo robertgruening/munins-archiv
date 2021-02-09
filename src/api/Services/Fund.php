@@ -228,6 +228,21 @@ function Get()
 		{
 			$loadFunde->addSearchCondition("MinRating", $_GET["minRating"]);
 		}
+		
+		if (isset($_GET["hasFileName"]))
+		{
+			$loadFunde->addSearchCondition("HasFileName", $_GET["hasFileName"] === "true");
+		}
+
+		if (isset($_GET["containsFileName"]))
+		{
+			$loadFunde->addSearchCondition("ContainsFileName", $_GET["containsFileName"]);
+		}
+
+		if (isset($_GET["fileName"]))
+		{
+			$loadFunde->addSearchCondition("FileName", $_GET["fileName"]);
+		}
 
 		$pagingConditions = array();
 

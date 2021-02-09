@@ -59,6 +59,10 @@
 	}
 }
 
+img.preview {
+	height: 200px;
+}
+
 .fieldDescription label{
     line-height: 19px;
 }

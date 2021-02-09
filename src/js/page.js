@@ -70,3 +70,11 @@ function openFormNewElement()
 {
 	window.open(window.location.href.replace(window.location.search, ""), "_self");
 }
+
+function getMuninsArchivBaseUrl() {
+	return "https://localhost/Munins Archiv";
+}
+
+function getMuninsArchivFileServiceBaseUrl() {
+	return "https://localhost/munins-archiv-file-service";
+}
