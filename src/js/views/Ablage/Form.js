@@ -240,6 +240,30 @@ LinkToFundFormField.prototype = new jsGrid.Field({
 		return link;
 	}
 });
+var RatingField = function(config) {
+	jsGrid.Field.call(this, config);
+}
+
+RatingField.prototype = new jsGrid.Field({
+	itemTemplate: function(value) {
+		let div = $("<div>")
+			.attr("title", value);
+
+		for (let i = 1; i <= 5; i++) {
+
+			if (i <= value) {
+				div.append($("<i>")
+					.addClass("fas fa-star rating-star--checked"));
+			}
+			else {
+				div.append($("<i>")
+					.addClass("fas fa-star rating-star"));
+			}
+		}
+
+		return div;
+	}
+});
 
 function InitGridFunde()
 {
@@ -249,6 +273,7 @@ function InitGridFunde()
 	jsGrid.locale("de");
 	jsGrid.fields.icon = IconField;
 	jsGrid.fields.linkToFundFormField = LinkToFundFormField;
+	jsGrid.fields.rating = RatingField;
 
 	$("#gridFunde").jsGrid({
 		width: "100%",
@@ -285,6 +310,11 @@ function InitGridFunde()
 				title: "Fundattribute",
 				name: "FundAttributAnzeigeTexte",
 				type: "text"
+			},
+			{
+				title: "Bewertung",
+				name: "Rating",
+				type: "rating"
 			}
 		],
 
