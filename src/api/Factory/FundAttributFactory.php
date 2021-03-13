@@ -56,11 +56,11 @@ class FundAttributFactory extends Factory implements iTreeFactory
 
 	#region load
 	/**
-	* Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id and CountOfFunde as string.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id, path and CountOfFunde as string.
 	*/
 	protected function getSQLStatementToLoad()
 	{
-		return "SELECT Id, Bezeichnung, Typ_Id, (SELECT COUNT(*) FROM ".$this->getFundFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getFundFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id) AS CountOfFunde
+		return "SELECT Id, Bezeichnung, Typ_Id, `Path`, (SELECT COUNT(*) FROM ".$this->getFundFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getFundFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id) AS CountOfFunde
 			FROM ".$this->getTableName();
 	}
 
@@ -122,7 +122,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
         $fundAttribut = new FundAttribut();
         $fundAttribut->setId(intval($dataSet["Id"]));
         $fundAttribut->setBezeichnung($dataSet["Bezeichnung"]);
-        $fundAttribut->setPath($this->getPath($fundAttribut));
+		$fundAttribut->setPath($dataset["Path"]);
         $fundAttribut->setType($this->getFundAttributTypeFactory()->loadById(intval($dataSet["Typ_Id"])));
         $fundAttribut->setCountOfFunde(intval($dataSet["CountOfFunde"]));
 
@@ -166,19 +166,28 @@ class FundAttributFactory extends Factory implements iTreeFactory
     #endregion
 
     #region save
+	public function save($element)
+	{
+		$entity = parent::save($element);
+
+		$this->updatePathRecursive($entity);
+
+		return $entity;
+	}
+
     /**
-     * Returns the SQL statement to insert Bezeichnung and Fundattribut type ID.
+     * Returns the SQL statement to insert Bezeichnung, Fundattribut type ID and path.
      *
      * @param iNode $element Fundattribut to be inserted.
      */
     protected function getSQLStatementToInsert(iNode $element)
     {
-        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
-                VALUES ('".addslashes($element->getBezeichnung())."', ".$element->getType()->getId().");";
+        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, `Path`)
+                VALUES ('".addslashes($element->getBezeichnung())."', ".$element->getType()->getId().", '".addslashes($this->calculatePathByParentId($element, $element->getParent() == null ? null : $element->getParent()->getId()))."');";
     }
 
     /**
-     * Returns the SQL statement to update Bezeichnung and Fundattribut type ID.
+     * Returns the SQL statement to update Bezeichnung, Fundattribut type ID and path.
      *
      * @param iNode $element Fundattribut to be updated.
      */
@@ -186,7 +195,8 @@ class FundAttributFactory extends Factory implements iTreeFactory
     {
         return "UPDATE ".$this->getTableName()."
                 SET Bezeichnung = '".addslashes($element->getBezeichnung())."',
-                    Typ_Id = ".$element->getType()->getId()."
+                    Typ_Id = ".$element->getType()->getId().",
+					`Path` = '".addslashes($this->calculatePath($ablage))."'
                 WHERE Id = ".$element->getId().";";
     }
     #endregion
@@ -326,10 +336,22 @@ class FundAttributFactory extends Factory implements iTreeFactory
     }
     #endregion
 
-    public function getPath(iTreeNode $fundAttribut)
+	#region path
+    public function calculatePath(iTreeNode $ablage)
     {
-        return $this->getTreeFactory()->getPath($fundAttribut);
+        return $this->getTreeFactory()->calculatePath($ablage);
     }
+
+    public function calculatePathByParentId(iTreeNode $ablage, $parentId)
+    {
+        return $this->getTreeFactory()->calculatePathByParentId($ablage, $parentId);
+    }
+
+	public function updatePathRecursive(iTreeNode $node = null)
+	{
+		return $this->getTreeFactory()->updatePathRecursive($node);
+	}
+	#endregion
 
     public function loadRoots()
     {

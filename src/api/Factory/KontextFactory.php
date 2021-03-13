@@ -96,13 +96,14 @@ class KontextFactory extends Factory implements iTreeFactory
 
     #region load
 	/**
-	* Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id, GeoPointLatitude (for Fundstelle), GeoPointLongitude (for Fundstelle), Datum (for Begehung) and Kommentar (for Begehung) as string.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id, path, GeoPointLatitude (for Fundstelle), GeoPointLongitude (for Fundstelle), Datum (for Begehung) and Kommentar (for Begehung) as string.
 	*/
 	protected function getSqlStatementToLoad()
 	{		
 			return "SELECT ".$this->getTableName().".Id AS Id,
 			 ".$this->getTableName().".Bezeichnung AS Bezeichnung, 
 			 ".$this->getTableName().".Typ_Id AS Typ_Id, 
+			 `Path` AS `Path`,
 			 ST_X(Fundstelle.GeoPoint) AS GeoPointLatitude, 
 			 ST_Y(Fundstelle.GeoPoint) AS GeoPointLongitude,
 			 Begehung.Datum AS Datum, 
@@ -185,7 +186,7 @@ class KontextFactory extends Factory implements iTreeFactory
 
         $kontext->setId(intval($dataSet["Id"]));
         $kontext->setBezeichnung($dataSet["Bezeichnung"]);
-        $kontext->setPath($this->getPath($kontext));
+        $kontext->setPath($dataset["Path"]);
         $kontext->setType($kontextType);
 
         if ($kontext instanceof Fundstelle)
@@ -289,6 +290,15 @@ class KontextFactory extends Factory implements iTreeFactory
     #endregion
 
     #region save
+	public function save($element)
+	{
+		$entity = parent::save($element);
+
+		$this->updatePathRecursive($entity);
+
+		return $entity;
+	}
+
     /**
     * Overwrites the basis function. If the Kontext type is 'Begehung'
     * then the system calls a transaction.
@@ -375,8 +385,8 @@ class KontextFactory extends Factory implements iTreeFactory
 
     protected function getSQLStatementToInsert(iNode $kontext)
     {
-        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
-        VALUES ('".addslashes($kontext->getBezeichnung())."', ".$kontext->getType()->getId().");";
+        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, `Path`)
+        VALUES ('".addslashes($kontext->getBezeichnung())."', ".$kontext->getType()->getId().", '".addslashes($this->calculatePathByParentId($kontext, $kontext->getParent() == null ? null : $kontext->getParent()->getId()))."');";
     }
 
     protected function getSQLStatementToInsertFundstelle(iNode $kontext)
@@ -491,7 +501,8 @@ class KontextFactory extends Factory implements iTreeFactory
     {
         return "UPDATE ".$this->getTableName()."
             SET Bezeichnung = '".addslashes($kontext->getBezeichnung())."',
-            Typ_Id = ".$kontext->getType()->getId()."
+            Typ_Id = ".$kontext->getType()->getId().",
+			`Path` = '".addslashes($this->calculatePath($ablage))."'
             WHERE Id = ".$kontext->getId().";";
     }
 
@@ -837,10 +848,22 @@ class KontextFactory extends Factory implements iTreeFactory
         }
         #endregion
 
-        public function getPath(iTreeNode $kontext)
-        {
-            return $this->getTreeFactory()->getPath($kontext);
-        }
+		#region path
+		public function calculatePath(iTreeNode $ablage)
+		{
+			return $this->getTreeFactory()->calculatePath($ablage);
+		}
+
+		public function calculatePathByParentId(iTreeNode $ablage, $parentId)
+		{
+			return $this->getTreeFactory()->calculatePathByParentId($ablage, $parentId);
+		}
+
+		public function updatePathRecursive(iTreeNode $node = null)
+		{
+			return $this->getTreeFactory()->updatePathRecursive($node);
+		}
+		#endregion
 
         public function loadRoots()
         {
