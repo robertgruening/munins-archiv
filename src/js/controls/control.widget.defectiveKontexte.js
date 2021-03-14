@@ -59,9 +59,9 @@
 			a.attr("href", "../../pages/" + items[i].Type.Bezeichnung + "/Form.html?Id=" + items[i].Id);
 
 			var span= $("<span></span>");
-			span.text("/" + items[i].Path);
+			span.text(items[i].Path);
 			a.append(span);
-			a.attr("title", "/" + items[i].Path);
+			a.attr("title", items[i].Path);
 			li.append(a);
 			ul.append(li);
 		}

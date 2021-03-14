@@ -174,12 +174,6 @@ function esti_initFieldPath() {
 function esti_setPath(path) {
 	console.info("setting value of 'Path'");
 	console.debug("'Path' is", path);
-
-	if (!path.startsWith("/")) {
-		console.warn("added '/' to path");
-		path = "/" + path;
-	}
-
 	$("#path", _htmlContainerElement).val(path);
 }
 //#endregion

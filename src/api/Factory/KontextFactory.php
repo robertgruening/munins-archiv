@@ -154,59 +154,68 @@ class KontextFactory extends Factory implements iTreeFactory
 		return $sqlSearchConditionStrings;
 	}
 
-    protected function fill($dataSet)
+    protected function fill($dataset)
     {
-        if ($dataSet == null)
+        if ($dataset == null)
         {
             return null;
         }
 
-        $kontextType = $this->getKontextTypeFactory()->loadById(intval($dataSet["Typ_Id"]));
+        $kontextType = $this->getKontextTypeFactory()->loadById(intval($dataset["Typ_Id"]));
 
-        $kontext = null;
+        $entity = null;
 
         switch ($kontextType->getBezeichnung())
         {
             case "Fundstelle":
             {
-                $kontext = new Fundstelle();
+				global $logger;
+				$logger->debug("Fülle Fundstelle (".intval($dataset["Id"]).") mit Daten");
+
+                $entity = new Fundstelle();
                 break;
             }
             case "Begehungsfläche":
             {
-                $kontext = new Begehungsflaeche();
+				global $logger;
+				$logger->debug("Fülle Begehungsfläche (".intval($dataset["Id"]).") mit Daten");
+
+                $entity = new Begehungsflaeche();
                 break;
             }
             case "Begehung":
             {
-                $kontext = new Begehung();
+				global $logger;
+				$logger->debug("Fülle Begehung (".intval($dataset["Id"]).") mit Daten");
+
+                $entity = new Begehung();
                 break;
             }
         }
 
-        $kontext->setId(intval($dataSet["Id"]));
-        $kontext->setBezeichnung($dataSet["Bezeichnung"]);
-        $kontext->setPath($dataset["Path"]);
-        $kontext->setType($kontextType);
+        $entity->setId(intval($dataset["Id"]));
+        $entity->setBezeichnung($dataset["Bezeichnung"]);
+        $entity->setPath($dataset["Path"]);
+        $entity->setType($kontextType);
 
-        if ($kontext instanceof Fundstelle)
+        if ($entity instanceof Fundstelle)
         {
-			if ($dataSet["GeoPointLatitude"] != null &&
-				$dataSet["GeoPointLongitude"] != null)
+			if ($dataset["GeoPointLatitude"] != null &&
+				$dataset["GeoPointLongitude"] != null)
 			{
 				$geoPoint = new GeoPoint();
-				$geoPoint->setLatitude($dataSet["GeoPointLatitude"]);
-				$geoPoint->setLongitude($dataSet["GeoPointLongitude"]);
-	            $kontext->setGeoPoint($geoPoint);
+				$geoPoint->setLatitude($dataset["GeoPointLatitude"]);
+				$geoPoint->setLongitude($dataset["GeoPointLongitude"]);
+	            $entity->setGeoPoint($geoPoint);
 			}
         }
-		else if ($kontext instanceof Begehung)
+		else if ($entity instanceof Begehung)
         {
-            $kontext->setDatum($dataSet["Datum"]);
-            $kontext->setKommentar($dataSet["Kommentar"]);
+            $entity->setDatum($dataset["Datum"]);
+            $entity->setKommentar($dataset["Kommentar"]);
         }
 
-        return $kontext;
+        return $entity;
     }
 
     public function loadByFund($fund)
@@ -502,7 +511,7 @@ class KontextFactory extends Factory implements iTreeFactory
         return "UPDATE ".$this->getTableName()."
             SET Bezeichnung = '".addslashes($kontext->getBezeichnung())."',
             Typ_Id = ".$kontext->getType()->getId().",
-			`Path` = '".addslashes($this->calculatePath($ablage))."'
+			`Path` = '".addslashes($this->calculatePath($kontext))."'
             WHERE Id = ".$kontext->getId().";";
     }
 
@@ -848,22 +857,22 @@ class KontextFactory extends Factory implements iTreeFactory
         }
         #endregion
 
-		#region path
-		public function calculatePath(iTreeNode $ablage)
-		{
-			return $this->getTreeFactory()->calculatePath($ablage);
-		}
+	#region path
+	public function calculatePath(iTreeNode $entity)
+	{
+		return $this->getTreeFactory()->calculatePath($entity);
+	}
 
-		public function calculatePathByParentId(iTreeNode $ablage, $parentId)
-		{
-			return $this->getTreeFactory()->calculatePathByParentId($ablage, $parentId);
-		}
+	public function calculatePathByParentId(iTreeNode $entity, $parentId)
+	{
+		return $this->getTreeFactory()->calculatePathByParentId($entity, $parentId);
+	}
 
-		public function updatePathRecursive(iTreeNode $node = null)
-		{
-			return $this->getTreeFactory()->updatePathRecursive($node);
-		}
-		#endregion
+	public function updatePathRecursive(iTreeNode $entity = null)
+	{
+		return $this->getTreeFactory()->updatePathRecursive($entity);
+	}
+	#endregion
 
         public function loadRoots()
         {

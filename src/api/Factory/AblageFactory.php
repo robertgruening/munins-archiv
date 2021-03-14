@@ -160,14 +160,14 @@ class AblageFactory extends Factory implements iTreeFactory
         global $logger;
         $logger->debug("Fülle Ablage (".intval($dataset["Id"]).") mit Daten");
 
-        $ablage = new Ablage();
-        $ablage->setId(intval($dataset["Id"]));
-        $ablage->setBezeichnung($dataset["Bezeichnung"]);
-        $ablage->setGuid($dataset["Guid"]);
-		$ablage->setPath($dataset["Path"]);
-        $ablage->setType($this->getAblageTypeFactory()->loadById(intval($dataset["Typ_Id"])));
+        $entity = new Ablage();
+        $entity->setId(intval($dataset["Id"]));
+        $entity->setBezeichnung($dataset["Bezeichnung"]);
+        $entity->setGuid($dataset["Guid"]);
+		$entity->setPath($dataset["Path"]);
+        $entity->setType($this->getAblageTypeFactory()->loadById(intval($dataset["Typ_Id"])));
 
-        return $ablage;
+        return $entity;
     }
 
     public function loadByFund($fund)
@@ -435,19 +435,19 @@ class AblageFactory extends Factory implements iTreeFactory
     #endregion
 
 	#region path
-    public function calculatePath(iTreeNode $ablage)
-    {
-        return $this->getTreeFactory()->calculatePath($ablage);
-    }
-
-    public function calculatePathByParentId(iTreeNode $ablage, $parentId)
-    {
-        return $this->getTreeFactory()->calculatePathByParentId($ablage, $parentId);
-    }
-
-	public function updatePathRecursive(iTreeNode $node = null)
+	public function calculatePath(iTreeNode $entity)
 	{
-		return $this->getTreeFactory()->updatePathRecursive($node);
+		return $this->getTreeFactory()->calculatePath($entity);
+	}
+
+	public function calculatePathByParentId(iTreeNode $entity, $parentId)
+	{
+		return $this->getTreeFactory()->calculatePathByParentId($entity, $parentId);
+	}
+
+	public function updatePathRecursive(iTreeNode $entity = null)
+	{
+		return $this->getTreeFactory()->updatePathRecursive($entity);
 	}
 	#endregion
 

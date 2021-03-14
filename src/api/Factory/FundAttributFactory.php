@@ -110,23 +110,26 @@ class FundAttributFactory extends Factory implements iTreeFactory
      * the ID, Bezeichnung, Fundattribut type and
      * count of Funde by the given dataset.
      *
-     * @param $dataSet Dataset from Fundattribut table.
+     * @param $dataset Dataset from Fundattribut table.
      */
-    protected function fill($dataSet)
+    protected function fill($dataset)
     {
-        if ($dataSet == null)
+        if ($dataset == null)
         {
             return null;
         }
 
-        $fundAttribut = new FundAttribut();
-        $fundAttribut->setId(intval($dataSet["Id"]));
-        $fundAttribut->setBezeichnung($dataSet["Bezeichnung"]);
-		$fundAttribut->setPath($dataset["Path"]);
-        $fundAttribut->setType($this->getFundAttributTypeFactory()->loadById(intval($dataSet["Typ_Id"])));
-        $fundAttribut->setCountOfFunde(intval($dataSet["CountOfFunde"]));
+        global $logger;
+        $logger->debug("Fülle Fundattribut (".intval($dataset["Id"]).") mit Daten");
 
-        return $fundAttribut;
+        $entity = new FundAttribut();
+        $entity->setId(intval($dataset["Id"]));
+        $entity->setBezeichnung($dataset["Bezeichnung"]);
+		$entity->setPath($dataset["Path"]);
+        $entity->setType($this->getFundAttributTypeFactory()->loadById(intval($dataset["Typ_Id"])));
+        $entity->setCountOfFunde(intval($dataset["CountOfFunde"]));
+
+        return $entity;
     }
 
     public function loadByFund($fund)
@@ -196,7 +199,7 @@ class FundAttributFactory extends Factory implements iTreeFactory
         return "UPDATE ".$this->getTableName()."
                 SET Bezeichnung = '".addslashes($element->getBezeichnung())."',
                     Typ_Id = ".$element->getType()->getId().",
-					`Path` = '".addslashes($this->calculatePath($ablage))."'
+					`Path` = '".addslashes($this->calculatePath($element))."'
                 WHERE Id = ".$element->getId().";";
     }
     #endregion
@@ -337,19 +340,19 @@ class FundAttributFactory extends Factory implements iTreeFactory
     #endregion
 
 	#region path
-    public function calculatePath(iTreeNode $ablage)
-    {
-        return $this->getTreeFactory()->calculatePath($ablage);
-    }
-
-    public function calculatePathByParentId(iTreeNode $ablage, $parentId)
-    {
-        return $this->getTreeFactory()->calculatePathByParentId($ablage, $parentId);
-    }
-
-	public function updatePathRecursive(iTreeNode $node = null)
+	public function calculatePath(iTreeNode $entity)
 	{
-		return $this->getTreeFactory()->updatePathRecursive($node);
+		return $this->getTreeFactory()->calculatePath($entity);
+	}
+
+	public function calculatePathByParentId(iTreeNode $entity, $parentId)
+	{
+		return $this->getTreeFactory()->calculatePathByParentId($entity, $parentId);
+	}
+
+	public function updatePathRecursive(iTreeNode $entity = null)
+	{
+		return $this->getTreeFactory()->updatePathRecursive($entity);
 	}
 	#endregion
 

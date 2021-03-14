@@ -285,7 +285,7 @@ function setFundAttribute(fundAttribute) {
 		var linkFundAttribut = $("<a>");
 		linkFundAttribut.attr("title", "gehe zu");
 		linkFundAttribut.attr("href", "../../pages/FundAttribut/Form.html?Id=" + fundAttribut.Id);
-		linkFundAttribut.text("/" + fundAttribut.Path);
+		linkFundAttribut.text(fundAttribut.Path);
 		li.append(linkFundAttribut);
 
 		$("#divFundAttribute div #divList ul").append(li);
@@ -404,7 +404,7 @@ function setAblage(ablage) {
 		$("#linkSelectedAblage").attr("href", "");
 	}
 	else {
-		$("#linkSelectedAblage").text("/" + ablage.Path);
+		$("#linkSelectedAblage").text(ablage.Path);
 		$("#linkSelectedAblage").attr("href", "../../pages/Ablage/Form.html?Id=" + ablage.Id);
 	}
 }
@@ -454,7 +454,7 @@ function setKontext(kontext) {
 		$("#linkSelectedKontext").attr("href", "");
 	}
 	else {
-		$("#linkSelectedKontext").text("/" + kontext.Path);
+		$("#linkSelectedKontext").text(kontext.Path);
 		$("#linkSelectedKontext").attr("href", "../../pages/" + kontext.Type.Bezeichnung + "/Form.html?Id=" + kontext.Id);
 	}
 }

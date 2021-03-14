@@ -131,25 +131,25 @@ class OrtFactory extends Factory implements iTreeFactory
     *
     * @param $dataset Dataset from Ablage table.
     */
-    protected function fill($dataSet)
+    protected function fill($dataset)
     {
-        if ($dataSet == null)
+        if ($dataset == null)
         {
             return null;
         }
 
         global $logger;
-        $logger->debug("Fülle Ort (".intval($dataSet["Id"]).") mit Daten");
+        $logger->debug("Fülle Ort (".intval($dataset["Id"]).") mit Daten");
 
-        $ort = new Ort();
-        $ort->setId(intval($dataSet["Id"]));
-        $ort->setBezeichnung($dataSet["Bezeichnung"]);
-        $ort->setPath($dataset["Path"]);
-        $ort->setType($this->getOrtsTypeFactory()->loadById(intval($dataSet["Typ_Id"])));
-        $ort->setCategory($this->getOrtsCategoryFactory()->loadById(intval($dataSet["Category_Id"])));
-        $ort->setCountOfKontexte(intval($dataSet["CountOfKontexte"]));
+        $entity = new Ort();
+        $entity->setId(intval($dataset["Id"]));
+        $entity->setBezeichnung($dataset["Bezeichnung"]);
+        $entity->setPath($dataset["Path"]);
+        $entity->setType($this->getOrtsTypeFactory()->loadById(intval($dataset["Typ_Id"])));
+        $entity->setCategory($this->getOrtsCategoryFactory()->loadById(intval($dataset["Category_Id"])));
+        $entity->setCountOfKontexte(intval($dataset["CountOfKontexte"]));
 
-        return $ort;
+        return $entity;
     }
     #endregion
 
@@ -184,7 +184,7 @@ class OrtFactory extends Factory implements iTreeFactory
         return "UPDATE ".$this->getTableName()."
                 SET Bezeichnung = '".addslashes($ort->getBezeichnung())."',
                     Typ_Id = ".$ort->getType()->getId().",
-					`Path` = '".addslashes($this->calculatePath($ablage))."',
+					`Path` = '".addslashes($this->calculatePath($ort))."',
                     Category_Id = ".$ort->getCategory()->getId()."
                 WHERE Id = ".$ort->getId().";";
     }
@@ -343,19 +343,19 @@ class OrtFactory extends Factory implements iTreeFactory
     #endregion
 
 	#region path
-    public function calculatePath(iTreeNode $ablage)
-    {
-        return $this->getTreeFactory()->calculatePath($ablage);
-    }
-
-    public function calculatePathByParentId(iTreeNode $ablage, $parentId)
-    {
-        return $this->getTreeFactory()->calculatePathByParentId($ablage, $parentId);
-    }
-
-	public function updatePathRecursive(iTreeNode $node = null)
+	public function calculatePath(iTreeNode $entity)
 	{
-		return $this->getTreeFactory()->updatePathRecursive($node);
+		return $this->getTreeFactory()->calculatePath($entity);
+	}
+
+	public function calculatePathByParentId(iTreeNode $entity, $parentId)
+	{
+		return $this->getTreeFactory()->calculatePathByParentId($entity, $parentId);
+	}
+
+	public function updatePathRecursive(iTreeNode $entity = null)
+	{
+		return $this->getTreeFactory()->updatePathRecursive($entity);
 	}
 	#endregion
 

@@ -58,10 +58,10 @@
 			var a = $("<a></a>");
 			a.attr("href", "../../pages/Ablage/Form.html?Id=" + items[i].Id);
 
-			var span= $("<span></span>");
-			span.text("/" + items[i].Path);
+			var span = $("<span></span>");
+			span.text(items[i].Path);
 			a.append(span);
-			a.attr("title", "/" + items[i].Path);
+			a.attr("title", items[i].Path);
 			li.append(a);
 			ul.append(li);
 		}
