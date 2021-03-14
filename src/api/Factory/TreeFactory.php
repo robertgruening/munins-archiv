@@ -394,22 +394,99 @@ class TreeFactory implements iTreeFactory, iSqlSearchConditionStringsProvider
 		return $node;
 	}
 	#endregion
-    
-    public function getPath(iTreeNode $node)
-    {
-        $path = "";
-        
-        $node = $this->loadParent($node);
-            
-        if ($node->getParent() != null)
-        {
-            $path .= $this->getPath($node->getParent())."/";
-        }
-                
-        $path .= $node->getBezeichnung();
-        
-        return $path;
-    }
+
+	#region path
+	/**
+	 * Loads the parent if exists, appends the current node's Bezeichnung
+	 * to the parent's path and returns the created path.
+	 * 
+	 * @param $node Node for which the path is to calculate.
+	 */
+	public function calculatePath(iTreeNode $node)
+	{
+		$node = $this->loadParent($node);
+
+		if ($node->getParent() == null)
+		{
+			return "/".$node->getBezeichnung();
+		}
+
+		return $node->getParent()->getPath()."/".$node->getBezeichnung();		
+	}
+
+	/**
+	 * Loads the parent by the given parent ID if exists, appends the current node's Bezeichnung
+	 * to the parent's path and returns the created path.
+	 * 
+	 * @param $node Node for which the path is to calculate.
+	 * @param $parentId ID of the parent which is to use to calculate the path.
+	 */
+	public function calculatePathByParentId(iTreeNode $node, $parentId)
+	{
+		$parent = ($parentId == null ? null : $this->loadById($parentId));
+
+		if ($parent == null)
+		{
+			return "/".$node->getBezeichnung();
+		}
+
+		return $parent->getPath()."/".$node->getBezeichnung();		
+	}
+
+	/**
+	 * Updates the path of the given node and continues updating
+	 * the path of each child with depth-first strategy.
+	 * 
+	 * @param $node Node which is the starting point for updating the subtree. If node is null it starts with all root nodes.
+	 */
+	public function updatePathRecursive(iTreeNode $node = null)
+	{
+		if ($node == null)
+		{
+			$roots = $this->loadRoots();
+
+			for ($i = 0; $i < count($roots); $i++)
+			{
+				$this->updatePathRecursive($roots[$i]);
+			}
+
+			return;
+		}
+
+		$this->updatePath($node);
+		$node = $this->loadChildren($node);
+
+		for ($i = 0; $i < count($node->getChildren()); $i++)
+		{
+			$this->updatePathRecursive($node->getChildren()[$i]);
+		}
+	}
+
+	private function updatePath(iTreeNode $node)
+	{
+		$mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
+		
+		if (!$mysqli->connect_errno)
+		{
+			$mysqli->set_charset("utf8");
+			$mysqli->query($this->getSQLStatementToUpdatePath($node));
+		}
+		
+		$mysqli->close();
+	}
+	
+	private function getSQLStatementToUpdatePath(iTreeNode $node)
+	{
+		return "Update ".$this->getModelFactory()->getTableName()."
+				SET Path = '".addslashes($this->calculatePath($node))."'
+				WHERE Id = ".$node->getId().";";
+	}
+	#endregion
+
+	public function loadById($id)
+	{
+		return $this->getModelFactory()->loadById($id);
+	}
     
 	public function loadRoots()
 	{

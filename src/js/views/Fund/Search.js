@@ -244,12 +244,12 @@ function UpdateGridData(funde) {
 
 		if (copy.Ablage != null)
 		{
-			copy.AblageLinkedPath = "<a href='/Munins Archiv/src/pages/Ablage/Form.html?Id=" + copy.Ablage.Id + "' target='_self'>/" + copy.Ablage.Path + "</a>";
+			copy.AblageLinkedPath = "<a href='/Munins Archiv/src/pages/Ablage/Form.html?Id=" + copy.Ablage.Id + "' target='_self'>" + copy.Ablage.Path + "</a>";
 		}
 
 		if (copy.Kontext != null)
 		{
-			copy.KontextLinkedPath = "<a href='/Munins Archiv/src/pages/" + copy.Kontext.Type.Bezeichnung + "/Form.html?Id=" + copy.Kontext.Id + "' target='_self'>/" + copy.Kontext.Path + "</a>";
+			copy.KontextLinkedPath = "<a href='/Munins Archiv/src/pages/" + copy.Kontext.Type.Bezeichnung + "/Form.html?Id=" + copy.Kontext.Id + "' target='_self'>" + copy.Kontext.Path + "</a>";
 		}
 
 		entries.push(copy);

@@ -71,6 +71,11 @@ function Main()
 	readline("Weiter mit [EINGABE] ...");
 	echo "\r\n";
 	UpgradeFunde($config);
+	
+	echo "Im Folgenden werden Ablagen, Fundattribute, Kontexte und Orte um vorberechnete Pfade erweitert.\r\n";
+	readline("Weiter mit [EINGABE] ...");
+	echo "\r\n";
+	UpgradeByPrecalculatedPath($config);
 	readline("Weiter mit [EINGABE] ...");
 	echo "\r\n";
 
@@ -389,7 +394,7 @@ function InsertColumnGuidInTableAblage($config)
 {
 	if (DoesColumnExist($config, "Ablage", "Guid"))
 	{
-		echo "Die Spalte \"Guid\" existiert bereits in der Tabelle \"Ablage\".";
+		echo "Die Spalte \"Guid\" existiert bereits in der Tabelle \"Ablage\".\r\n";
 	}
 	else
 	{
@@ -527,7 +532,7 @@ function InsertColumnCategoryIdInTableOrt($config)
 {
 	if (DoesColumnExist($config, "Ort", "Category_Id"))
 	{
-		echo "Die Spalte \"Category_Id\" existiert bereits in der Tabelle \"Ort\".";
+		echo "Die Spalte \"Category_Id\" existiert bereits in der Tabelle \"Ort\".\r\n";
 	}
 	else
 	{
@@ -560,7 +565,7 @@ function InsertColumnFileNameInTableFund($config)
 {
 	if (DoesColumnExist($config, "Fund", "FileName"))
 	{
-		echo "Die Spalte \"FileName\" existiert bereits in der Tabelle \"Fund\".";
+		echo "Die Spalte \"FileName\" existiert bereits in der Tabelle \"Fund\".\r\n";
 	}
 	else
 	{
@@ -591,7 +596,7 @@ function InsertColumnFolderNameInTableFund($config)
 {
 	if (DoesColumnExist($config, "Fund", "FolderName"))
 	{
-		echo "Die Spalte \"FolderName\" existiert bereits in der Tabelle \"Fund\".";
+		echo "Die Spalte \"FolderName\" existiert bereits in der Tabelle \"Fund\".\r\n";
 	}
 	else
 	{
@@ -649,6 +654,37 @@ function InsertColumnRatingInTableFund($config)
 	}
 }
 #endregion
+
+function InsertColumnPathInTable($config, $tableName)
+{
+	if (DoesColumnExist($config, $tableName, "Path"))
+	{
+		echo "Die Spalte \"Path\" existiert bereits in der Tabelle \"".$tableName."\".\r\n";
+	}
+	else
+	{
+        $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
+    
+            $ergebnis = $mysqli->query("ALTER TABLE `".$tableName."` ADD COLUMN `Path` varchar(1000);");
+        
+            if ($mysqli->errno)
+            {
+                    echo "Beim Anlegen der Spalte \"Path\" in der Tabelle \"".$tableName."\" ist ein Fehler aufgetreten!\r\n";
+                    echo $mysqli->errno.": ".$mysqli->error."\r\n";
+            }
+            else
+            {
+                echo "Spalte \"Path\" wurde erfolgreich in Tabelle \"".$tableName."\" angelgt.\r\n";
+            }
+        }
+
+        $mysqli->close();
+	}
+}
 #endregion
 
 #region tasks
@@ -698,6 +734,187 @@ function UpgradeFunde($config)
 	InsertColumnFileNameInTableFund($config);
 	InsertColumnFolderNameInTableFund($config);
 	InsertColumnRatingInTableFund($config);
+}
+#endregion
+
+#region extend by path
+function UpgradeByPrecalculatedPath($config)
+{
+	InsertColumnPathInTable($config, "Ablage");
+	updatePathRecursive($config, "Ablage");
+	UpdateColumnPathNotNullAndUnique($config, "Ablage");
+
+	InsertColumnPathInTable($config, "FundAttribut");
+	updatePathRecursive($config, "FundAttribut");
+	UpdateColumnPathNotNullAndUnique($config, "FundAttribut");
+
+	InsertColumnPathInTable($config, "Kontext");
+	updatePathRecursive($config, "Kontext");
+	UpdateColumnPathNotNullAndUnique($config, "Kontext");
+
+	InsertColumnPathInTable($config, "Ort");
+	updatePathRecursive($config, "Ort");
+	UpdateColumnPathNotNullAndUnique($config, "Ort");
+}
+
+function updatePathRecursive($config, $tableName, $id = null, $parentPath = "")
+{
+	if ($id == null)
+	{
+		$rootIds = getRootIds($config, $tableName);
+
+		for ($i = 0; $i < count($rootIds); $i++)
+		{
+			updatePathRecursive($config, $tableName, $rootIds[$i]);
+		}
+
+		return;
+	}
+
+	$path = $parentPath."/".getBezeichnungById($config, $tableName, $id);
+	
+	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+	
+	if (!$mysqli->connect_errno)
+	{
+		$mysqli->set_charset("utf8");
+		$mysqli->query(
+			"Update ".$tableName."
+			 SET Path = '".addslashes($path)."'
+			 WHERE Id = ".$id.";"
+		);
+	}
+	
+	$mysqli->close();
+	
+	$childIds = getChildIds($config, $tableName, $id);
+
+	for ($i = 0; $i < count($childIds); $i++)
+	{
+		updatePathRecursive($config, $tableName, $childIds[$i], $path);
+	}
+}
+
+function getBezeichnungById($config, $tableName, $id)
+{
+    $bezeichnung = null;
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+	    $ergebnis = $mysqli->query("
+	        SELECT Bezeichnung
+	        FROM ".$tableName."
+	        WHERE Id = ".$id.";");
+
+		if ($mysqli->errno)
+		{
+			echo "Datenbankfehler: ".$mysqli->errno." ".$mysqli->error."\r\n";
+		}
+		else if ($datensatz = $ergebnis->fetch_assoc())
+		{
+			$bezeichnung = $datensatz["Bezeichnung"];
+		}
+    }
+    $mysqli->close();
+
+    return $bezeichnung;
+}
+
+function getRootIds($config, $tableName)
+{
+	$ids = array();
+	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+	
+	if (!$mysqli->connect_errno)
+	{
+		$mysqli->set_charset("utf8");
+		$ergebnis = $mysqli->query(
+			"SELECT Id
+			 FROM ".$tableName."
+			 WHERE Parent_Id IS NULL;");
+
+		if ($mysqli->errno)
+		{
+			echo "Datenbankfehler: ".$mysqli->errno." ".$mysqli->error."\r\n";
+		}
+		else
+		{
+			while ($datensatz = $ergebnis->fetch_assoc())
+			{
+				array_push($ids, intval($datensatz["Id"]));
+			}
+		}
+	}
+	
+	$mysqli->close();
+
+	return $ids;
+}
+
+function getChildIds($config, $tableName, $id)
+{
+	$ids = array();
+	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+	
+	if (!$mysqli->connect_errno)
+	{
+		$mysqli->set_charset("utf8");
+		$ergebnis = $mysqli->query(
+			"SELECT Id
+			 FROM ".$tableName."
+			 WHERE Parent_Id = ".$id.";"
+		);
+
+		if ($mysqli->errno)
+		{
+			echo "Datenbankfehler: ".$mysqli->errno." ".$mysqli->error."\r\n";
+		}
+		else
+		{
+			while ($datensatz = $ergebnis->fetch_assoc())
+			{
+				array_push($ids, intval($datensatz["Id"]));
+			}
+		}
+	}
+	
+	$mysqli->close();
+
+	return $ids;
+}
+
+function UpdateColumnPathNotNullAndUnique($config, $tableName)
+{
+	if (!DoesColumnExist($config, $tableName, "Path"))
+	{
+		echo "Die Spalte \"Path\" existiert nicht in der Tabelle \"".$tableName."\".\r\n";
+	}
+	else
+	{
+   	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+   	if (!$mysqli->connect_errno)
+   	{
+	   	$mysqli->set_charset("utf8");
+	    	$ergebnis = $mysqli->query("
+	        ALTER TABLE `".$tableName."` MODIFY `Path` varchar(1000) NOT NULL;");
+
+	   	if ($mysqli->errno)
+	   	{
+	    		echo "Beim Ändern der Spalte \"Path\" in der Tabelle \"".$tableName."\" ist ein Fehler aufgetreten!\r\n";
+	    		echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    	}
+	    	else
+	    	{
+	    		echo "Spalte \"Path\" wurde erfolgreich in Tabelle \"".$tableName."\" geändert.\r\n";
+	    		CreateUniqueIndex($config, $tableName, "Index".$tableName."Guid", "Path");
+	    	}
+    	}
+
+   	$mysqli->close();
+	}
 }
 #endregion
 #endregion

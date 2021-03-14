@@ -273,12 +273,6 @@ function InitFieldPath() {
 function setPath(path) {
 	console.info("setting value of 'Path'");
 	console.debug("'Path' is", path);
-
-	if (!path.startsWith("/")) {
-		console.warn("added '/' to path");
-		path = "/" + path;
-	}
-
 	$("#path").val(path);
 }
 //#endregion

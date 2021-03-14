@@ -68,11 +68,11 @@ class AblageFactory extends Factory implements iTreeFactory
 
     #region load
 	/**
-	* Returns the SQL SELECT statement to load Id, Bezeichnung, Guid and Typ_Id as string.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Guid, Typ_Id and path as string.
 	*/
 	protected function getSqlStatementToLoad()
 	{		
-        	return "SELECT Id, Bezeichnung, Guid, Typ_Id
+        	return "SELECT Id, Bezeichnung, `Guid`, Typ_Id, `Path`
         		FROM ".$this->getTableName();
 	}
 
@@ -145,7 +145,7 @@ class AblageFactory extends Factory implements iTreeFactory
 
     /**
     * Creates an Ablage instance and fills
-    * the ID, Bezeichnung and GUID by the given
+    * the ID, Bezeichnung, GUID and path by the given
     * dataset.
     *
     * @param $dataset Dataset from Ablage table.
@@ -160,14 +160,14 @@ class AblageFactory extends Factory implements iTreeFactory
         global $logger;
         $logger->debug("Fülle Ablage (".intval($dataset["Id"]).") mit Daten");
 
-        $ablage = new Ablage();
-        $ablage->setId(intval($dataset["Id"]));
-        $ablage->setBezeichnung($dataset["Bezeichnung"]);
-        $ablage->setGuid($dataset["Guid"]);
-        $ablage->setPath($this->getPath($ablage));
-        $ablage->setType($this->getAblageTypeFactory()->loadById(intval($dataset["Typ_Id"])));
+        $entity = new Ablage();
+        $entity->setId(intval($dataset["Id"]));
+        $entity->setBezeichnung($dataset["Bezeichnung"]);
+        $entity->setGuid($dataset["Guid"]);
+		$entity->setPath($dataset["Path"]);
+        $entity->setType($this->getAblageTypeFactory()->loadById(intval($dataset["Typ_Id"])));
 
-        return $ablage;
+        return $entity;
     }
 
     public function loadByFund($fund)
@@ -251,20 +251,29 @@ class AblageFactory extends Factory implements iTreeFactory
     #endregion
 
     #region save
+	public function save($element)
+	{
+		$entity = parent::save($element);
+
+		$this->updatePathRecursive($entity);
+
+		return $entity;
+	}
+
     /**
-    * Returns the SQL statement to insert Bezeichnung, Ablage type ID and GUID.
+    * Returns the SQL statement to insert Bezeichnung, Ablage type ID, GUID and path.
     *
     * @param iNode $ablage Ablage to be inserted.
     */
     protected function getSQLStatementToInsert(iNode $ablage)
     {
-        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, Guid)
-        VALUES ('".addslashes($ablage->getBezeichnung())."', ".$ablage->getType()->getId().", UUID());";
+        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, `Guid`, `Path`)
+        VALUES ('".addslashes($ablage->getBezeichnung())."', ".$ablage->getType()->getId().", UUID(), '".addslashes($this->calculatePathByParentId($ablage, $ablage->getParent() == null ? null : $ablage->getParent()->getId()))."');";
     }
 
     /**
-    * Returns the SQL statement to update Bezeichnung and Ablage type ID.
-    * Note:GUID is not allowed to be changed (updated)!
+    * Returns the SQL statement to update Bezeichnung, Ablage type ID and path.
+    * Note: GUID is not allowed to be changed (updated)!
     *
     * @param iNode $ablage Ablage to be updated.
     */
@@ -272,7 +281,8 @@ class AblageFactory extends Factory implements iTreeFactory
     {
         return "UPDATE ".$this->getTableName()."
         SET Bezeichnung = '".addslashes($ablage->getBezeichnung())."',
-        Typ_Id = ".$ablage->getType()->getId()."
+        Typ_Id = ".$ablage->getType()->getId().",
+		`Path` = '".addslashes($this->calculatePath($ablage))."'
         WHERE Id = ".$ablage->getId().";";
     }
     #endregion
@@ -424,10 +434,22 @@ class AblageFactory extends Factory implements iTreeFactory
     }
     #endregion
 
-    public function getPath(iTreeNode $ablage)
-    {
-        return $this->getTreeFactory()->getPath($ablage);
-    }
+	#region path
+	public function calculatePath(iTreeNode $entity)
+	{
+		return $this->getTreeFactory()->calculatePath($entity);
+	}
+
+	public function calculatePathByParentId(iTreeNode $entity, $parentId)
+	{
+		return $this->getTreeFactory()->calculatePathByParentId($entity, $parentId);
+	}
+
+	public function updatePathRecursive(iTreeNode $entity = null)
+	{
+		return $this->getTreeFactory()->updatePathRecursive($entity);
+	}
+	#endregion
 
     public function loadRoots()
     {

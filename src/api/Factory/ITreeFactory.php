@@ -3,6 +3,8 @@ include_once(__DIR__."/../Model/ITreeNode.php");
 
 interface iTreeFactory
 {
+	public function loadById($id);
+
     public function loadRoots();
 
     public function loadParent(iTreeNode $node);
@@ -18,7 +20,9 @@ interface iTreeFactory
     public function unlinkAllChildren(iTreeNode $node);    
     public function synchroniseChildren(iTreeNode $node, array $children);
 
-    public function getPath(iTreeNode $node);
+	public function updatePathRecursive(iTreeNode $node = null);
+    public function calculatePath(iTreeNode $node);
+	public function calculatePathByParentId(iTreeNode $node, $parentId);
 
 	//public static function isNodeInCircleCondition(iTreeNode $node);
 }

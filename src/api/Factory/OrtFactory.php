@@ -65,11 +65,11 @@ class OrtFactory extends Factory implements iTreeFactory
 
     #region load
     /**
-     * Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id, Category_Id and CountOfKontexte as string.
+     * Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id, path, Category_Id and CountOfKontexte as string.
      */
     protected function getSqlStatementToLoad()
 	{
-		return "SELECT Id, Bezeichnung, Typ_Id, Category_Id, (SELECT COUNT(*) FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id) AS CountOfKontexte
+		return "SELECT Id, Bezeichnung, Typ_Id, `Path`, Category_Id, (SELECT COUNT(*) FROM ".$this->getKontextFactory()->getTableName()."_".$this->getTableName()." WHERE ".$this->getKontextFactory()->getTableName()."_".$this->getTableName().".".$this->getTableName()."_Id = ".$this->getTableName().".Id) AS CountOfKontexte
 			FROM ".$this->getTableName();
 	}
 
@@ -131,42 +131,51 @@ class OrtFactory extends Factory implements iTreeFactory
     *
     * @param $dataset Dataset from Ablage table.
     */
-    protected function fill($dataSet)
+    protected function fill($dataset)
     {
-        if ($dataSet == null)
+        if ($dataset == null)
         {
             return null;
         }
 
         global $logger;
-        $logger->debug("Fülle Ort (".intval($dataSet["Id"]).") mit Daten");
+        $logger->debug("Fülle Ort (".intval($dataset["Id"]).") mit Daten");
 
-        $ort = new Ort();
-        $ort->setId(intval($dataSet["Id"]));
-        $ort->setBezeichnung($dataSet["Bezeichnung"]);
-        $ort->setPath($this->getPath($ort));
-        $ort->setType($this->getOrtsTypeFactory()->loadById(intval($dataSet["Typ_Id"])));
-        $ort->setCategory($this->getOrtsCategoryFactory()->loadById(intval($dataSet["Category_Id"])));
-        $ort->setCountOfKontexte(intval($dataSet["CountOfKontexte"]));
+        $entity = new Ort();
+        $entity->setId(intval($dataset["Id"]));
+        $entity->setBezeichnung($dataset["Bezeichnung"]);
+        $entity->setPath($dataset["Path"]);
+        $entity->setType($this->getOrtsTypeFactory()->loadById(intval($dataset["Typ_Id"])));
+        $entity->setCategory($this->getOrtsCategoryFactory()->loadById(intval($dataset["Category_Id"])));
+        $entity->setCountOfKontexte(intval($dataset["CountOfKontexte"]));
 
-        return $ort;
+        return $entity;
     }
     #endregion
 
     #region save
+	public function save($element)
+	{
+		$entity = parent::save($element);
+
+		$this->updatePathRecursive($entity);
+
+		return $entity;
+	}
+
     /**
-    * Returns the SQL statement to insert Bezeichnung, Ort type ID and Ort category ID.
+    * Returns the SQL statement to insert Bezeichnung, Ort type ID, path and Ort category ID.
     *
     * @param iNode $ort Ort to be inserted.
     */
     protected function getSQLStatementToInsert(iNode $ort)
     {
-        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, Category_Id)
-                VALUES ('".addslashes($ort->getBezeichnung())."', ".$ort->getType()->getId().", ".$ort->getCategory()->getId().");";
+        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, `Path`, Category_Id)
+                VALUES ('".addslashes($ort->getBezeichnung())."', ".$ort->getType()->getId().", '".addslashes($this->calculatePathByParentId($ort, $ort->getParent() == null ? null : $ort->getParent()->getId()))."', ".$ort->getCategory()->getId().");";
     }
 
     /**
-    * Returns the SQL statement to update Bezeichnung, Ort type ID and Ort category ID.
+    * Returns the SQL statement to update Bezeichnung, Ort type ID, path and Ort category ID.
     *
     * @param iNode $ort Ort to be updated.
     */
@@ -175,6 +184,7 @@ class OrtFactory extends Factory implements iTreeFactory
         return "UPDATE ".$this->getTableName()."
                 SET Bezeichnung = '".addslashes($ort->getBezeichnung())."',
                     Typ_Id = ".$ort->getType()->getId().",
+					`Path` = '".addslashes($this->calculatePath($ort))."',
                     Category_Id = ".$ort->getCategory()->getId()."
                 WHERE Id = ".$ort->getId().";";
     }
@@ -332,10 +342,22 @@ class OrtFactory extends Factory implements iTreeFactory
     }
     #endregion
 
-    public function getPath(iTreeNode $ort)
-    {
-        return $this->getTreeFactory()->getPath($ort);
-    }
+	#region path
+	public function calculatePath(iTreeNode $entity)
+	{
+		return $this->getTreeFactory()->calculatePath($entity);
+	}
+
+	public function calculatePathByParentId(iTreeNode $entity, $parentId)
+	{
+		return $this->getTreeFactory()->calculatePathByParentId($entity, $parentId);
+	}
+
+	public function updatePathRecursive(iTreeNode $entity = null)
+	{
+		return $this->getTreeFactory()->updatePathRecursive($entity);
+	}
+	#endregion
 
     public function loadRoots()
     {

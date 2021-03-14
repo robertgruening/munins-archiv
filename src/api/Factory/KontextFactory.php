@@ -96,13 +96,14 @@ class KontextFactory extends Factory implements iTreeFactory
 
     #region load
 	/**
-	* Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id, GeoPointLatitude (for Fundstelle), GeoPointLongitude (for Fundstelle), Datum (for Begehung) and Kommentar (for Begehung) as string.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id, path, GeoPointLatitude (for Fundstelle), GeoPointLongitude (for Fundstelle), Datum (for Begehung) and Kommentar (for Begehung) as string.
 	*/
 	protected function getSqlStatementToLoad()
 	{		
 			return "SELECT ".$this->getTableName().".Id AS Id,
 			 ".$this->getTableName().".Bezeichnung AS Bezeichnung, 
 			 ".$this->getTableName().".Typ_Id AS Typ_Id, 
+			 `Path` AS `Path`,
 			 ST_X(Fundstelle.GeoPoint) AS GeoPointLatitude, 
 			 ST_Y(Fundstelle.GeoPoint) AS GeoPointLongitude,
 			 Begehung.Datum AS Datum, 
@@ -153,59 +154,68 @@ class KontextFactory extends Factory implements iTreeFactory
 		return $sqlSearchConditionStrings;
 	}
 
-    protected function fill($dataSet)
+    protected function fill($dataset)
     {
-        if ($dataSet == null)
+        if ($dataset == null)
         {
             return null;
         }
 
-        $kontextType = $this->getKontextTypeFactory()->loadById(intval($dataSet["Typ_Id"]));
+        $kontextType = $this->getKontextTypeFactory()->loadById(intval($dataset["Typ_Id"]));
 
-        $kontext = null;
+        $entity = null;
 
         switch ($kontextType->getBezeichnung())
         {
             case "Fundstelle":
             {
-                $kontext = new Fundstelle();
+				global $logger;
+				$logger->debug("Fülle Fundstelle (".intval($dataset["Id"]).") mit Daten");
+
+                $entity = new Fundstelle();
                 break;
             }
             case "Begehungsfläche":
             {
-                $kontext = new Begehungsflaeche();
+				global $logger;
+				$logger->debug("Fülle Begehungsfläche (".intval($dataset["Id"]).") mit Daten");
+
+                $entity = new Begehungsflaeche();
                 break;
             }
             case "Begehung":
             {
-                $kontext = new Begehung();
+				global $logger;
+				$logger->debug("Fülle Begehung (".intval($dataset["Id"]).") mit Daten");
+
+                $entity = new Begehung();
                 break;
             }
         }
 
-        $kontext->setId(intval($dataSet["Id"]));
-        $kontext->setBezeichnung($dataSet["Bezeichnung"]);
-        $kontext->setPath($this->getPath($kontext));
-        $kontext->setType($kontextType);
+        $entity->setId(intval($dataset["Id"]));
+        $entity->setBezeichnung($dataset["Bezeichnung"]);
+        $entity->setPath($dataset["Path"]);
+        $entity->setType($kontextType);
 
-        if ($kontext instanceof Fundstelle)
+        if ($entity instanceof Fundstelle)
         {
-			if ($dataSet["GeoPointLatitude"] != null &&
-				$dataSet["GeoPointLongitude"] != null)
+			if ($dataset["GeoPointLatitude"] != null &&
+				$dataset["GeoPointLongitude"] != null)
 			{
 				$geoPoint = new GeoPoint();
-				$geoPoint->setLatitude($dataSet["GeoPointLatitude"]);
-				$geoPoint->setLongitude($dataSet["GeoPointLongitude"]);
-	            $kontext->setGeoPoint($geoPoint);
+				$geoPoint->setLatitude($dataset["GeoPointLatitude"]);
+				$geoPoint->setLongitude($dataset["GeoPointLongitude"]);
+	            $entity->setGeoPoint($geoPoint);
 			}
         }
-		else if ($kontext instanceof Begehung)
+		else if ($entity instanceof Begehung)
         {
-            $kontext->setDatum($dataSet["Datum"]);
-            $kontext->setKommentar($dataSet["Kommentar"]);
+            $entity->setDatum($dataset["Datum"]);
+            $entity->setKommentar($dataset["Kommentar"]);
         }
 
-        return $kontext;
+        return $entity;
     }
 
     public function loadByFund($fund)
@@ -289,6 +299,15 @@ class KontextFactory extends Factory implements iTreeFactory
     #endregion
 
     #region save
+	public function save($element)
+	{
+		$entity = parent::save($element);
+
+		$this->updatePathRecursive($entity);
+
+		return $entity;
+	}
+
     /**
     * Overwrites the basis function. If the Kontext type is 'Begehung'
     * then the system calls a transaction.
@@ -375,8 +394,8 @@ class KontextFactory extends Factory implements iTreeFactory
 
     protected function getSQLStatementToInsert(iNode $kontext)
     {
-        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id)
-        VALUES ('".addslashes($kontext->getBezeichnung())."', ".$kontext->getType()->getId().");";
+        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, `Path`)
+        VALUES ('".addslashes($kontext->getBezeichnung())."', ".$kontext->getType()->getId().", '".addslashes($this->calculatePathByParentId($kontext, $kontext->getParent() == null ? null : $kontext->getParent()->getId()))."');";
     }
 
     protected function getSQLStatementToInsertFundstelle(iNode $kontext)
@@ -491,7 +510,8 @@ class KontextFactory extends Factory implements iTreeFactory
     {
         return "UPDATE ".$this->getTableName()."
             SET Bezeichnung = '".addslashes($kontext->getBezeichnung())."',
-            Typ_Id = ".$kontext->getType()->getId()."
+            Typ_Id = ".$kontext->getType()->getId().",
+			`Path` = '".addslashes($this->calculatePath($kontext))."'
             WHERE Id = ".$kontext->getId().";";
     }
 
@@ -837,10 +857,22 @@ class KontextFactory extends Factory implements iTreeFactory
         }
         #endregion
 
-        public function getPath(iTreeNode $kontext)
-        {
-            return $this->getTreeFactory()->getPath($kontext);
-        }
+	#region path
+	public function calculatePath(iTreeNode $entity)
+	{
+		return $this->getTreeFactory()->calculatePath($entity);
+	}
+
+	public function calculatePathByParentId(iTreeNode $entity, $parentId)
+	{
+		return $this->getTreeFactory()->calculatePathByParentId($entity, $parentId);
+	}
+
+	public function updatePathRecursive(iTreeNode $entity = null)
+	{
+		return $this->getTreeFactory()->updatePathRecursive($entity);
+	}
+	#endregion
 
         public function loadRoots()
         {

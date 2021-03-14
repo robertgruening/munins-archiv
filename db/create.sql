@@ -31,13 +31,15 @@ CREATE TABLE IF NOT EXISTS `Ablage` (
   `Typ_Id` int(11) DEFAULT NULL,
   `Bezeichnung` varchar(30) DEFAULT NULL,
   `Parent_Id` int(11) DEFAULT NULL,
+  `Path` varchar(1000) NOT NULL,
   `Ebene` int(11) NOT NULL DEFAULT '0',
   `Guid` varchar(36) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   KEY `AblageTyp_Id` (`Typ_Id`),
   KEY `Parent_Id` (`Parent_Id`),
   KEY `IndexAblage` (`Bezeichnung`),
-  UNIQUE KEY `IndexAblageGuid` (`Guid`)
+  UNIQUE KEY `IndexAblageGuid` (`Guid`),
+  UNIQUE KEY `IndexAblagePath` (`Path`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -98,9 +100,10 @@ CREATE TABLE IF NOT EXISTS `FundAttribut` (
   `Typ_Id` int(11) NOT NULL,
   `Bezeichnung` varchar(30) NOT NULL,
   `Parent_Id` int(11) DEFAULT NULL,
+  `Path` varchar(1000) NOT NULL,
   `Ebene` int(11) NOT NULL DEFAULT '0',
-  `PathToRoot` text,
   PRIMARY KEY (`Id`),
+  UNIQUE KEY `IndexFundAttributPath` (`Path`),
   KEY `Parent_Id` (`Parent_Id`),
   KEY `FundAttributTyp_Id` (`Typ_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -154,8 +157,10 @@ CREATE TABLE IF NOT EXISTS `Kontext` (
   `Typ_Id` int(11) DEFAULT NULL,
   `Bezeichnung` varchar(30) DEFAULT NULL,
   `Parent_Id` int(11) DEFAULT NULL,
+  `Path` varchar(1000) NOT NULL,
   `Ebene` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Id`),
+  UNIQUE KEY `IndexKontextPath` (`Path`),
   KEY `KontextTyp_Id` (`Typ_Id`),
   KEY `Parent_Id` (`Parent_Id`),
   KEY `IndexKontext` (`Bezeichnung`) USING BTREE
@@ -225,8 +230,10 @@ CREATE TABLE IF NOT EXISTS `Ort` (
   `Bezeichnung` varchar(50) NOT NULL,
   `Typ_Id` int(11) NOT NULL,
   `Parent_Id` int(11) DEFAULT NULL,
+  `Path` varchar(1000) NOT NULL,
   `Ebene` int(11) DEFAULT '0',
   PRIMARY KEY (`Id`),
+  UNIQUE KEY `IndexOrtPath` (`Path`),
   KEY `Typ_Id` (`Typ_Id`),
   KEY `Parent_Id` (`Parent_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

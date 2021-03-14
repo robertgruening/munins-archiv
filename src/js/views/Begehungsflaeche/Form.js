@@ -183,12 +183,6 @@ function InitFieldPath() {
 function setPath(path) {
 	console.info("setting value of 'Path'");
 	console.debug("'Path' is", path);
-
-	if (!path.startsWith("/")) {
-		console.warn("added '/' to path");
-		path = "/" + path;
-	}
-
 	$("#labelPath").text(path);
 }
 //#endregion
@@ -336,7 +330,7 @@ function setOrte(orte) {
 		var linkOrt = $("<a>");
 		linkOrt.attr("title", "gehe zu");
 		linkOrt.attr("href", "../../pages/Ort/Explorer.html?Id=" + ort.Id);
-		linkOrt.text("/" + ort.Path);
+		linkOrt.text(ort.Path);
 		li.append(linkOrt);
 
 		$("#divOrte div #divList ul").append(li);
