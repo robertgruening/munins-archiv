@@ -115,7 +115,7 @@ class KontextFactory extends Factory implements iTreeFactory
 
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, Typ_Id, HasFunde, HasParent, Parent_Id, HasChildren and Child_Id.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, Path, ConatinsPath, Typ_Id, HasFunde, HasParent, Parent_Id, HasChildren and Child_Id.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/

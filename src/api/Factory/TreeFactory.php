@@ -115,6 +115,11 @@ class TreeFactory implements iTreeFactory, iSqlSearchConditionStringsProvider
 			array_push($sqlSearchConditionStrings, $this->getModelFactory()->getTableName().".Id = (SELECT Parent_Id FROM ".$this->getModelFactory()->getTableName()." WHERE Id = ".$searchConditions["Child_Id"].")");
 		}
 
+		if (isset($searchConditions["ContainsPath"]))
+		{
+			array_push($sqlSearchConditionStrings, $this->getModelFactory()->getTableName().".`Path` LIKE '%".$searchConditions["ContainsPath"]."%'");
+		}
+
 		return $sqlSearchConditionStrings;
 	}
 

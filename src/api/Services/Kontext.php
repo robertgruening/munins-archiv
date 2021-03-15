@@ -180,6 +180,16 @@ function Get()
 			$loadEntites->addSearchCondition("Bezeichnung", $_GET["bezeichnung"]);
 		}
 
+		if (isset($_GET["containsBezeichnung"]))
+		{
+			$loadEntites->addSearchCondition("ContainsBezeichnung", $_GET["containsBezeichnung"]);
+		}
+
+		if (isset($_GET["containsPath"]))
+		{
+			$loadEntites->addSearchCondition("ContainsPath", $_GET["containsPath"]);
+		}
+
         if ($loadEntites->run())
         {
             echo json_encode($loadEntites->getEntites());
