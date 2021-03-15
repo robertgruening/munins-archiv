@@ -2,8 +2,9 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
+require_once("../Factory/FundAttributFactory.php");
+require_once("../UserStories/LoadEntites.php");
 require_once("../UserStories/FundAttribut/LoadFundAttribut.php");
-require_once("../UserStories/FundAttribut/LoadRootFundAttribute.php");
 require_once("../UserStories/FundAttribut/SaveFundAttribut.php");
 require_once("../UserStories/FundAttribut/DeleteFundAttribut.php");
 
@@ -153,21 +154,37 @@ function Get()
 
         $logger->info("Fundattribut-anhand-ID-laden beendet");
 	}
-	else
-	{
-        $logger->info("Root-Fundattribute-laden gestartet");
-		$loadRootFundAttribute = new LoadRootFundAttribute();
+    else
+    {
+		$logger->info("Fundattribute-suchen gestartet");
 
-		if ($loadRootFundAttribute->run())
+		$loadEntites = new LoadEntites(new FundAttributFactory());
+
+		if (isset($_GET["hasParent"]))
 		{
-			echo json_encode($loadRootFundAttribute->getRootFundAttribute());
-		}
-		else
-		{
-			http_response_code(500);
-			echo json_encode($loadRootFundAttribute->getMessages());
+			$loadEntites->addSearchCondition("HasParent", $_GET["hasParent"] === "true");
 		}
 
-        $logger->info("Root-Fundattribute-laden beendet");
-	}
+		if (isset($_GET["hasChildren"]))
+		{
+			$loadEntites->addSearchCondition("HasChildren", $_GET["hasChildren"] === "true");
+		}
+
+		if (isset($_GET["bezeichnung"]))
+		{
+			$loadEntites->addSearchCondition("Bezeichnung", $_GET["bezeichnung"]);
+		}
+
+        if ($loadEntites->run())
+        {
+            echo json_encode($loadEntites->getEntites());
+        }
+        else
+        {
+            http_response_code(500);
+            echo json_encode($loadEntites->getMessages());
+        }
+
+        $logger->info("Fundattribute-suchen beendet");
+    }
 }

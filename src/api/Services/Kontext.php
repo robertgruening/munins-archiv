@@ -2,8 +2,9 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
+require_once("../Factory/KontextFactory.php");
+require_once("../UserStories/LoadEntites.php");
 require_once("../UserStories/Kontext/LoadKontext.php");
-require_once("../UserStories/Kontext/LoadKontexte.php");
 require_once("../UserStories/Kontext/SaveKontext.php");
 require_once("../UserStories/Kontext/DeleteKontext.php");
 
@@ -157,36 +158,36 @@ function Get()
     {
 		$logger->info("Kontext-suchen gestartet");
 
-		$loadKontexte = new LoadKontexte();
+		$loadEntites = new LoadEntites(new KontextFactory());
 
 		if (isset($_GET["hasParent"]))
 		{
-			$loadKontexte->addSearchCondition("HasParent", $_GET["hasParent"] === "true");
+			$loadEntites->addSearchCondition("HasParent", $_GET["hasParent"] === "true");
 		}
 
 		if (isset($_GET["hasChildren"]))
 		{
-			$loadKontexte->addSearchCondition("HasChildren", $_GET["hasChildren"] === "true");
+			$loadEntites->addSearchCondition("HasChildren", $_GET["hasChildren"] === "true");
 		}
 
 		if (isset($_GET["hasFunde"]))
 		{
-			$loadKontexte->addSearchCondition("HasFunde", $_GET["hasFunde"] === "true");
+			$loadEntites->addSearchCondition("HasFunde", $_GET["hasFunde"] === "true");
 		}
 
 		if (isset($_GET["bezeichnung"]))
 		{
-			$loadKontexte->addSearchCondition("Bezeichnung", $_GET["bezeichnung"]);
+			$loadEntites->addSearchCondition("Bezeichnung", $_GET["bezeichnung"]);
 		}
 
-        if ($loadKontexte->run())
+        if ($loadEntites->run())
         {
-            echo json_encode($loadKontexte->getKontexte());
+            echo json_encode($loadEntites->getEntites());
         }
         else
         {
             http_response_code(500);
-            echo json_encode($loadKontexte->getMessages());
+            echo json_encode($loadEntites->getMessages());
         }
 
         $logger->info("Kontext-suchen beendet");

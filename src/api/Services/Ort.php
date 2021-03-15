@@ -2,8 +2,9 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 
+require_once("../Factory/OrtFactory.php");
+require_once("../UserStories/LoadEntites.php");
 require_once("../UserStories/Ort/LoadOrt.php");
-require_once("../UserStories/Ort/LoadRootOrte.php");
 require_once("../UserStories/Ort/SaveOrt.php");
 require_once("../UserStories/Ort/DeleteOrt.php");
 
@@ -153,21 +154,37 @@ function Get()
 
 		$logger->info("Ort-anhand-ID-laden beendet");
 	}
-	else
-	{
-        $logger->info("Root-Orte-laden gestartet");
-		$loadRootOrte = new LoadRootOrte();
+    else
+    {
+		$logger->info("Orte-suchen gestartet");
 
-		if ($loadRootOrte->run())
+		$loadEntites = new LoadEntites(new OrtFactory());
+
+		if (isset($_GET["hasParent"]))
 		{
-			echo json_encode($loadRootOrte->getRootOrte());
+			$loadEntites->addSearchCondition("HasParent", $_GET["hasParent"] === "true");
 		}
-		else
+
+		if (isset($_GET["hasChildren"]))
 		{
+			$loadEntites->addSearchCondition("HasChildren", $_GET["hasChildren"] === "true");
+		}
+
+		if (isset($_GET["bezeichnung"]))
+		{
+			$loadEntites->addSearchCondition("Bezeichnung", $_GET["bezeichnung"]);
+		}
+
+        if ($loadEntites->run())
+        {
+            echo json_encode($loadEntites->getEntites());
+        }
+        else
+        {
             http_response_code(500);
-			echo json_encode($loadRootOrte->getMessages());
-		}
+            echo json_encode($loadEntites->getMessages());
+        }
 
-        $logger->info("Root-Orte-laden beendet");
-	}
+        $logger->info("Orte-suchen beendet");
+    }
 }

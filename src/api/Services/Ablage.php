@@ -2,8 +2,9 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
+require_once("../Factory/AblageFactory.php");
+require_once("../UserStories/LoadEntites.php");
 require_once("../UserStories/Ablage/LoadAblage.php");
-require_once("../UserStories/Ablage/LoadAblagen.php");
 require_once("../UserStories/Ablage/SaveAblage.php");
 require_once("../UserStories/Ablage/DeleteAblage.php");
 
@@ -175,36 +176,36 @@ function Get()
     {
 		$logger->info("Ablagen-suchen gestartet");
 
-		$loadAblagen = new LoadAblagen();
+		$loadEntites = new LoadEntites(new AblageFactory());
 
 		if (isset($_GET["hasParent"]))
 		{
-			$loadAblagen->addSearchCondition("HasParent", $_GET["hasParent"] === "true");
+			$loadEntites->addSearchCondition("HasParent", $_GET["hasParent"] === "true");
 		}
 
 		if (isset($_GET["hasChildren"]))
 		{
-			$loadAblagen->addSearchCondition("HasChildren", $_GET["hasChildren"] === "true");
+			$loadEntites->addSearchCondition("HasChildren", $_GET["hasChildren"] === "true");
 		}
 
 		if (isset($_GET["hasFunde"]))
 		{
-			$loadAblagen->addSearchCondition("HasFunde", $_GET["hasFunde"] === "true");
+			$loadEntites->addSearchCondition("HasFunde", $_GET["hasFunde"] === "true");
 		}
 
 		if (isset($_GET["bezeichnung"]))
 		{
-			$loadAblagen->addSearchCondition("Bezeichnung", $_GET["bezeichnung"]);
+			$loadEntites->addSearchCondition("Bezeichnung", $_GET["bezeichnung"]);
 		}
 
-        if ($loadAblagen->run())
+        if ($loadEntites->run())
         {
-            echo json_encode($loadAblagen->getAblagen());
+            echo json_encode($loadEntites->getEntites());
         }
         else
         {
             http_response_code(500);
-            echo json_encode($loadAblagen->getMessages());
+            echo json_encode($loadEntites->getMessages());
         }
 
         $logger->info("Ablagen-suchen beendet");
