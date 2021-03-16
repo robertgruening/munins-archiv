@@ -581,31 +581,6 @@ function setKontext(kontext) {
 	}
 }
 
-function ShowFormSelectKontext() {
-	$("#dialogSelect").dialog({
-		height: "auto",
-		title: "Kontext auswählen",
-		modal: true,
-		buttons: {
-			"Auswählen": function () {
-				_viewModelFormFund.setKontext(esti_getSelectedItem());
-				setKontext(_viewModelFormFund.getKontext());
-				$(this).dialog("close");
-			},
-			"Abbrechen": function () {
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	var viewModelFactory = new ViewModelFactory();
-	var viewModelExplorer = viewModelFactory.getViewModelExplorerKontext();
-	var iconCssClasses = null;
-	esti_initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
-
-	$("#dialogSelect").dialog("open");
-}
-
 function showMessagesKontext(messages) {
 	$("#divKontext .fieldValue div[name=messages]").text(messages);
 }
