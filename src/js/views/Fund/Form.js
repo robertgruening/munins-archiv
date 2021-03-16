@@ -1,4 +1,7 @@
 var _viewModelFormFund = null;
+var _selectedFundAttribute = null;
+var _selectedAblage = null;
+var _selectedKontext = null;
 
 $(document).ready(function () {
 	var viewModelFactory = new ViewModelFactory();
@@ -13,6 +16,9 @@ $(document).ready(function () {
 	InitButtonSelectKontext();
 	InitButtonSelectAblage();
 	InitButtonToSearch();
+	InitTextBoxSearchFundAttribut();
+	InitTextBoxSearchAblage();
+	InitTextBoxSearchKontext();
 
 	InitFieldId();
 	InitFieldBeschriftung();
@@ -236,32 +242,64 @@ function InitFieldFundattribute() {
 }
 
 function InitButtonSelectFundAttribut() {
-	$("#buttonAddFundAttribut").click(ShowFormSelectFundAttribut);
+	$("#buttonAddFundAttribut").click(addFundAttribut);
 }
 
-function ShowFormSelectFundAttribut() {
-	$("#dialogSelect").dialog({
-		height: "auto",
-		title: "Fundattribut auswählen",
-		modal: true,
-		buttons: {
-			"Auswählen": function () {
-				_viewModelFormFund.addFundAttribut(esti_getSelectedItem());
-				setKontext(_viewModelFormFund.getKontext());
-				$(this).dialog("close");
-			},
-			"Abbrechen": function () {
-				$(this).dialog("close");
-			}
+function addFundAttribut() {
+	if (_selectedFundAttribute == null)	
+	{
+		return;
+	}
+
+	_viewModelFormFund.addFundAttribut(_selectedFundAttribute);
+	$("#textBoxSearchFundAttributByPath").val("");
+}
+
+function InitTextBoxSearchFundAttribut() {
+	$.ajax(
+	{
+		type:"GET",
+		url: "../../api/Services/FundAttribut",
+		dataType: "JSON",
+		success:function(data, textStatus, jqXHR)
+		{
+			SetTextBoxSearchFundAttributAutocomplete(data);
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			console.log("FEHLER: \"../../api/Services/FundAttribut\" konnte nicht geladen werden!");
 		}
 	});
+}
 
-	var viewModelFactory = new ViewModelFactory();
-	var viewModelExplorer = viewModelFactory.getViewModelExplorerFundAttribut();
-	var iconCssClasses =  IconConfig.getCssClasses("FundAttribut");
-	esti_initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
+function SetTextBoxSearchFundAttributAutocomplete(data) {
+	var autoCompleteItems = new Array();
 
-	$("#dialogSelect").dialog("open");
+	data.forEach(item => {
+		var autoCompleteItem = new Object();
+		autoCompleteItem.label = item.Path;
+		autoCompleteItem.value = item;
+		autoCompleteItems.push(autoCompleteItem);
+	});
+
+	$("#textBoxSearchFundAttributByPath").autocomplete({
+		minLength: 0,
+		source: autoCompleteItems,
+		focus: function(event, ui) {
+			$("#textBoxSearchFundAttributByPath").val(ui.item.label);
+			return false;
+		},
+		select: function(event, ui) {
+			$("#textBoxSearchFundAttributByPath").val(ui.item.label);
+			_selectedFundAttribute = ui.item.value;
+			return false;
+		}
+	})
+	.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>")
+			.append("<div>" + item.label + "</div>")
+			.appendTo(ul);
+	};
 }
 
 function setFundAttribute(fundAttribute) {
@@ -396,7 +434,61 @@ function InitFieldAblage() {
 }
 
 function InitButtonSelectAblage() {
-	$("#buttonSelectAblage").click(ShowFormSelectAblage);
+	$("#buttonSelectAblage").click(function() {
+		if (_selectedAblage == null) {
+			return;
+		}
+
+		_viewModelFormFund.setAblage(_selectedAblage);
+		$("#textBoxSearchAblageByPath").val("");
+	});
+}
+
+function InitTextBoxSearchAblage() {
+	$.ajax(
+	{
+		type:"GET",
+		url: "../../api/Services/Ablage",
+		dataType: "JSON",
+		success:function(data, textStatus, jqXHR)
+		{
+			SetTextBoxSearchAblageAutocomplete(data);
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			console.log("FEHLER: \"../../api/Services/Ablage\" konnte nicht geladen werden!");
+		}
+	});
+}
+
+function SetTextBoxSearchAblageAutocomplete(data) {
+	var autoCompleteItems = new Array();
+
+	data.forEach(item => {
+		var autoCompleteItem = new Object();
+		autoCompleteItem.label = item.Path;
+		autoCompleteItem.value = item;
+		autoCompleteItems.push(autoCompleteItem);
+	});
+
+	$("#textBoxSearchAblageByPath").autocomplete({
+		minLength: 0,
+		source: autoCompleteItems,
+		focus: function(event, ui) {
+			$("#textBoxSearchAblageByPath").val(ui.item.label);
+			return false;
+		},
+		select: function(event, ui) {
+			$("#textBoxSearchAblageByPath").val(ui.item.label);
+			_selectedAblage = ui.item.value;
+			return false;
+		}
+	})
+	.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>")
+			.append("<div>" + item.label + "</div>")
+			.appendTo(ul);
+	};
 }
 
 function setAblage(ablage) {
@@ -410,31 +502,6 @@ function setAblage(ablage) {
 	}
 }
 
-function ShowFormSelectAblage() {
-	$("#dialogSelect").dialog({
-		height: "auto",
-		title: "Ablage auswählen",
-		modal: true,
-		buttons: {
-			"Auswählen": function () {
-				_viewModelFormFund.setAblage(esti_getSelectedItem());
-				setAblage(_viewModelFormFund.getAblage());
-				$(this).dialog("close");
-			},
-			"Abbrechen": function () {
-				$(this).dialog("close");
-			}
-		}
-	});
-
-	var viewModelFactory = new ViewModelFactory();
-	var viewModelExplorer = viewModelFactory.getViewModelExplorerAblage();
-	var iconCssClasses =  IconConfig.getCssClasses("Ablage");
-	esti_initExplorerSelectTypedItem($("#dialogSelect"), viewModelExplorer, iconCssClasses);
-
-	$("#dialogSelect").dialog("open");
-}
-
 function showMessagesAblage(messages) {
 	$("#divAblage .fieldValue div[name=messages]").text(messages);
 }
@@ -446,7 +513,61 @@ function InitFieldKontext() {
 }
 
 function InitButtonSelectKontext() {
-	$("#buttonSelectKontext").click(ShowFormSelectKontext);
+	$("#buttonSelectKontext").click(function() {
+		if (_selectedKontext == null) {
+			return;
+		}
+
+		_viewModelFormFund.setKontext(_selectedKontext);
+		$("#textBoxSearchKontextByPath").val("");
+	});
+}
+
+function InitTextBoxSearchKontext() {
+	$.ajax(
+	{
+		type:"GET",
+		url: "../../api/Services/Kontext",
+		dataType: "JSON",
+		success:function(data, textStatus, jqXHR)
+		{
+			SetTextBoxSearchKontextAutocomplete(data);
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			console.log("FEHLER: \"../../api/Services/Kontext\" konnte nicht geladen werden!");
+		}
+	});
+}
+
+function SetTextBoxSearchKontextAutocomplete(data) {
+	var autoCompleteItems = new Array();
+
+	data.forEach(item => {
+		var autoCompleteItem = new Object();
+		autoCompleteItem.label = item.Path;
+		autoCompleteItem.value = item;
+		autoCompleteItems.push(autoCompleteItem);
+	});
+
+	$("#textBoxSearchKontextByPath").autocomplete({
+		minLength: 0,
+		source: autoCompleteItems,
+		focus: function(event, ui) {
+			$("#textBoxSearchKontextByPath").val(ui.item.label);
+			return false;
+		},
+		select: function(event, ui) {
+			$("#textBoxSearchKontextByPath").val(ui.item.label);
+			_selectedKontext = ui.item.value;
+			return false;
+		}
+	})
+	.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>")
+			.append("<div>" + item.label + "</div>")
+			.appendTo(ul);
+	};
 }
 
 function setKontext(kontext) {
