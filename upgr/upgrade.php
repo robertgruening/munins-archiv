@@ -678,7 +678,7 @@ function InsertColumnPathInTable($config, $tableName)
             }
             else
             {
-                echo "Spalte \"Path\" wurde erfolgreich in Tabelle \"".$tableName."\" angelgt.\r\n";
+                echo "Spalte \"Path\" wurde erfolgreich in Tabelle \"".$tableName."\" angelegt.\r\n";
             }
         }
 

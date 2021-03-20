@@ -48,6 +48,7 @@
 1. git-Repository einrichten
 1. URL-Weiterleitung einrichten
 1. HTTPS einrichten
+1. Log-Ordner anlegen und berechtigen
 1. Kartenkacheln herunterladen
 
 Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [Ubuntu-Betriebssystem](https://ubuntu.com/) und dem [Apache HTTP Server](https://www.apache.org/).
@@ -114,6 +115,12 @@ Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [
 	```
 	```
 	sudo service apache2 restart
+	```
+1. Log-Ordner anlegen und berechtigen
+	```
+	cd ./Munins\ Archiv/api
+	mkdir Logs
+	sudo chown www-data Logs
 	```
 1. Kartenkacheln herunterladen
 	1. http://tools.geofabrik.de/calc/#type=geofabrik_standard&bbox=5,47,16,55&grid=1 öffnen
