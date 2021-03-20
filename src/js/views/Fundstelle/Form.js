@@ -1,5 +1,6 @@
 var _viewModelFormFundstelle = null;
 var _viewModelListKontextType = null;
+var _selectedLfdNummer = null;
 
 $(document).ready(function () {
 	var viewModelFactory = new ViewModelFactory();
@@ -16,6 +17,7 @@ $(document).ready(function () {
 	InitButtonSelectLfdNummer();
 	InitButtonEditGeoPoint();
 	InitButtonDeleteGeoPoint();
+	InitTextBoxSearchLfdNummer();
 
 	InitFieldId();
 	InitFieldType();
@@ -207,26 +209,64 @@ function InitFieldLfdNummern() {
 }
 
 function InitButtonSelectLfdNummer() {
-	$("#buttonSelectLfdNummer").click(ShowFormSelectLfdNummer);
+	$("#buttonSelectLfdNummer").click(addLfdNummer);
 }
 
-function ShowFormSelectLfdNummer() {
-	$("#dialogSelectLfdNummer").dialog({
-		height: "auto",
-		title: "Lfd-Nummer auswählen",
-		modal: true,
-		buttons: {
-			"Auswählen": function () {
-				_viewModelFormFundstelle.addLfdNummer(GetSelectedLfdNummerNode());
-				$(this).dialog("close");
-			},
-			"Abbrechen": function () {
-				$(this).dialog("close");
-			}
+function addLfdNummer() {
+	if (_selectedLfdNummer == null)	
+	{
+		return;
+	}
+
+	_viewModelFormFundstelle.addLfdNummer(_selectedLfdNummer);
+	$("#textBoxSearchLfdNummer").val("");
+}
+
+function InitTextBoxSearchLfdNummer() {
+	$.ajax(
+	{
+		type:"GET",
+		url: "../../api/Services/LfdNummer",
+		dataType: "JSON",
+		success:function(data, textStatus, jqXHR)
+		{
+			SetTextBoxSearchLfdNummerAutocomplete(data);
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			console.log("FEHLER: \"../../api/Services/LfdNummer\" konnte nicht geladen werden!");
 		}
 	});
-	_webServiceClientLfdNummer.LoadAll("listSelect.loaded");
-	$("#dialogSelectLfdNummer").dialog("open");
+}
+
+function SetTextBoxSearchLfdNummerAutocomplete(data) {
+	var autoCompleteItems = new Array();
+
+	data.forEach(item => {
+		var autoCompleteItem = new Object();
+		autoCompleteItem.label = item.Bezeichnung;
+		autoCompleteItem.value = item;
+		autoCompleteItems.push(autoCompleteItem);
+	});
+
+	$("#textBoxSearchLfdNummer").autocomplete({
+		minLength: 0,
+		source: autoCompleteItems,
+		focus: function(event, ui) {
+			$("#textBoxSearchLfdNummer").val(ui.item.label);
+			return false;
+		},
+		select: function(event, ui) {
+			$("#textBoxSearchLfdNummer").val(ui.item.label);
+			_selectedLfdNummer = ui.item.value;
+			return false;
+		}
+	})
+	.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>")
+			.append("<div>" + item.label + "</div>")
+			.appendTo(ul);
+	};
 }
 
 function setLfdNummern(lfdNummern) {

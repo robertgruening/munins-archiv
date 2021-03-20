@@ -1,11 +1,10 @@
 <?php
-require_once(__DIR__."/../../UserStories/UserStory.php");
-require_once(__DIR__."/../../Factory/AblageFactory.php");
+require_once(__DIR__."/../UserStories/UserStory.php");
 
-class LoadAblagen extends UserStory
+class LoadEntites extends UserStory
 {
     #region variables
-    private $_ablagen = array();
+    private $_entites = array();
 	private $_searchConditions = array();
     #endregion
 
@@ -22,18 +21,27 @@ class LoadAblagen extends UserStory
 	}
 	#endregion
 
+	private $_repository = null;
+
     #region output properties
-    public function getAblagen()
+    public function getEntites()
     {
-        return $this->_ablagen;
+        return $this->_entites;
     }
 
-    private function setAblagen($ablagen)
+    private function setEntites($entites)
     {
-        $this->_ablagen = $ablagen;
+        $this->_entites = $entites;
     }
     #endregion
     #endregion
+
+	#region constructor
+	public function __construct($repository)
+	{
+		$this->_repository = $repository;
+	}
+	#endregion
 
     protected function areParametersValid()
     {
@@ -42,9 +50,8 @@ class LoadAblagen extends UserStory
 
     protected function execute()
     {
-        $ablageFactory = new AblageFactory();
-        $ablagen = $ablageFactory->loadBySearchConditions($this->getSearchConditions());
-        $this->setAblagen($ablagen);
+        $entites = $this->_repository->loadBySearchConditions($this->getSearchConditions());
+        $this->setEntites($entites);
 
         return true;
     }

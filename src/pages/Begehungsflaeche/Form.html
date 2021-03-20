@@ -38,13 +38,11 @@
 	<script type="text/javascript" src="../../js/viewModels/ViewModelList.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelListKontextType.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelListLfdNummer.js"></script>
-	<script type="text/javascript" src="../../js/viewModels/LfdNummer/FormSelectLfdNummer.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelExplorer.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelExplorerOrt.js"></script>
 	<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
 	<!-- view -->
 	<script type="text/javascript" src="../../js/views/Begehungsflaeche/Form.js"></script>
-	<script type="text/javascript" src="../../js/views/Kontext/FormSelectLfdNummer.js"></script>
 	<script type="text/javascript" src="../../js/views/ExplorerSelectTypedItem.js"></script>
 
 	<!-- javascript frameworks etc. -->
@@ -129,7 +127,8 @@
 					<div class=fieldValue>
 						<div name="messages"></div>
 						<div id=divList class="field editable-list"></div>
-						<a id=buttonSelectLfdNummer title="auswählen" class="notToPrint ui-button"><i class="fas fa-plus"></i></a>
+						<input id=textBoxSearchLfdNummer type=text class=field></input>
+						<a id=buttonSelectLfdNummer title="auswählen" class="notToPrint ui-button"><i class="fas fa-check"></i></a>
 					</div>
 				</div>
 				<div id=divOrte class=fieldBlock>
@@ -140,7 +139,8 @@
 					<div class=fieldValue>
 						<div name="messages"></div>
 						<div id=divList class="field editable-list"></div>
-						<a id=buttonAddOrt title="hinzufügen" class="notToPrint ui-button"><i class="fas fa-plus"></i></a>
+						<input id=textBoxSearchOrt type=text class=field></input>
+						<a id=buttonAddOrt title="hinzufügen" class="notToPrint ui-button"><i class="fas fa-check"></i></a>
 					</div>
 			</div>
 			<style>
@@ -151,21 +151,6 @@
 					overflow-x: hidden;
 				}
 			</style>
-			<div id=dialogSelectLfdNummer title="Lfd-Nummer auswählen" class=dialog>
-				<input id=selectLfdNummer type=text />
-			</div>
-			<div id=dialogSelect title="Ort auswählen" class=dialog>
-				<ul id=toolBar>
-					<li><a id=buttonOpen title=öffnen class=ui-button><i class="fas fa-external-link-alt"></i><span>Öffnen</span></a></li>
-				</ul>
-				<ul id=toolBar style="float:left;">
-					<li><a id=buttonOpenParent title="Übergeordneten Knoten öffnen" class="ui-button"><i class="fas fa-arrow-alt-circle-up"></i></a></li>
-					<li><a id=buttonOpenAbstractRoot title="Wurzelknoten öffnen" class="ui-button"><i class="fas fa-home"></i></a></li>
-					<li class=toolbar__item--max-width><input id=path type=text /></li>
-				</ul>
-				<div class=clear></div>
-				<div id=explorerSelect></div>
-			</div>
 			<div id=dialogDelete title=Löschen class=dialog></div>
 		</div>
 	</div>

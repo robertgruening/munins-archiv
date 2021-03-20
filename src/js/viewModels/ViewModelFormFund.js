@@ -133,6 +133,7 @@ var ViewModelFormFund = function (webServiceClient) {
 	this.setAblage = function (ablage) {
 		this._model.Ablage = ablage;
 		this._update("dataChanged");
+		this._update("ablage", this._model.Ablage);
 	};
 	//#endregion
 
@@ -144,6 +145,7 @@ var ViewModelFormFund = function (webServiceClient) {
 	this.setKontext = function (kontext) {
 		this._model.Kontext = kontext;
 		this._update("dataChanged");
+		this._update("kontext", this._model.Kontext);
 	};
 	//#endregion
 

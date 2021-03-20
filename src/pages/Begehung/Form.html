@@ -38,11 +38,9 @@
 	<script type="text/javascript" src="../../js/viewModels/ViewModelList.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelListKontextType.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelListLfdNummer.js"></script>
-	<script type="text/javascript" src="../../js/viewModels/LfdNummer/FormSelectLfdNummer.js"></script>
 	<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
 	<!-- view -->
 	<script type="text/javascript" src="../../js/views/Begehung/Form.js"></script>
-	<script type="text/javascript" src="../../js/views/Kontext/FormSelectLfdNummer.js"></script>
 
 	<!-- javascript frameworks etc. -->
 	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
@@ -133,7 +131,8 @@
 					<div class=fieldValue>
 						<div name="messages"></div>
 						<div id=divList class="field editable-list"></div>
-						<a id=buttonSelectLfdNummer title="auswählen" class="notToPrint ui-button"><i class="fas fa-plus"></i></a>
+						<input id=textBoxSearchLfdNummer type=text class=field></input>
+						<a id=buttonSelectLfdNummer title="auswählen" class="notToPrint ui-button"><i class="fas fa-check"></i></a>
 					</div>
 				</div>
 				<div id=divDatum class=fieldBlock>
@@ -195,9 +194,6 @@
 					overflow-x: hidden;
 				}
 			</style>
-			<div id=dialogSelectLfdNummer title="Lfd-Nummer auswählen" class=dialog>
-				<input id=selectLfdNummer type=text />
-			</div>
 			<div id=dialogDelete title=Löschen class=dialog></div>
 		</div>
 	</div>

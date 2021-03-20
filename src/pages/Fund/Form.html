@@ -35,14 +35,9 @@
 	<!-- view model -->
 	<script type="text/javascript" src="../../js/viewModels/ViewModelForm.js"></script>
 	<script type="text/javascript" src="../../js/viewModels/ViewModelFormFund.js"></script>
-	<script type="text/javascript" src="../../js/viewModels/ViewModelExplorer.js"></script>
-	<script type="text/javascript" src="../../js/viewModels/ViewModelExplorerAblage.js"></script>
-	<script type="text/javascript" src="../../js/viewModels/ViewModelExplorerKontext.js"></script>
-	<script type="text/javascript" src="../../js/viewModels/ViewModelExplorerFundAttribut.js"></script>
 	<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
 	<!-- view -->
 	<script type="text/javascript" src="../../js/views/Fund/Form.js"></script>
-	<script type="text/javascript" src="../../js/views/ExplorerSelectTypedItem.js"></script>
 
 	<!-- javascript frameworks etc. -->
 	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
@@ -99,7 +94,8 @@
 					<div class=fieldValue>
 						<div name="messages"></div>
 						<div id=divList class="field editable-list"></div>
-						<a id=buttonAddFundAttribut title="hinzufügen" class="notToPrint ui-button"><i class="fas fa-plus"></i></a>
+						<input id=textBoxSearchFundAttributByPath type=text class=field></input>
+						<a id=buttonAddFundAttribut title="hinzufügen" class="notToPrint ui-button"><i class="fas fa-check"></i></a>
 					</div>
 				</div>
 				<div id=divBeschriftung class=fieldBlock>
@@ -169,8 +165,9 @@
 					</div>
 					<div class=fieldValue>
 						<div name="messages"></div>
-						<a id=buttonSelectKontext title="auswählen" class="notToPrint ui-button"><i class="fas fa-edit"></i></a>
 						<a id=linkSelectedKontext></a>
+						<input id=textBoxSearchKontextByPath type=text class=field></input>
+						<a id=buttonSelectKontext title="auswählen" class="notToPrint ui-button"><i class="fas fa-check"></i></a>
 					</div>
 				</div>
 				<div id=divAblage class=fieldBlock>
@@ -180,8 +177,9 @@
 					</div>
 					<div class=fieldValue>
 						<div name="messages"></div>
-						<a id=buttonSelectAblage title="auswählen" class="notToPrint ui-button"><i class="fas fa-edit"></i></a>
 						<a id=linkSelectedAblage></a>
+						<input id=textBoxSearchAblageByPath type=text class=field></input>
+						<a id=buttonSelectAblage title="auswählen" class="notToPrint ui-button"><i class="fas fa-check"></i></a>
 					</div>
 				</div>
 				<div id=divFileName class=fieldBlock>
@@ -223,18 +221,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div id=dialogSelect title="" class=dialog>
-			<ul id=toolBar>
-				<li><a id=buttonOpen title=öffnen class=ui-button><i class="fas fa-external-link-alt"></i><span>Öffnen</span></a></li>
-			</ul>
-			<ul id=toolBar style="float:left;">
-				<li><a id=buttonOpenParent title="Übergeordneten Knoten öffnen" class="ui-button"><i class="fas fa-arrow-alt-circle-up"></i></a></li>
-				<li><a id=buttonOpenAbstractRoot title="Wurzelknoten öffnen" class="ui-button"><i class="fas fa-home"></i></a></li>
-				<li class=toolbar__item--max-width><input id=path type=text /></li>
-			</ul>
-			<div class=clear></div>
-			<div id=explorerSelect></div>
 		</div>
 		<div id=dialogDelete title=Löschen class=dialog></div>
 	</div>
