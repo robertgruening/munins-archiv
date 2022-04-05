@@ -26,6 +26,7 @@ $(document).ready(function () {
 	InitFieldCountOfChildren();
 	InitFieldLfdNummern();
 	InitFieldOrte();
+	initFiles();
 });
 
 function getPageName() {
@@ -420,6 +421,26 @@ function removeOrt(ortId) {
 
 function showMessagesOrte(messages) {
 	$("#divOrte .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
+//#region Dateien
+function initFiles() {
+	_viewModelFormBegehungsflaeche.register("path", new GuiClient(listFiles, null));
+}
+
+function listFiles(path) {
+	console.info("listing files");
+	console.debug("'Path' is", path);
+
+	if (path.startsWith("/")) {
+		console.warn("removed '/' to path");
+		path = path.substring(1);
+	}
+	
+	$("#divFileList").KontextFileList({
+		path : path
+	});
 }
 //#endregion
 //#endregion

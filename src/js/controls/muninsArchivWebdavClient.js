@@ -1,6 +1,7 @@
 var MuninsArchivWebdavClient = function () {
-	this.setWebdavServer("https://10.0.0.1/");
-	this.webdavShare("webdav");
+	this.setWebdavProtocol("https");
+	this.setWebdavServer("10.0.0.1");
+	this.setWebdavShare("webdav");
 	this.setWebdavUser("aaf");
 	this.setWebdavPassword("gwf");
 };

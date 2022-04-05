@@ -1,6 +1,7 @@
 var WebdavClient = function () {
 
 	//#region variables
+	this.webdavProtocol = null;
 	this.webdavServer = null;
 	this.webdavShare = null;
 	this.webdavUser = null;
@@ -8,6 +9,14 @@ var WebdavClient = function () {
 	//#endregion
 
 	//#region properties
+	this.getWebdavProtocol = function() {
+		return this.webdavProtocol;
+	};
+
+	this.setWebdavProtocol = function(webdavProtocol) {
+		return this.webdavProtocol = webdavProtocol;
+	};
+
 	this.getWebdavServer = function() {
 		return this.webdavServer;
 	};
@@ -41,8 +50,17 @@ var WebdavClient = function () {
 	};
 
 	this.getWebdavUrl = function(resourcePath) {
-		return this.getWebdavServer() + "/" + this.getWebdavShare() + (resourcePath == undefined ? "" : ("/" + resourcePath));
+		return this.getWebdavProtocol() + "://" +
+			this.getWebdavServer() + "/" + 
+			this.getWebdavShare() + (resourcePath == undefined ? "" : ("/" + resourcePath));
 	};
+	
+	this.getWebdavServerUrlWithAuthentication = function() {
+		return this.getWebdavProtocol() + "://" + 
+			this.getWebdavUser() + ":" +
+			this.getWebdavPassword() + "@" +
+			this.getWebdavServer();
+	}
 	//#endregion
 
 	this.getContentListRequestXml = function() {
@@ -122,9 +140,10 @@ var WebdavClient = function () {
 		
 		responses.each(function(i, element) {
 			let item = {
-				href : $(element)
-					.find("D\\:href")
-					.text(),
+				href : this.getWebdavServerUrlWithAuthentication() + 
+					$(element)
+						.find("D\\:href")
+						.text(),
 				name : $(element)
 					.find("D\\:href")
 					.text()

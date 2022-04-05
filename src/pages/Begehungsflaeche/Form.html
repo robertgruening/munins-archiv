@@ -44,6 +44,12 @@
 	<!-- view -->
 	<script type="text/javascript" src="../../js/views/Begehungsflaeche/Form.js"></script>
 	<script type="text/javascript" src="../../js/views/ExplorerSelectTypedItem.js"></script>
+	
+	<!-- prototype -->
+	<script type="text/javascript" src="../../js/controls/webdavClient.js"></script>
+	<script type="text/javascript" src="../../js/controls/muninsArchivWebdavClient.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.KontextFileList.js"></script>
+
 
 	<!-- javascript frameworks etc. -->
 	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
@@ -60,6 +66,10 @@
 	<link rel="stylesheet" type="text/css" href="../../css/form.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/navigation.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/clipboard.css" />
+		
+	<!-- prototype -->
+	<link rel="stylesheet" type="text/css" href="../../css/control.kontext-file-list.css" />
+	
 	<!-- print -->
 	<link rel="stylesheet" type="text/css" href="../../css/print.css" media="print" />
 	<link rel=icon type="image/png" href="../../images/system/IconMunin_001.png">
@@ -142,6 +152,17 @@
 						<input id=textBoxSearchOrt type=text class=field></input>
 						<a id=buttonAddOrt title="hinzufügen" class="notToPrint ui-button"><i class="fas fa-check"></i></a>
 					</div>
+				</div>
+				<div id=divFiles class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Liste der Dateien."></i>
+						<label>Dateien: </label>
+					</div>
+					<div class=fieldValue>
+						<div id=divFileList></div>
+						<div name="messages"></div>
+					</div>
+				</div>
 			</div>
 			<style>
 				.ui-autocomplete {

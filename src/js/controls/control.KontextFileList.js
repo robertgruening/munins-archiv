@@ -14,69 +14,74 @@
 
 		let muninsArchivWebdavClient = new MuninsArchivWebdavClient();
 		muninsArchivWebdavClient.getContentList(
-			options.path,
+			"Fundstellen/Akten/" + options.path,
 			function(contentListJson) {
-
+				console.log(contentListJson);
+				
+				if ($(contentListJson).length == 0) {
+					$(htmlElement).append(
+						$("<span>").text("Keine Dateien gefunden!")
+					);
+					
+					return;
+				}
+				
+				$(contentListJson).each(function(i, element) {
+					if (element.type == "file") {
+						
+						let img = $("<img>");
+						img.attr("src", element.href);
+						img.attr("alt", element.name);
+						img.attr("title", element.name);
+						
+						let span = $("<span>");
+						span.text(element.name);
+						
+						let div = $("<div>");
+						div.attr("class", "kontext-file-list-item");
+						div.append(img);
+						div.append(span);
+						
+						let a = $("<a>");
+						a.attr("href", element.href);
+						a.attr("target", "_blank");
+						a.append(div)
+				
+						$(htmlElement).append(a);
+					}
+				});
+				
+				/*
+				$(htmlElement).append(
+					$("<ul>")
+				);
+				
+				$(contentListJson).each(function(i, element) {
+					if (element.type == "file") {
+						
+						let a = $("<a></a>");
+						a.attr("title", element.name);
+						a.attr("class", "");
+						a.attr("href", element.href);
+						a.attr("target", "_blank");
+						a.text(element.name);
+				
+						$("ul", htmlElement).append(
+							$("<li></li>").append(a)
+						);
+					}
+				});
+				*/
 			},
 			function(jqXHR, textStatus, errorThrown) {
 				
 			}
 		);
 	}
-
-	function getActiveNavigationNode(navigationNode)
-	{
-		if (getPageName() == navigationNode.PageName)
-		{
-			return navigationNode;
-		}
-
-		if (navigationNode.Children != undefined &&
-			navigationNode.Children != null)
-		{
-			for (var i = 0; i < navigationNode.Children.length; i++)
-			{
-				var activeNavigationNode = getActiveNavigationNode(navigationNode.Children[i]);
-
-				if (activeNavigationNode != null)
-				{
-					return activeNavigationNode;
-				}
-			}
-		}
-
-		return null;
+	
+	/*
+	function () {
 	}
-
-	function SetHeadline(options, htmlElement, items)
-	{
-		var activeNavigationNode = null;
-
-		for (var i = 0; i < items.length; i++)
-		{
-			var activeNavigationNode = getActiveNavigationNode(items[i]);
-
-			if (activeNavigationNode != null)
-			{
-				break;
-			}
-		}
-
-		if (activeNavigationNode == null)
-		{
-			return;
-		}
-
-		$(htmlElement).text(activeNavigationNode.Title);
-	}
-
+	*/
+	
 })(jQuery);
-
-function InitHeadline()
-{
-    $("h2").Headline();
-}
-
-$(document).ready(function() {
-	InitHeadline();
-});
