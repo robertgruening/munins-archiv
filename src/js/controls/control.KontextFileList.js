@@ -16,72 +16,152 @@
 		muninsArchivWebdavClient.getContentList(
 			"Fundstellen/Akten/" + options.path,
 			function(contentListJson) {
-				console.log(contentListJson);
+				$(htmlElement).empty();
+
+				let muninsArchivWebdavClient = new MuninsArchivWebdavClient();
+				muninsArchivWebdavClient.getContentList(
+					"Fundstellen/Akten/" + options.path,
+					function(contentListJson) {
+						var IconField = function(config)
+						{
+							jsGrid.Field.call(this, config);
+						}
+
+						IconField.prototype = new jsGrid.Field({
+							itemTemplate: function(value) {
+								return $("<i>").addClass(value);
+							}
+						});
+						
+						var FileSizeField = function(config)
+						{
+							jsGrid.Field.call(this, config);
+						}
+
+						FileSizeField.prototype = new jsGrid.Field({
+							align: "right",
+							itemTemplate: function(value) {
+								return $("<label>").text((value / 1024)
+									.toLocaleString("de-DE", {
+										minimumFractionDigits: 2,
+										maximumFractionDigits: 2
+									})
+								);
+							},
+							sorter: function(value1, value2) {
+								return value1 - value2;
+							}
+						});
+						
+						var DateTimeField = function(config)
+						{
+							jsGrid.Field.call(this, config);
+						}
+
+						DateTimeField.prototype = new jsGrid.Field({
+							align: "right",
+							itemTemplate: function(value) {
+								return $("<label>").text(new Date(value)
+									.toLocaleString("de-DE"));
+							},
+							sorter: function(value1, value2) {
+								return new Date(value1) - new Date(value2);
+							}
+						});
+						
+						let fileList = $(contentListJson)
+							.filter(function() {
+								return $(this)[0].type == "file";
+							});
+						
+						$(fileList).each(function(i, element) {
+							element.downloadicon = "fas fa-download";
+						});
+						
+						jsGrid.fields.icon = IconField;
+						jsGrid.fields.fileSize = FileSizeField;
+						jsGrid.fields.dateTime = DateTimeField;
+
+						$(htmlElement).jsGrid({
+							width: "100%",
+
+							inserting: false,
+							editing: false,
+							sorting: true,
+							paging: false,
+							autoload: false,
+
+							pageSize: 10,
+							pageButtonCount: 5,
+							pagerFormat: "Seiten: {first} {prev} {pages} {next} {last}",
+							pagePrevText: "Zurück",
+							pageNextText: "Weiter",
+							pageFirstText: "Anfang",
+							pageLastText: "Ende",
+
+							fields: [
+								{
+									title: "",
+									name: "downloadicon",
+									type: "icon",
+									width: 27,
+									sorting: false
+								},
+								{
+									title: "Name",
+									name: "name",
+									type: "text",
+									validate: "required",
+									sorting: true
+								},
+								{
+									title: "Größe (KB)",
+									name: "size",
+									type: "fileSize",
+									sorting: true
+								},
+								{
+									title: "Erzeugungsdatum",
+									name: "creationDate",
+									type: "dateTime",
+									sorting: true
+								},
+								{
+									title: "Änderungsdatum",
+									name: "lastModifiedDate",
+									type: "dateTime",
+									sorting: true
+								}
+							],
+
+							rowClick: function(args) {
+								console.info("row clicked");
+								console.debug("clicked item", args.item);
+								window.open(args.item.href, "_blank");
+							},
+
+							rowDoubleClick: function(args) {
+								console.info("row double clicked");
+								console.debug("clicked item", args.item);
+								window.open(args.item.href, "_blank");
+							}
+						});
+
+						$(htmlElement).jsGrid({
+							data: fileList
+						});
+
+						$(htmlElement).jsGrid("sort", "Name");
+					},
+					function(jqXHR, textStatus, errorThrown) {
 				
-				if ($(contentListJson).length == 0) {
-					$(htmlElement).append(
-						$("<span>").text("Keine Dateien gefunden!")
-					);
-					
-					return;
-				}
-				
-				$(contentListJson).each(function(i, element) {
-					if (element.type == "file") {
-						
-						let img = $("<img>");
-						img.attr("src", element.href);
-						img.attr("alt", element.name);
-						img.attr("title", element.name);
-						
-						let span = $("<span>");
-						span.text(element.name);
-						
-						let div = $("<div>");
-						div.attr("class", "kontext-file-list-item");
-						div.append(img);
-						div.append(span);
-						
-						let a = $("<a>");
-						a.attr("href", element.href);
-						a.attr("target", "_blank");
-						a.append(div)
-				
-						$(htmlElement).append(a);
 					}
-				});
-				
-				/*
-				$(htmlElement).append(
-					$("<ul>")
 				);
-				
-				$(contentListJson).each(function(i, element) {
-					if (element.type == "file") {
-						
-						let a = $("<a></a>");
-						a.attr("title", element.name);
-						a.attr("class", "");
-						a.attr("href", element.href);
-						a.attr("target", "_blank");
-						a.text(element.name);
-				
-						$("ul", htmlElement).append(
-							$("<li></li>").append(a)
-						);
-					}
-				});
-				*/
 			},
 			function(jqXHR, textStatus, errorThrown) {
 				
 			}
 		);
 	}
-	
-	/*
-	function () {
-	}
-	*/
 	
 })(jQuery);

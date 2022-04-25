@@ -75,6 +75,6 @@ function getMuninsArchivBaseUrl() {
 	return "https://localhost/Munins Archiv";
 }
 
-function getMuninsArchivFileServiceBaseUrl() {
-	return "https://localhost/munins-archiv-file-service";
+function getWebdavFundImageBaseUrl() {
+	return "https://aaf:gwf@localhost/webdav/Fundstellen/Akten";
 }

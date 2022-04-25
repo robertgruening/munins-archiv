@@ -137,6 +137,39 @@ Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [
 		python3 download-map-tiles.py
 		```
 
+#### 1.2.3. Webdav
+
+https://www.digitalocean.com/community/tutorials/how-to-configure-webdav-access-with-apache-on-ubuntu-18-04
+
+1. webdav-Modul aktivieren
+	```
+	sudo a2enmod dav
+	sudo a2enmod dav_fs
+	sudo mkdir /var/www/webdav
+	sudo chown -R www-data:www-data /var/www/webdav
+	sudo mkdir -p /usr/local/apache/var/
+	sudo chown www-data:www-data /usr/local/apache/var	
+	```
+1. 
+	```
+	sudo nano /etc/apache2/sites-enabled/default-ssl.conf
+	Alias /webdav /var/www/webdav
+	<Directory "/var/www/webdav">
+			DAV On 
+			AuthType Basic
+			AuthName "webdav"
+			AuthUserFile /etc/apache2/webdav.passwords
+			Require valid-user
+	</Directory>
+	```
+1. 
+	```
+	sudo htpasswd -c /etc/apache2/webdav.passwords aaf
+	sudo chown www-data:www-data /etc/apache2/webdav.passwords
+	sudo a2enmod auth_basic
+	sudo systemctl restart apache2.service
+	```
+
 ## 2. Verzeichnisstruktur
 
 * **/db** - Die Skripte zum Erstellen und Befüllen der Datenbank befinden sich im Verzeichnis "db" (database -> Datenbank).  

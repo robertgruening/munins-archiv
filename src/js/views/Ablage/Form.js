@@ -344,7 +344,7 @@ function UpdateGridData(funde) {
 			let kontextPath = fund.Kontext.Path;
 			let previewFileName = fund.FileName.substr(0, fund.FileName.lastIndexOf(".")) + ".preview" + fund.FileName.substr(fund.FileName.lastIndexOf("."));
 			let relativePreviewFilePath = kontextPath + "/" + previewFileName;
-			copy.PreviewImage = getMuninsArchivFileServiceBaseUrl() + "/file.php?relativePath=/" + relativePreviewFilePath;
+			copy.PreviewImage = getWebdavFundImageBaseUrl() + relativePreviewFilePath;
 		}
 
 		copy.Anzahl = fund.Anzahl.replace("-", ">");

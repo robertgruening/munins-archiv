@@ -608,8 +608,7 @@ function setFileName(fileName) {
 		let kontextPath = _viewModelFormFund.getKontext().Path;
 		let previewFileName = fileName.substr(0, fileName.lastIndexOf(".")) + ".preview" + fileName.substr(fileName.lastIndexOf("."));
 		let relativePreviewFilePath = kontextPath + "/" + previewFileName;
-		$("img.preview").attr("src", getMuninsArchivFileServiceBaseUrl() + "/file.php?relativePath=/" +
- relativePreviewFilePath);		
+		$("img.preview").attr("src", getWebdavFundImageBaseUrl() + relativePreviewFilePath);
 	}
 }
 

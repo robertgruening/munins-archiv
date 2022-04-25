@@ -14,7 +14,7 @@ var WebdavClient = function () {
 	};
 
 	this.setWebdavProtocol = function(webdavProtocol) {
-		return this.webdavProtocol = webdavProtocol;
+		this.webdavProtocol = webdavProtocol;
 	};
 
 	this.getWebdavServer = function() {
@@ -22,7 +22,7 @@ var WebdavClient = function () {
 	};
 
 	this.setWebdavServer = function(webdavServer) {
-		return this.webdavServer = webdavServer;
+		this.webdavServer = webdavServer;
 	};
 
 	this.getWebdavShare = function() {
@@ -30,7 +30,7 @@ var WebdavClient = function () {
 	};
 
 	this.setWebdavShare = function(webdavShare) {
-		return this.webdavShare = webdavShare;
+		this.webdavShare = webdavShare;
 	};
 
 	this.getWebdavUser = function() {
@@ -38,7 +38,7 @@ var WebdavClient = function () {
 	};
 
 	this.setWebdavUser = function(webdavUser) {
-		return this.webdavUser = webdavUser;
+		this.webdavUser = webdavUser;
 	};
 
 	this.getWebdavPassword = function() {
@@ -46,7 +46,7 @@ var WebdavClient = function () {
 	};
 
 	this.setWebdavPassword = function(webdavPassword) {
-		return this.webdavPassword = webdavPassword;
+		this.webdavPassword = webdavPassword;
 	};
 
 	this.getWebdavUrl = function(resourcePath) {
@@ -60,29 +60,34 @@ var WebdavClient = function () {
 			this.getWebdavUser() + ":" +
 			this.getWebdavPassword() + "@" +
 			this.getWebdavServer();
-	}
+	};
 	//#endregion
 
 	this.getContentListRequestXml = function() {
 		return "<?xml version='1.0'?>\
 			<a:propfind xmlns:a='DAV:'>\
-				<a:prop>\
-					<a:resourcetype/>\
-				</a:prop>\
+				<a:allprop/>\
 			</a:propfind>";
 	};
 			
 	this.convertContentListXmlToJson = function(contentListXml) {
-			
 		let items = [];
 		let responses = $(contentListXml)
 			.find("D\\:response");
+		let webdavServerUrlWithAuthentication = this.getWebdavServerUrlWithAuthentication();
 		
 		responses.each(function(i, element) {
 			let item = {
-				href : $(element)
-					.find("D\\:href")
-					.text()
+				href : webdavServerUrlWithAuthentication +
+					$(element)
+						.find("D\\:href")
+						.text(),
+				creationDate : $(element)
+						.find("lp1\\:creationdate")
+						.text(),
+				lastModifiedDate : $(element)
+						.find("lp1\\:getlastmodified")
+						.text()
 			};
 				
 			if ($(element)
@@ -92,6 +97,9 @@ var WebdavClient = function () {
 			}
 			else {
 				item.type = "file";
+				item.size = $(element)
+					.find("lp1\\:getcontentlength")
+					.text()
 			}
 			
 			items.push(item);
@@ -130,45 +138,6 @@ var WebdavClient = function () {
 		});
 		
 		return currentDirectory;
-	};
-			
-	this.transformContentListXmlToJson = function(contentXml, currentDirectory) {
-		let responses = $(contentXml)
-			.find("D\\:response");
-			
-		let items = [];
-		
-		responses.each(function(i, element) {
-			let item = {
-				href : this.getWebdavServerUrlWithAuthentication() + 
-					$(element)
-						.find("D\\:href")
-						.text(),
-				name : $(element)
-					.find("D\\:href")
-					.text()
-					.replace(currentDirectory, "")
-			};
-			
-			if (item.name == "") {
-				item.name = ".";
-			}
-				
-			if ($(element)
-					.find("D\\:collection")
-					.length == 1) {
-				item.type = "directory";
-			}
-			else {
-				item.type = "file";
-			}
-			
-			items.push(item);
-		});
-		
-		console.log(items);
-			
-		return items;
 	};
 
 	this.getContentList = function(folderPath = "", callbackSuccess, callbackError) {

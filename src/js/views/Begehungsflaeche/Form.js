@@ -27,6 +27,7 @@ $(document).ready(function () {
 	InitFieldLfdNummern();
 	InitFieldOrte();
 	initFiles();
+	initImages();
 });
 
 function getPageName() {
@@ -439,6 +440,26 @@ function listFiles(path) {
 	}
 	
 	$("#divFileList").KontextFileList({
+		path : path
+	});
+}
+//#endregion
+
+//#region Bilder
+function initImages() {
+	_viewModelFormBegehungsflaeche.register("path", new GuiClient(listImages, null));
+}
+
+function listImages(path) {
+	console.info("listing images");
+	console.debug("'Path' is", path);
+
+	if (path.startsWith("/")) {
+		console.warn("removed '/' to path");
+		path = path.substring(1);
+	}
+	
+	$("#divImageList").KontextImageList({
 		path : path
 	});
 }
