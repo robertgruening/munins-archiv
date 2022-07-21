@@ -72,9 +72,13 @@ function openFormNewElement()
 }
 
 function getMuninsArchivBaseUrl() {
-	return "https://localhost/Munins Archiv";
+	return "https://127.0.0.1/Munins Archiv";
 }
 
 function getWebdavFundImageBaseUrl() {
-	return "https://aaf:gwf@localhost/webdav/Fundstellen/Akten";
+	return "https://aaf:gwf@127.0.0.1/webdav/Fundstellen/Akten";
+}
+
+function getFundImageBaseUrl() {
+    return "https://127.0.0.1/munins-archiv-image-service-php/image.php";
 }

@@ -36,6 +36,7 @@ $(document).ready(function () {
 
 	if (getUrlParameterValue("Id")) {
 		_viewModelFormFund.load(getUrlParameterValue("Id"));
+		initButtonImageFileUpload()
 	}
 	else {
 		_viewModelFormFund.updateAllListeners();
@@ -605,15 +606,61 @@ function setFileName(fileName) {
 	if (_viewModelFormFund.getKontext() != null &&
 		fileName != null) {
 
-		let kontextPath = _viewModelFormFund.getKontext().Path;
-		let previewFileName = fileName.substr(0, fileName.lastIndexOf(".")) + ".preview" + fileName.substr(fileName.lastIndexOf("."));
-		let relativePreviewFilePath = kontextPath + "/" + previewFileName;
-		$("img.preview").attr("src", getWebdavFundImageBaseUrl() + relativePreviewFilePath);
+		$("img.preview").attr("src", getWebdavFundImageBaseUrl() + _viewModelFormFund.getKontext().Path + "/" + fileName);
 	}
 }
 
 function showMessagesFileName(messages) {
 	$("#divFileName .fieldValue div[name=messages]").text(messages);
+}
+
+function initButtonImageFileUpload() {
+	$("#imageFileUpload").change(uploadImageFile);
+}
+
+function uploadImageFile() {
+	let kontext = _viewModelFormFund.getKontext();
+	let kontextPath = kontext == null ? null : kontext.Path;
+
+	let formData = new FormData();
+	let file = $("#imageFileUpload")[0].files[0];
+	formData.append("file", file);
+	
+	let fullPath = $("#imageFileUpload").val();
+	let filename = null;
+	
+	if (fullPath) {
+		let startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndex('/'));
+		filename = fullPath.substring(startIndex);
+		
+		if (filename.indexOf('\\') === 0 ||
+			filename.indexOf('/') === 0) {
+			
+			filename = filename.substring(1);
+		}
+		
+		$("#textboxFileName").val(filename);
+		_viewModelFormFund.setFileName($("#textboxFileName").val());
+	}
+	
+	$.ajax({
+		type: "POST",
+		url: getFundImageBaseUrl()+"?newWidth=1000&kontext=" + (kontextPath == null ? "" : (kontextPath + "/")),
+		contentType: false,
+		cache: false,
+		processData: false,
+		data: formData,
+		success: function(data, textStatus, jqXHR) {
+			console.info("success");
+			console.log(data);
+			showMessagesFileUploaded(_viewModelFormFund.getFileName());
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			console.error("error");
+			console.log(jqXHR);
+			showErrorMessages("Datei konnte nicht hochgeladen werden!");
+		}
+	});
 }
 //#endregion
 
@@ -662,4 +709,8 @@ function showMessageSaved(element) {
 
 function showMessageDeleted(element) {
     showSuccessMessageBox("Fund (" + element.Id + ") gelöscht");
+}
+
+function showMessagesFileUploaded(filename) {
+	showInformationMessageBox("Datei (" + filename + ") hochgeladen");
 }
