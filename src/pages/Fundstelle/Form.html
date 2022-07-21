@@ -17,6 +17,10 @@
 	<script type="text/javascript" src="../../js/controls/control.Headline.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.MessageBox.js"></script>
 	<script type="text/javascript" src="../../js/controls/control.ErrorMessageBox.js"></script>
+	<script type="text/javascript" src="../../js/controls/webdavClient.js"></script>
+	<script type="text/javascript" src="../../js/controls/muninsArchivWebdavClient.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.KontextImageList.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.KontextFileList.js"></script>
 	<!-- basic page functions -->
 	<script type="text/javascript" src="../../js/page.js"></script>
 	<script type="text/javascript" src="../../js/ui/IconConfig.js"></script>
@@ -41,7 +45,7 @@
 	<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
 	<!-- view -->
 	<script type="text/javascript" src="../../js/views/Fundstelle/Form.js"></script>
-
+	
 	<!-- javascript frameworks etc. -->
 	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/solid.css" />
@@ -56,6 +60,8 @@
 	<link rel="stylesheet" type="text/css" href="../../css/form.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/navigation.css" />
 	<link rel="stylesheet" type="text/css" href="../../css/clipboard.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/control.kontext-file-list.css" />
+		
 	<!-- print -->
 	<link rel="stylesheet" type="text/css" href="../../css/print.css" media="print" />
 	<link rel=icon type="image/png" href="../../images/system/IconMunin_001.png">
@@ -140,6 +146,26 @@
 						</div>
 						<div name="messages"></div>
 						<div id=divMap></div>
+					</div>
+				</div>
+				<div id=divFiles class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Liste der Dateien."></i>
+						<label>Dateien: </label>
+					</div>
+					<div class=fieldValue>
+						<div id=divFileList></div>
+						<div name="messages"></div>
+					</div>
+				</div>
+				<div id=divImages class=fieldBlock>
+					<div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Liste der Bilder."></i>
+						<label>Bilder: </label>
+					</div>
+					<div class=fieldValue>
+						<div id=divImageList></div>
+						<div name="messages"></div>
 					</div>
 				</div>
 			</div>

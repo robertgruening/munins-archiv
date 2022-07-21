@@ -1,0 +1,11 @@
+.kontext-file-list-item {
+	width: 100px;
+	height: 120px;
+	float: left;
+	margin-right: 10px;
+}
+
+.kontext-file-list-item img {
+	width: 100px;
+	height: 100px;
+}

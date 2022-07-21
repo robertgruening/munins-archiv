@@ -26,6 +26,8 @@ $(document).ready(function () {
 	InitFieldCountOfChildren();
 	InitFieldLfdNummern();
 	InitGeoPoint();
+	initFiles();
+	initImages();
 });
 
 function getPageName() {
@@ -456,6 +458,46 @@ function DisableButtonDeleteGeoPoint() {
 	$("#buttonDeleteGeoPoint").off("click");
 	$("#buttonDeleteGeoPoint").addClass("disabled");
 	$("#buttonDeleteGeoPoint").prop("disabled", true);
+}
+//#endregion
+
+//#region Dateien
+function initFiles() {
+	_viewModelFormFundstelle.register("path", new GuiClient(listFiles, null));
+}
+
+function listFiles(path) {
+	console.info("listing files");
+	console.debug("'Path' is", path);
+
+	if (path.startsWith("/")) {
+		console.warn("removed '/' to path");
+		path = path.substring(1);
+	}
+	
+	$("#divFileList").KontextFileList({
+		path : path
+	});
+}
+//#endregion
+
+//#region Bilder
+function initImages() {
+	_viewModelFormFundstelle.register("path", new GuiClient(listImages, null));
+}
+
+function listImages(path) {
+	console.info("listing images");
+	console.debug("'Path' is", path);
+
+	if (path.startsWith("/")) {
+		console.warn("removed '/' to path");
+		path = path.substring(1);
+	}
+	
+	$("#divImageList").KontextImageList({
+		path : path
+	});
 }
 //#endregion
 //#endregion
