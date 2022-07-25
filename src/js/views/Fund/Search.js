@@ -1,4 +1,6 @@
 var _viewModelSearchResultListFund = null;
+var _selectedFundattribut = null;
+let _selectedFundattribute = new Array();
 
 $(document).ready(function () {
 	var viewModelFactory = new ViewModelFactory();
@@ -6,6 +8,9 @@ $(document).ready(function () {
 
     RegisterToViewModel();
 	InitButtonNew();
+
+	InitButtonSelectFundAttribut();
+	InitTextBoxSearchFundAttribut();
 
 	InitButtonSearch();
 	initButtonGoToFirstPage();
@@ -46,6 +51,125 @@ function DisableButtonNew() {
 	$("#buttonNew").removeAttr("href");
 	$("#buttonNew").addClass("disabled");
 	$("#buttonNew").prop("disabled", true);
+}
+//#endregion
+//#endregion
+
+//#region form data
+//#region Fundattribute
+function InitButtonSelectFundAttribut() {
+	$("#buttonAddFundAttribut").click(addFundAttribut);
+}
+
+function addFundAttribut() {
+	if (_selectedFundattribut == null)	
+	{
+		return;
+	}
+
+	for (i = 0; i < _selectedFundattribute.length; i++) {
+		if (_selectedFundattribute[i].Id == _selectedFundattribut.Id) {
+			return;
+		}
+	}
+
+	_selectedFundattribute.push(_selectedFundattribut);
+	setFundAttribute(_selectedFundattribute);
+	$("#textBoxSearchFundAttributByPath").val("");
+}
+
+function InitTextBoxSearchFundAttribut() {
+	$.ajax(
+	{
+		type:"GET",
+		url: "../../api/Services/FundAttribut",
+		dataType: "JSON",
+		success:function(data, textStatus, jqXHR)
+		{
+			SetTextBoxSearchFundAttributAutocomplete(data);
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			console.log("FEHLER: \"../../api/Services/FundAttribut\" konnte nicht geladen werden!");
+		}
+	});
+}
+
+function SetTextBoxSearchFundAttributAutocomplete(data) {
+	var autoCompleteItems = new Array();
+
+	data.forEach(item => {
+		var autoCompleteItem = new Object();
+		autoCompleteItem.label = item.Path;
+		autoCompleteItem.value = item;
+		autoCompleteItems.push(autoCompleteItem);
+	});
+
+	$("#textBoxSearchFundAttributByPath").autocomplete({
+		minLength: 0,
+		source: autoCompleteItems,
+		focus: function(event, ui) {
+			$("#textBoxSearchFundAttributByPath").val(ui.item.label);
+			return false;
+		},
+		select: function(event, ui) {
+			$("#textBoxSearchFundAttributByPath").val(ui.item.label);
+			_selectedFundattribut = ui.item.value;
+			return false;
+		}
+	})
+	.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>")
+			.append("<div>" + item.label + "</div>")
+			.appendTo(ul);
+	};
+}
+
+function setFundAttribute(fundAttribute) {
+	$("#divFundattribute div #divFundAttributList").empty();
+	$("#divFundattribute div #divFundAttributList").append($("<ul>"));
+
+	fundAttribute.forEach(fundAttribut => {
+		var li = $("<li>");
+
+		var linkButtonDelete = $("<a>");
+		linkButtonDelete.attr("title", "löschen");
+		linkButtonDelete.attr("class", "ui-button risky-action");
+		linkButtonDelete.attr("href", "javascript:removeFundAttribut(" + fundAttribut.Id + ");");
+
+		var icon = $("<i>");
+		icon.attr("class", "fas fa-trash-alt");
+		linkButtonDelete.append(icon);
+		li.append(linkButtonDelete);
+
+		li.append("&nbsp;");
+
+		var linkFundAttribut = $("<a>");
+		linkFundAttribut.attr("title", "gehe zu");
+		linkFundAttribut.attr("href", "../../pages/FundAttribut/Form.html?Id=" + fundAttribut.Id);
+		linkFundAttribut.text(fundAttribut.Path);
+		li.append(linkFundAttribut);
+
+		$("#divFundattribute div #divFundAttributList ul").append(li);
+	});
+}
+
+function removeFundAttribut(fundAttributId) {
+	var fundAttribut = new Object();
+	fundAttribut.Id = fundAttributId;
+
+	for (i = 0; i < _selectedFundattribute.length; i++) {
+		if (_selectedFundattribute[i].Id == fundAttribut.Id) {
+			_selectedFundattribute.splice(i, 1);
+			break;
+		}
+	}
+
+	setFundAttribute(_selectedFundattribute);
+}
+
+function showMessagesFundAttribute(messages) {
+	$("#divFundattribute .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 //#endregion
@@ -288,6 +412,16 @@ function getSearchConditions() {
 	else if ($("[name='choiceFilterHasFundAttribute']:checked").val() == "no")
 	{
 		searchConditions.push({ "key" : "hasFundAttribute", "value" : "false" });
+	}
+
+	if ($("[name='choiceFilterHasFundAttribute']:checked").val() != "no") {
+		let fundattributIdList = new Array();
+
+		for (i = 0; i < _selectedFundattribute.length; i++) {
+			fundattributIdList.push(_selectedFundattribute[i].Id);
+		}
+
+		searchConditions.push({ "key" : "fundAttribut_Ids", "value" : fundattributIdList.join() });
 	}
 
 	if ($("[name='choiceFilterHasAblage']:checked").val() == "yes")

@@ -81,7 +81,7 @@
 						<input type=radio name=choiceFilterBeschriftung value=contains checked=true><label for=contains>enthält</label></input>
 					</div>
 				</div>
-				<div class=fieldBlock>
+				<div id="divFundattribute" class=fieldBlock>
 				    <div class=fieldDescription>
 						<i class="help notToPrint fas fa-question-circle" title="Es kann nach Funden gesucht werden, die mindestens ein oder kein Fundattribut haben. Mit 'egal' wird das Kriterium ignoriert."></i>
 					    <label>hat Fundattribute: </label>
@@ -90,6 +90,12 @@
 						<input type=radio name=choiceFilterHasFundAttribute value=yes><label for=yes>ja</label></input>
 						<input type=radio name=choiceFilterHasFundAttribute value=no><label for=no>nein</label></input>
 						<input type=radio name=choiceFilterHasFundAttribute value=any checked=true><label for=any>egal</label></input>
+						<div class=fieldValue>
+							<div name="messages"></div>
+							<div id=divFundAttributList class="field editable-list"></div>
+							<input id=textBoxSearchFundAttributByPath type=text class=field></input>
+							<a id=buttonAddFundAttribut title="hinzufügen" class="notToPrint ui-button"><i class="fas fa-check"></i></a>
+						</div>
 				    </div>
 				</div>
 				<div class=fieldBlock>
