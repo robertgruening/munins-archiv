@@ -1,6 +1,8 @@
 var _viewModelSearchResultListFund = null;
 var _selectedFundattribut = null;
 let _selectedFundattribute = new Array();
+var _selectedAblage = null;
+let _selectedAblagen = new Array();
 
 $(document).ready(function () {
 	var viewModelFactory = new ViewModelFactory();
@@ -10,7 +12,9 @@ $(document).ready(function () {
 	InitButtonNew();
 
 	InitButtonSelectFundAttribut();
+	InitButtonSelectAblage();
 	InitTextBoxSearchFundAttribut();
+	InitTextBoxSearchAblage();
 
 	InitButtonSearch();
 	initButtonGoToFirstPage();
@@ -170,6 +174,123 @@ function removeFundAttribut(fundAttributId) {
 
 function showMessagesFundAttribute(messages) {
 	$("#divFundattribute .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
+//#region Ablage
+function InitButtonSelectAblage() {
+	$("#buttonAddAblage").click(addAblage);
+}
+
+function addAblage() {
+	if (_selectedAblage == null)	
+	{
+		return;
+	}
+
+	for (i = 0; i < _selectedAblagen.length; i++) {
+		if (_selectedAblagen[i].Id == _selectedAblage.Id) {
+			return;
+		}
+	}
+
+	_selectedAblagen.push(_selectedAblage);
+	setAblagen(_selectedAblagen);
+	$("#textBoxSearchAblageByPath").val("");
+}
+
+function InitTextBoxSearchAblage() {
+	$.ajax(
+	{
+		type:"GET",
+		url: "../../api/Services/Ablage",
+		dataType: "JSON",
+		success:function(data, textStatus, jqXHR)
+		{
+			SetTextBoxSearchAblageAutocomplete(data);
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			console.log("FEHLER: \"../../api/Services/Ablage\" konnte nicht geladen werden!");
+		}
+	});
+}
+
+function SetTextBoxSearchAblageAutocomplete(data) {
+	var autoCompleteItems = new Array();
+
+	data.forEach(item => {
+		var autoCompleteItem = new Object();
+		autoCompleteItem.label = item.Path;
+		autoCompleteItem.value = item;
+		autoCompleteItems.push(autoCompleteItem);
+	});
+
+	$("#textBoxSearchAblageByPath").autocomplete({
+		minLength: 0,
+		source: autoCompleteItems,
+		focus: function(event, ui) {
+			$("#textBoxSearchAblageByPath").val(ui.item.label);
+			return false;
+		},
+		select: function(event, ui) {
+			$("#textBoxSearchAblageByPath").val(ui.item.label);
+			_selectedAblage = ui.item.value;
+			return false;
+		}
+	})
+	.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>")
+			.append("<div>" + item.label + "</div>")
+			.appendTo(ul);
+	};
+}
+
+function setAblagen(ablagen) {
+	$("#divAblagen div #divAblageList").empty();
+	$("#divAblagen div #divAblageList").append($("<ul>"));
+
+	ablagen.forEach(ablage => {
+		var li = $("<li>");
+
+		var linkButtonDelete = $("<a>");
+		linkButtonDelete.attr("title", "löschen");
+		linkButtonDelete.attr("class", "ui-button risky-action");
+		linkButtonDelete.attr("href", "javascript:removeAblage(" + ablage.Id + ");");
+
+		var icon = $("<i>");
+		icon.attr("class", "fas fa-trash-alt");
+		linkButtonDelete.append(icon);
+		li.append(linkButtonDelete);
+
+		li.append("&nbsp;");
+
+		var linkAblage = $("<a>");
+		linkAblage.attr("title", "gehe zu");
+		linkAblage.attr("href", "../../pages/Ablage/Form.html?Id=" + ablage.Id);
+		linkAblage.text(ablage.Path);
+		li.append(linkAblage);
+
+		$("#divAblagen div #divAblageList ul").append(li);
+	});
+}
+
+function removeAblage(ablageId) {
+	var ablage = new Object();
+	ablage.Id = ablageId;
+
+	for (i = 0; i < _selectedAblagen.length; i++) {
+		if (_selectedAblagen[i].Id == ablage.Id) {
+			_selectedAblagen.splice(i, 1);
+			break;
+		}
+	}
+
+	setAblagen(_selectedAblagen);
+}
+
+function showMessagesAblagen(messages) {
+	$("#divAblagen .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 //#endregion
@@ -431,6 +552,16 @@ function getSearchConditions() {
 	else if ($("[name='choiceFilterHasAblage']:checked").val() == "no")
 	{
 		searchConditions.push({ "key" : "hasAblage", "value" : "false" });
+	}
+
+	if ($("[name='choiceFilterHasAblage']:checked").val() != "no") {
+		let ablageIdList = new Array();
+
+		for (i = 0; i < _selectedAblagen.length; i++) {
+			ablageIdList.push(_selectedAblagen[i].Id);
+		}
+
+		searchConditions.push({ "key" : "ablage_Ids", "value" : ablageIdList.join() });
 	}
 
 	if ($("[name='choiceFilterHasKontext']:checked").val() == "yes")

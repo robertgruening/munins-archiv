@@ -200,6 +200,11 @@ function Get()
 			$loadFunde->addSearchCondition("Ablage_Id", $_GET["ablage_Id"]);
 		}
 
+		if (isset($_GET["ablage_Ids"]))
+		{
+			$loadFunde->addSearchCondition("Ablage_Ids", $_GET["ablage_Ids"]);
+		}
+
 		if (isset($_GET["hasKontext"]))
 		{
 			$loadFunde->addSearchCondition("HasKontext", $_GET["hasKontext"] === "true");

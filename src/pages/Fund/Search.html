@@ -98,7 +98,7 @@
 						</div>
 				    </div>
 				</div>
-				<div class=fieldBlock>
+				<div id="divAblagen" class=fieldBlock>
 				    <div class=fieldDescription>
 						<i class="help notToPrint fas fa-question-circle" title="Es kann nach Funden gesucht werden, die in einer oder keiner Ablage abgelget sind. Mit 'egal' wird das Kriterium ignoriert."></i>
 					    <label>hat Ablage: </label>
@@ -107,6 +107,12 @@
 						<input type=radio name=choiceFilterHasAblage value=yes><label for=yes>ja</label></input>
 						<input type=radio name=choiceFilterHasAblage value=no><label for=no>nein</label></input>
 						<input type=radio name=choiceFilterHasAblage value=any checked=true><label for=any>egal</label></input>
+						<div class=fieldValue>
+							<div name="messages"></div>
+							<div id=divAblageList class="field editable-list"></div>
+							<input id=textBoxSearchAblageByPath type=text class=field></input>
+							<a id=buttonAddAblage title="hinzufügen" class="notToPrint ui-button"><i class="fas fa-check"></i></a>
+						</div>
 				    </div>
 				</div>
 				<div class=fieldBlock>

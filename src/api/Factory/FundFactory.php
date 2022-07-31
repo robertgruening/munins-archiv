@@ -108,6 +108,11 @@ class FundFactory extends Factory implements iListFactory
 		{
 			array_push($sqlSearchConditionStrings, "Ablage_Id = ".$searchConditions["Ablage_Id"]);
 		}
+		
+		if (isset($searchConditions["Ablage_Ids"]))
+		{
+            array_push($sqlSearchConditionStrings, "Ablage_Id IN (".$searchConditions["Ablage_Ids"].")");
+		}
 
 		if (isset($searchConditions["HasKontext"]))
 		{
