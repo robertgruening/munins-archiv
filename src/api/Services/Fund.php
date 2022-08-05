@@ -215,6 +215,11 @@ function Get()
 			$loadFunde->addSearchCondition("Kontext_Id", $_GET["kontext_Id"]);
 		}
 
+		if (isset($_GET["kontext_Ids"]))
+		{
+			$loadFunde->addSearchCondition("Kontext_Ids", $_GET["kontext_Ids"]);
+		}
+
 		if (isset($_GET["hasFundAttribute"]))
 		{
 			$loadFunde->addSearchCondition("HasFundAttribute", $_GET["hasFundAttribute"] === "true");

@@ -694,6 +694,16 @@ function getSearchConditions() {
 		searchConditions.push({ "key" : "hasKontext", "value" : "false" });
 	}
 
+	if ($("[name='choiceFilterHasKontext']:checked").val() != "no") {
+		let kontextIdList = new Array();
+
+		for (i = 0; i < _selectedKontexte.length; i++) {
+			kontextIdList.push(_selectedKontexte[i].Id);
+		}
+
+		searchConditions.push({ "key" : "kontext_Ids", "value" : kontextIdList.join() });
+	}
+
 	if ($("[name='choiceFilterRatingPrecision']:checked").val() == "exact")
 	{
 		searchConditions.push({ "key" : "rating", "value" : $("#choiceFilterRating").val() });
