@@ -3,6 +3,8 @@ var _selectedFundattribut = null;
 let _selectedFundattribute = new Array();
 var _selectedAblage = null;
 let _selectedAblagen = new Array();
+var _selectedKontext = null;
+let _selectedKontexte = new Array();
 
 $(document).ready(function () {
 	var viewModelFactory = new ViewModelFactory();
@@ -13,8 +15,10 @@ $(document).ready(function () {
 
 	InitButtonSelectFundAttribut();
 	InitButtonSelectAblage();
+	InitButtonSelectKontext();
 	InitTextBoxSearchFundAttribut();
 	InitTextBoxSearchAblage();
+	InitTextBoxSearchKontext();
 
 	InitButtonSearch();
 	initButtonGoToFirstPage();
@@ -291,6 +295,123 @@ function removeAblage(ablageId) {
 
 function showMessagesAblagen(messages) {
 	$("#divAblagen .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
+//#region Kontext
+function InitButtonSelectKontext() {
+	$("#buttonAddKontext").click(addKontext);
+}
+
+function addKontext() {
+	if (_selectedKontext == null)	
+	{
+		return;
+	}
+
+	for (i = 0; i < _selectedKontexte.length; i++) {
+		if (_selectedKontexte[i].Id == _selectedKontext.Id) {
+			return;
+		}
+	}
+
+	_selectedKontexte.push(_selectedKontext);
+	setKontexte(_selectedKontexte);
+	$("#textBoxSearchKontextByPath").val("");
+}
+
+function InitTextBoxSearchKontext() {
+	$.ajax(
+	{
+		type:"GET",
+		url: "../../api/Services/Kontext",
+		dataType: "JSON",
+		success:function(data, textStatus, jqXHR)
+		{
+			SetTextBoxSearchKontextAutocomplete(data);
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			console.log("FEHLER: \"../../api/Services/Kontext\" konnte nicht geladen werden!");
+		}
+	});
+}
+
+function SetTextBoxSearchKontextAutocomplete(data) {
+	var autoCompleteItems = new Array();
+
+	data.forEach(item => {
+		var autoCompleteItem = new Object();
+		autoCompleteItem.label = item.Path;
+		autoCompleteItem.value = item;
+		autoCompleteItems.push(autoCompleteItem);
+	});
+
+	$("#textBoxSearchKontextByPath").autocomplete({
+		minLength: 0,
+		source: autoCompleteItems,
+		focus: function(event, ui) {
+			$("#textBoxSearchKontextByPath").val(ui.item.label);
+			return false;
+		},
+		select: function(event, ui) {
+			$("#textBoxSearchKontextByPath").val(ui.item.label);
+			_selectedKontext = ui.item.value;
+			return false;
+		}
+	})
+	.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>")
+			.append("<div>" + item.label + "</div>")
+			.appendTo(ul);
+	};
+}
+
+function setKontexte(kontexte) {
+	$("#divKontexte div #divKontextList").empty();
+	$("#divKontexte div #divKontextList").append($("<ul>"));
+
+	kontexte.forEach(kontext => {
+		var li = $("<li>");
+
+		var linkButtonDelete = $("<a>");
+		linkButtonDelete.attr("title", "löschen");
+		linkButtonDelete.attr("class", "ui-button risky-action");
+		linkButtonDelete.attr("href", "javascript:removeKontext(" + kontext.Id + ");");
+
+		var icon = $("<i>");
+		icon.attr("class", "fas fa-trash-alt");
+		linkButtonDelete.append(icon);
+		li.append(linkButtonDelete);
+
+		li.append("&nbsp;");
+
+		var linkKontext = $("<a>");
+		linkKontext.attr("title", "gehe zu");
+		linkKontext.attr("href", "../../pages/Kontext/Form.html?Id=" + kontext.Id);
+		linkKontext.text(kontext.Path);
+		li.append(linkKontext);
+
+		$("#divKontexte div #divKontextList ul").append(li);
+	});
+}
+
+function removeKontext(kontextId) {
+	var kontext = new Object();
+	kontext.Id = kontextId;
+
+	for (i = 0; i < _selectedKontexte.length; i++) {
+		if (_selectedKontexte[i].Id == kontext.Id) {
+			_selectedKontexte.splice(i, 1);
+			break;
+		}
+	}
+
+	setKontexte(_selectedKontexte);
+}
+
+function showMessagesKontexte(messages) {
+	$("#divKontexte .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 //#endregion
