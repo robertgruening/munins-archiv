@@ -656,7 +656,9 @@ function getSearchConditions() {
 		searchConditions.push({ "key" : "hasFundAttribute", "value" : "false" });
 	}
 
-	if ($("[name='choiceFilterHasFundAttribute']:checked").val() != "no") {
+	if ($("[name='choiceFilterHasFundAttribute']:checked").val() != "no" &&
+		_selectedFundattribute.length >=1)
+	{
 		let fundattributIdList = new Array();
 
 		for (i = 0; i < _selectedFundattribute.length; i++) {
@@ -675,7 +677,9 @@ function getSearchConditions() {
 		searchConditions.push({ "key" : "hasAblage", "value" : "false" });
 	}
 
-	if ($("[name='choiceFilterHasAblage']:checked").val() != "no") {
+	if ($("[name='choiceFilterHasAblage']:checked").val() != "no" && 
+		_selectedAblagen.length >= 1)
+	{
 		let ablageIdList = new Array();
 
 		for (i = 0; i < _selectedAblagen.length; i++) {
@@ -694,7 +698,9 @@ function getSearchConditions() {
 		searchConditions.push({ "key" : "hasKontext", "value" : "false" });
 	}
 
-	if ($("[name='choiceFilterHasKontext']:checked").val() != "no") {
+	if ($("[name='choiceFilterHasKontext']:checked").val() != "no" &&
+		_selectedKontexte.length >= 1)
+	{
 		let kontextIdList = new Array();
 
 		for (i = 0; i < _selectedKontexte.length; i++) {
