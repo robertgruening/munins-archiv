@@ -116,12 +116,6 @@ Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [
 	```
 	sudo service apache2 restart
 	```
-1. Log-Ordner anlegen und berechtigen
-	```
-	cd ./Munins\ Archiv/api
-	mkdir Logs
-	sudo chown www-data Logs
-	```
 1. Kartenkacheln herunterladen
 	1. http://tools.geofabrik.de/calc/#type=geofabrik_standard&bbox=5,47,16,55&grid=1 öffnen
 	1. "+" klicken
