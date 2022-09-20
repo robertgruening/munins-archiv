@@ -116,12 +116,6 @@ Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [
 	```
 	sudo service apache2 restart
 	```
-1. Log-Ordner anlegen und berechtigen
-	```
-	cd ./Munins\ Archiv/api
-	mkdir Logs
-	sudo chown www-data Logs
-	```
 1. Kartenkacheln herunterladen
 	1. http://tools.geofabrik.de/calc/#type=geofabrik_standard&bbox=5,47,16,55&grid=1 öffnen
 	1. "+" klicken
@@ -183,7 +177,6 @@ https://www.digitalocean.com/community/tutorials/how-to-configure-webdav-access-
 
 ## 3. Verwendete Pakete
 
-* [Apache log4php](https://logging.apache.org/log4php/download.html) v2.3.0 von der **Apache Software Foundation** unter der *Apache-Lizenz 2.0*
 * [Font Awesome Icons](https://fontawesome.com/) v5.3.1 von **Fonticons, Inc.** unter der *CC BY 4.0 Lizenz*
 * [jQuery min](https://jquery.com/) v3.4.1 von der **jQuery Foundation** unter der *MIT-Lizenz*
 * [jQuery UI](https://jquery.com/) v1.12.1 von der **jQuery Foundation** unter der *MIT-Lizenz*
