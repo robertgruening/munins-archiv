@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-require_once(__DIR__."/../../../src/UserStories/Ablage/LoadAblage.php");
+require_once(__DIR__."/../../../UserStories/Ablage/LoadAblage.php");
 
 final class LoadAblageTest extends TestCase
 {

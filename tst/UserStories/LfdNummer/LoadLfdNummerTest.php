@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-require_once(__DIR__."/../../../src/UserStories/LfdNummer/LoadLfdNummer.php");
+require_once(__DIR__."/../../../UserStories/LfdNummer/LoadLfdNummer.php");
 
 final class LoadLfdNummerTest extends TestCase
 {

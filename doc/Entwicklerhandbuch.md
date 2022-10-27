@@ -166,14 +166,18 @@ https://www.digitalocean.com/community/tutorials/how-to-configure-webdav-access-
 
 ## 2. Verzeichnisstruktur
 
+* **/api** - Webservice.
+* **/css** - CSS der Webseite (Client-Anwendung).
 * **/db** - Die Skripte zum Erstellen und Befüllen der Datenbank befinden sich im Verzeichnis "db" (database -> Datenbank).  
 * **/doc** - Die Dokumentation zum Projekt, inklusive der Handbücher, befindet sich im Verzeichnis "doc" (documents -> Dokumente).
+* **/images** - Bilder und Grafiken der Webseite (Client-Anwendung).
+* **/js** - JavaScript der Webseite (Client-Anwendung).
+* **/pages** - HTML der Webseite (Client-Anwendung).
 * **/pkg** - Programmbibliotheken und -erweiterungen von Drittanbietern sind in "pkg" (packages -> Pakete) gespeichert.
-* **/prototypes** - Prozess-, Architektur- und Designstudien befinden sich in "prototypes" (prototypes -> Prototypen).
-* **/src** - Der Quellcode befindet sich unter "src" (sources -> Quellcode). Als Sprachen kommen hier HTML, JavaScript und PHP zum Einsatz.
 * **/tools** - Die Werkzeuge der Anwendung, z. B. Python3-Skript zum Herunterladen von Kartenkacheln.
 * **/tst** - Die automatisierten Tests für die Schichten der Serverseite befinden sich im Verzeichnis "tst" (test -> Test).
 * **/upgr** - Die Skripte zum Aktualisieren der Anwendung auf die neueste Version befinden sich unter "upgr" (upgrade -> Auktualisierung).
+* **/webfonts** - Schriftarten für die die Icons der Webseite (Client-Anwendung).
 
 ## 3. Verwendete Pakete
 
