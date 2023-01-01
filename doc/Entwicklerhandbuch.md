@@ -133,7 +133,17 @@ Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [
 
 #### 1.2.3. Webdav
 
-https://www.digitalocean.com/community/tutorials/how-to-configure-webdav-access-with-apache-on-ubuntu-18-04
+Munins Archiv verwendet das HTTP-Webdav-Protokoll,
+um Fotos von Funden an einen Dateiserver zu übermitteln
+(POST) und um diese anzuzeigen (GET).
+
+Beispiele für Webdav-Implementierungen sind:
+
+- Apache mit Webdav-Modul
+- NextCloud
+
+Die nachfolgende Anleitung beschreibt die Installation
+des Webdav-Moduls von Apache [Quelle](https://www.digitalocean.com/community/tutorials/how-to-configure-webdav-access-with-apache-on-ubuntu-18-04)
 
 1. webdav-Modul aktivieren
 	```

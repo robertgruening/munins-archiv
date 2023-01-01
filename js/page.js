@@ -76,9 +76,9 @@ function getMuninsArchivBaseUrl() {
 }
 
 function getWebdavFundImageBaseUrl() {
-	return "https://aaf:gwf@127.0.0.1/webdav/Fundstellen/Akten";
+    return "https://aaf:gwf@192.168.0.220:9111/remote.php/dav/files/aaf/AAF/Fundstellen/Akten";
 }
 
 function getFundImageBaseUrl() {
-    return "https://127.0.0.1/munins-archiv-image-service-php/image.php";
+    return "https://192.168.0.220:9111/munins-archiv-image-service-php/image.php";
 }
