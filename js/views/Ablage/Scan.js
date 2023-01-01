@@ -40,7 +40,7 @@ function loadByGuid(guid) {
 }
 
 function openAblageFormPage(element) {
-	window.open("/Munins Archiv/pages/Ablage/Form.html?Id=" + element.Id, "_self");
+	window.open("/munins-archiv/pages/Ablage/Form.html?Id=" + element.Id, "_self");
 }
 
 function startScanning() {

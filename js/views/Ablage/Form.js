@@ -235,7 +235,7 @@ LinkToFundFormField.prototype = new jsGrid.Field({
 	itemTemplate: function(value) {
 		var icon = $("<i>").addClass("fas fa-external-link-alt");
 		var link = $("<a>").append(icon);
-		$(link).attr("href", "/Munins Archiv/pages/Fund/Form.html?Id=" + value);
+		$(link).attr("href", "/munins-archiv/pages/Fund/Form.html?Id=" + value);
 		$(link).attr("target", "_blank");
 		$(link).attr("title", "Fundformular öffnen");
 		return link;
@@ -323,7 +323,7 @@ function InitGridFunde()
 			console.info("row double clicked");
 			console.debug("selected grid item", args.item);
 
-			window.open("/Munins Archiv/pages/Fund/Form.html?Id=" + args.item.Id, "_self");
+			window.open("/munins-archiv/pages/Fund/Form.html?Id=" + args.item.Id, "_self");
 		}
 	});
 }
@@ -416,7 +416,7 @@ function setKontexte(kontexte) {
 		var li = $("<li>");
 
 		var linkKontext = $("<a>");
-		linkKontext.attr("href", "/Munins Archiv/pages/" + kontext.Type.Bezeichnung + "/Form.html?Id=" + kontext.Id);
+		linkKontext.attr("href", "/munins-archiv/pages/" + kontext.Type.Bezeichnung + "/Form.html?Id=" + kontext.Id);
 		linkKontext.text(kontext.Path);
 		li.append(linkKontext);
 
@@ -559,7 +559,7 @@ function EnableButtonPrintLabel(id) {
 		DisableButtonPrintLabel();
 	}
 	else {
-		$("#buttonPrintLabel").attr("href", "/Munins Archiv/pages/Ablage/PrintLabel.html?Id=" + id, "_self");
+		$("#buttonPrintLabel").attr("href", "/munins-archiv/pages/Ablage/PrintLabel.html?Id=" + id, "_self");
 	}
 
 	$("#buttonPrintLabel").removeClass("disabled");
@@ -585,10 +585,10 @@ function EnableButtonToOverview(parent) {
 		parent.Id === undefined)
 	{
 
-		$("#buttonToOverview").attr("href", "/Munins Archiv/pages/Ablage/Explorer.html", "_self");
+		$("#buttonToOverview").attr("href", "/munins-archiv/pages/Ablage/Explorer.html", "_self");
 	}
 	else {
-		$("#buttonToOverview").attr("href", "/Munins Archiv/pages/Ablage/Explorer.html?Id=" + parent.Id, "_self");
+		$("#buttonToOverview").attr("href", "/munins-archiv/pages/Ablage/Explorer.html?Id=" + parent.Id, "_self");
 	}
 
 	$("#buttonToOverview").removeClass("disabled");

@@ -240,7 +240,7 @@ function InitButtonToList() {
 }
 
 function EnableButtonToList() {
-	$("#buttonToList").attr("href", "/Munins Archiv/pages/AblageType/List.html", "_self");
+	$("#buttonToList").attr("href", "/munins-archiv/pages/AblageType/List.html", "_self");
 	$("#buttonToList").removeClass("disabled");
 	$("#buttonToList").prop("disabled", false);
 }

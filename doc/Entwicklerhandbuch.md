@@ -60,8 +60,8 @@ Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [
 1. git-Repository einrichten
 	```
 	cd /var/www/html/
-	git clone https://github.com/robertgruening/Munins-Archiv.git
-	mv "/var/www/html/Munins-Archiv/" "/var/www/html/Munins Archiv/"
+	git clone https://github.com/robertgruening/munins-archiv.git
+	mv "/var/www/html/Munins-Archiv/" "/var/www/html/munins-archiv/"
 	```
 1. URL-Weiterleitung einrichten
 	```
@@ -122,7 +122,7 @@ Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [
 	1. Kacheln auswählen
 	1. Skript anpassen
 		```
-		cd "/var/www/html/Munins Archiv/tools/"
+		cd "/var/www/html/munins-archiv/tools/"
 		nano download-map-tiles.py
 		```		
 	1. minimale und maximale X- und Y-Werte entsprechend unter Berücksichtigung der Zoomstufe eintragen
@@ -133,7 +133,7 @@ Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [
 
 #### 1.2.3. Webdav
 
-Munins Archiv verwendet das HTTP-Webdav-Protokoll,
+_Munins Archiv_ verwendet das HTTP-Webdav-Protokoll,
 um Fotos von Funden an einen Dateiserver zu übermitteln
 (POST) und um diese anzuzeigen (GET).
 

@@ -95,10 +95,10 @@ function EnableButtonNew(id) {
 if (id === undefined ||
 	id === null) {
 
-		$("#buttonNew").attr("href", "/Munins Archiv/pages/" + getChildKontextTypeBezeichnung(_viewModelExplorerKontext.getType()) + "/Form.html");
+		$("#buttonNew").attr("href", "/munins-archiv/pages/" + getChildKontextTypeBezeichnung(_viewModelExplorerKontext.getType()) + "/Form.html");
 	}
 	else {
-		$("#buttonNew").attr("href", "/Munins Archiv/pages/" + getChildKontextTypeBezeichnung(_viewModelExplorerKontext.getType()) + "/Form.html?Parent_Id=" + id);
+		$("#buttonNew").attr("href", "/munins-archiv/pages/" + getChildKontextTypeBezeichnung(_viewModelExplorerKontext.getType()) + "/Form.html?Parent_Id=" + id);
 	}
 
 	$("#buttonNew").removeClass("disabled");
@@ -119,10 +119,10 @@ function InitButtonOpen() {
 
 function EnableButtonOpen(args) {
 	if (args.SelectedItem.Id === undefined) {
-		$("#buttonOpen").attr("href", "/Munins Archiv/pages/Kontext/Explorer.html");
+		$("#buttonOpen").attr("href", "/munins-archiv/pages/Kontext/Explorer.html");
 	}
 	else {
-		$("#buttonOpen").attr("href", "/Munins Archiv/pages/Kontext/Explorer.html?Id=" + args.SelectedItem.Id);
+		$("#buttonOpen").attr("href", "/munins-archiv/pages/Kontext/Explorer.html?Id=" + args.SelectedItem.Id);
 	}
 
 	$("#buttonOpen").removeClass("disabled");
@@ -143,10 +143,10 @@ function InitButtonEdit() {
 
 function EnableButtonEdit(args) {
 	if (args.SelectedItem.Id === undefined) {
-		$("#buttonEdit").attr("href", "/Munins Archiv/pages/" + getChildKontextTypeBezeichnung(_viewModelExplorerKontext.getType()) + "/Form.html");
+		$("#buttonEdit").attr("href", "/munins-archiv/pages/" + getChildKontextTypeBezeichnung(_viewModelExplorerKontext.getType()) + "/Form.html");
 	}
 	else {
-		$("#buttonEdit").attr("href", "/Munins Archiv/pages/" + getChildKontextTypeBezeichnung(_viewModelExplorerKontext.getType()) + "/Form.html?Id=" + args.SelectedItem.Id);
+		$("#buttonEdit").attr("href", "/munins-archiv/pages/" + getChildKontextTypeBezeichnung(_viewModelExplorerKontext.getType()) + "/Form.html?Id=" + args.SelectedItem.Id);
 	}
 
 	$("#buttonEdit").removeClass("disabled");
@@ -222,10 +222,10 @@ function EnableButtonOpenParent(parent)
 	}
 
 	if (parent.Id === undefined) {
-		$("#buttonOpenParent").attr("href", "/Munins Archiv/pages/Kontext/Explorer.html");
+		$("#buttonOpenParent").attr("href", "/munins-archiv/pages/Kontext/Explorer.html");
 	}
 	else {
-		$("#buttonOpenParent").attr("href", "/Munins Archiv/pages/Kontext/Explorer.html?Id=" + parent.Id);
+		$("#buttonOpenParent").attr("href", "/munins-archiv/pages/Kontext/Explorer.html?Id=" + parent.Id);
 	}
 
 	$("#buttonOpenParent").removeClass("disabled");
@@ -256,7 +256,7 @@ function EnableButtonOpenAbstractRoot(parent)
 		return;
 	}
 
-	$("#buttonOpenAbstractRoot").attr("href", "/Munins Archiv/pages/Kontext/Explorer.html");
+	$("#buttonOpenAbstractRoot").attr("href", "/munins-archiv/pages/Kontext/Explorer.html");
 	$("#buttonOpenAbstractRoot").removeClass("disabled");
 	$("#buttonOpenAbstractRoot").prop("disabled", false);
 }
@@ -271,7 +271,7 @@ function DisableButtonOpenAbstractRoot()
 
 //#region open map
 function InitButtonToMap() {
-	$("#buttonToMap").attr("href", "/Munins Archiv/pages/Fundstelle/Map.html", "_self");
+	$("#buttonToMap").attr("href", "/munins-archiv/pages/Fundstelle/Map.html", "_self");
 }
 //#endregon
 //#endregion
@@ -360,7 +360,7 @@ function InitGrid()
 			console.debug("clicked item", args.item);
 			markSelectedChildItem(this.paging ? args.itemIndex % this.pageSize : args.itemIndex);
 			console.warn("view model will not be informed about double clicked grid item");
-			window.open("/Munins Archiv/pages/Kontext/Explorer.html?Id=" + args.item.Id, "_self");
+			window.open("/munins-archiv/pages/Kontext/Explorer.html?Id=" + args.item.Id, "_self");
 		}
 	});
 }

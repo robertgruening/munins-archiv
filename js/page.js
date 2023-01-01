@@ -72,7 +72,7 @@ function openFormNewElement()
 }
 
 function getMuninsArchivBaseUrl() {
-	return "https://127.0.0.1/Munins Archiv";
+	return "https://127.0.0.1:9111/munins-archiv";
 }
 
 function getWebdavFundImageBaseUrl() {

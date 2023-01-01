@@ -384,7 +384,7 @@ function refreshMapMarkerStatusIcon()
 	
 	var iconFile = _isGeoPointInEditMode ? "marker-icon.png" : "marker-icon__disabled.png"
 	var icon = L.icon({
-		iconUrl : "/Munins Archiv/images/map/" + iconFile,
+		iconUrl : "/munins-archiv/images/map/" + iconFile,
 		iconSize: [25, 41],
 		iconAnchor: [13, 41],
 		popupAnchor: [0, -41]
@@ -629,10 +629,10 @@ function EnableButtonToOverview(parent) {
 		parent === null ||
 		parent.Id === undefined)
 	{
-		$("#buttonToOverview").attr("href", "/Munins Archiv/pages/Kontext/Explorer.html", "_self");
+		$("#buttonToOverview").attr("href", "/munins-archiv/pages/Kontext/Explorer.html", "_self");
 	}
 	else {
-		$("#buttonToOverview").attr("href", "/Munins Archiv/pages/Kontext/Explorer.html?Id=" + parent.Id, "_self");
+		$("#buttonToOverview").attr("href", "/munins-archiv/pages/Kontext/Explorer.html?Id=" + parent.Id, "_self");
 	}
 
 	$("#buttonToOverview").removeClass("disabled");
@@ -648,7 +648,7 @@ function DisableButtonToOverview() {
 
 //#region open map
 function InitButtonToMap() {
-	$("#buttonToMap").attr("href", "/Munins Archiv/pages/Fundstelle/Map.html", "_self");
+	$("#buttonToMap").attr("href", "/munins-archiv/pages/Fundstelle/Map.html", "_self");
 }
 //#endregon
 //#endregion

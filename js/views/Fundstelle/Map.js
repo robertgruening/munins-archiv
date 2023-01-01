@@ -49,14 +49,14 @@ function setGeoPointMarkers(children) {
 			countOfChildrenWithGeoPoint++;
 
 			var icon = L.icon({
-				iconUrl : "/Munins Archiv/images/map/marker-icon.png",
+				iconUrl : "/munins-archiv/images/map/marker-icon.png",
 				iconSize: [25, 41],
     			iconAnchor: [13, 41],
 				popupAnchor: [0, -41]
 			});
 			
 			var marker = L.marker([children[i].GeoPoint.Latitude, children[i].GeoPoint.Longitude]);
-			marker.bindPopup("Fundstelle: <a href='/Munins Archiv/pages/Fundstelle/Form.html?Id=" + children[i].Id + "' target=_blank>" + children[i].Bezeichnung + "</a>");
+			marker.bindPopup("Fundstelle: <a href='/munins-archiv/pages/Fundstelle/Form.html?Id=" + children[i].Id + "' target=_blank>" + children[i].Bezeichnung + "</a>");
 			marker.title = "Fundstelle: " + children[i].Bezeichnung;
 			marker.alt = "Fundstelle: " + children[i].Bezeichnung;
 			marker.setIcon(icon);

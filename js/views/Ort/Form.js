@@ -413,10 +413,10 @@ function EnableButtonToOverview(parent) {
 		parent === null ||
 		parent.Id === undefined) {
 
-			$("#buttonToOverview").attr("href", "/Munins Archiv/pages/Ort/Explorer.html", "_self");
+			$("#buttonToOverview").attr("href", "/munins-archiv/pages/Ort/Explorer.html", "_self");
 		}
 		else {
-			$("#buttonToOverview").attr("href", "/Munins Archiv/pages/Ort/Explorer.html?Id=" + parent.Id, "_self");
+			$("#buttonToOverview").attr("href", "/munins-archiv/pages/Ort/Explorer.html?Id=" + parent.Id, "_self");
 		}
 
 		$("#buttonToOverview").removeClass("disabled");

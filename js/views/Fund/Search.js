@@ -46,11 +46,11 @@ function RegisterToViewModel() {
 //#region new
 function InitButtonNew() {
 	EnableButtonNew();
-	$("#buttonNew").attr("href", "/Munins Archiv/pages/Fund/Form.html");
+	$("#buttonNew").attr("href", "/munins-archiv/pages/Fund/Form.html");
 }
 
 function EnableButtonNew() {
-	$("#buttonNew").attr("href", "/Munins Archiv/pages/Fund/Form.html");
+	$("#buttonNew").attr("href", "/munins-archiv/pages/Fund/Form.html");
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
 }
@@ -473,7 +473,7 @@ LinkToFundFormField.prototype = new jsGrid.Field({
 	itemTemplate: function(value) {
 		var icon = $("<i>").addClass("fas fa-external-link-alt");
 		var link = $("<a>").append(icon);
-		$(link).attr("href", "/Munins Archiv/pages/Fund/Form.html?Id=" + value);
+		$(link).attr("href", "/munins-archiv/pages/Fund/Form.html?Id=" + value);
 		$(link).attr("target", "_blank");
 		$(link).attr("title", "Fundformular öffnen");
 		return link;
@@ -575,7 +575,7 @@ function InitGrid()
 			console.info("row double clicked");
 			console.debug("selected grid item", args.item);
 
-			window.open("/Munins Archiv/pages/Fund/Form.html?Id=" + args.item.Id, "_self");
+			window.open("/munins-archiv/pages/Fund/Form.html?Id=" + args.item.Id, "_self");
 		}
 	});
 }
@@ -607,12 +607,12 @@ function UpdateGridData(funde) {
 
 		if (copy.Ablage != null)
 		{
-			copy.AblageLinkedPath = "<a href='/Munins Archiv/pages/Ablage/Form.html?Id=" + copy.Ablage.Id + "' target='_self'>" + copy.Ablage.Path + "</a>";
+			copy.AblageLinkedPath = "<a href='/munins-archiv/pages/Ablage/Form.html?Id=" + copy.Ablage.Id + "' target='_self'>" + copy.Ablage.Path + "</a>";
 		}
 
 		if (copy.Kontext != null)
 		{
-			copy.KontextLinkedPath = "<a href='/Munins Archiv/pages/" + copy.Kontext.Type.Bezeichnung + "/Form.html?Id=" + copy.Kontext.Id + "' target='_self'>" + copy.Kontext.Path + "</a>";
+			copy.KontextLinkedPath = "<a href='/munins-archiv/pages/" + copy.Kontext.Type.Bezeichnung + "/Form.html?Id=" + copy.Kontext.Id + "' target='_self'>" + copy.Kontext.Path + "</a>";
 		}
 
 		entries.push(copy);
