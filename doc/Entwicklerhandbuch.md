@@ -60,8 +60,8 @@ Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [
 1. git-Repository einrichten
 	```
 	cd /var/www/html/
-	git clone https://github.com/robertgruening/Munins-Archiv.git
-	mv "/var/www/html/Munins-Archiv/" "/var/www/html/Munins Archiv/"
+	git clone https://github.com/robertgruening/munins-archiv.git
+	mv "/var/www/html/Munins-Archiv/" "/var/www/html/munins-archiv/"
 	```
 1. URL-Weiterleitung einrichten
 	```
@@ -122,7 +122,7 @@ Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [
 	1. Kacheln auswählen
 	1. Skript anpassen
 		```
-		cd "/var/www/html/Munins Archiv/tools/"
+		cd "/var/www/html/munins-archiv/tools/"
 		nano download-map-tiles.py
 		```		
 	1. minimale und maximale X- und Y-Werte entsprechend unter Berücksichtigung der Zoomstufe eintragen
@@ -133,7 +133,17 @@ Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [
 
 #### 1.2.3. Webdav
 
-https://www.digitalocean.com/community/tutorials/how-to-configure-webdav-access-with-apache-on-ubuntu-18-04
+_Munins Archiv_ verwendet das HTTP-Webdav-Protokoll,
+um Fotos von Funden an einen Dateiserver zu übermitteln
+(POST) und um diese anzuzeigen (GET).
+
+Beispiele für Webdav-Implementierungen sind:
+
+- Apache mit Webdav-Modul
+- NextCloud
+
+Die nachfolgende Anleitung beschreibt die Installation
+des Webdav-Moduls von Apache [Quelle](https://www.digitalocean.com/community/tutorials/how-to-configure-webdav-access-with-apache-on-ubuntu-18-04)
 
 1. webdav-Modul aktivieren
 	```
@@ -166,14 +176,18 @@ https://www.digitalocean.com/community/tutorials/how-to-configure-webdav-access-
 
 ## 2. Verzeichnisstruktur
 
+* **/api** - Webservice.
+* **/css** - CSS der Webseite (Client-Anwendung).
 * **/db** - Die Skripte zum Erstellen und Befüllen der Datenbank befinden sich im Verzeichnis "db" (database -> Datenbank).  
 * **/doc** - Die Dokumentation zum Projekt, inklusive der Handbücher, befindet sich im Verzeichnis "doc" (documents -> Dokumente).
+* **/images** - Bilder und Grafiken der Webseite (Client-Anwendung).
+* **/js** - JavaScript der Webseite (Client-Anwendung).
+* **/pages** - HTML der Webseite (Client-Anwendung).
 * **/pkg** - Programmbibliotheken und -erweiterungen von Drittanbietern sind in "pkg" (packages -> Pakete) gespeichert.
-* **/prototypes** - Prozess-, Architektur- und Designstudien befinden sich in "prototypes" (prototypes -> Prototypen).
-* **/src** - Der Quellcode befindet sich unter "src" (sources -> Quellcode). Als Sprachen kommen hier HTML, JavaScript und PHP zum Einsatz.
 * **/tools** - Die Werkzeuge der Anwendung, z. B. Python3-Skript zum Herunterladen von Kartenkacheln.
 * **/tst** - Die automatisierten Tests für die Schichten der Serverseite befinden sich im Verzeichnis "tst" (test -> Test).
 * **/upgr** - Die Skripte zum Aktualisieren der Anwendung auf die neueste Version befinden sich unter "upgr" (upgrade -> Auktualisierung).
+* **/webfonts** - Schriftarten für die die Icons der Webseite (Client-Anwendung).
 
 ## 3. Verwendete Pakete
 

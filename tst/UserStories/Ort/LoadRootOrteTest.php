@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-require_once(__DIR__."/../../../src/UserStories/Ort/LoadRootOrte.php");
+require_once(__DIR__."/../../../UserStories/Ort/LoadRootOrte.php");
 
 final class LoadRootOrteTest extends TestCase
 {

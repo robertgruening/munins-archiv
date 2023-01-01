@@ -1,0 +1,344 @@
+[
+	{
+		
+		"Title" : "Home",
+		"Icon" : "fa-home",
+		"URL" : "/munins-archiv/pages/administration/Home.html",
+		"PageName" : "Home"
+	},
+	{
+		"Title" : "Kontexte",
+		"Icon" : "fa-flag",
+		"URL" : "/munins-archiv/pages/Kontext/Explorer.html",
+		"Children" :
+		[
+			{
+				"Title" : "Kontexte durchsuchen",
+				"URL" : "/munins-archiv/pages/Kontext/Explorer.html",
+				"PageName" : "KontextExplorer"
+			},
+			{
+				"Title" : "Fundstellenkarte",
+				"URL" : "/munins-archiv/pages/Fundstelle/Map.html",
+				"PageName" : "FundstelleMap"
+			},
+			{
+				"Title" : "Fundstelle anlegen",
+				"URL" : "/munins-archiv/pages/Fundstelle/Form.html",
+				"PageName" : "FundstelleFormNew",
+				"Visible": false
+			},
+			{
+				"Title" : "Fundstelle bearbeiten",
+				"URL" : "/munins-archiv/pages/Fundstelle/Form.html",
+				"PageName" : "FundstelleFormEdit",
+				"Visible": false
+			},
+			{
+				"Title" : "Begehungsfläche anlegen",
+				"URL" : "/munins-archiv/pages/Begehungsflaeche/Form.html",
+				"PageName" : "BegehungsflaecheFormNew",
+				"Visible": false
+			},
+			{
+				"Title" : "Begehungsfläche bearbeiten",
+				"URL" : "/munins-archiv/pages/Begehungsflaeche/Form.html",
+				"PageName" : "BegehungsflaecheFormEdit",
+				"Visible": false
+			},
+			{
+				"Title" : "Begehung anlegen",
+				"URL" : "/munins-archiv/pages/Begehung/Form.html",
+				"PageName" : "BegehungFormNew",
+				"Visible": false
+			},
+			{
+				"Title" : "Begehung bearbeiten",
+				"URL" : "/munins-archiv/pages/Begehung/Form.html",
+				"PageName" : "BegehungFormEdit",
+				"Visible": false
+			}
+		]
+	},
+	{
+		"Title" : "Orte",
+		"Icon" : "fa-map-marker",
+		"URL" : "/munins-archiv/pages/Ort/Explorer.html",
+		"Children" :
+		[
+			{
+				"Title" : "Orte durchsuchen",
+				"URL" : "/munins-archiv/pages/Ort/Explorer.html",
+				"PageName" : "OrtExplorer"
+			},
+			{
+				"Title" : "Ort anlegen",
+				"URL" : "/munins-archiv/pages/Ort/Form.html",
+				"PageName" : "OrtFormNew",
+				"Visible" : false
+			},
+			{
+				"Title" : "Ort bearbeiten",
+				"URL" : "/munins-archiv/pages/Ort/Form.html",
+				"PageName" : "OrtFormEdit",
+				"Visible" : false
+			},
+			{
+				"Title" : "Gebietskörperschaften verwalten",
+				"URL" : "/munins-archiv/pages/Ort/Gebietskoerperschaft/Form.html",
+				"Enabled" : false
+			},
+			{
+				"Title" : "Kartasterdaten verwalten",
+				"URL" : "/munins-archiv/pages/Ort/Fundstelle/Form.html",
+				"Enabled" : false
+			},
+			{
+				"Title" : "Flurnamen verwalten",
+				"URL" : "/munins-archiv/pages/Ort/Flurname/Form.html",
+				"Enabled" : false
+			}
+		]
+	},
+	{
+		"Title" : "Ablagen",
+		"Icon" : "fa-box",
+		"URL" : "/munins-archiv/pages/Ablage/Explorer.html",
+		"Children" :
+		[
+			{
+				"Title" : "Ablagen durchsuchen",
+				"URL" : "/munins-archiv/pages/Ablage/Explorer.html",
+				"PageName" : "AblageExplorer",
+				"visible" : false
+			},
+			{
+				"Title" : "Ablage scannen",
+				"URL" : "/munins-archiv/pages/Ablage/Scan.html",
+				"PageName" : "AblageScan",
+				"visible" : false
+			},
+			{
+				"Title" : "Ablagenschilder",
+				"URL" : "/munins-archiv/pages/Ablage/PrintLabels.html",
+				"PageName" : "AblagePrintLabels",
+				"visible" : false
+			},
+			{
+				"Title" : "Ablageschild",
+				"URL" : "/munins-archiv/pages/Ablage/PrintLabel.html",
+				"PageName" : "AblagePrintLabel",
+				"visible" : false
+			},
+			{
+				"Title" : "Ablage anlegen",
+				"URL" : "/munins-archiv/pages/Ablage/Form.html",
+				"PageName" : "AblageFormNew",
+				"Visible" : false
+			},
+			{
+				"Title" : "Ablage bearbeiten",
+				"URL" : "/munins-archiv/pages/Ablage/Form.html",
+				"PageName" : "AblageFormEdit",
+				"Visible" : false
+			}
+		]
+	},
+	{
+		"Title" : "Funde",
+		"Icon" : "fa-puzzle-piece",
+		"URL" : "/munins-archiv/pages/Fund/Search.html",
+		"Children" :
+		[
+			{
+				"Title" : "Fund anlegen",
+				"URL" : "/munins-archiv/pages/Fund/Form.html",
+				"PageName" : "FundFormNew",
+				"Visible" : false
+			},
+			{
+				"Title" : "Fund bearbeiten",
+				"URL" : "/munins-archiv/pages/Fund/Form.html",
+				"PageName" : "FundFormEdit",
+				"Visible" : false
+			},
+			{
+				"Title" : "Funde suchen",
+				"URL" : "/munins-archiv/pages/Fund/Search.html",
+				"PageName" : "FundSearch",
+				"Enabled" : true,
+				"Visible" : true
+			}
+		]
+	},
+	{
+		"Title" : "Fundattribute",
+		"Icon" : "fa-tag",
+		"URL" : "/munins-archiv/pages/FundAttribut/Explorer.html",
+		"Children" :
+		[
+			{
+				"Title" : "Fundattribut durchsuchen",
+				"URL" : "/munins-archiv/pages/FundAttribut/Explorer.html",
+				"PageName" : "FundAttributExplorer"
+			},
+			{
+				"Title" : "Fundattribut anlegen",
+				"URL" : "/munins-archiv/pages/FundAttribut/Form.html",
+				"PageName" : "FundAttributFormNew",
+				"Visible" : false
+			},
+			{
+				"Title" : "Fundattribut bearbeiten",
+				"URL" : "/munins-archiv/pages/FundAttribut/Form.html",
+				"PageName" : "FundAttributFormEdit",
+				"Visible" : false
+			}
+		]
+	},
+	{
+		"Title" : "Administration",
+		"Icon" : "fa-cogs",
+		"Children" :
+		[
+			{
+				"Title" : "Typen",
+				"Icon" : "fa-cubes",
+				"Children" :
+				[
+					{
+						"Title" : "Ablagetypen durchsuchen",
+						"URL" : "/munins-archiv/pages/AblageType/List.html",
+						"PageName" : "AblageTypeList"
+					},
+					{
+						"Title" : "Ablage anlegen",
+						"URL" : "/munins-archiv/pages/AblageType/Form.html",
+						"PageName" : "AblageTypeFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Ablage bearbeiten",
+						"URL" : "/munins-archiv/pages/AblageType/Form.html",
+						"PageName" : "AblageTypeFormEdit",
+						"Visible" : false
+					},
+					{
+						"Title" : "Ortstypen durchsuchen",
+						"URL" : "/munins-archiv/pages/OrtType/List.html",
+						"PageName" : "OrtTypeList"
+					},
+					{
+						"Title" : "Ortstyp anlegen",
+						"URL" : "/munins-archiv/pages/OrtType/Form.html",
+						"PageName" : "OrtTypeFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Ortstyp bearbeiten",
+						"URL" : "/munins-archiv/pages/OrtType/Form.html",
+						"PageName" : "OrtTypeFormEdit",
+						"Visible" : false
+					},
+					{
+						"Title" : "Fundattributtypen durchsuchen",
+						"URL" : "/munins-archiv/pages/FundAttributType/List.html",
+						"PageName" : "FundAttributTypeList"
+					},
+					{
+						"Title" : "Fundattributtyp anlegen",
+						"URL" : "/munins-archiv/pages/FundAttributType/Form.html",
+						"PageName" : "FundAttributTypeFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Fundattributtyp bearbeiten",
+						"URL" : "/munins-archiv/pages/FundAttributType/Form.html",
+						"PageName" : "FundAttributTypeFormEdit",
+						"Visible" : false
+					}
+				]
+			},
+			{
+				"Title" : "LfD-Nummern",
+				"Icon" : "fa-hashtag",
+				"Children" :
+				[
+					{
+						"Title" : "LfD-Nummern durchsuchen",
+						"URL" : "/munins-archiv/pages/LfdNummer/List.html",
+						"PageName" : "LfdNummerList"
+					},
+					{
+						"Title" : "LfD-Nummer anlegen",
+						"URL" : "/munins-archiv/pages/LfdNummer/Form.html",
+						"PageName" : "LfdNummerFormNew"
+					},
+					{
+						"Title" : "LfD-Nummer bearbeiten",
+						"URL" : "/munins-archiv/pages/LfdNummer/Form.html",
+						"PageName" : "LfdNummerFormEdit",
+						"Visible" : false
+					}
+				]
+			},
+			{
+				"Title" : "Organisation",
+				"Icon" : "fa-users",
+				"Children" :
+				[
+					{
+						"Title" : "Organisationsprofil bearbeiten",
+						"URL" : "/munins-archiv/pages/Organisation/Profile.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Mitglieder verwalten",
+						"URL" : "/munins-archiv/pages/Member/Form.html",
+						"Enabled" : false
+					}
+				],
+				"Visible" : false
+			},
+			{
+				"Title" : "Anwendung",
+				"Icon" : "fa-cogs",
+				"Children" :
+				[
+					{
+						"Title" : "Sicherung erstellen",
+						"Icon" : "fa-hdd",
+						"Action" : "Backup();",
+						"Enabled" : false,
+						"Visible" : false
+					},
+					{
+						"Title" : "Server herunterfahren",
+						"Icon" : "fa-power-off",
+						"Action" : "Shutdown();",
+						"Enabled" : false,
+						"Visible" : false
+					},
+					{
+						"Title" : "Log einsehen",
+						"Icon" : "fa-file-alt",
+						"URL" : "/munins-archiv/api/Logs/Log.html",
+						"Enabled" : true,
+						"Target" : "_blank"
+					},
+					{
+						"Title" : "Version 1.1",
+						"Enabled" : false
+					}
+				]
+			}
+		]
+	},
+	{
+		"Title" : "Hilfe",
+		"Icon" : "fa-info-circle",
+		"URL" : "/munins-archiv/doc/Benutzerhandbuch.pdf",
+		"Enabled" : false,
+		"Target" : "_blank"
+	}
+]

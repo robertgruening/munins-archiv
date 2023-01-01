@@ -122,7 +122,7 @@ Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [
 	1. Kacheln auswählen
 	1. Skript anpassen
 		```
-		cd "/var/www/html/Munins Archiv/tools/"
+		cd "/var/www/html/munins-archiv/tools/"
 		nano download-map-tiles.py
 		```		
 	1. minimale und maximale X- und Y-Werte entsprechend unter Berücksichtigung der Zoomstufe eintragen
