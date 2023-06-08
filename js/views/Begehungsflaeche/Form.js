@@ -482,7 +482,7 @@ function EnableButtonNew(parent) {
 		return;
 	}
 
-	$("#buttonNew").attr("href", "/munins-archiv/pages/Begehungsflaeche/Form.html?Parent_Id=" + parent.Id);
+	$("#buttonNew").attr("href", "/pages/Begehungsflaeche/Form.html?Parent_Id=" + parent.Id);
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
 }
@@ -601,10 +601,10 @@ function EnableButtonToOverview(parent) {
 		parent === null ||
 		parent.Id === undefined) {
 
-			$("#buttonToOverview").attr("href", "/munins-archiv/pages/Kontext/Explorer.html", "_self");
+			$("#buttonToOverview").attr("href", "/pages/Kontext/Explorer.html", "_self");
 		}
 		else {
-			$("#buttonToOverview").attr("href", "/munins-archiv/pages/Kontext/Explorer.html?Id=" + parent.Id, "_self");
+			$("#buttonToOverview").attr("href", "/pages/Kontext/Explorer.html?Id=" + parent.Id, "_self");
 		}
 
 		$("#buttonToOverview").removeClass("disabled");

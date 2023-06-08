@@ -5,7 +5,7 @@ import os
 def download_tiles(zoom, xmin, ymin, xmax, ymax):
 	serviceUrl = "http://!h.tile.openstreetmap.org/!z/!x/!y.png"
 	attribution = "Map data (c) OpenStreetMap"
-	downloadRootPath = "/var/www/html/openstreetmap/mapTiles/"
+	downloadRootPath = "/home/renton/projects/openstreetmap/mapTiles/"
 	numberOfTiles = (xmax - xmin + 1) * (ymax - ymin + 1)
 	counterOfTiles = 0
 
@@ -81,5 +81,5 @@ def download_tiles(zoom, xmin, ymin, xmax, ymax):
 #download_tiles(7, 67, 43, 67, 43)
 
 # Deutschland
-download_tiles(6, 33, 20, 34, 22)
-download_tiles(5, 16, 10, 17, 11)
+#download_tiles(6, 33, 20, 34, 22)
+#download_tiles(5, 16, 10, 17, 11)

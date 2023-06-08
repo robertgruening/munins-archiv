@@ -22,7 +22,7 @@ function InitMap()
 	_map.options.minZoom = 5;
 	_map.options.maxZoom = 17;
 	L.control.scale().addTo(_map);
-	L.tileLayer("/openstreetmap/mapTiles/{z}/{x}/{y}.png").addTo(_map);
+	L.tileLayer("https://openstreetmap.intranet.aaf:443/mapTiles/{z}/{x}/{y}.png").addTo(_map);
 
 	_viewModelExplorerKontext.register("children", new GuiClient(setGeoPointMarkers, showErrorMessages));
 }
@@ -49,14 +49,14 @@ function setGeoPointMarkers(children) {
 			countOfChildrenWithGeoPoint++;
 
 			var icon = L.icon({
-				iconUrl : "/munins-archiv/images/map/marker-icon.png",
+				iconUrl : "/images/map/marker-icon.png",
 				iconSize: [25, 41],
     			iconAnchor: [13, 41],
 				popupAnchor: [0, -41]
 			});
 			
 			var marker = L.marker([children[i].GeoPoint.Latitude, children[i].GeoPoint.Longitude]);
-			marker.bindPopup("Fundstelle: <a href='/munins-archiv/pages/Fundstelle/Form.html?Id=" + children[i].Id + "' target=_blank>" + children[i].Bezeichnung + "</a>");
+			marker.bindPopup("Fundstelle: <a href='/pages/Fundstelle/Form.html?Id=" + children[i].Id + "' target=_blank>" + children[i].Bezeichnung + "</a>");
 			marker.title = "Fundstelle: " + children[i].Bezeichnung;
 			marker.alt = "Fundstelle: " + children[i].Bezeichnung;
 			marker.setIcon(icon);

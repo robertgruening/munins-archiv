@@ -243,7 +243,7 @@ function EnableButtonToList() {
 	$("#buttonToList").off("click");
 	$("#buttonToList").click( function() {
 		console.log("button 'to list' clicked");
-		window.open("/munins-archiv/pages/FundAttributType/List.html", "_self");
+		window.open("/pages/FundAttributType/List.html", "_self");
 	});
 	$("#buttonToList").removeClass("disabled");
 	$("#buttonToList").prop("disabled", false);

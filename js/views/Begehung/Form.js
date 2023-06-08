@@ -393,7 +393,7 @@ LinkToFundFormField.prototype = new jsGrid.Field({
 	itemTemplate: function(value) {
 		var icon = $("<i>").addClass("fas fa-external-link-alt");
 		var link = $("<a>").append(icon);
-		$(link).attr("href", "/munins-archiv/pages/Fund/Form.html?Id=" + value);
+		$(link).attr("href", "/pages/Fund/Form.html?Id=" + value);
 		$(link).attr("target", "_blank");
 		$(link).attr("title", "Fundformular öffnen");
 		return link;
@@ -481,7 +481,7 @@ function InitGridFunde()
 			console.info("row double clicked");
 			console.debug("selected grid item", args.item);
 
-			window.open("/munins-archiv/pages/Fund/Form.html?Id=" + args.item.Id, "_self");
+			window.open("/pages/Fund/Form.html?Id=" + args.item.Id, "_self");
 		}
 	});
 }
@@ -540,7 +540,7 @@ function setAblagen(ablagen) {
 		var li = $("<li>");
 		
 		var linkAblage = $("<a>");
-		linkAblage.attr("href", "/munins-archiv/pages/Ablage/Form.html?Id=" + ablage.Id);
+		linkAblage.attr("href", "/pages/Ablage/Form.html?Id=" + ablage.Id);
 		linkAblage.text(ablage.Path);
 		li.append(linkAblage);
 
@@ -610,7 +610,7 @@ function EnableButtonNew(parent) {
 		return;
 	}
 
-	$("#buttonNew").attr("href", "/munins-archiv/pages/Begehung/Form.html?Parent_Id=" + parent.Id);
+	$("#buttonNew").attr("href", "/pages/Begehung/Form.html?Parent_Id=" + parent.Id);
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
 }
@@ -728,10 +728,10 @@ function EnableButtonToOverview(parent) {
 	if (parent === undefined ||
 		parent === null ||
 		parent.Id === undefined) {
-			$("#buttonToOverview").attr("href", "/munins-archiv/pages/Kontext/Explorer.html", "_self");
+			$("#buttonToOverview").attr("href", "/pages/Kontext/Explorer.html", "_self");
 		}
 		else {
-			$("#buttonToOverview").attr("href", "/munins-archiv/pages/Kontext/Explorer.html?Id=" + parent.Id, "_self");
+			$("#buttonToOverview").attr("href", "/pages/Kontext/Explorer.html?Id=" + parent.Id, "_self");
 		}
 
 		$("#buttonToOverview").removeClass("disabled");

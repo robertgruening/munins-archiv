@@ -185,7 +185,7 @@ function EnableButtonToSearch() {
 	$("#buttonToSearch").off("click");
 	$("#buttonToSearch").click( function() {
         console.log("button 'to search' clicked");
-		window.open("/munins-archiv/pages/Fund/Search.html", "_self");
+		window.open("/pages/Fund/Search.html", "_self");
 	});
 	$("#buttonToSearch").removeClass("disabled");
 	$("#buttonToSearch").prop("disabled", false);

@@ -72,13 +72,13 @@ function openFormNewElement()
 }
 
 function getMuninsArchivBaseUrl() {
-	return "https://127.0.0.1:9111/munins-archiv";
+	return "https://munins-archiv.intranet.aaf:443";
 }
 
 function getWebdavFundImageBaseUrl() {
-    return "https://aaf:gwf@192.168.0.220:9111/remote.php/dav/files/aaf/AAF/Fundstellen/Akten";
+    return "https://aaf:gwf@nextcloud.intranet.aaf:443/remote.php/dav/files/aaf/AAF/Fundstellen/Akten";
 }
 
 function getFundImageBaseUrl() {
-    return "https://192.168.0.220:9111/munins-archiv-image-service-php/image.php";
+    return "https://image-service.munins-archiv.intranet.aaf:443/image.php";
 }

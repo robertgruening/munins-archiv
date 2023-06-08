@@ -148,7 +148,7 @@ function UpdateGridData(lfdNummern) {
 }
 
 function setIdToEditLink(id) {
-    $("#buttonEdit").attr("href", "/munins-archiv/pages/LfdNummer/Form.html?Id=" + id);
+    $("#buttonEdit").attr("href", "/pages/LfdNummer/Form.html?Id=" + id);
 }
 
 function showMessageAllLoaded(elements) {
@@ -177,7 +177,7 @@ function EnableButtonNew() {
 	$("#buttonNew").off("click");
     $("#buttonNew").click(function () {
         console.log("button 'new' clicked");
-        window.open("/munins-archiv/pages/LfdNummer/Form.html", "_self");
+        window.open("/pages/LfdNummer/Form.html", "_self");
     });
 	$("#buttonNew").removeClass("disabled");
 	$("#buttonNew").prop("disabled", false);
@@ -199,7 +199,7 @@ function EnableButtonEdit() {
 	$("#buttonEdit").off("click");
 	$("#buttonEdit").click(function () {
 		console.log("button 'edit' clicked");
-		window.open("/munins-archiv/pages/LfdNummer/Form.html?Id=" + _viewModelListLfdNummer.getSelectedItem().Id, "_self");
+		window.open("/pages/LfdNummer/Form.html?Id=" + _viewModelListLfdNummer.getSelectedItem().Id, "_self");
 	});
 	$("#buttonEdit").removeClass("disabled");
 	$("#buttonEdit").prop("disabled", false);
