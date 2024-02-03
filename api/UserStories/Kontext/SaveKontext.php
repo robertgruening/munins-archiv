@@ -91,6 +91,7 @@ class SaveKontext extends UserStory
         $kontextFromDatabase = $loadKontext->getKontext();
         $kontextFromDatabase = $kontextFactory->updateParent($kontextFromDatabase, $this->getKontext()->getParent());
         $kontextFromDatabase = $kontextFactory->synchroniseChildren($kontextFromDatabase, $this->getKontext()->getChildren());
+        $kontextFromDatabase = $kontextFactory->updatePathRecursive($kontextFromDatabase);
         $kontextFromDatabase = $kontextFactory->synchroniseLfdNummern($kontextFromDatabase, $this->getKontext()->getLfdNummern());
 
         if ($kontextFromDatabase instanceof iOrtContainer)
