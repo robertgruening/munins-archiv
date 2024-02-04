@@ -70,6 +70,12 @@ var ViewModelFormAblage = function (webServiceClient) {
 		this._update("dataChanged");
 		this._update("parent", this._model.Parent);
 	};
+
+	this.removeParent = function () {
+		this._model.Parent = null;
+		this._update("dataChanged");
+		this._update("parent", this._model.Parent);
+	};
 	//#endregion
 
 	//#region Children

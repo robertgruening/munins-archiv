@@ -237,14 +237,38 @@ function SetTextBoxSearchParentAutocomplete(data) {
 }
 
 function setParent(parent) {
+	$("#divParent div #divList").empty();
+	$("#divParent div #divList").append($("<ul>"));
+
 	if (parent == null) {
-		$("#linkSelectedParent").text("");
-		$("#linkSelectedParent").attr("href", "");
+		return;
 	}
-	else {
-		$("#linkSelectedParent").text(parent.Path);
-		$("#linkSelectedParent").attr("href", "../../pages/FundAttribut/Form.html?Id=" + parent.Id);
-	}
+
+	var li = $("<li>");
+
+	var linkButtonDelete = $("<a>");
+	linkButtonDelete.attr("title", "löschen");
+	linkButtonDelete.attr("class", "ui-button risky-action");
+	linkButtonDelete.attr("href", "javascript:removeParent();");
+
+	var icon = $("<i>");
+	icon.attr("class", "fas fa-trash-alt");
+	linkButtonDelete.append(icon);
+	li.append(linkButtonDelete);
+
+	li.append("&nbsp;");
+
+	var linkParent = $("<a>");
+	linkParent.attr("title", "gehe zu");
+	linkParent.attr("href", "../../pages/FundAttribut/Form.html?Id=" + parent.Id);
+	linkParent.text(parent.Path);
+	li.append(linkParent);
+
+	$("#divParent div #divList ul").append(li);
+}
+
+function removeParent() {
+	_viewModelFormFundAttribut.removeParent();
 }
 
 function showMessagesParent(messages) {
