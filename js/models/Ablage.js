@@ -6,4 +6,5 @@ function Ablage()
     this.Path = "";
 	this.Children = new Array();
 	this.Funde = new Array();
+    this.Kontexte = new Array();
 }
