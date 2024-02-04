@@ -82,21 +82,6 @@ class SaveAblage extends UserStory
             $this->addMessages($loadAblage->getMessages());
             return false;
         }
-
-        $ablageFromDatabase = $loadAblage->getAblage();
-        $ablageFromDatabase = $ablageFactory->updateParent($ablageFromDatabase, $this->getAblage()->getParent());
-        $ablageFromDatabase = $ablageFactory->synchroniseChildren($ablageFromDatabase, $this->getAblage()->getChildren());
-        $ablageFactory->updatePathRecursive($ablageFromDatabase);
-        $ablageFromDatabase = $ablageFactory->synchroniseFunde($ablageFromDatabase, $this->getAblage()->getFunde());
-
-        $loadAblage = new LoadAblage();
-        $loadAblage->setId($savedAblage->getId());
-        
-        if (!$loadAblage->run())
-        {
-            $this->addMessages($loadAblage->getMessages());
-            return false;
-        }
         
         $this->setAblage($loadAblage->getAblage());
 
