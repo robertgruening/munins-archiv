@@ -258,7 +258,6 @@ class AblageFactory extends Factory implements iTreeFactory
             // Insert
 			$element = parent::save($element);
             $element = $this->updateParent($element, $element->getParent());
-            $element = $this->synchroniseFunde($element, $element->getFunde());
 		}
 		else
 		{
@@ -267,8 +266,12 @@ class AblageFactory extends Factory implements iTreeFactory
             $element = $this->synchroniseChildren($element, $element->getChildren());
 			$element = parent::save($element);
             $this->updatePathRecursive($element);
-            $element = $this->synchroniseFunde($element, $element->getFunde());
 		}
+
+        if ($element instanceof iFundContainer)
+        {
+            $element = $this->synchroniseFunde($element, $element->getFunde());
+        }
 
 		return $element;
 	}
