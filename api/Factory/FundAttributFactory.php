@@ -171,11 +171,22 @@ class FundAttributFactory extends Factory implements iTreeFactory
     #region save
 	public function save($element)
 	{
-		$entity = parent::save($element);
+		if ($element->getId() == -1)
+		{
+            // Insert
+			$element = parent::save($element);
+            $element = $this->updateParent($element, $element->getParent());
+		}
+		else
+		{
+            //Update
+            $element = $this->updateParent($element, $element->getParent());
+            $element = $this->synchroniseChildren($element, $element->getChildren());
+			$element = parent::save($element);
+            $this->updatePathRecursive($element);
+		}
 
-		$this->updatePathRecursive($entity);
-
-		return $entity;
+		return $element;
 	}
 
     /**
