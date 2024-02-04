@@ -49,6 +49,7 @@ function loadForm() {
 		console.debug("creation of a new Ablage is requested with parent ID", getUrlParameterValue("Parent_Id"));
 		var parent = new Ablage();
 		parent.Id = getUrlParameterValue("Parent_Id");
+		parent.Path = "[ Pfad der übergeordnete Ablage ]";
 
 		_viewModelFormAblage.setParent(parent);
 		showMessageParentSet();

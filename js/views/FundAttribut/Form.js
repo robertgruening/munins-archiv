@@ -45,6 +45,7 @@ function loadForm() {
 		console.debug("creation of a new Fundattribut is requested with parent ID", getUrlParameterValue("Parent_Id"));
 		var parent = new FundAttribut();
 		parent.Id = getUrlParameterValue("Parent_Id");
+		parent.Path = "[ Pfad der übergeordnete Ablage ]";
 
 		_viewModelFormFundAttribut.setParent(parent);
 		showMessageParentSet();
