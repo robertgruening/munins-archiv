@@ -482,7 +482,7 @@ class TreeFactory implements iTreeFactory, iSqlSearchConditionStringsProvider
 	
 	private function getSQLStatementToUpdatePath(iTreeNode $node)
 	{
-		return "Update ".$this->getModelFactory()->getTableName()."
+		return "UPDATE ".$this->getModelFactory()->getTableName()."
 				SET Path = '".addslashes($this->calculatePath($node))."'
 				WHERE Id = ".$node->getId().";";
 	}

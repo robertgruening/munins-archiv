@@ -1,5 +1,6 @@
 var _viewModelFormFundAttribut = null;
 var _viewModelListFundAttributType = null;
+var _selectedParent = null;
 
 $(document).ready(function () {
 	var viewModelFactory = new ViewModelFactory();
@@ -11,11 +12,14 @@ $(document).ready(function () {
 	InitButtonSave();
 	InitButtonDelete();
 	InitButtonUndo();
+	InitButtonSelectParent();
+	InitTextBoxSearchParent();
 	InitButtonToOverview();
 
 	InitFieldId();
 	InitFieldType();
 	InitFieldBezeichnung();
+	InitFieldParent();
 	InitFieldPath();
 	InitFieldCountOfChildren();
 	InitFieldCountOfFunde();
@@ -41,6 +45,7 @@ function loadForm() {
 		console.debug("creation of a new Fundattribut is requested with parent ID", getUrlParameterValue("Parent_Id"));
 		var parent = new FundAttribut();
 		parent.Id = getUrlParameterValue("Parent_Id");
+		parent.Path = "[ Pfad der übergeordnete Ablage ]";
 
 		_viewModelFormFundAttribut.setParent(parent);
 		showMessageParentSet();
@@ -166,6 +171,109 @@ function setBezeichnung(bezeichnung) {
 
 function showMessagesBezeichnung(messages) {
 	$("#divBezeichnung .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
+//#region Parent
+function InitFieldParent() {
+	_viewModelFormFundAttribut.register("parent", new GuiClient(setParent, showMessagesParent));
+}
+
+function InitButtonSelectParent() {
+	$("#buttonSelectParent").click(function() {
+		if (_selectedParent == null) {
+			return;
+		}
+
+		_viewModelFormFundAttribut.setParent(_selectedParent);
+		$("#textBoxSearchParentByPath").val("");
+	});
+}
+
+function InitTextBoxSearchParent() {
+	$.ajax(
+	{
+		type:"GET",
+		url: "../../api/Services/FundAttribut",
+		dataType: "JSON",
+		success:function(data, textStatus, jqXHR)
+		{
+			SetTextBoxSearchParentAutocomplete(data);
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			console.log("FEHLER: \"../../api/Services/FundAttribut\" konnte nicht geladen werden!");
+		}
+	});
+}
+
+function SetTextBoxSearchParentAutocomplete(data) {
+	var autoCompleteItems = new Array();
+
+	data.forEach(item => {
+		var autoCompleteItem = new Object();
+		autoCompleteItem.label = item.Path;
+		autoCompleteItem.value = item;
+		autoCompleteItems.push(autoCompleteItem);
+	});
+
+	$("#textBoxSearchParentByPath").autocomplete({
+		minLength: 0,
+		source: autoCompleteItems,
+		focus: function(event, ui) {
+			$("#textBoxSearchParentByPath").val(ui.item.label);
+			return false;
+		},
+		select: function(event, ui) {
+			$("#textBoxSearchParentByPath").val(ui.item.label);
+			_selectedParent = ui.item.value;
+			return false;
+		}
+	})
+	.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>")
+			.append("<div>" + item.label + "</div>")
+			.appendTo(ul);
+	};
+}
+
+function setParent(parent) {
+	$("#divParent div #divList").empty();
+	$("#divParent div #divList").append($("<ul>"));
+
+	if (parent == null) {
+		return;
+	}
+
+	var li = $("<li>");
+
+	var linkButtonDelete = $("<a>");
+	linkButtonDelete.attr("title", "löschen");
+	linkButtonDelete.attr("class", "ui-button risky-action");
+	linkButtonDelete.attr("href", "javascript:removeParent();");
+
+	var icon = $("<i>");
+	icon.attr("class", "fas fa-trash-alt");
+	linkButtonDelete.append(icon);
+	li.append(linkButtonDelete);
+
+	li.append("&nbsp;");
+
+	var linkParent = $("<a>");
+	linkParent.attr("title", "gehe zu");
+	linkParent.attr("href", "../../pages/FundAttribut/Form.html?Id=" + parent.Id);
+	linkParent.text(parent.Path);
+	li.append(linkParent);
+
+	$("#divParent div #divList ul").append(li);
+}
+
+function removeParent() {
+	_viewModelFormFundAttribut.removeParent();
+}
+
+function showMessagesParent(messages) {
+	$("#divParent .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 

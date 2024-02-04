@@ -88,23 +88,7 @@ class SaveKontext extends UserStory
             return false;
         }
 
-        $kontextFromDatabase = $loadKontext->getKontext();
-        $kontextFromDatabase = $kontextFactory->updateParent($kontextFromDatabase, $this->getKontext()->getParent());
-        $kontextFromDatabase = $kontextFactory->synchroniseChildren($kontextFromDatabase, $this->getKontext()->getChildren());
-        $kontextFromDatabase = $kontextFactory->updatePathRecursive($kontextFromDatabase);
-        $kontextFromDatabase = $kontextFactory->synchroniseLfdNummern($kontextFromDatabase, $this->getKontext()->getLfdNummern());
-
-        if ($kontextFromDatabase instanceof iOrtContainer)
-        {
-            $kontextFromDatabase = $kontextFactory->synchroniseOrte($kontextFromDatabase, $this->getKontext()->getOrte());
-        }
-
-        if ($kontextFromDatabase instanceof iFundContainer)
-        {
-            $kontextFromDatabase = $kontextFactory->synchroniseFunde($kontextFromDatabase, $this->getKontext()->getFunde());
-        }
-
-        $this->setKontext($kontextFromDatabase);
+        $this->setKontext($loadKontext->getKontext());
 
         return true;
     }

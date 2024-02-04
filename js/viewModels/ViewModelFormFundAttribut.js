@@ -64,6 +64,13 @@ var ViewModelFormFundAttribut = function (webServiceClient) {
 	this.setParent = function (parent) {
 		this._model.Parent = parent;
 		this._update("dataChanged");
+		this._update("parent", this._model.Parent);
+	};
+
+	this.removeParent = function () {
+		this._model.Parent = null;
+		this._update("dataChanged");
+		this._update("parent", this._model.Parent);
 	};
 	//#endregion
 
