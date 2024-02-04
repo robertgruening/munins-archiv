@@ -1,5 +1,6 @@
 var _viewModelFormAblage = null;
 var _viewModelListAblageType = null;
+var _selectedParent = null;
 
 $(document).ready(function () {
 	var viewModelFactory = new ViewModelFactory();
@@ -11,12 +12,15 @@ $(document).ready(function () {
 	InitButtonSave();
 	InitButtonDelete();
 	InitButtonUndo();
+	InitButtonSelectParent();
+	InitTextBoxSearchParent();
 	InitButtonPrintLabel();
 	InitButtonToOverview();
 
 	InitFieldId();
 	InitFieldType();
 	InitFieldBezeichnung();
+	InitFieldParent();
 	InitFieldPath();
 	InitFieldCountOfChildren();
 	InitFieldCountOfFunde();
@@ -170,6 +174,85 @@ function setBezeichnung(bezeichnung) {
 
 function showMessagesBezeichnung(messages) {
 	$("#divBezeichnung .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
+//#region Parent
+function InitFieldParent() {
+	_viewModelFormAblage.register("parent", new GuiClient(setParent, showMessagesParent));
+}
+
+function InitButtonSelectParent() {
+	$("#buttonSelectParent").click(function() {
+		if (_selectedParent == null) {
+			return;
+		}
+
+		_viewModelFormAblage.setParent(_selectedParent);
+		$("#textBoxSearchParentByPath").val("");
+	});
+}
+
+function InitTextBoxSearchParent() {
+	$.ajax(
+	{
+		type:"GET",
+		url: "../../api/Services/Ablage",
+		dataType: "JSON",
+		success:function(data, textStatus, jqXHR)
+		{
+			SetTextBoxSearchParentAutocomplete(data);
+		},
+		error:function(jqXHR, textStatus, errorThrown)
+		{
+			console.log("FEHLER: \"../../api/Services/Ablage\" konnte nicht geladen werden!");
+		}
+	});
+}
+
+function SetTextBoxSearchParentAutocomplete(data) {
+	var autoCompleteItems = new Array();
+
+	data.forEach(item => {
+		var autoCompleteItem = new Object();
+		autoCompleteItem.label = item.Path;
+		autoCompleteItem.value = item;
+		autoCompleteItems.push(autoCompleteItem);
+	});
+
+	$("#textBoxSearchParentByPath").autocomplete({
+		minLength: 0,
+		source: autoCompleteItems,
+		focus: function(event, ui) {
+			$("#textBoxSearchParentByPath").val(ui.item.label);
+			return false;
+		},
+		select: function(event, ui) {
+			$("#textBoxSearchParentByPath").val(ui.item.label);
+			_selectedParent = ui.item.value;
+			return false;
+		}
+	})
+	.autocomplete("instance")._renderItem = function(ul, item) {
+		return $("<li>")
+			.append("<div>" + item.label + "</div>")
+			.appendTo(ul);
+	};
+}
+
+function setParent(parent) {
+	if (parent == null) {
+		$("#linkSelectedParent").text("");
+		$("#linkSelectedParent").attr("href", "");
+	}
+	else {
+		$("#linkSelectedParent").text(parent.Path);
+		$("#linkSelectedParent").attr("href", "../../pages/Ablage/Form.html?Id=" + parent.Id);
+	}
+}
+
+function showMessagesParent(messages) {
+	$("#divParent .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 

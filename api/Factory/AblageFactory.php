@@ -253,11 +253,7 @@ class AblageFactory extends Factory implements iTreeFactory
     #region save
 	public function save($element)
 	{
-		$entity = parent::save($element);
-
-		$this->updatePathRecursive($entity);
-
-		return $entity;
+		return parent::save($element);
 	}
 
     /**
@@ -281,8 +277,7 @@ class AblageFactory extends Factory implements iTreeFactory
     {
         return "UPDATE ".$this->getTableName()."
         SET Bezeichnung = '".addslashes($ablage->getBezeichnung())."',
-        Typ_Id = ".$ablage->getType()->getId().",
-		`Path` = '".addslashes($this->calculatePath($ablage))."'
+        Typ_Id = ".$ablage->getType()->getId()."
         WHERE Id = ".$ablage->getId().";";
     }
     #endregion
@@ -447,7 +442,7 @@ class AblageFactory extends Factory implements iTreeFactory
 
 	public function updatePathRecursive(iTreeNode $entity = null)
 	{
-		return $this->getTreeFactory()->updatePathRecursive($entity);
+		$this->getTreeFactory()->updatePathRecursive($entity);
 	}
 	#endregion
 

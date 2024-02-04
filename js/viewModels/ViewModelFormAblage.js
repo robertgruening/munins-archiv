@@ -68,6 +68,7 @@ var ViewModelFormAblage = function (webServiceClient) {
 	this.setParent = function (parent) {
 		this._model.Parent = parent;
 		this._update("dataChanged");
+		this._update("parent", this._model.Parent);
 	};
 	//#endregion
 
