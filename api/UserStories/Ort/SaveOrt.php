@@ -91,11 +91,7 @@ class SaveOrt extends UserStory
             return false;
         }
 
-        $ortFromDatabase = $loadOrt->getOrt();
-        $ortFromDatabase = $ortFactory->updateParent($ortFromDatabase, $this->getOrt()->getParent());
-        $ortFromDatabase = $ortFactory->synchroniseChildren($ortFromDatabase, $this->getOrt()->getChildren());
-        $ortFromDatabase = $ortFactory->updatePathRecursive($ortFromDatabase);
-        $this->setOrt($ortFromDatabase);
+        $this->setOrt($loadOrt->getOrt());
 
         return true;
     }
