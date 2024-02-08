@@ -177,7 +177,7 @@
 		"Children" :
 		[
 			{
-				"Title" : "Fundattribut durchsuchen",
+				"Title" : "Fundattribute durchsuchen",
 				"URL" : "/pages/FundAttribut/Explorer.html",
 				"PageName" : "FundAttributExplorer"
 			},
