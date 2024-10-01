@@ -265,7 +265,7 @@ function CreateTableUser($config)
   					`Id` int(11) NOT NULL AUTO_INCREMENT,
 					`UserName` varchar(20) NOT NULL,
 					`Guid` varchar(36) DEFAULT NULL,
-					`Bookmark` varchar(100) NOT NULL,
+					`Bookmark` varchar(100) NULL,
 					PRIMARY KEY (`Id`),
 					UNIQUE KEY `IndexUserGuid` (`Guid`)
 				);
