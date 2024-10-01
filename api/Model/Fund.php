@@ -139,67 +139,6 @@ class Fund implements iNode
         return false;
     }
     
-	public function getRatings()
-    {
-        return $this->Ratings;
-    }
-    
-    public function setRatings($ratings)
-    {
-	    $this->Ratings = $ratings;
-	    $this->Rating = $this->calculateAverage($this->Ratings);
-    }
-
-    public function getRating()
-    {
-        array_push($this->UserRatings, $userRating);
-    }
-    
-    public function removeUserRating($userRating)
-    {
-        for ($i = 0; $i < count($this->UserRatings); $i++)
-        {
-            if ($this->UserRatings[$i]->getUser()->getId() == $userRating->getUser()->getId())
-            {
-                array_splice($this->UserRatings, $i, 1);
-                break;
-            }
-        }
-    }
-    
-    public function containsUserRating($userRating)
-    {
-        for ($i = 0; $i < count($this->UserRatings); $i++)
-        {
-            if ($this->UserRatings[$i]->getUser()->getId() == $userRating->getUser()->->getId())
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-    
-    public function getFolderName()
-    {
-        return $this->FolderName;
-    }
-    
-    public function setFolderName($folderName)
-    {
-        $this->FolderName = $folderName;
-    }
-    
-    public function getRating()
-    {
-        return $this->Rating;
-    }
-    
-    public function setRating($rating)
-    {
-        $this->Rating = $rating;
-    }
-    
     public function getFileName()
     {
         return $this->FileName;

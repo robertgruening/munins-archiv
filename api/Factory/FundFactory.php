@@ -7,7 +7,6 @@ include_once(__DIR__."/ListFactory.php");
 include_once(__DIR__."/FundAttributFactory.php");
 include_once(__DIR__."/AblageFactory.php");
 include_once(__DIR__."/KontextFactory.php");
-include_once(__DIR__."/UserFactory.php");
 
 class FundFactory extends Factory implements iListFactory
 {
@@ -768,74 +767,5 @@ class FundFactory extends Factory implements iListFactory
         return $this->unlinkObsoleteFundAttribute($fund, array());
     }
     #endregion
-
-        #region User (Funde are bookmarked)
-        public function loadByUserAsBookmarked($user)
-        {
-            $funde = array();
-            $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-
-            if (!$mysqli->connect_errno)
-            {
-                $mysqli->set_charset("utf8");
-                $ergebnis = $mysqli->query($this->getSQLStatementToLoadIdsByUserAsBookmarked($user));
-
-                if (!$mysqli->errno)
-                {
-                    while ($datensatz = $ergebnis->fetch_assoc())
-                    {
-						if ($datensatz["Id"] != null)
-						{
-                        	array_push($funde, $this->loadById(intval($datensatz["Id"])));
-						}
-                    }
-                }
-            }
-
-            $mysqli->close();
-
-            return $funde;
-        }
-
-        protected function getSQLStatementToLoadIdsByUserAsBookmarked($user)
-        {
-            return "SELECT ".$this->getTableName()."_Id AS Id
-            FROM ".$this->getUserFactory()->getTableName()."_Bookmarked".$this->getTableName()."
-            WHERE ".$this->getUserFactory()->getTableName()."_Id = ".$user->getId().";";
-        }
-	#endregion
-
-    #region Ratings
-    protected function loadRatings(iNode $fund)
-    {
-        $ratings = array();
-        $mysqli = new mysqli(MYSQL_HOST, MYSQL_BENUTZER, MYSQL_KENNWORT, MYSQL_DATENBANK);
-
-        if (!$mysqli->connect_errno)
-        {
-            $mysqli->set_charset("utf8");
-            $ergebnis = $mysqli->query($this->getSQLStatementToLoadRatings($fund));
-
-            if (!$mysqli->errno)
-            {
-                while ($datensatz = $ergebnis->fetch_assoc())
-                {
-                    array_push($ratings, intval($datensatz["Rating"]));
-                }
-            }
-        }
-
-        $mysqli->close();
-
-        return $ratings;
-    }
-
-    protected function getSQLStatementToLoadRatingsByFund(iNode $fund)
-    {
-        return "SELECT Rating
-        FROM ".$this->getUserFactory()->getTableName()."_Rated".$this->getTableName()."
-        WHERE ".$this->getFundFactory()->getTableName()."_Id = ".$fund->getId().";";
-    }
-	#endregion
     #endregion
 }

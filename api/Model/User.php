@@ -52,7 +52,7 @@ class User implements iNode, iListNode
 
     public function getGuid()
     {
-	    return $this->euid;
+	    return $this->Guid;
     }
 
     public function setGuid($guid)

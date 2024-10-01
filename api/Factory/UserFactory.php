@@ -1,7 +1,6 @@
 <?php
 include_once(__DIR__."/Factory.php");
 include_once(__DIR__."/../Model/User.php");
-include_once(__DIR__."/../Model/RatedFund.php");
 include_once(__DIR__."/IListFactory.php");
 include_once(__DIR__."/ListFactory.php");
 
@@ -36,6 +35,49 @@ class UserFactory extends Factory implements iListFactory
     }
 
     #region load
+	/**
+	* Returns the SQL SELECT statement to load Id, UserName, Guid and Bookmark as string.
+	*/
+	protected function getSqlStatementToLoad()
+	{		
+        	return "SELECT Id, UserName, `Guid`, Bookmark
+        		    FROM ".$this->getTableName();
+	}
+
+	/**
+	* Returns the SQL statement search conditions as string by the given search conditions.
+	* Search condition keys are: Id, UserName and Guid.
+	*
+	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
+	*/
+	protected function getSqlSearchConditionStrings($searchConditions)
+	{
+		if ($searchConditions == null ||
+			count($searchConditions) == 0)
+		{
+			return array();
+		}
+
+		$sqlSearchConditionStrings = array();
+		
+		if (isset($searchConditions["UserName"]))
+		{
+			array_push($sqlSearchConditionStrings, "UserName = ".$searchConditions["UserName"]);
+		}
+		
+		if (isset($searchConditions["Guid"]))
+		{
+			array_push($sqlSearchConditionStrings, "Guid = '".$searchConditions["Guid"]."'");
+		}
+
+		if ($this->getTreeFactory() instanceof iSqlSearchConditionStringsProvider)
+		{
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getTreeFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
+		}
+		
+		return $sqlSearchConditionStrings;
+	}
+    
 	public function loadByGuid($guid)
 	{
 		global $logger;
@@ -65,7 +107,7 @@ class UserFactory extends Factory implements iListFactory
 	}
 
     /**
-    * Returns the SQL statement to load ID, FirstName, LastName and GUID
+    * Returns the SQL statement to load ID, UserName, GUID und Bookmark
     * by User GUID.
     *
     * @param $guid GUID of the User to load.
@@ -77,7 +119,6 @@ class UserFactory extends Factory implements iListFactory
                 WHERE Guid = '".$guid."';";
     }
 
-    #region load
     protected function getSQLStatementToLoadById($id)
     {
         return "SELECT Id, UserName, Guid, Bookmark

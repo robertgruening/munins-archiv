@@ -2,18 +2,17 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
+require_once("../Factory/UserFactory.php");
 require_once("../UserStories/User/LoadUser.php");
 require_once("../UserStories/User/LoadUsers.php");
 
 session_start();
 
-global $logger;
-
-if (isset($_POST))
+if (isset($_POST)) {
 	if (isset($_POST["logoff"])) {		
 		logoff();
 	}
-	else if (isset($_POST["login"]) {
+	else if (isset($_POST["login"])) {
 		login();
 	}
 }
@@ -22,6 +21,7 @@ else if (isset($_GET)) {
 }
 
 function logoff() {
+	global $logger;
 	$logger->info("User-abmelden gestartet");
 	session_unset();
 	session_destroy();
@@ -29,6 +29,7 @@ function logoff() {
 }
 
 function login() {
+	global $logger;
 	$logger->info("User-anmelden gestartet");
 		
 	if (!isset($_POST["userName"])) {
@@ -77,6 +78,7 @@ function login() {
 }
 
 function getSession() {
+	global $logger;
 	$logger->info("Session-abfragen gestartet");
 
 	if (!isset($_SESSION["UserGuid"])) {
