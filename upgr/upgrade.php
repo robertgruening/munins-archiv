@@ -91,11 +91,11 @@ function Main()
 	}
 	echo "\r\n";
 
-    echo "Im Folgenden wird die Benutzerverwaltung angelgt. Hierzu gehört das Merken (Bookmarken) und Bewerten (5-Sterne-Bewertung) von Funden.\r\n";
+    echo "Im Folgenden wird die Benutzerverwaltung angelgt.\r\n";
 	if (readline("Weiter mit \"ja\": ") == "ja")
 	{
 		echo "\r\n";
-		CreateUserManagement($config);
+		CreateTableUser($config);
 		readline("Weiter mit [EINGABE] ...");
 	}
 	echo "\r\n";
@@ -263,9 +263,9 @@ function CreateTableUser($config)
 	    	$ergebnis = $mysqli->query("
 				CREATE TABLE IF NOT EXISTS `User` (
   					`Id` int(11) NOT NULL AUTO_INCREMENT,
-					`FirstName` varchar(20) NOT NULL,
-					`LastName` varchar(30) NOT NULL,
+					`UserName` varchar(20) NOT NULL,
 					`Guid` varchar(36) DEFAULT NULL,
+					`Bookmark` varchar(100) NOT NULL,
 					PRIMARY KEY (`Id`),
 					UNIQUE KEY `IndexUserGuid` (`Guid`)
 				);
@@ -279,84 +279,6 @@ function CreateTableUser($config)
 	    	else
 	    	{
 	    		echo "Tabelle \"User\" ist angelegt.\r\n";
-	    	}
-    	}
-
-    	$mysqli->close();
-    }
-}
-
-function CreateTableUserBookmarkedFund($config)
-{
-    if (DoesTableExist($config, "User_BookmarkedFund"))
-    {
-        echo "Die Tabelle \"User_BookmarkedFund\" existiert bereits.\r\n";
-    }
-    else
-    {
-    	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    	if (!$mysqli->connect_errno)
-    	{
-	    	$mysqli->set_charset("utf8");
-	    	$ergebnis = $mysqli->query("
-				CREATE TABLE IF NOT EXISTS `User_BookmarkedFund` (
-  					`User_Id` int(11) NOT NULL,
-					`Fund_Id` int(11) NOT NULL,
-					PRIMARY KEY (`User_Id`, `Fund_Id`),
-					FOREIGN KEY (`User_Id`) REFERENCES `User`(`Id`),
-					FOREIGN KEY (`Fund_Id`) REFERENCES `Fund`(`Id`)
-				);
-	    	");
-
-	    	if ($mysqli->errno)
-	    	{
-	    		echo "Beim Anlegen der Tabelle \"User_BookmarkedFund\" ist ein Fehler aufgetreten!\r\n";
-	    		echo $mysqli->errno.": ".$mysqli->error."\r\n";
-	    	}
-	    	else
-	    	{
-	    		echo "Tabelle \"User_BookmarkedFund\" ist angelegt.\r\n";
-	    	}
-    	}
-
-    	$mysqli->close();
-    }
-}
-
-function CreateTableUserRatedFund($config)
-{
-    if (DoesTableExist($config, "User_RatedFund"))
-    {
-        echo "Die Tabelle \"User_RatedFund\" existiert bereits.\r\n";
-    }
-    else
-    {
-    	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    	if (!$mysqli->connect_errno)
-    	{
-	    	$mysqli->set_charset("utf8");
-	    	$ergebnis = $mysqli->query("
-				CREATE TABLE IF NOT EXISTS `User_RatedFund` (
-					`Id` int (11) NOT NULL AUTO_INCREMENT,
-  					`User_Id` int(11) NOT NULL,
-					`Fund_Id` int(11) NOT NULL,
-					`Rating` tinyint(1) NOT NULL,
-					PRIMARY KEY (`Id`),
-					FOREIGN KEY (`User_Id`) REFERENCES `User`(`Id`),
-					FOREIGN KEY (`Fund_Id`) REFERENCES `Fund`(`Id`)
-				);
-	    	");
-
-	    	if ($mysqli->errno)
-	    	{
-	    		echo "Beim Anlegen der Tabelle \"User_RatedFund\" ist ein Fehler aufgetreten!\r\n";
-	    		echo $mysqli->errno.": ".$mysqli->error."\r\n";
-	    	}
-	    	else
-	    	{
-	    		echo "Tabelle \"User_RatedFund\" ist angelegt.\r\n";
 	    	}
     	}
 

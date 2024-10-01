@@ -27,31 +27,25 @@ class SaveUser extends UserStory
         global $logger;
         $user = $this->getUser();
 
-        if ($user->getFirstName() == null ||
-            trim($user->getFirstName()) == "")
+        if ($user->getUserName() == null ||
+            trim($user->getUserName()) == "")
         {
-            $logger->warn("Vorname ist nicht gesetzt!");
-            $this->addMessage("Vorname ist nicht gesetzt!");
+            $logger->warn("Benutzername ist nicht gesetzt!");
+            $this->addMessage("Benutzername ist nicht gesetzt!");
             return false;
         }
-        else if (strlen($user->getFirstName()) > 20)
+        else if (strlen($user->getUserName()) > 20)
         {
-            $logger->warn("Vorname darf nicht länger als 20 Zeichen sein!");
-            $this->addMessage("Vorname darf nicht länger als 20 Zeichen sein!");
+            $logger->warn("Benutzername darf nicht länger als 20 Zeichen sein!");
+            $this->addMessage("Benutzername darf nicht länger als 20 Zeichen sein!");
             return false;
-	}
+	    }
 
-        if ($user->getLastName() == null ||
-            trim($user->getLastName()) == "")
+        if ($user->getBookmark() != null &&
+            strlen($user->getBookmark()) > 100)
         {
-            $logger->warn("Nachname ist nicht gesetzt!");
-            $this->addMessage("Nachname ist nicht gesetzt!");
-            return false;
-        }
-        else if (strlen($user->getLastName()) > 30)
-        {
-            $logger->warn("Nachname darf nicht länger als 30 Zeichen sein!");
-            $this->addMessage("Nachname darf nicht länger als 30 Zeichen sein!");
+            $logger->warn("Bookmark darf nicht länger als 100 Zeichen sein!");
+            $this->addMessage("Bookmark darf nicht länger als 100 Zeichen sein!");
             return false;
         }
 

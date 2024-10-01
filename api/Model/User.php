@@ -5,11 +5,10 @@ include_once(__DIR__."/IListNode.php");
 class User implements iNode, iListNode
 {    
 	public $Id;
-	public $FirstName;
-	public $LastName;
-    	public $Guid;	
+	public $UserName;
+    public $Guid;
 	public $OrderNumber;
-	public $BookmarkedFunde;
+	public $Bookmark;
     
     
     public function getId()
@@ -24,31 +23,21 @@ class User implements iNode, iListNode
     
     public function getBezeichnung()
     {
-        return $this->getFirstName()." ".$this->getLastName();
+        return $this->getUserName();
     }
 
     public function setBezeichnung($bezeichnung)
     {
     }
 
-    public function getFirstName()
+    public function getUserName()
     {
-	    return $this->FirstName;
+	    return $this->UserName;
     }
 
-    public function setFirstName($firstName)
+    public function setUserName($userName)
     {
-	    $this->FirstName = $firstName;
-    }
-
-    public function getLastName()
-    {
-	    return $this->LastName;
-    }
-
-    public function setLastName($lastName)
-    {
-	    $this->LastName = $lastName;
+	    $this->UserName = $userName;
     }
     
     public function getOrderNumber()
@@ -71,41 +60,22 @@ class User implements iNode, iListNode
 	    $this->Guid = $guid;
     }
 
-    public function getBookmarkedFunde()
+    public function getBookmark()
     {
-	    return $this->BookmarkedFunde;
+	    return $this->Bookmark;
     }
 
-    public function setBookmarkedFunde($funde)
+    public function setBookmark($bookmark)
     {
-	$this->BookmarkedFunde = $funde;
-    }
-
-    public function addBookmarkedFund($fund)
-    {
-	    $array_push($this->BookmarkedFunde, $fund);
-    }
-
-    public function removeBookmarkedFund($bookmarkedFund)
-    {
-        for ($i = 0; $i < count($this->BookmarkedFunde); $i++)
-        {
-            if ($this->BookmarkedFunde[$i]->getId() == $bookmarkedFund->getId())
-            {
-                array_splice($this->BookmarkedFunde, $i, 1);
-                break;
-            }
-        }
-
+	    $this->Bookmark = $bookmark;
     }
     
     function __construct()
     {
         $this->Id = -1;
-	$this->FirstName = null;
-	$this->LastName = null;
-	$this->Guid = null;
-	$this->OrderNumber = null;
-	$this->BookmarkedFunde = array();
+        $this->UserName = null;
+        $this->Guid = null;
+        $this->OrderNumber = null;
+        $this->Bookmark = null;
     }
 }
