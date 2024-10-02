@@ -4,6 +4,8 @@ $(function() {
 	$(window).resize(function() {
 	    setSizes();
     });
+    
+    setSignInState();
 });
 
 function setSizes() {

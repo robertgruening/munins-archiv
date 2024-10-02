@@ -339,5 +339,29 @@
 		"URL" : "/doc/Benutzerhandbuch.pdf",
 		"Enabled" : false,
 		"Target" : "_blank"
+	},
+	{
+		"Title" : "Benutzer",
+		"Icon" : "fa-user",
+		"Id" : "navigation-item-user",
+		"Children" :
+		[
+			{
+				"Title" : "Aktionen",
+				"Icon" : "fa-bolt",
+				"Children" :
+				[
+					{
+						"Title" : "Bookmark setzen",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Abmelden",
+						"Id" : "navigation-item-sign-off",
+						"Enabled" : false
+					}
+				]
+			}
+		]
 	}
 ]

@@ -24,7 +24,7 @@
 		$(htmlElement).append(h);
 
 		var description = $("<p></p>");
-		description.text("Als angemelder Benutzer kann man u.s. seinen Arbeitsstand speichern.");
+		description.text("Als angemelder Benutzer kann man u.a. seinen Arbeitsstand speichern.");
 
 		$(htmlElement).append(description);
 
@@ -78,7 +78,7 @@
 			var a = $("<a></a>");
 			a.attr("id", "buttonLoginUser" + items[i].UserName);
 			a.attr("href", "javascript:void(0)");
-			a.attr("onclick", "loginUser('" + items[i].UserName + "');");
+			a.attr("onclick", "signIn('" + items[i].UserName + "');");
 
 			var span = $("<span></span>");
 			span.text(items[i].UserName);

@@ -71,6 +71,11 @@
 			var li = $("<li></li>");
 			var a = $("<a></a>");
 
+			if (items[i].Id != undefined)
+			{
+				a.attr("id", items[i].Id);
+			}
+
 			if (items[i].Target != undefined)
 			{
 				a.attr("target", items[i].Target);
@@ -197,6 +202,11 @@
 		    }
 
 			html += "<a ";
+
+			if (topic.Children[i].Id != undefined)
+			{
+				html += "id=\""+ topic.Children[i].Id + "\" ";
+			}
 
 			if (topic.Children[i].Enabled == undefined ||
 				topic.Children[i].Enabled == true)

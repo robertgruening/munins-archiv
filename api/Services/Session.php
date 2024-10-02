@@ -8,19 +8,19 @@ require_once("../UserStories/User/LoadUsers.php");
 
 session_start();
 
-if (isset($_POST)) {
-	if (isset($_POST["logoff"])) {		
-		logoff();
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+	if (isset($_POST["signIn"])) {		
+		signIn();
 	}
-	else if (isset($_POST["login"])) {
-		login();
+	else if (isset($_POST["signOff"])) {
+		signOff();
 	}
 }
-else if (isset($_GET)) {
+else if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	getSessionState();
 }
 
-function logoff() {
+function signOff() {
 	global $logger;
 	$logger->info("User-abmelden gestartet");
 	session_unset();
@@ -28,7 +28,7 @@ function logoff() {
 	$logger->info("User-abmelden beendet");
 }
 
-function login() {
+function signIn() {
 	global $logger;
 	$logger->info("User-anmelden gestartet");
 		
@@ -77,7 +77,7 @@ function login() {
 	$logger->info("User-anmelden beendet");
 }
 
-function getSession() {
+function getSessionState() {
 	global $logger;
 	$logger->info("Session-abfragen gestartet");
 
