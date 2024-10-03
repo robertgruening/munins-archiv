@@ -350,7 +350,11 @@
 				"Children" :
 				[
 					{
-						"Title" : "Bookmark setzen",
+						"Title" : "Lesezeichen setzen",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Lesezeichnen öffnen",
 						"Enabled" : false
 					},
 					{
