@@ -351,10 +351,14 @@
 				[
 					{
 						"Title" : "Lesezeichen setzen",
+						"Id" : "navigation-item-set-bookmark",
+						"Action" : "setBookmark();",
 						"Enabled" : false
 					},
 					{
 						"Title" : "Lesezeichnen öffnen",
+						"Id" : "navigation-item-open-bookmark",
+						"Action" : "openBookmark();",
 						"Enabled" : false
 					},
 					{
