@@ -35,6 +35,8 @@ function setSignInState() {
 
 function setUserSignedInState(user) {
     $("#navigation-item-user span").text(user.UserName);
+    $("#navigation-item-user i").addClass("fa-user");
+    $("#navigation-item-user i").removeClass("fa-right-to-bracket");
     $("#navigation-item-sign-off").removeClass("disabled");
     $("#navigation-item-sign-off").attr("href", "javascript:void(0)");
     $("#navigation-item-sign-off").attr("onclick", "signOff();");
@@ -42,6 +44,8 @@ function setUserSignedInState(user) {
 
 function setUserSignedOffState() {
     $("#navigation-item-user span").text("Benutzer");
+    $("#navigation-item-user i").addClass("fa-right-to-bracket");
+    $("#navigation-item-user i").removeClass("fa-user");
     $("#navigation-item-sign-off").addClass("disabled");
     $("#navigation-item-sign-off").removeAttr("href");
     $("#navigation-item-sign-off").removeAttr("onclick");

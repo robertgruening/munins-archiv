@@ -340,7 +340,7 @@
 	},
 	{
 		"Title" : "Benutzer",
-		"Icon" : "fa-user",
+		"Icon" : "fa-right-to-bracket",
 		"Id" : "navigation-item-user",
 		"Children" :
 		[
