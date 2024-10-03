@@ -60,46 +60,6 @@
 		]
 	},
 	{
-		"Title" : "Orte",
-		"Icon" : "fa-map-marker",
-		"URL" : "/pages/Ort/Explorer.html",
-		"Children" :
-		[
-			{
-				"Title" : "Orte durchsuchen",
-				"URL" : "/pages/Ort/Explorer.html",
-				"PageName" : "OrtExplorer"
-			},
-			{
-				"Title" : "Ort anlegen",
-				"URL" : "/pages/Ort/Form.html",
-				"PageName" : "OrtFormNew",
-				"Visible" : false
-			},
-			{
-				"Title" : "Ort bearbeiten",
-				"URL" : "/pages/Ort/Form.html",
-				"PageName" : "OrtFormEdit",
-				"Visible" : false
-			},
-			{
-				"Title" : "Gebietskörperschaften verwalten",
-				"URL" : "/pages/Ort/Gebietskoerperschaft/Form.html",
-				"Enabled" : false
-			},
-			{
-				"Title" : "Kartasterdaten verwalten",
-				"URL" : "/pages/Ort/Fundstelle/Form.html",
-				"Enabled" : false
-			},
-			{
-				"Title" : "Flurnamen verwalten",
-				"URL" : "/pages/Ort/Flurname/Form.html",
-				"Enabled" : false
-			}
-		]
-	},
-	{
 		"Title" : "Ablagen",
 		"Icon" : "fa-box",
 		"URL" : "/pages/Ablage/Explorer.html",
@@ -171,35 +131,73 @@
 		]
 	},
 	{
-		"Title" : "Fundattribute",
-		"Icon" : "fa-tag",
-		"URL" : "/pages/FundAttribut/Explorer.html",
+		"Title" : "Menü",
+		"Icon" : "fa-bars",
 		"Children" :
 		[
 			{
-				"Title" : "Fundattribute durchsuchen",
-				"URL" : "/pages/FundAttribut/Explorer.html",
-				"PageName" : "FundAttributExplorer"
+				"Title" : "Orte",
+				"Icon" : "fa-map-marker",
+				"Children" :
+				[
+					{
+						"Title" : "Orte durchsuchen",
+						"URL" : "/pages/Ort/Explorer.html",
+						"PageName" : "OrtExplorer"
+					},
+					{
+						"Title" : "Ort anlegen",
+						"URL" : "/pages/Ort/Form.html",
+						"PageName" : "OrtFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Ort bearbeiten",
+						"URL" : "/pages/Ort/Form.html",
+						"PageName" : "OrtFormEdit",
+						"Visible" : false
+					},
+					{
+						"Title" : "Gebietskörperschaften verwalten",
+						"URL" : "/pages/Ort/Gebietskoerperschaft/Form.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Kartasterdaten verwalten",
+						"URL" : "/pages/Ort/Fundstelle/Form.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Flurnamen verwalten",
+						"URL" : "/pages/Ort/Flurname/Form.html",
+						"Enabled" : false
+					}
+				]
 			},
 			{
-				"Title" : "Fundattribut anlegen",
-				"URL" : "/pages/FundAttribut/Form.html",
-				"PageName" : "FundAttributFormNew",
-				"Visible" : false
+				"Title" : "Fundattribute",
+				"Icon" : "fa-tag",
+				"Children" :
+				[
+					{
+						"Title" : "Fundattribute durchsuchen",
+						"URL" : "/pages/FundAttribut/Explorer.html",
+						"PageName" : "FundAttributExplorer"
+					},
+					{
+						"Title" : "Fundattribut anlegen",
+						"URL" : "/pages/FundAttribut/Form.html",
+						"PageName" : "FundAttributFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Fundattribut bearbeiten",
+						"URL" : "/pages/FundAttribut/Form.html",
+						"PageName" : "FundAttributFormEdit",
+						"Visible" : false
+					}
+				]
 			},
-			{
-				"Title" : "Fundattribut bearbeiten",
-				"URL" : "/pages/FundAttribut/Form.html",
-				"PageName" : "FundAttributFormEdit",
-				"Visible" : false
-			}
-		]
-	},
-	{
-		"Title" : "Administration",
-		"Icon" : "fa-cogs",
-		"Children" :
-		[
 			{
 				"Title" : "Typen",
 				"Icon" : "fa-cubes",
@@ -328,17 +326,17 @@
 					{
 						"Title" : "Version 1.1",
 						"Enabled" : false
+					},
+					{
+						"Title" : "Hilfe",
+						"Icon" : "fa-info-circle",
+						"URL" : "/doc/Benutzerhandbuch.pdf",
+						"Enabled" : false,
+						"Target" : "_blank"
 					}
 				]
 			}
 		]
-	},
-	{
-		"Title" : "Hilfe",
-		"Icon" : "fa-info-circle",
-		"URL" : "/doc/Benutzerhandbuch.pdf",
-		"Enabled" : false,
-		"Target" : "_blank"
 	},
 	{
 		"Title" : "Benutzer",
