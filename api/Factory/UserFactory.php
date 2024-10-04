@@ -70,9 +70,9 @@ class UserFactory extends Factory implements iListFactory
 			array_push($sqlSearchConditionStrings, "Guid = '".$searchConditions["Guid"]."'");
 		}
 
-		if ($this->getTreeFactory() instanceof iSqlSearchConditionStringsProvider)
+		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
 		{
-			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getTreeFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
+			$sqlSearchConditionStrings = array_merge($sqlSearchConditionStrings, $this->getListFactory()->getSqlSearchConditionStringsBySearchConditions($searchConditions));
 		}
 		
 		return $sqlSearchConditionStrings;
@@ -159,7 +159,7 @@ class UserFactory extends Factory implements iListFactory
     {
         return "UPDATE ".$this->getTableName()."
                 SET UserName = '".addslashes($element->getUserName())."',
-                    BookmarkName = '".addslashes($element->getBookmark())."'
+                    Bookmark = '".addslashes($element->getBookmark())."'
                 WHERE Id = ".$element->getId().";";
     }
     #endregion

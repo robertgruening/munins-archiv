@@ -49,8 +49,7 @@ function setUserSignedInState(user) {
         user.Bookmark.length >= 1) {
 
         $("#navigation-item-open-bookmark").removeClass("disabled");
-        $("#navigation-item-open-bookmark").attr("href", "javascript:void(0)");
-        $("#navigation-item-open-bookmark").attr("onclick", "openBookmark();");
+        $("#navigation-item-open-bookmark").attr("href", user.Bookmark);
     }
 }
 
@@ -68,5 +67,30 @@ function setUserSignedOffState() {
 
     $("#navigation-item-open-bookmark").addClass("disabled");
     $("#navigation-item-open-bookmark").removeAttr("href");
-    $("#navigation-item-open-bookmark").removeAttr("onclick");
+}
+
+function setBookmark() {
+    $.get('../../api/Services/Session', function(data, status){
+        if (status == "success") {
+            let user = JSON.parse(data);
+            user.Bookmark = window.location.href;
+
+            $.ajax(
+                {
+                    type: "PUT",
+                    url: "../../api/Services/User/" + user.Id,
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify(user),
+                    success: function (data2, textStatus2, jqXHR2) {
+                        let user2 = data2;
+    
+                        $("#navigation-item-open-bookmark").removeClass("disabled");
+                        $("#navigation-item-open-bookmark").attr("href", user.Bookmark);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                    }
+                });
+        }
+    });
 }
