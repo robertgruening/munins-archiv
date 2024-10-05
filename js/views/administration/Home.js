@@ -3,6 +3,7 @@ $(document).ready(function () {
 	$("#defectiveAblagen").DefectiveAblagen();
 	$("#defectiveKontexte").DefectiveKontexte();
 	$("#lastFiveFunde").LastFiveFunde();
+	$("#loginUsers").LoginUsers();
 });
 
 function getPageName() {

@@ -15,6 +15,7 @@ class FundFactory extends Factory implements iListFactory
     private $_fundAttributFactory = null;
     private $_ablageFactory = null;
     private $_kontextFactory = null;
+    private $_userFactory = null;
     #endregion
 
     #region properties
@@ -46,6 +47,16 @@ class FundFactory extends Factory implements iListFactory
         }
 
         return $this->_kontextFactory;
+    }
+
+    protected function getUserFactory()
+    {
+	    if ($this->_userFactory == null)
+	    {
+		    $this->_userFactory = new UserFactory();
+	    }
+
+	    return $this->_userFactory;
     }
     #endregion
 

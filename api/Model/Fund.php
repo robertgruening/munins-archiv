@@ -139,26 +139,6 @@ class Fund implements iNode
         return false;
     }
     
-    public function getAblage()
-    {
-        return $this->Ablage;
-    }
-    
-    public function setAblage($ablage)
-    {
-        $this->Ablage = $ablage;
-    }
-    
-    public function getKontext()
-    {
-        return $this->Kontext;
-    }
-    
-    public function setKontext($kontext)
-    {
-        $this->Kontext = $kontext;
-    }
-    
     public function getFileName()
     {
         return $this->FileName;
