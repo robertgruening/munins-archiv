@@ -13,6 +13,7 @@
     1. [Ort](#25-ort)
 1. [Glossar](#3-glossar)
 1. [Quellenverzeichnis](#4-quellenverzeichnis)
+1. [Sonstiges](#5-sonstiges)
 
 ## 1. Betriebsumgebung
 
@@ -42,8 +43,94 @@ Abhängig vom Betriebssystem Ihres Servers gibt es unterschiedliche Möglichkeit
 
 #### 1.2.2. Website
 
-1. Beliebigen Webserver für PHP einrichten (z. B. Apache Http Server oder Microsoft Internet Information Services)
-2. Inhalt des Ordners „src“ aus dem git-Repository als Wurzel der Website einrichten
+1. Webserver einrichten
+1. Release einrichten
+1. URL-Weiterleitung einrichten
+1. HTTPS einrichten
+1. Log-Ordner anlegen und berechtigen
+1. Kartenkacheln herunterladen
+
+Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [Ubuntu-Betriebssystem](https://ubuntu.com/) und dem [Apache HTTP Server](https://www.apache.org/).
+
+1. Apache Http Server installieren
+	```
+	sudo apt-get install apache2 php php-curl libapache2-mod-php php-mysql
+	```
+1. Release einrichten
+	```
+	cd /var/www/html/
+	wget https://github.com/robertgruening/Munins-Archiv/releases/download/v1.2/Munins-Archiv-1.2.zip
+	unzip Munins-Archiv-1.2.zip
+	mv "Munins-Archiv-1.2" "Munins Archiv"
+	```
+1. URL-Weiterleitung einrichten
+	```
+	sudo a2enmod rewrite
+	sudo nano /etc/apache2/sites-available/000-default.conf
+	```
+	Eintrag vornehmen:
+	```
+	<Directory "/var/www/html">
+		AllowOverride All
+	</Directory>
+	```
+	```
+	sudo service apache2 restart
+	```
+1. HTTPS einrichten
+	```
+	sudo a2enmod ssl
+	sudo service apache2 restart
+	sudo mkdir /etc/apache2/ssl
+	sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+	sudo nano /etc/apache2/sites-available/default-ssl.conf
+	```
+	Eintrag vornehmen:
+	```
+	SSLEngine on
+	SSLCertificateFile /etc/apache2/ssl/apache.crt
+	SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+	```
+	```
+	sudo a2ensite default-ssl.conf
+	sudo a2enmod headers
+	sudo nano /etc/apache2/sites-available/default-ssl.conf
+	```
+	Eintrag nach *ServerAdmin* vornehmen:
+	```
+	<IfModule mod_headers.c>
+		Header always set Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"
+	</IfModule>
+	```
+	```
+	sudo service apache2 restart
+	sudo a2enmod rewrite
+	sudo nano /etc/apache2/sites-available/default-ssl.conf
+	```
+	Eintrag vornehmen:
+	```
+	<Directory "/var/www/html">
+		AllowOverride All
+	</Directory>
+	```
+	```
+	sudo service apache2 restart
+	```
+1. Kartenkacheln herunterladen
+	1. http://tools.geofabrik.de/calc/#type=geofabrik_standard&bbox=5,47,16,55&grid=1 öffnen
+	1. "+" klicken
+	1. Kacheln auswählen
+	1. Skript anpassen
+		```
+		cd "/var/www/html/munins-archiv/tools/"
+		nano download-map-tiles.py
+		```		
+	1. minimale und maximale X- und Y-Werte entsprechend unter Berücksichtigung der Zoomstufe eintragen
+	1. *downloadRootPath* auf "/var/www/html/openstreetmap/mapTiles/" setzen
+	1. Skript ausführen
+		```
+		python3 download-map-tiles.py
+		```
 
 ## 2. Programmelemente
 
@@ -102,7 +189,7 @@ Aufgrund der unterschiedlichen Dokumentationsarten und -traditionen bei Grabunge
 
 #### 2.3.1. Fundstelle
 
-Der Kontexttyp Fundstelle dient der Registrierung von Grabungen und Begehungen. Die Zuordnung der Grabungen und Begehungen zu einer Fundstelle ist von der räumlichen Nähe und der individuellen Beurteilung abhängig. Von herausragender Tragweite ist das System, mit dem Fundstellen benannt bzw. identifiziert werden. Dieses Identifikationssystem sollte einheitlich und konsequent angewendet werden, zum Beispiel in Form einer lückenlosen Nummerierung beginnend mit „1“. In der Praxis finden jedoch Umstellungen von Identifikationssystem statt. Munins Archiv versucht, Systembrüche und -änderungen zu unterstützen, indem es keine Vorgaben bei der Benennung macht.
+Der Kontexttyp Fundstelle dient der Registrierung von Grabungen und Begehungen. Die Zuordnung der Grabungen und Begehungen zu einer Fundstelle ist von der räumlichen Nähe und der individuellen Beurteilung abhängig. Von herausragender Tragweite ist das System, mit dem Fundstellen benannt bzw. identifiziert werden. Dieses Identifikationssystem sollte einheitlich und konsequent angewendet werden, zum Beispiel in Form einer lückenlosen Nummerierung beginnend mit „1“. In der Praxis finden jedoch Umstellungen von Identifikationssystem statt. Munins Archiv versucht, Systembrüche und -änderungen zu unterstützen, indem es keine Vorgaben bei der Benennung macht. Jeder Fundstelle kann eine geografische Position zugeordnet werden, vergleichbar mit einer Stecknadel auf einer Landkarte. Entsprechend kann die Detailansicht jeder kartierten Fundstelle über die Kartenansicht aufgerufen werden.
 
 #### 2.3.2. Begehungsfläche
 
@@ -138,6 +225,10 @@ Sinnvollerweise werden die Ablagen so angelegt, dass sie sich auch tatsächlich 
 
 ![Beispiel für hierarchische Ablagestruktur](Ablagestruktur.jpg)  
 *Abbildung 8 - Beispiel für hierarchische Ablagestruktur*
+
+Das System erzeugt für jede Ablage eine sogenannte **GUID** ([Globally Unique Identifier](https://de.wikipedia.org/wiki/Globally_Unique_Identifier)), z. B. 936DA01F-9ABD-4D9D-80C7-02AF85C822A8. Diese Hexadezimalzahl mit 32 Stellen dient dazu, jede Ablage eindeutig zu identifizieren. Die Daten einer Ablage können mittels der zugehörigen GUID geladen werden.
+
+Um den zeitaufwändigen Eingabevorgang zu beschleunigen, kann der zu jeder GUID generierte **QR Code** verwendet werden. Ein [QR Code](https://de.wikipedia.org/wiki/QR-Code) ist eine zweidimensionale, maschinenlesbare Grafik, in der Daten abgelegt sind. Der QR Code kann ausgedruckt an der angebracht werden. Wird die Ablage-Scannseite auf einem Gerät mit Kamera (z. B. Smartphone) geöffnet, versucht die Seite den QR Code im Videosingal zu erkennen, die Daten auszulesen und im Fall einer gültigen GUID den Ablagedatensatz zu laden.
 
 ### 2.5. Ort
 
@@ -186,3 +277,8 @@ Ortsdaten sind Teil der räumlichen Kontexte, z. B. Begehungsfläche (Begehung) 
 ### [Eggert, 2012]
 
 Prähistorische Archäologie; Konzepte und Methoden; Manfred K. H. Eggert; Narr Francke Attempo Verlag GmbH & Co. KG; 4. Auflage; 2012; ISBN 978-3-8252-3696-0
+
+## 5. Sonstiges
+
+"QR Code" is registered trademark of DENSO WAVE INCORPORATED.
+"QR Code" ist eine registrierte Handelsmarke der DENSO WAVE INCORPORATED.

@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<!-- javascript frameworks etc. -->
+		<script type="text/javascript" src="../../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/ui/jquery-ui/jquery-ui.js"></script>
+		<script type="text/javascript" src="../../js/solid.min.js"></script>
+		<!-- controls -->
+		<script type="text/javascript" src="../../js/controls/jsgrid/jsgrid.min.js"></script>
+		<script type="text/javascript" src="../../js/controls/jquery.toast.min.js"></script>
+		<script type="text/javascript" src="../../js/controls/jquery.qrcode.min.js"></script>
+		<script type="text/javascript" src="../../js/controls/control.Navigation.js"></script>
+		<script type="text/javascript" src="../../js/controls/control.SignIn.js"></script>
+		<script type="text/javascript" src="../../js/controls/control.Headline.js"></script>
+		<script type="text/javascript" src="../../js/controls/control.MessageBox.js"></script>
+		<script type="text/javascript" src="../../js/controls/control.ErrorMessageBox.js"></script>
+		<!-- basic page functions -->
+		<script type="text/javascript" src="../../js/page.js"></script>
+		<!-- observer pattern data structure -->
+		<script type="text/javascript" src="../../js/ui/GuiClient.js"></script>
+		<!-- model -->
+		<script type="text/javascript" src="../../js/models/Ablage.js"></script>
+		<!-- web service client -->
+		<script type="text/javascript" src="../../js/webServiceClients/WebServiceClient.js"></script>
+		<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientAblage.js"></script>
+		<script type="text/javascript" src="../../js/factories/webServiceClientFactory.js"></script>
+		<!-- view model -->
+		<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
+		<!-- old view model -->
+		<script type="text/javascript" src="../../js/viewModels/ViewModelForm.js"></script>
+		<script type="text/javascript" src="../../js/viewModels/ViewModelFormAblage.js"></script>
+		<script type="text/javascript" src="../../js/viewModels/ViewModelExplorer.js"></script>
+		<script type="text/javascript" src="../../js/viewModels/ViewModelExplorerAblage.js"></script>
+		<!-- old view -->
+		<script type="text/javascript" src="../../js/ui/IconConfig.js"></script>
+		<script type="text/javascript" src="../../js/views/Ablage/PrintLabels.js"></script>
+		<script type="text/javascript" src="../../js/views/ExplorerSelectTypedItem.js"></script>
+		<script type="text/javascript" src="../../js/Fund/Factory.js"></script>
+	
+		<!-- javascript frameworks etc. -->
+		<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/solid.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/fontawesome.min.css" />
+		<!-- page -->
+		<link rel="stylesheet" type="text/css" href="../../css/page.css" />
+		<!-- controls -->
+		<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid-theme.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.toast.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/print-label.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/form.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/explorer.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/grid.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/navigation.css" />
+		<!-- print -->
+		<link rel="stylesheet" type="text/css" href="../../css/print.css" media="print" />
+		<link rel="stylesheet" type="text/css" href="../../css/print-label--print.css" media="print" />
+		<link rel=icon type="image/png" href="../../images/system/IconMunin_001.png">
+		<title>Ablageschild</title>
+	</head>
+	<body>
+		<div id=navigation class="notToPrint"></div>
+		<div id=content>
+			<div id=form class=form>
+				<div class="formBlock notToPrint">
+					<h2 class=notToPrint></h2>
+					<a id=buttonSelectAblage0 title=auswählen class=ui-button><i class="fas fa-edit"></i><span>Auswählen</span></a><a id=buttonSelectAblage1 title=auswählen class=ui-button><i class="fas fa-edit"></i><span>Auswählen</span></a><br/>
+					<a id=buttonSelectAblage2 title=auswählen class=ui-button><i class="fas fa-edit"></i><span>Auswählen</span></a><a id=buttonSelectAblage3 title=auswählen class=ui-button><i class="fas fa-edit"></i><span>Auswählen</span></a><br/>
+					<a id=buttonSelectAblage4 title=auswählen class=ui-button><i class="fas fa-edit"></i><span>Auswählen</span></a><a id=buttonSelectAblage5 title=auswählen class=ui-button><i class="fas fa-edit"></i><span>Auswählen</span></a><br/>
+					<a id=buttonSelectAblage6 title=auswählen class=ui-button><i class="fas fa-edit"></i><span>Auswählen</span></a><a id=buttonSelectAblage7 title=auswählen class=ui-button><i class="fas fa-edit"></i><span>Auswählen</span></a><br/>
+					<div id=dialogSelect title="" class=dialog>
+						<ul id=toolBar>
+							<li><a id=buttonOpen title=öffnen class=ui-button><i class="fas fa-external-link-alt"></i><span>Öffnen</span></a></li>
+						</ul>
+						<ul id=toolBar style="float:left;">
+							<li><a id=buttonOpenParent title="Übergeordneten Knoten öffnen" class="ui-button"><i class="fas fa-arrow-alt-circle-up"></i></a></li>
+							<li><a id=buttonOpenAbstractRoot title="Wurzelknoten öffnen" class="ui-button"><i class="fas fa-home"></i></a></li>
+							<li class=toolbar__item--max-width><input id=path type=text /></li>
+						</ul>
+						<div class=clear></div>
+						<div id=explorerSelect></div>
+					</div>
+				</div>
+				<div class=formBlock>					
+					<div class=ablage-print-label-page>
+						<div id=printLabel0 class=ablage-print-label>
+							<label id=labelBezeichnung class=ablage-print-label__head-line></label>
+							<input type=text class=ablage-print-label__free-text-line />
+							<input type=text class=ablage-print-label__free-text-line />
+							<div id=divQrCodeGuid class=ablage-print-label__qr-code></div>
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<div class=clear ></div>
+						</div>
+						<div id=printLabel1 class=ablage-print-label>
+							<label id=labelBezeichnung class=ablage-print-label__head-line></label>
+							<input type=text class=ablage-print-label__free-text-line />
+							<input type=text class=ablage-print-label__free-text-line />
+							<div id=divQrCodeGuid class=ablage-print-label__qr-code></div>
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<div class=clear ></div>
+						</div>
+						<div id=printLabel2 class=ablage-print-label>
+							<label id=labelBezeichnung class=ablage-print-label__head-line></label>
+							<input type=text class=ablage-print-label__free-text-line />
+							<input type=text class=ablage-print-label__free-text-line />
+							<div id=divQrCodeGuid class=ablage-print-label__qr-code></div>
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<div class=clear ></div>
+						</div>
+						<div id=printLabel3 class=ablage-print-label>
+							<label id=labelBezeichnung class=ablage-print-label__head-line></label>
+							<input type=text class=ablage-print-label__free-text-line />
+							<input type=text class=ablage-print-label__free-text-line />
+							<div id=divQrCodeGuid class=ablage-print-label__qr-code></div>
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<div class=clear ></div>
+						</div>
+						<div id=printLabel4 class=ablage-print-label>
+							<label id=labelBezeichnung class=ablage-print-label__head-line></label>
+							<input type=text class=ablage-print-label__free-text-line />
+							<input type=text class=ablage-print-label__free-text-line />
+							<div id=divQrCodeGuid class=ablage-print-label__qr-code></div>
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<div class=clear ></div>
+						</div>
+						<div id=printLabel5 class=ablage-print-label>
+							<label id=labelBezeichnung class=ablage-print-label__head-line></label>
+							<input type=text class=ablage-print-label__free-text-line />
+							<input type=text class=ablage-print-label__free-text-line />
+							<div id=divQrCodeGuid class=ablage-print-label__qr-code></div>
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<div class=clear ></div>
+						</div>
+						<div id=printLabel6 class=ablage-print-label>
+							<label id=labelBezeichnung class=ablage-print-label__head-line></label>
+							<input type=text class=ablage-print-label__free-text-line />
+							<input type=text class=ablage-print-label__free-text-line />
+							<div id=divQrCodeGuid class=ablage-print-label__qr-code></div>
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<div class=clear ></div>
+						</div>
+						<div id=printLabel7 class=ablage-print-label>
+							<label id=labelBezeichnung class=ablage-print-label__head-line></label>
+							<input type=text class=ablage-print-label__free-text-line />
+							<input type=text class=ablage-print-label__free-text-line />
+							<div id=divQrCodeGuid class=ablage-print-label__qr-code></div>
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<input type=text class=ablage-print-label__free-text-line--small />
+							<div class=clear ></div>
+						</div>
+						<div class=clear></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

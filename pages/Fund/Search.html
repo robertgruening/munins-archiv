@@ -1,0 +1,186 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<!-- javascript frameworks etc. -->
+	<script type="text/javascript" src="../../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../js/ui/jquery-ui/jquery-ui.js"></script>
+	<script type="text/javascript" src="../../js/solid.min.js"></script>
+	<!-- controls -->
+	<script type="text/javascript" src="../../js/controls/jsgrid/jsgrid.min.js"></script>
+	<script type="text/javascript" src="../../js/controls/jsgrid/i18n/jsgrid-de.js"></script>
+	<script type="text/javascript" src="../../js/controls/jquery.toast.min.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.Navigation.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.SignIn.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.Headline.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.MessageBox.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.ErrorMessageBox.js"></script>
+	<script type="text/javascript" src="../../js/controls/control.ImageModal.js"></script>
+	<!-- basic page functions -->
+	<script type="text/javascript" src="../../js/page.js"></script>
+	<script type="text/javascript" src="../../js/ui/IconConfig.js"></script>
+	<!-- observer pattern data structure -->
+	<script type="text/javascript" src="../../js/ui/GuiClient.js"></script>
+	<!-- web service client -->
+	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClient.js"></script>
+	<script type="text/javascript" src="../../js/webServiceClients/WebServiceClientFund.js"></script>
+	<script type="text/javascript" src="../../js/factories/webServiceClientFactory.js"></script>
+	<!-- view model -->
+	<script type="text/javascript" src="../../js/viewModels/ViewModelSearchResultList.js"></script>
+	<script type="text/javascript" src="../../js/viewModels/ViewModelSearchResultListFund.js"></script>
+	<script type="text/javascript" src="../../js/factories/viewModelFactory.js"></script>
+	<!-- view -->
+	<script type="text/javascript" src="../../js/views/Fund/Search.js"></script>
+
+	<!-- javascript frameworks etc. -->
+	<link rel="stylesheet" type="text/css" href="../../js/ui/jquery-ui/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/w3.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/fontawesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/solid.min.css" />
+	<!-- page -->
+	<link rel="stylesheet" type="text/css" href="../../css/page.css" />
+	<!-- controls -->
+	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../js/controls/jsgrid/jsgrid-theme.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/grid.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/jquery.toast.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/form.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/navigation.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/clipboard.css" />
+	<!-- print -->
+	<link rel="stylesheet" type="text/css" href="../../css/print.css" media="print" />
+	<link rel=icon type="image/png" href="../../images/system/IconMunin_001.png">
+	<title>Fund-Suche</title>
+</head>
+
+<body>
+	<div class="w3-container">
+		<div class="w3-modal image-modal" onclick="$(this).hide()">
+			<div class="w3-modal-content w3-animate-zoom">
+				<img class="w3-modal-content" src="">
+			</div>
+		</div>
+	</div>
+	<div id=navigation class="notToPrint"></div>
+	<div id=content>
+		<div class=form>
+			<div class=formBlock>
+				<h2>Suche</h2>
+				<ul id=toolBar>
+					<li><a id=buttonNew title=anlegen class=ui-button><i class="fas fa-plus"></i><span>Anlegen</span></a></li>
+				</ul>
+			    <div class=fieldBlock>
+				    <div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Es kann nach Funden gesucht werden, die die exakte Beschriftung aufweisen oder den gesuchten Text in der Beschriftung enthalten. Ohne Beschriftungstext und mit der Einstellung 'enthält' wird das Kriterium ignoriert."></i>
+					    <label>Beschriftung: </label>
+				    </div>
+				    <div class=fieldValue>
+					    <input id=textboxFilterBeschriftung type=text class=field></input>
+						<input type=radio name=choiceFilterBeschriftung value=exact><label for=exact>exakt</label></input>
+						<input type=radio name=choiceFilterBeschriftung value=contains checked=true><label for=contains>enthält</label></input>
+					</div>
+				</div>
+				<div id="divFundattribute" class=fieldBlock>
+				    <div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Es kann nach Funden gesucht werden, die mindestens ein oder kein Fundattribut haben. Mit 'egal' wird das Kriterium ignoriert."></i>
+					    <label>hat Fundattribute: </label>
+				    </div>
+				    <div class=fieldValue>
+						<input type=radio name=choiceFilterHasFundAttribute value=yes><label for=yes>ja</label></input>
+						<input type=radio name=choiceFilterHasFundAttribute value=no><label for=no>nein</label></input>
+						<input type=radio name=choiceFilterHasFundAttribute value=any checked=true><label for=any>egal</label></input>
+						<div class=fieldValue>
+							<div name="messages"></div>
+							<div id=divFundAttributList class="field editable-list"></div>
+							<input id=textBoxSearchFundAttributByPath type=text class=field></input>
+							<a id=buttonAddFundAttribut title="hinzufügen" class="notToPrint ui-button"><i class="fas fa-check"></i></a>
+						</div>
+				    </div>
+				</div>
+				<div id="divAblagen" class=fieldBlock>
+				    <div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Es kann nach Funden gesucht werden, die in einer oder keiner Ablage abgelget sind. Mit 'egal' wird das Kriterium ignoriert."></i>
+					    <label>hat Ablage: </label>
+				    </div>
+				    <div class=fieldValue>
+						<input type=radio name=choiceFilterHasAblage value=yes><label for=yes>ja</label></input>
+						<input type=radio name=choiceFilterHasAblage value=no><label for=no>nein</label></input>
+						<input type=radio name=choiceFilterHasAblage value=any checked=true><label for=any>egal</label></input>
+						<div class=fieldValue>
+							<div name="messages"></div>
+							<div id=divAblageList class="field editable-list"></div>
+							<input id=textBoxSearchAblageByPath type=text class=field></input>
+							<a id=buttonAddAblage title="hinzufügen" class="notToPrint ui-button"><i class="fas fa-check"></i></a>
+						</div>
+				    </div>
+				</div>
+				<div id="divKontexte" class=fieldBlock>
+				    <div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Es kann nach Funden gesucht werden, die einem oder keinem Kontext zugeordnet sind. Mit 'egal' wird das Kriterium ignoriert."></i>
+					    <label>hat Kontext: </label>
+				    </div>
+				    <div class=fieldValue>
+						<input type=radio name=choiceFilterHasKontext value=yes><label for=yes>ja</label></input>
+						<input type=radio name=choiceFilterHasKontext value=no><label for=no>nein</label></input>
+						<input type=radio name=choiceFilterHasKontext value=any checked=true><label for=any>egal</label></input>
+						<div class=fieldValue>
+							<div name="messages"></div>
+							<div id=divKontextList class="field editable-list"></div>
+							<input id=textBoxSearchKontextByPath type=text class=field></input>
+							<a id=buttonAddKontext title="hinzufügen" class="notToPrint ui-button"><i class="fas fa-check"></i></a>
+						</div>
+				    </div>
+			    </div>
+				<div class=fieldBlock>
+				    <div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Es kann nach Funden gesucht werden, die eine Bewertung von genau 0, 1, 2, 3, 4, oder 5 Sternen haben. Mit der Zusatzeinstellung 'mindestens' wird auch nach höheren Bewertungen gesucht."></i>
+					    <label>Bewertung: </label>
+				    </div>
+				    <div class=fieldValue>
+						<select id=choiceFilterRating class="selectmenu field">
+							<option value=0>0</option>
+							<option value=1>1</option>
+							<option value=2>2</option>
+							<option value=3>3</option>
+							<option value=4>4</option>
+							<option value=5>5</option>
+						</select>
+						<input type=radio name=choiceFilterRatingPrecision value=exact><label for=exact>exakt</label></input>
+						<input type=radio name=choiceFilterRatingPrecision value=min checked=true><label for=min>mindestens</label></input>
+				    </div>
+			    </div>
+				<div class=fieldBlock>
+				    <div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Es kann nach Funden gesucht werden, denen eine oder keine Dateiresource zugeordnet ist. Mit 'egal' wird das Kriterium ignoriert."></i>
+					    <label>hat Dateiname: </label>
+				    </div>
+				    <div class=fieldValue>
+						<input type=radio name=choiceFilterHasFileName value=yes><label for=yes>ja</label></input>
+						<input type=radio name=choiceFilterHasFileName value=no><label for=no>nein</label></input>
+						<input type=radio name=choiceFilterHasFileName value=any checked=true><label for=any>egal</label></input>
+				    </div>
+				</div>
+			    <div class=fieldBlock>
+				    <div class=fieldDescription>
+						<i class="help notToPrint fas fa-question-circle" title="Es kann nach Funden gesucht werden, die eine Dateiresource mit dem exakten Dateinamen aufweisen oder den gesuchten Text im Dtaeinamen enthalten. Ohne Dateinamenstext und mit der Einstellung 'enthält' wird das Kriterium ignoriert."></i>
+					    <label>Dateiname: </label>
+				    </div>
+				    <div class=fieldValue>
+					    <input id=textboxFilterFileName type=text class=field></input>
+						<input type=radio name=choiceFilterFileName value=exact><label for=exact>exakt</label></input>
+						<input type=radio name=choiceFilterFileName value=contains checked=true><label for=contains>enthält</label></input>
+					</div>
+				</div>
+				<input type=button id=buttonSearch value=Suche class="field notToPrint formButton"></input>
+				<label id=labelCount></label>
+				<input type=button id=buttonGoToFirstPage value=Anfang />
+				<input type=button id=buttonGoToPreviousPage value=Zurück />
+				<input type=button id=buttonGoToNextPage value=Weiter />
+				<input type=button id=buttonGoToLastPage value=Ende />
+				<div id=gridContainer></div>
+			</div>
+		</div>
+	</div>
+</body>

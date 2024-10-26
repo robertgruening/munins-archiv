@@ -1,0 +1,19 @@
+.widget {
+	width: 300px;
+	max-width: 300px;
+	height: 250px;
+	max-height: 250px;
+	overflow-y: scroll;
+	border: 1px solid lightgray;
+	padding: 10px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+.widget h3 {
+	margin-top: 0px;
+}
+
+.widget h3 i {
+	margin-right: 5px;
+}

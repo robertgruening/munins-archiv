@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
-ini_set("display_errors", 1); 
-    
+ini_set("display_errors", 1);
+
 Main();
 
 function Main()
@@ -12,7 +12,7 @@ function Main()
     $config["MYSQL_KENNWORT"] = "";
     $config["MYSQL_DATENBANK"] = "Munins_Archiv";
     $config["DATABASE_BACKUP_FILE_PATH"] = "";
-    $config["DATABASE_BACKUP_FILE_NAME"] = "Munins_Archiv_v1.0.sql";
+    $config["DATABASE_BACKUP_FILE_NAME"] = "Munins_Archiv_v1.1.sql";
 
     echo "MUNINS ARCHIV\r\n";
     echo "\r\n";
@@ -23,20 +23,20 @@ function Main()
     echo "Falls Sie das Upgrade abbrechen wollen, verwenden Sie die Tastenkombination Steuerung und C (STRG+C).\r\n";
     readline("Weiter mit [EINGABE] ...");
     echo "\r\n";
-    echo "Starte Upgrade von Version 1.0 auf Version 1.1.\r\n";
+    echo "Starte Upgrade von Version 1.1 auf Version 1.2.\r\n";
     echo "\r\n";
     echo "\r\n";
-    
+
     echo "1. Konfiguriere Parameter\r\n";
     echo "Im Folgenden müssen Sie Zugangsdaten und Einstellungen vornehmen, damit das Skript das Upgrade durchführen kann.\r\n";
     readline("Weiter mit [EINGABE] ...");
     echo "\r\n";
-    $config = FillConfig($config); 
-    echo "\r\n"; 
-    ListConfig($config);    
+    $config = FillConfig($config);
+    echo "\r\n";
+    ListConfig($config);
     readline("Weiter mit [EINGABE] ...");
     echo "\r\n";
-    
+
     echo "2. Datenbanksicherung\r\n";
     echo "Im Folgenden wird eine Sicherungsdatei mit dem Inhalt der Datenbank \"Munins_Archiv\" erzeugt.\r\n";
     readline("Weiter mit [EINGABE] ...");
@@ -46,49 +46,61 @@ function Main()
     echo "\r\n";
 
     echo "3. Datenbankaktualisierung\r\n";
-    echo "Im Folgenden werden alle Grabungsdaten gelöscht. Aufgrund der Komplexität von Grabungsdaten muss diese für die Anwendung \"Munins Archiv\" neu bewertet und entwickelt werden.\r\n";
-    readline("Weiter mit [EINGABE] ...");
-    echo "\r\n";
-    DeleteGrabungen($config);
-    readline("Weiter mit [EINGABE] ...");
-    echo "\r\n";
+    echo "Im Folgenden werden alle Fundstellen um geografische Positionen erweitert. \r\n";
+	if (readline("Weiter mit \"ja\": ") == "ja")
+	{
+		echo "\r\n";
+		UpgradeFundstellen($config);
+		readline("Weiter mit [EINGABE] ...");
+	}
+	echo "\r\n";
 
-    echo "Im Folgenden wird die Tabelle \"Fund\" um neue Felder erweitert.\r\n";
-    readline("Weiter mit [EINGABE] ...");
-    echo "\r\n";
-    UpgradeTableFund($config);
-    readline("Weiter mit [EINGABE] ...");
-    echo "\r\n";
+    echo "Im Folgenden werden alle Ablagen um eine GUID (UUID) erweitert.\r\n";
+	if (readline("Weiter mit \"ja\": ") == "ja")
+	{
+		echo "\r\n";
+		UpgradeAblagen($config);
+		readline("Weiter mit [EINGABE] ...");
+	}
+	echo "\r\n";
 
-    echo "Im Folgenden wird die Segmentierung der Nummern des Landesamtes für Denkmalpflege (LfD) aufgehoben. Außerdem werden die bisherigen LfD-Erfassungsnummern zu LfD-Nummern umgewandelt. Mit diesen Änderungen soll dem Umstand Rechnung getragen werden, dass die Landesämter ihr Nummerierungssystem ändern und unterschiedliche Landesämter unterschiedliche Nummerierungssystem haben.\r\n";
-    readline("Weiter mit [EINGABE] ...");
-    echo "\r\n";
-    UpgradeLfDNummern($config);
-    readline("Weiter mit [EINGABE] ...");
-    echo "\r\n";
+    echo "Im Folgenden werden alle Orte gelöscht. Orte werden um eine Kategorie erweitert.\r\n";
+	if (readline("Weiter mit \"ja\": ") == "ja")
+	{
+		echo "\r\n";
+		UpgradeOrte($config);
+		readline("Weiter mit [EINGABE] ...");
+	}
+	echo "\r\n";
+	
+	echo "Im Folgenden werden Funde um Datei- und Ordnernamen und Bewertungen erweitert.\r\n";
+	if (readline("Weiter mit \"ja\": ") == "ja")
+	{
+		echo "\r\n";
+		UpgradeFunde($config);
+		readline("Weiter mit [EINGABE] ...");
+	}
+	echo "\r\n";
+	
+	echo "Im Folgenden werden Ablagen, Fundattribute, Kontexte und Orte um vorberechnete Pfade erweitert.\r\n";
+	if (readline("Weiter mit \"ja\": ") == "ja")
+	{
+		echo "\r\n";
+		UpgradeByPrecalculatedPath($config);
+		readline("Weiter mit [EINGABE] ...");
+	}
+	echo "\r\n";
 
-    echo "Im Folgenden werden die Bezeichnungen der Ablagen vom Typ \"Karton\" so geändert, dass diese nicht mehr zur Laufzeit vom System berechnet werden, sondern vollständig vom Anwender bestimmt werden. Folglich ist die Kartonbezeichnung nicht mehr von den zugeordneten Kontexten abhängig.\r\n";
-    readline("Weiter mit [EINGABE] ...");
-    echo "\r\n";
-    UpgradeKartonBezeichnungen($config);
-    readline("Weiter mit [EINGABE] ...");
-    echo "\r\n";
+    echo "Im Folgenden wird die Benutzerverwaltung angelgt.\r\n";
+	if (readline("Weiter mit \"ja\": ") == "ja")
+	{
+		echo "\r\n";
+		CreateTableUser($config);
+		readline("Weiter mit [EINGABE] ...");
+	}
+	echo "\r\n";
 
-    echo "Im Folgenden werden die Bezeichnungen daraufhin geprüft, dass sie gesetzt sind und, dass sie unter den Kindelementen eindeutig ist. Muss ein Element geändert werden, so fordert das Skript dazu auf. Diese Aktualisierung erfolgt für Fundattribute, Kontexte, Ablagen und Orte.\r\n";
-    readline("Weiter mit [EINGABE] ...");
-    echo "\r\n";
-    UpgradeAllBezeichnungen($config);
-    readline("Weiter mit [EINGABE] ...");
-    echo "\r\n";
-
-    echo "Im Folgenden wird die Struktur der Datenbank \"Munins_Archiv\" aufgeräumt. Tabellen, Spalten und Indexe werden dabei gelöscht.\r\n";
-    readline("Weiter mit [EINGABE] ...");
-    echo "\r\n";
-    CleanUpDatabaseStructure($config);
-    readline("Weiter mit [EINGABE] ...");
-    echo "\r\n";
-
-    echo "Beende Upgrade von Version 1.0 auf Version 1.1.\r\n";
+    echo "Beende Upgrade von Version 1.1 auf Version 1.2.\r\n";
 }
 
 #region configuration
@@ -100,12 +112,12 @@ function FillConfig($config)
     echo "\r\n";
     echo "Geben Sie nachfolgend den Verzeichnispfad an, in dem die Sicherungsdateien für das Upgrade abgelegt werden sollen.\r\n";
     $config["DATABASE_BACKUP_FILE_PATH"] = readline("Pfad: ");
-    
+
     if (!endsWith($config["DATABASE_BACKUP_FILE_PATH"], "/"))
     {
         $config["DATABASE_BACKUP_FILE_PATH"] .= "/";
     }
-    
+
     return $config;
 }
 
@@ -122,20 +134,20 @@ function ListConfig($config)
 function startsWith($haystack, $needle)
 {
      $length = strlen($needle);
-     
+
      if ($length == 0)
      {
         return true;
      }
-          
+
      return (substr($haystack, 0, $length) === $needle);
 }
 
 function endsWith($haystack, $needle)
 {
     $length = strlen($needle);
-    
-    if ($length == 0) 
+
+    if ($length == 0)
     {
         return true;
     }
@@ -156,38 +168,6 @@ function CreateDatabaseBackup($config)
 
 #region SQL operations
 #region table operations
-function RenameTable($config, $oldTableName, $newTableName)
-{
-    $ergebnis = false;
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        RENAME TABLE ".$oldTableName." TO ".$newTableName.";");
-    }
-    $mysqli->close();
-    
-    return $ergebnis;
-}
-
-function DeleteTable($config, $tableName)
-{
-    $ergebnis = false;
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        DROP TABLE ".$tableName.";");
-    }
-    $mysqli->close();
-    
-    return $ergebnis;
-}
-
 function DoesTableExist($config, $tableName)
 {
     $doesTableExist = false;
@@ -197,54 +177,16 @@ function DoesTableExist($config, $tableName)
     {
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
-	        SELECT COUNT(*) AS Anzahl 
+	        SELECT COUNT(*) AS Anzahl
 	        FROM information_schema.TABLES
-	        WHERE TABLE_SCHEMA = '".$config["MYSQL_DATENBANK"]."' AND 
+	        WHERE TABLE_SCHEMA = '".$config["MYSQL_DATENBANK"]."' AND
 	        TABLE_NAME = '".$tableName."';");
 	    $datensatz = $ergebnis->fetch_assoc();
 	    $doesTableExist = intval($datensatz["Anzahl"]) == 0 ? false : true;
     }
     $mysqli->close();
-    
+
     return $doesTableExist;
-}
-
-function RemoveTable($config, $tableName)
-{
-    if (!DoesTableExist($config, $tableName))
-    {
-        echo "Die Tabelle \"".$tableName."\" ist bereits entfernt.\r\n";
-    }
-    else
-    {
-        if (DeleteTable($config, $tableName))
-        {        
-            echo "Die Tabelle \"".$tableName."\" wurde erfolgreich entfernt.\r\n";
-        }
-        else
-        {
-            echo "Es ist ein Fehler aufgetreten beim Löschen der Tabelle \"".$tableName."\".\r\n";
-        }
-    }
-}
-#endregion
-
-#region column operations
-function RenameColumnInTable($config, $tableName, $oldColumnName, $newColumnName)
-{
-    $ergebnis = false;
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-            ALTER TABLE ".$tableName."
-            CHANGE COLUMN ".$oldColumnName." ".$newColumnName." INT(11) NOT NULL;");
-    }
-    $mysqli->close();
-    
-    return $ergebnis;
 }
 
 function DoesColumnExist($config, $tableName, $columnName)
@@ -256,113 +198,128 @@ function DoesColumnExist($config, $tableName, $columnName)
     {
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
-	        SELECT COUNT(*) AS Anzahl 
-	        FROM information_schema.COLUMNS 
-	        WHERE TABLE_SCHEMA = '".$config["MYSQL_DATENBANK"]."' AND 
-	        TABLE_NAME = '".$tableName."' AND 
+	        SELECT COUNT(*) AS Anzahl
+	        FROM information_schema.COLUMNS
+	        WHERE TABLE_SCHEMA = '".$config["MYSQL_DATENBANK"]."' AND
+	        TABLE_NAME = '".$tableName."' AND
 	        COLUMN_NAME = '".$columnName."';");
 	    $datensatz = $ergebnis->fetch_assoc();
 	    $doesColumnExist = intval($datensatz["Anzahl"]) == 0 ? false : true;
     }
     $mysqli->close();
-    
+
     return $doesColumnExist;
 }
 
-function CreateColumn($config, $tableName, $columnName, $dataType)
+function CreateTableFundstelle($config)
 {
-    $ergebnis = false;
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
+    if (DoesTableExist($config, "Fundstelle"))
     {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        ALTER TABLE ".$tableName." 
-            ADD COLUMN ".$columnName." ".$dataType." NULL;");
-    }
-    $mysqli->close();
-    
-    return $ergebnis;
-}
-
-function AddColumnToTable($config, $tableName, $columnName, $dataType)
-{
-    if (DoesColumnExist($config, $tableName, $columnName))
-    {
-        echo "Die Spalte \"".$columnName."\" existiert bereits in der Tabelle \"".$tableName."\".\r\n";
+        echo "Die Tabelle \"Fundstelle\" existiert bereits.\r\n";
     }
     else
     {
-        if (CreateColumn($config, $tableName, $columnName, $dataType))
-        {        
-            echo "Die Spalte \"".$columnName."\" wurde erfolgreich in der Tabelle \"".$tableName."\" angelegt.\r\n";
-        }
-        else
-        {
-            echo "Es ist ein Fehler aufgetreten beim Anlegen der Spalte \"".$columnName."\" in der Tabelle \"".$tableName."\".\r\n";
-        }
+    	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    	if (!$mysqli->connect_errno)
+    	{
+	    	$mysqli->set_charset("utf8");
+	    	$ergebnis = $mysqli->query("
+				CREATE TABLE IF NOT EXISTS `Fundstelle` (
+  					`Id` int(11) NOT NULL,
+  					`GeoPoint` point DEFAULT NULL,
+  					PRIMARY KEY (`Id`)
+				);
+	    	");
+
+	    	if ($mysqli->errno)
+	    	{
+	    		echo "Beim Anlegen der Tabelle \"Fundstelle\" ist ein Fehler aufgetreten!\r\n";
+	    		echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    	}
+	    	else
+	    	{
+	    		echo "Tabelle \"Fundstelle\" ist angelegt.\r\n";
+	    	}
+    	}
+
+    	$mysqli->close();
     }
 }
 
-function DropColumn($config, $tableName, $columnName)
+function CreateTableUser($config)
 {
-    $ergebnis = false;
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
+    if (DoesTableExist($config, "User"))
     {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        ALTER TABLE ".$tableName." 
-            DROP COLUMN ".$columnName.";");
-    }
-    $mysqli->close();
-    
-    return $ergebnis;
-}
-
-function RemoveColumnFromTable($config, $tableName, $columnName)
-{
-    if (DoesColumnExist($config, $tableName, $columnName))
-    {
-        if (DropColumn($config, $tableName, $columnName))
-        {        
-            echo "Die Spalte \"".$columnName."\" wurde erfolgreich aus der Tabelle \"".$tableName."\" entfernt.\r\n";
-        }
-        else
-        {
-            echo "Es ist ein Fehler aufgetreten beim Entfernen der Spalte \"".$columnName."\" aus der Tabelle \"".$tableName."\".\r\n";
-        }
+        echo "Die Tabelle \"User\" existiert bereits.\r\n";
     }
     else
     {
-        echo "Die Spalte \"".$columnName."\" ist bereits aus der Tabelle \"".$tableName."\" entfernt.\r\n";
+    	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    	if (!$mysqli->connect_errno)
+    	{
+	    	$mysqli->set_charset("utf8");
+	    	$ergebnis = $mysqli->query("
+				CREATE TABLE IF NOT EXISTS `User` (
+  					`Id` int(11) NOT NULL AUTO_INCREMENT,
+					`UserName` varchar(20) NOT NULL,
+					`Guid` varchar(36) DEFAULT NULL,
+					`Bookmark` varchar(100) NULL,
+					PRIMARY KEY (`Id`),
+					UNIQUE KEY `IndexUserGuid` (`Guid`)
+				);
+	    	");
+
+	    	if ($mysqli->errno)
+	    	{
+	    		echo "Beim Anlegen der Tabelle \"User\" ist ein Fehler aufgetreten!\r\n";
+	    		echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    	}
+	    	else
+	    	{
+	    		echo "Tabelle \"User\" ist angelegt.\r\n";
+	    	}
+    	}
+
+    	$mysqli->close();
     }
 }
-#endregion
 
-#region index operations
-function DoesIndexExist($config, $tableName, $indexName)
+function CreateTableOrtCategory($config)
 {
-    $doesIndexExist = false;
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
+    if (DoesTableExist($config, "OrtCategory"))
     {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-            SELECT COUNT(*) AS Anzahl 
-            FROM INFORMATION_SCHEMA.STATISTICS
-            WHERE TABLE_SCHEMA = '".$config["MYSQL_DATENBANK"]."' AND
-                TABLE_NAME = '".$tableName."' AND
-                INDEX_NAME = '".$indexName."';");
-	    $datensatz = $ergebnis->fetch_assoc();
-	    $doesIndexExist = intval($datensatz["Anzahl"]) == 0 ? false : true;
+        echo "Die Tabelle \"OrtCategory\" existiert bereits.\r\n";
     }
-    $mysqli->close();
-    
-    return $doesIndexExist;
+    else
+    {
+    	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    	if (!$mysqli->connect_errno)
+    	{
+	    	$mysqli->set_charset("utf8");
+	    	$ergebnis = $mysqli->query("
+				CREATE TABLE IF NOT EXISTS `OrtCategory` (
+  					`Id` int(11) NOT NULL AUTO_INCREMENT,
+  					`Bezeichnung` varchar(30) NOT NULL UNIQUE,
+                    PRIMARY KEY (`Id`)
+				);
+	    	");
+
+	    	if ($mysqli->errno)
+	    	{
+	    		echo "Beim Anlegen der Tabelle \"OrtCategory\" ist ein Fehler aufgetreten!\r\n";
+	    		echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    	}
+	    	else
+	    	{
+	    		echo "Tabelle \"OrtCategory\" ist angelegt.\r\n";
+	    	}
+    	}
+
+    	$mysqli->close();
+    }
 }
 
 function CreateUniqueIndex($config, $tableName, $indexName, $columnName)
@@ -374,74 +331,19 @@ function CreateUniqueIndex($config, $tableName, $indexName, $columnName)
     {
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
-	        CREATE UNIQUE INDEX ".$indexName." 
+	        CREATE UNIQUE INDEX ".$indexName."
             ON ".$tableName." (".$columnName.");");
     }
     $mysqli->close();
-    
+
     return $ergebnis;
-}
-
-function AddUniqueIndexToTable($config, $tableName, $indexName, $columnName)
-{
-    if (DoesIndexExist($config, $tableName, $indexName))
-    {
-        echo "Der eindeutige Index \"".$indexName."\" existiert bereits in der Tabelle \"".$tableName."\".\r\n";
-    }
-    else
-    {
-        if (CreateUniqueIndex($config, $tableName, $indexName, $columnName))
-        {        
-            echo "Der eindeutige Index \"".$indexName."\" wurde erfolgreich in der Tabelle \"".$tableName."\" angelegt.\r\n";
-        }
-        else
-        {
-            echo "Es ist ein Fehler aufgetreten beim Anlegen des eindeutigen Index' \"".$indexName."\" in der Tabelle \"".$tableName."\".\r\n";
-        }
-    }
-}
-
-function DropIndex($config, $tableName, $indexName)
-{
-    $ergebnis = false;
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        ALTER TABLE ".$tableName." 
-            DROP INDEX ".$indexName.";");
-    }
-    $mysqli->close();
-    
-    return $ergebnis;
-}
-
-function RemoveIndexFromTable($config, $tableName, $indexName)
-{
-    if (DoesIndexExist($config, $tableName, $indexName))
-    {
-        if (DropIndex($config, $tableName, $indexName))
-        {        
-            echo "Der Index \"".$indexName."\" wurde erfolgreich aus der Tabelle \"".$tableName."\" entfernt.\r\n";
-        }
-        else
-        {
-            echo "Es ist ein Fehler aufgetreten beim Entfernen des Index' \"".$indexName."\" aus der Tabelle \"".$tableName."\".\r\n";
-        }
-    }
-    else
-    {
-        echo "Der Index \"".$indexName."\" ist bereits aus der Tabelle \"".$tableName."\" entfernt.\r\n";
-    }
 }
 #endregion
 #endregion
 
 #region data operations
 #region Ablage
-function GetAblageByType($config, $ablageType)
+function GetAblage($config)
 {
     $ablagen = array();
     $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
@@ -450,10 +352,9 @@ function GetAblageByType($config, $ablageType)
     {
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
-        SELECT Ablage.Id AS Id, Ablage.Bezeichnung AS Bezeichnung
-        FROM Ablage LEFT JOIN AblageTyp ON Ablage.Typ_Id = AblageTyp.Id	        
-        WHERE AblageTyp.Bezeichnung = '".$ablageType."';");
-	        
+        SELECT Id, Bezeichnung
+        FROM Ablage;");
+
 	    if (!$mysqli->errno)
 		{
 			while ($datensatz = $ergebnis->fetch_assoc())
@@ -465,36 +366,37 @@ function GetAblageByType($config, $ablageType)
 		}
     }
     $mysqli->close();
-    
+
     return $ablagen;
 }
-#endregion
 
-#region Kontext
-function GetKontext($config, $id)
+function InsertGuidToAblage($config, $ablage)
 {
-    $kontext = null;
     $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
 
     if (!$mysqli->connect_errno)
     {
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
-	        SELECT Id, Bezeichnung, Parent_Id
-	        FROM Kontext
-	        WHERE Id = ".$id.";");
-	        
-	    if (!$mysqli->errno)
-		{
-			$datensatz = $ergebnis->fetch_assoc();
-			$kontext = $datensatz;
-		}
+	        UPDATE Ablage
+	        SET Guid = UUID()
+	        WHERE Id = ".$ablage["Id"].";");
+
+	    if ($mysqli->errno)
+	    {
+	    	echo "Beim Hinzufügen der GUID für die Ablage (".$ablage["Id"].") ist ein Fehler aufgetreten!\r\n";
+	    	echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    }
+	    else
+	    {
+	    	echo "GUID wurde erfolgreich zu Ablage (".$ablage["Id"].") hinzugefügt.\r\n";
+	    }
     }
     $mysqli->close();
-    
-    return $kontext;
 }
+#endregion
 
+#region Kontext
 function GetKontexteByType($config, $kontextType)
 {
     $kontexte = array();
@@ -505,9 +407,9 @@ function GetKontexteByType($config, $kontextType)
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
 	        SELECT Kontext.Id AS Id, Kontext.Bezeichnung AS Bezeichnung
-	        FROM Kontext LEFT JOIN KontextTyp ON Kontext.Typ_Id = KontextTyp.Id	        
+	        FROM Kontext LEFT JOIN KontextTyp ON Kontext.Typ_Id = KontextTyp.Id
 	        WHERE KontextTyp.Bezeichnung = '".$kontextType."';");
-	        
+
 	    if (!$mysqli->errno)
 		{
 			while ($datensatz = $ergebnis->fetch_assoc())
@@ -519,728 +421,560 @@ function GetKontexteByType($config, $kontextType)
 		}
     }
     $mysqli->close();
-    
+
     return $kontexte;
 }
 
-function GetKontextByAblage($config, $ablageId)
+function InsertFundstelleToTableFundstelle($config, $fundstelle)
 {
-    $kontext = null;
     $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
 
     if (!$mysqli->connect_errno)
     {
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
-	        SELECT Kontext.Id AS Id, Kontext.Bezeichnung AS Bezeichnung, Kontext.Parent_Id AS Parent_Id
-	        FROM Kontext LEFT JOIN Ablage_Kontext ON Kontext.Id = Ablage_Kontext.Kontext_Id
-	        WHERE Ablage_Kontext.Ablage_Id = ".$ablageId."
-	        LIMIT 1;");
-	        
-	    if (!$mysqli->errno)
-		{
-			$datensatz = $ergebnis->fetch_assoc();
-			$kontext = $datensatz;
-		}
+	        INSERT INTO Fundstelle(Id)
+	        VALUES(".$fundstelle["Id"].");");
+
+
+	    if ($mysqli->errno)
+	    {
+	    	echo "Beim Anlegen einer Fundstelle in der Tabelle \"Fundstelle\" ist ein Fehler aufgetreten!\r\n";
+	    	echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    }
+	    else
+	    {
+	    	echo "Fundstelle (".$fundstelle["Id"].") ist erfolgreich in der Tabelle \"Fundstelle\" angelgt.\r\n";
+	    }
     }
     $mysqli->close();
-    
-    return $kontext;
 }
 
-function UnlinkAblagenFromKontext($config, $kontext)
+function InsertColumnGuidInTableAblage($config)
 {
-    $ablagen = array();
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+	if (DoesColumnExist($config, "Ablage", "Guid"))
+	{
+		echo "Die Spalte \"Guid\" existiert bereits in der Tabelle \"Ablage\".\r\n";
+	}
+	else
+	{
+   	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
 
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        DELETE
-	        FROM Ablage_Kontext
-	        WHERE Kontext_Id = ".$kontext["Id"].";");
-	        
-	    if (!$mysqli->errno)
-		{
-			echo "Verknüpfungen des Kontexts (".$kontext["Id"].") mit Ablagen sind gelöscht.\r\n";
-		}
-    }
-    $mysqli->close();
-    
-    return $ablagen;
-}
+   	if (!$mysqli->connect_errno)
+   	{
+	   	$mysqli->set_charset("utf8");
+	    	$ergebnis = $mysqli->query("
+	        ALTER TABLE `Ablage` ADD COLUMN `Guid` varchar(36) DEFAULT NULL;");
 
-function UnlinkOrteFromKontext($config, $kontext)
-{
-    $ablagen = array();
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+	   	if ($mysqli->errno)
+	   	{
+	    		echo "Beim Anlegen der Spalte \"Guid\" in der Tabelle \"Ablage\" ist ein Fehler aufgetreten!\r\n";
+	    		echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    	}
+	    	else
+	    	{
+	    		echo "Spalte \"Guid\" wurde erfolgreich in Tabelle \"Ablage\" angelgt.\r\n";
+	    		CreateUniqueIndex($config, "Ablage", "IndexAblageGuid", "Guid");
+	    	}
+    	}
 
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        DELETE
-	        FROM Kontext_Ort
-	        WHERE Kontext_Id = ".$kontext["Id"].";");
-	        
-	    if (!$mysqli->errno)
-		{
-			echo "Verknüpfungen des Kontexts (".$kontext["Id"].") mit Orten sind gelöscht.\r\n";
-		}
-    }
-    $mysqli->close();
-    
-    return $ablagen;
-}
-
-function UnlinkLfDsFromKontext($config, $kontext)
-{
-    $ergebnis = false;
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-            DELETE
-            FROM Kontext_LfD
-            WHERE Kontext_Id = ".$kontext["Id"].";");
-
-        if (!$mysqli->errno)
-        {
-            echo "Verknüpfungen des Kontexts (".$kontext["Id"].") mit LfDs sind gelöscht.\r\n";
-        }
-    }
-    $mysqli->close();
-    
-    return $ergebnis;
-}
-
-function DeleteKontext($config, $kontext)
-{
-    $ergebnis = false;
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        DELETE
-            FROM Kontext
-            WHERE Id = ".$kontext["Id"].";");
-    }
-    $mysqli->close();
-    
-    return $ergebnis;
-}
-
-function DeleteKontextByType($config, $kontextTypeName)
-{
-    $kontexte = GetKontexteByType($config, $kontextTypeName);
-
-    for ($i = 0; $i < count($kontexte); $i++)
-    {
-        $funde = GetFundeByKontext($config, $kontexte[$i]);
-
-        for ($j = 0; $j < count($funde); $j++)
-        {
-            UnlinkFundAttributeFromFund($config, $funde[$j]);
-
-            if (DeleteFund($config, $funde[$j]))
-            {
-                echo "Fund (".$funde[$j]["Id"].") ist gelöscht.\r\n";
-            }
-            else
-            {
-                echo "Fehler: Fund (".$funde[$j]["Id"].") wurde nicht gelöscht.\r\n";
-            }
-        }
-
-        UnlinkAblagenFromKontext($config, $kontexte[$i]);        
-        UnlinkOrteFromKontext($config, $kontexte[$i]);
-        UnlinkLfDsFromKontext($config, $kontexte[$i]);
-
-        if (DeleteKontext($config, $kontexte[$i]))
-        {
-            echo "Kontext (".$kontexte[$i]["Id"].") ist gelöscht.\r\n";
-        }
-        else
-        {
-            echo "Fehler: Kontext (".$kontexte[$i]["Id"].") ist nicht gelöscht.\r\n";
-        }
-    }
+   	$mysqli->close();
+	}
 }
 #endregion
 
-#region KontextTyp
-function DeleteKontextType($config, $kontextTypeName)
+#region Ort
+function DeleteLinkedDataToTableOrt($config)
 {
-    $ergebnis = false;
     $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
 
     if (!$mysqli->connect_errno)
     {
 	    $mysqli->set_charset("utf8");
-        $ergebnis = $mysqli->query("
+	    $ergebnis = $mysqli->query("
             DELETE
-            FROM KontextTyp
-            WHERE Bezeichnung = '".$kontextTypeName."';");
-            
-        if (!$mysqli->errno)
-        {
-            echo "Kontexttyp \"".$kontextTypeName."\" ist gelöscht.\r\n";
-        }
+            FROM Kontext_Ort;");
+
+
+	    if ($mysqli->errno)
+	    {
+	    	echo "Beim Löschen aller Verknüpfungen zwischen Orten und Kontexten ist ein Fehler aufgetreten!\r\n";
+	    	echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    }
+	    else
+	    {
+	    	echo "Alle Verknüpfungen zwischen Orten und Kontexten sind erfolgreich gelöscht.\r\n";
+	    }
     }
     $mysqli->close();
+}
+
+function DeleteDataInTableOrt($config)
+{
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+        $mysqli->autocommit(false);
+        $mysqli->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+
+        $passed = true;
+        $passed = $mysqli->query("SET FOREIGN_KEY_CHECKS=0;") && $passed;
+
+        if ($passed)
+        {
+            $passed = $mysqli->query("DELETE FROM Ort;") && $passed;
+        }
+
+        if ($passed)
+        {
+            $passed = $mysqli->query("SET FOREIGN_KEY_CHECKS=1;") && $passed;
+        }
+
+        if ($passed)
+        {
+            $mysqli->commit();
+        }
+        else
+        {
+            $mysqli->rollback();
+        }
+
+	    if ($mysqli->errno)
+	    {
+	    	echo "Beim Löschen Orte ist ein Fehler aufgetreten!\r\n";
+	    	echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    }
+	    else
+	    {
+	    	echo "Alle Orte sind erfolgreich gelöscht.\r\n";
+	    }
+    }
+    $mysqli->close();
+}
+
+function InsertOrtCategoriesToTableOrtCategory($config)
+{
+    $ortCategoryBezeichnung = array("Kartasterdatum", "Gebietskörperschaft", "Flurname");
+
+    for ($i = 0; $i < count($ortCategoryBezeichnung); $i++)
+    {
+        InsertOrtCategoryToTableOrtCategory($config, $ortCategoryBezeichnung[$i]);
+    }
+}
+
+function InsertOrtCategoryToTableOrtCategory($config, $ortCategoryBezeichnung)
+{
+    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+    if (!$mysqli->connect_errno)
+    {
+	    $mysqli->set_charset("utf8");
+	    $ergebnis = $mysqli->query("
+	        INSERT INTO OrtCategory(Bezeichnung)
+	        VALUES('".$ortCategoryBezeichnung."');");
+
+	    if ($mysqli->errno)
+	    {
+	    	echo "Beim Anlegen einer Ortskategorie in der Tabelle \"OrtCategory\" ist ein Fehler aufgetreten!\r\n";
+	    	echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    }
+	    else
+	    {
+	    	echo "Ortskategorie (".$ortCategoryBezeichnung.") ist erfolgreich in der Tabelle \"OrtCategory\" angelgt.\r\n";
+	    }
+    }
+    $mysqli->close();
+}
+
+function InsertColumnCategoryIdInTableOrt($config)
+{
+	if (DoesColumnExist($config, "Ort", "Category_Id"))
+	{
+		echo "Die Spalte \"Category_Id\" existiert bereits in der Tabelle \"Ort\".\r\n";
+	}
+	else
+	{
+        $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
     
-    return $ergebnis;
+            $ergebnis = $mysqli->query("ALTER TABLE `Ort` ADD COLUMN `Category_Id` int NOT NULL, ADD FOREIGN KEY (`Category_Id`) REFERENCES `OrtCategory` (`Id`);");
+        
+            if ($mysqli->errno)
+            {
+                    echo "Beim Anlegen der Spalte \"Category_Id\" in der Tabelle \"Ort\" ist ein Fehler aufgetreten!\r\n";
+                    echo $mysqli->errno.": ".$mysqli->error."\r\n";
+            }
+            else
+            {
+                echo "Spalte \"Category_Id\" wurde erfolgreich in Tabelle \"Ort\" angelgt.\r\n";
+            }
+        }
+
+        $mysqli->close();
+	}
 }
 #endregion
 
 #region Fund
-function GetFundeByKontext($config, $kontext)
+function InsertColumnFileNameInTableFund($config)
 {
-    $funde = array();
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+	if (DoesColumnExist($config, "Fund", "FileName"))
+	{
+		echo "Die Spalte \"FileName\" existiert bereits in der Tabelle \"Fund\".\r\n";
+	}
+	else
+	{
+        $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
 
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        SELECT Id
-	        FROM Fund
-	        WHERE Kontext_Id = ".$kontext["Id"].";");
-	        
-	    if (!$mysqli->errno)
-		{
-			while ($datensatz = $ergebnis->fetch_assoc())
-			{
-				$fund["Id"] = intval($datensatz["Id"]);
-				array_push($funde, $fund);
-			}
-		}
-    }
-    $mysqli->close();
-    
-    return $funde;
-}
-
-function UnlinkFundAttributeFromFund($config, $fund)
-{
-    $ergebnis = false;
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-        $ergebnis = $mysqli->query("
-            DELETE
-            FROM Fund_FundAttribut
-            WHERE Fund_Id = ".$fund["Id"].";");
-            
-        if (!$mysqli->errno)
+        if (!$mysqli->connect_errno)
         {
-            echo "Verknüpfungen des Fundes (".$fund["Id"].") mit Fundattributen sind gelöscht.\r\n";
-        }
-    }
-    $mysqli->close();
+            $mysqli->set_charset("utf8");
     
-    return $ergebnis;
+            $ergebnis = $mysqli->query("ALTER TABLE `Fund` ADD COLUMN `FileName` varchar(255) DEFAULT NULL;");
+        
+            if ($mysqli->errno)
+            {
+                    echo "Beim Anlegen der Spalte \"FileName\" in der Tabelle \"Fund\" ist ein Fehler aufgetreten!\r\n";
+                    echo $mysqli->errno.": ".$mysqli->error."\r\n";
+            }
+            else
+            {
+                echo "Spalte \"FileName\" wurde erfolgreich in Tabelle \"Fund\" angelgt.\r\n";
+            }
+        }
+
+        $mysqli->close();
+	}
 }
 
-function DeleteFund($config, $fund)
+function InsertColumnFolderNameInTableFund($config)
 {
-    $ergebnis = false;
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+	if (DoesColumnExist($config, "Fund", "FolderName"))
+	{
+		echo "Die Spalte \"FolderName\" existiert bereits in der Tabelle \"Fund\".\r\n";
+	}
+	else
+	{
+        $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
 
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-        $ergebnis = $mysqli->query("
-	        DELETE
-            FROM Fund
-            WHERE Id = ".$fund["Id"].";");
-    }
-    $mysqli->close();
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
     
-    return $ergebnis;
+            $ergebnis = $mysqli->query("ALTER TABLE `Fund` ADD COLUMN `FolderName` varchar(255) DEFAULT NULL;");
+        
+            if ($mysqli->errno)
+            {
+                    echo "Beim Anlegen der Spalte \"FolderName\" in der Tabelle \"Fund\" ist ein Fehler aufgetreten!\r\n";
+                    echo $mysqli->errno.": ".$mysqli->error."\r\n";
+            }
+            else
+            {
+                echo "Spalte \"FolderName\" wurde erfolgreich in Tabelle \"Fund\" angelgt.\r\n";
+            }
+        }
+
+        $mysqli->close();
+	}
+}
+
+function InsertColumnRatingInTableFund($config)
+{
+	if (DoesColumnExist($config, "Fund", "Rating"))
+	{
+		echo "Die Spalte \"Rating\" existiert bereits in der Tabelle \"Fund\".";
+	}
+	else
+	{
+        $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
+    
+            $ergebnis = $mysqli->query("ALTER TABLE `Fund` ADD COLUMN `Rating` TINYINT NOT NULL DEFAULT 0;");
+        
+            if ($mysqli->errno)
+            {
+                    echo "Beim Anlegen der Spalte \"FolderName\" in der Tabelle \"Fund\" ist ein Fehler aufgetreten!\r\n";
+                    echo $mysqli->errno.": ".$mysqli->error."\r\n";
+            }
+            else
+            {
+                echo "Spalte \"FolderName\" wurde erfolgreich in Tabelle \"Fund\" angelgt.\r\n";
+            }
+        }
+
+        $mysqli->close();
+	}
 }
 #endregion
+
+function InsertColumnPathInTable($config, $tableName)
+{
+	if (DoesColumnExist($config, $tableName, "Path"))
+	{
+		echo "Die Spalte \"Path\" existiert bereits in der Tabelle \"".$tableName."\".\r\n";
+	}
+	else
+	{
+        $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
+    
+            $ergebnis = $mysqli->query("ALTER TABLE `".$tableName."` ADD COLUMN `Path` varchar(1000);");
+        
+            if ($mysqli->errno)
+            {
+                    echo "Beim Anlegen der Spalte \"Path\" in der Tabelle \"".$tableName."\" ist ein Fehler aufgetreten!\r\n";
+                    echo $mysqli->errno.": ".$mysqli->error."\r\n";
+            }
+            else
+            {
+                echo "Spalte \"Path\" wurde erfolgreich in Tabelle \"".$tableName."\" angelegt.\r\n";
+            }
+        }
+
+        $mysqli->close();
+	}
+}
 #endregion
 
 #region tasks
-#region clean up
-function CleanUpDatabaseStructure($config)
+#region extend "Fundstelle" by "GeoPoint"
+function UpgradeFundstellen($config)
 {
-    RemoveTable($config, "Fundstelle_Flurstuecke");
-    RemoveTable($config, "Fundstelle");
-    RemoveTable($config, "Ort_Ort");
-    RemoveTable($config, "Ablage_Kontext");
+	CreateTableFundstelle($config);
+	$fundstellen = GetKontexteByType($config, "Fundstelle");
+
+	for ($i = 0; $i < count($fundstellen); $i++)
+	{
+		InsertFundstelleToTableFundstelle($config, $fundstellen[$i]);
+	}
 }
 #endregion
 
-#region delete "Grabungen"
-function DeleteGrabungen($config)
+#region extend "Ablagen" by "GUID"
+function UpgradeAblagen($config)
 {
-    echo "Lösche Kontexte vom Typ \"Laufende Nummer\".\r\n";
-    DeleteKontextByType($config, "Laufende Nummer");
-    DeleteKontextType($config, "Laufende Nummer");
-    echo "\r\n";
+	InsertColumnGuidInTableAblage($config);
+	$ablagen = GetAblage($config);
 
-    echo "Lösche Kontexte vom Typ \"Befund\".\r\n";
-    DeleteKontextByType($config, "Befund");
-    DeleteKontextType($config, "Befund");
-    echo "\r\n";
-
-    echo "Lösche Kontexte vom Typ \"Fläche\".\r\n";
-    DeleteKontextByType($config, "Fläche");
-    DeleteKontextType($config, "Fläche");
-    echo "\r\n";
-
-    echo "Lösche Kontexte vom Typ \"Grabung\".\r\n";
-    DeleteKontextByType($config, "Grabung");
-    DeleteKontextType($config, "Grabung");
-    echo "\r\n";
+	for ($i = 0; $i < count($ablagen); $i++)
+	{
+		InsertGuidToAblage($config, $ablagen[$i]);
+	}
 }
 #endregion
 
-#region upgrade "Fund"
-function UpgradeTableFund($config)
+#region extent "Orte" by "Category"
+function UpgradeOrte($config)
 {
-    AddColumnToTable($config, "Fund", "Dimension1", "INT");
-    AddColumnToTable($config, "Fund", "Dimension2", "INT");
-    AddColumnToTable($config, "Fund", "Dimension3", "INT");
-    AddColumnToTable($config, "Fund", "Masse", "INT");
+    DeleteLinkedDataToTableOrt($config);
+    DeleteDataInTableOrt($config);
+
+    CreateTableOrtCategory($config);
+    CreateUniqueIndex($config, "OrtCategory", "IndexOrtCategoryBezeichnung", "Bezeichnung");
+    InsertOrtCategoriesToTableOrtCategory($config);
+
+    InsertColumnCategoryIdInTableOrt($config);    
 }
 #endregion
 
-#region upgrade "Bezeichnung" of "Kartons"
-function UpgradeKartonBezeichnungen($config)
+#region extent "Funde" by file and folder name and rating
+function UpgradeFunde($config)
 {
-    $kartons = GetAblageByType($config, "Karton");
-    
-    for ($i = 0; $i < count($kartons); $i++)
-    {
-        echo "Bearbeite Karton mit Id ".$kartons[$i]["Id"]."\r\n";
-        $kontextFullBezeichnung = GetKontextFullBezeichnungByAblageId($config, $kartons[$i]["Id"]);
-        
-        if ($kontextFullBezeichnung != "" &&
-            $kartons[$i]["Bezeichnung"] != null &&
-            $kartons[$i]["Bezeichnung"] != "")
-        {
-            echo "Kartonbezeichnung: ............. ".$kartons[$i]["Bezeichnung"]."\r\n";
-            echo "Vollständige Kontextbezeichnung: ".$kontextFullBezeichnung."\r\n";
-            
-            if (startsWith($kartons[$i]["Bezeichnung"], $kontextFullBezeichnung))
-            {      
-                echo "Die Kartonbezeichnung (".$kartons[$i]["Bezeichnung"].") beginnt bereits mit der vollständigen Kontextbezeichnung (".$kontextFullBezeichnung.").\r\n";  
-            }
-            else
-            {    
-                $kartons[$i]["Bezeichnung"] = $kontextFullBezeichnung."-".$kartons[$i]["Bezeichnung"];
-                echo "Neue Kartonbezeichnung: ........ ".$kartons[$i]["Bezeichnung"]."\r\n";            
-                SaveNewKartonBezeichnung($config, $kartons[$i]["Id"], $kartons[$i]["Bezeichnung"]);
-            }
-            
-            echo "\r\n";
-        }
-    }
+	InsertColumnFileNameInTableFund($config);
+	InsertColumnFolderNameInTableFund($config);
+	InsertColumnRatingInTableFund($config);
+}
+#endregion
 
-    RemoveTable($config, "Karton");
+#region extend by path
+function UpgradeByPrecalculatedPath($config)
+{
+	InsertColumnPathInTable($config, "Ablage");
+	updatePathRecursive($config, "Ablage");
+	UpdateColumnPathNotNullAndUnique($config, "Ablage");
+
+	InsertColumnPathInTable($config, "FundAttribut");
+	updatePathRecursive($config, "FundAttribut");
+	UpdateColumnPathNotNullAndUnique($config, "FundAttribut");
+
+	InsertColumnPathInTable($config, "Kontext");
+	updatePathRecursive($config, "Kontext");
+	UpdateColumnPathNotNullAndUnique($config, "Kontext");
+
+	InsertColumnPathInTable($config, "Ort");
+	updatePathRecursive($config, "Ort");
+	UpdateColumnPathNotNullAndUnique($config, "Ort");
 }
 
-function GetKontextFullBezeichnungByAblageId($config, $ablageId)
+function updatePathRecursive($config, $tableName, $id = null, $parentPath = "")
 {
-    $kontext = GetKontextByAblage($config, $ablageId);
-    
-    if ($kontext == null)
-    {
-        return "";
-    }
-    
-    return GetKontextFullBezeichnung($config, $kontext["Id"]);
+	if ($id == null)
+	{
+		$rootIds = getRootIds($config, $tableName);
+
+		for ($i = 0; $i < count($rootIds); $i++)
+		{
+			updatePathRecursive($config, $tableName, $rootIds[$i]);
+		}
+
+		return;
+	}
+
+	$path = $parentPath."/".getBezeichnungById($config, $tableName, $id);
+	
+	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+	
+	if (!$mysqli->connect_errno)
+	{
+		$mysqli->set_charset("utf8");
+		$mysqli->query(
+			"Update ".$tableName."
+			 SET Path = '".addslashes($path)."'
+			 WHERE Id = ".$id.";"
+		);
+	}
+	
+	$mysqli->close();
+	
+	$childIds = getChildIds($config, $tableName, $id);
+
+	for ($i = 0; $i < count($childIds); $i++)
+	{
+		updatePathRecursive($config, $tableName, $childIds[$i], $path);
+	}
 }
 
-function GetKontextFullBezeichnung($config, $id)
+function getBezeichnungById($config, $tableName, $id)
 {
-    $fullBezeichnung = "";
-    $kontext = GetKontext($config, $id);
-    
-    if ($kontext["Parent_Id"] == null)
-    {
-        $fullBezeichnung = $kontext["Bezeichnung"];
-    }
-    else
-    {
-        $fullBezeichnung = GetKontextFullBezeichnung($config, $kontext["Parent_Id"]);
-        
-        if ($fullBezeichnung != null &&
-            $fullBezeichnung != "" &&
-            $kontext["Bezeichnung"] != null &&
-            $kontext["Bezeichnung"] != "")
-        {
-            $fullBezeichnung .= "-".$kontext["Bezeichnung"];
-        }            
-    }
-    
-    return $fullBezeichnung;
-}
-
-function SaveNewKartonBezeichnung($config, $id, $newBezeichnung)
-{
+    $bezeichnung = null;
     $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
 
     if (!$mysqli->connect_errno)
     {
 	    $mysqli->set_charset("utf8");
 	    $ergebnis = $mysqli->query("
-	        Update Ablage
-	        SET Bezeichnung = '".$newBezeichnung."'
+	        SELECT Bezeichnung
+	        FROM ".$tableName."
 	        WHERE Id = ".$id.";");
+
+		if ($mysqli->errno)
+		{
+			echo "Datenbankfehler: ".$mysqli->errno." ".$mysqli->error."\r\n";
+		}
+		else if ($datensatz = $ergebnis->fetch_assoc())
+		{
+			$bezeichnung = $datensatz["Bezeichnung"];
+		}
     }
     $mysqli->close();
-}
-#endregion
 
-#region upgrade "Bezeichnung" of "FundAttribut", "Kontext", "Ablage", "Ort"
-function UpgradeAllBezeichnungen($config)
-{
-    echo "Aktualisiere Fundattribute.\r\n";
-    UpgradeBezeichnungen($config, "FundAttribut", null, array());
-    
-    echo "Aktualisiere Kontexte.\r\n";
-    UpgradeBezeichnungen($config, "Kontext", null, array());
-    
-    echo "Aktualisiere Ablagen.\r\n";
-    UpgradeBezeichnungen($config, "Ablage", null, array());
-    
-    echo "Aktualisiere Orte.\r\n";
-    UpgradeBezeichnungen($config, "Ort", null, array());    
+    return $bezeichnung;
 }
 
-function UpgradeBezeichnungen($config, $tableName, $parentId, $pathElements)
+function getRootIds($config, $tableName)
 {
-    $elements = GetElements($config, $tableName, $parentId);    
-    $siblingsBezeichnungen = array();       
-    
-    for ($i = 0; $i < count($elements); $i++)
-    {
-        WriteElementInformation($elements[$i], $pathElements);
-        echo "\r\n";
-        
-        if ($elements[$i]["Bezeichnung"] == null ||
-            $elements[$i]["Bezeichnung"] == "" ||
-            in_array($elements[$i]["Bezeichnung"], $siblingsBezeichnungen))
-        {
-            $elements[$i]["Bezeichnung"] = GetNewBezeichnung($elements[$i], $pathElements, $siblingsBezeichnungen);
-            SetNewBezeichnung($config, $tableName, $elements[$i]);
-        }
-        
-        array_push($siblingsBezeichnungen, $elements[$i]["Bezeichnung"]);
-        array_push($pathElements, $elements[$i]);
-        UpgradeBezeichnungen($config, $tableName, $elements[$i]["Id"], $pathElements);
-        array_pop($pathElements);
-    }   
-}
+	$ids = array();
+	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+	
+	if (!$mysqli->connect_errno)
+	{
+		$mysqli->set_charset("utf8");
+		$ergebnis = $mysqli->query(
+			"SELECT Id
+			 FROM ".$tableName."
+			 WHERE Parent_Id IS NULL;");
 
-function GetElements($config, $tableName, $parentId)
-{
-    $elements = array();
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        SELECT ".$tableName.".Id AS Id, ".$tableName.".Bezeichnung AS Bezeichnung, ".$tableName."Typ.Bezeichnung AS Typ
-	        FROM ".$tableName." LEFT JOIN ".$tableName."Typ ON ".$tableName.".Typ_Id = ".$tableName."Typ.Id
-	        WHERE ".$tableName.".Parent_Id ".($parentId == null ? "IS NULL" : "= ".$parentId).";");
-	        
-	    if (!$mysqli->errno)
+		if ($mysqli->errno)
+		{
+			echo "Datenbankfehler: ".$mysqli->errno." ".$mysqli->error."\r\n";
+		}
+		else
 		{
 			while ($datensatz = $ergebnis->fetch_assoc())
 			{
-				$element["Id"] = intval($datensatz["Id"]);
-				$element["Bezeichnung"] = $datensatz["Bezeichnung"];
-				$element["Typ"] = $datensatz["Typ"];
-				array_push($elements, $element);
+				array_push($ids, intval($datensatz["Id"]));
 			}
 		}
-    }
-    $mysqli->close();
-    
-    return $elements;
+	}
+	
+	$mysqli->close();
+
+	return $ids;
 }
 
-function GetNewBezeichnung($element, $pathElements, $siblingsBezeichnungen)
+function getChildIds($config, $tableName, $id)
 {
-    $newBezeichnung = $element["Bezeichnung"];
-        
-    while (in_array($newBezeichnung, $siblingsBezeichnungen) || 
-            $newBezeichnung == null ||
-            $newBezeichnung == "")
-    {
-        if ($element["Bezeichnung"] == null ||
-            $element["Bezeichnung"] == "")
-        {
-            echo "Das folgende Element hat keine Bezeichnung.\r\n";
-        }
-        else if (in_array($newBezeichnung, $siblingsBezeichnungen))        
-        {
-            echo "Das folgende Element hat die gleiche Bezeichnung wie ein benachbartes Element.\r\n";
-        } 
-        else if (strpos($newBezeichnung, "/") === true)
-        {
-            echo "Das folgende Element enthält ein nicht erlaubtes Zeichen (\"/\").\r\n";
-        } 
-    
-        WriteElementInformation($element, $pathElements);
-        $newBezeichnung = readline("neue Bezeichnung: ");
-        echo "\r\n";
-    }
-    
-    return $newBezeichnung;
-}
+	$ids = array();
+	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+	
+	if (!$mysqli->connect_errno)
+	{
+		$mysqli->set_charset("utf8");
+		$ergebnis = $mysqli->query(
+			"SELECT Id
+			 FROM ".$tableName."
+			 WHERE Parent_Id = ".$id.";"
+		);
 
-function WriteElementInformation($element, $pathElements)
-{        
-    echo "Id: ........ ".$element["Id"]."\r\n";
-    echo "Bezeichnung: ".$element["Bezeichnung"]."\r\n";
-    echo "Typ: ....... ".$element["Typ"]."\r\n";
-    echo "Pfad: ...... ";
-    
-    for ($i = 0; $i < count($pathElements); $i++)
-    {
-        echo $pathElements[$i]["Bezeichnung"];
-        
-        if ($i < (count($pathElements) - 1))
-        {
-            echo "/";
-        }
-    }
-    
-    echo "\r\n";
-}
-
-function SetNewBezeichnung($config, $tableName, $element)
-{
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        Update ".$tableName."
-	        SET Bezeichnung = '".$element["Bezeichnung"]."'
-	        WHERE Id = ".$element["Id"].";");
-    }
-    $mysqli->close();
-}
-#endregion
-
-#region upgrade "LfdNummer"
-function UpgradeLfDNummern($config)
-{
-    RenameTable($config, "LfD", "LfdNummer");
-    RenameTable($config, "Kontext_LfD", "Kontext_LfdNummer");
-    RenameColumnInTable($config, "Kontext_LfdNummer", "LfD_Id", "LfdNummer_Id");
-    AddColumnToTable($config, "LfdNummer", "Bezeichnung", "NVARCHAR(30)");
-    AddUniqueIndexToTable($config, "LfdNummer", "LfDNummer", "Bezeichnung");
-
-    if (DoesColumnExist($config, "LfdNummer", "TK25Nr") &&
-        DoesColumnExist($config, "LfdNummer", "Nr"))
-    {
-        TransformLfDNummern($config);
-        RemoveIndexFromTable($config, "LfdNummer", "TK25Nummer");
-        RemoveColumnFromTable($config, "LfdNummer", "TK25Nr");
-        RemoveColumnFromTable($config, "LfdNummer", "Nr");
-    }
-    else
-    {
-        echo "Die LfD-Nummernsegmente sind bereits zusammengeführt.\r\n";
-    }
-
-    if (DoesColumnExist($config, "Begehung", "LfDErfassungsJahr") &&
-        DoesColumnExist($config, "Begehung", "LfDErfassungsNr"))
-    {
-        TransformLfDErfassungsNummern($config);
-        RemoveColumnFromTable($config, "Begehung", "LfDErfassungsJahr");
-        RemoveColumnFromTable($config, "Begehung", "LfDErfassungsNr");
-    }
-    else
-    {
-        echo "Die LfD-Erfassungsnummern sind bereits zu LfD-Nummern transformiert.\r\n";
-    }
-}
-
-function TransformLfDNummern($config)
-{
-    $lfdNummern = GetLfDNummern($config);
-    
-    for ($i = 0; $i < count($lfdNummern); $i++)
-    {
-        $lfdNummern[$i]["Bezeichnung"] = sprintf("%s\\%04s", $lfdNummern[$i]["TK25Nr"], $lfdNummern[$i]["Nr"]);
-        
-        echo $lfdNummern[$i]["Bezeichnung"]."\r\n";
-        
-        SetNewLfDNummer($config, $lfdNummern[$i]);
-    }
-}
-
-function GetLfDNummern($config)
-{
-    $elements = array();
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        SELECT Id, TK25Nr, Nr
-	        FROM LfdNummer;");
-	        
-	    if (!$mysqli->errno)
+		if ($mysqli->errno)
+		{
+			echo "Datenbankfehler: ".$mysqli->errno." ".$mysqli->error."\r\n";
+		}
+		else
 		{
 			while ($datensatz = $ergebnis->fetch_assoc())
 			{
-				$element["Id"] = intval($datensatz["Id"]);
-				$element["TK25Nr"] = $datensatz["TK25Nr"];
-				$element["Nr"] = $datensatz["Nr"];
-				array_push($elements, $element);
+				array_push($ids, intval($datensatz["Id"]));
 			}
 		}
-    }
-    $mysqli->close();
-    
-    return $elements;
+	}
+	
+	$mysqli->close();
+
+	return $ids;
 }
 
-function SetNewLfDNummer($config, $lfdNummer)
+function UpdateColumnPathNotNullAndUnique($config, $tableName)
 {
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+	if (!DoesColumnExist($config, $tableName, "Path"))
+	{
+		echo "Die Spalte \"Path\" existiert nicht in der Tabelle \"".$tableName."\".\r\n";
+	}
+	else
+	{
+   	$mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
 
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        Update LfdNummer
-	        SET Bezeichnung = '".$mysqli->real_escape_string($lfdNummer["Bezeichnung"])."'
-	        WHERE Id = ".$lfdNummer["Id"].";");
-    }
-    $mysqli->close();
-}
+   	if (!$mysqli->connect_errno)
+   	{
+	   	$mysqli->set_charset("utf8");
+	    	$ergebnis = $mysqli->query("
+	        ALTER TABLE `".$tableName."` MODIFY `Path` varchar(1000) NOT NULL;");
 
-function TransformLfDErfassungsNummern($config)
-{
-    $lfdErfassungsNummern = GetLfDErfassungsNummern($config);
-    
-    for ($i = 0; $i < count($lfdErfassungsNummern); $i++)
-    {
-        $lfdErfassungsNummern[$i]["Bezeichnung"] = sprintf("%s\\%04s", $lfdErfassungsNummern[$i]["LfDErfassungsJahr"], $lfdErfassungsNummern[$i]["LfDErfassungsNr"]);
-        
-        echo $lfdErfassungsNummern[$i]["Bezeichnung"]." verknüpft mit Kontext (".$lfdErfassungsNummern[$i]["Kontext_Id"].").\r\n";
+	   	if ($mysqli->errno)
+	   	{
+	    		echo "Beim Ändern der Spalte \"Path\" in der Tabelle \"".$tableName."\" ist ein Fehler aufgetreten!\r\n";
+	    		echo $mysqli->errno.": ".$mysqli->error."\r\n";
+	    	}
+	    	else
+	    	{
+	    		echo "Spalte \"Path\" wurde erfolgreich in Tabelle \"".$tableName."\" geändert.\r\n";
+	    		CreateUniqueIndex($config, $tableName, "Index".$tableName."Guid", "Path");
+	    	}
+    	}
 
-        $lfdErfassungsNummern[$i] = GetNewLfDErfassungsNummer($config, $lfdErfassungsNummern[$i]);
-
-        if ($lfdErfassungsNummern[$i]["Id"] == null)
-        {        
-            $lfdErfassungsNummern[$i] = SetNewLfDErfassungsNummer($config, $lfdErfassungsNummern[$i]);
-        }
-
-        LinkNewLfdErfassungsNummer($config, $lfdErfassungsNummern[$i]);
-    }
-}
-
-function GetLfDErfassungsNummern($config)
-{
-    $elements = array();
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        SELECT Id AS Kontext_Id, LfDErfassungsJahr, LfDErfassungsNr
-            FROM Begehung
-            ORDER BY LfDErfassungsJahr, LfDErfassungsNr;");
-	        
-	    if (!$mysqli->errno)
-		{
-			while ($datensatz = $ergebnis->fetch_assoc())
-			{
-                if ($datensatz["LfDErfassungsJahr"] != null &&
-                    $datensatz["LfDErfassungsNr"] != null)
-                {
-                    $element["Kontext_Id"] = intval($datensatz["Kontext_Id"]);
-                    $element["LfDErfassungsJahr"] = intval($datensatz["LfDErfassungsJahr"]);
-                    $element["LfDErfassungsNr"] = intval($datensatz["LfDErfassungsNr"]);
-                    array_push($elements, $element);
-                }
-			}
-		}
-    }
-    $mysqli->close();
-    
-    return $elements;
-}
-
-function LinkNewLfdErfassungsNummer($config, $lfdNummer)
-{
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        INSERT INTO Kontext_LfD (Kontext_Id, LfD_Id)
-            VALUES (".$lfdNummer["Kontext_Id"].", ".$lfdNummer["Id"].");");
-    }
-    $mysqli->close();
-}
-
-function SetNewLfDErfassungsNummer($config, $lfdNummer)
-{
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-	        INSERT INTO LfdNummer(Bezeichnung)
-            VALUES ('".$mysqli->real_escape_string($lfdNummer["Bezeichnung"])."');");
-
-        if (!$mysqli->errno)
-        {
-            $lfdNummer["Id"] = intval($mysqli->insert_id);
-        }
-    }
-    $mysqli->close();
-
-    return $lfdNummer;
-}
-
-function GetNewLfDErfassungsNummer($config, $lfdNummer)
-{
-    $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
-
-    if (!$mysqli->connect_errno)
-    {
-	    $mysqli->set_charset("utf8");
-	    $ergebnis = $mysqli->query("
-            SELECT Id            
-            FROM LfdNummer
-            WHERE Bezeichnung = '".$mysqli->real_escape_string($lfdNummer["Bezeichnung"])."';");
-	        
-	    if (!$mysqli->errno)
-		{
-            $datensatz = $ergebnis->fetch_assoc();
-            $lfdNummer["Id"] = intval($datensatz["Id"]);
-		}
-    }
-    $mysqli->close();
-    
-    return $lfdNummer;
+   	$mysqli->close();
+	}
 }
 #endregion
 #endregion

@@ -15,6 +15,7 @@
 1. [Benutzerführung](#5-benutzerfhrung)
 1. [Logfunktion](#6-logfunktion)
 1. [Releasemanagement](#7-releasemanagement)
+1. [Sonstiges](#8-sonstiges)
 
 ## 1. Entwicklungsumgebung
 
@@ -43,27 +44,160 @@
 
 #### 1.2.2. Website
 
-1. Beliebigen Webserver einrichten (z. B. Apache Http Server)
-1. git-Repository als Wurzel der Website einrichten ([http://localhost:80/Munins Archiv/src](http://localhost:80/Munins%20Archiv/src))
+1. Webserver einrichten
+1. git-Repository einrichten
+1. URL-Weiterleitung einrichten
+1. HTTPS einrichten
+1. Log-Ordner anlegen und berechtigen
+1. Kartenkacheln herunterladen
+
+Die folgende Anleitung ist spezifisch für den Betrieb der Anwendung auf einem [Ubuntu-Betriebssystem](https://ubuntu.com/) und dem [Apache HTTP Server](https://www.apache.org/).
+
+1. Apache Http Server installieren
+	```
+	sudo apt-get install apache2 php php-curl libapache2-mod-php php-mysql
+	```
+1. git-Repository einrichten
+	```
+	cd /var/www/html/
+	git clone https://github.com/robertgruening/munins-archiv.git
+	mv "/var/www/html/Munins-Archiv/" "/var/www/html/munins-archiv/"
+	```
+1. URL-Weiterleitung einrichten
+	```
+	sudo a2enmod rewrite
+	sudo nano /etc/apache2/sites-available/000-default.conf
+	```
+	Eintrag vornehmen:
+	```
+	<Directory "/var/www/html">
+		AllowOverride All
+	</Directory>
+	```
+	```
+	sudo service apache2 restart
+	```
+1. HTTPS einrichten
+	```
+	sudo a2enmod ssl
+	sudo service apache2 restart
+	sudo mkdir /etc/apache2/ssl
+	sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+	sudo nano /etc/apache2/sites-available/default-ssl.conf
+	```
+	Eintrag vornehmen:
+	```
+	SSLEngine on
+	SSLCertificateFile /etc/apache2/ssl/apache.crt
+	SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+	```
+	```
+	sudo a2ensite default-ssl.conf
+	sudo a2enmod headers
+	sudo nano /etc/apache2/sites-available/default-ssl.conf
+	```
+	Eintrag nach *ServerAdmin* vornehmen:
+	```
+	<IfModule mod_headers.c>
+		Header always set Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"
+	</IfModule>
+	```
+	```
+	sudo service apache2 restart
+	sudo a2enmod rewrite
+	sudo nano /etc/apache2/sites-available/default-ssl.conf
+	```
+	Eintrag vornehmen:
+	```
+	<Directory "/var/www/html">
+		AllowOverride All
+	</Directory>
+	```
+	```
+	sudo service apache2 restart
+	```
+1. Kartenkacheln herunterladen
+	1. http://tools.geofabrik.de/calc/#type=geofabrik_standard&bbox=5,47,16,55&grid=1 öffnen
+	1. "+" klicken
+	1. Kacheln auswählen
+	1. Skript anpassen
+		```
+		cd "/var/www/html/munins-archiv/tools/"
+		nano download-map-tiles.py
+		```		
+	1. minimale und maximale X- und Y-Werte entsprechend unter Berücksichtigung der Zoomstufe eintragen
+	1. Skript ausführen
+		```
+		python3 download-map-tiles.py
+		```
+
+#### 1.2.3. Webdav
+
+_Munins Archiv_ verwendet das HTTP-Webdav-Protokoll,
+um Fotos von Funden an einen Dateiserver zu übermitteln
+(POST) und um diese anzuzeigen (GET).
+
+Beispiele für Webdav-Implementierungen sind:
+
+- Apache mit Webdav-Modul
+- NextCloud
+
+Die nachfolgende Anleitung beschreibt die Installation
+des Webdav-Moduls von Apache [Quelle](https://www.digitalocean.com/community/tutorials/how-to-configure-webdav-access-with-apache-on-ubuntu-18-04)
+
+1. webdav-Modul aktivieren
+	```
+	sudo a2enmod dav
+	sudo a2enmod dav_fs
+	sudo mkdir /var/www/webdav
+	sudo chown -R www-data:www-data /var/www/webdav
+	sudo mkdir -p /usr/local/apache/var/
+	sudo chown www-data:www-data /usr/local/apache/var	
+	```
+1. 
+	```
+	sudo nano /etc/apache2/sites-enabled/default-ssl.conf
+	Alias /webdav /var/www/webdav
+	<Directory "/var/www/webdav">
+			DAV On 
+			AuthType Basic
+			AuthName "webdav"
+			AuthUserFile /etc/apache2/webdav.passwords
+			Require valid-user
+	</Directory>
+	```
+1. 
+	```
+	sudo htpasswd -c /etc/apache2/webdav.passwords aaf
+	sudo chown www-data:www-data /etc/apache2/webdav.passwords
+	sudo a2enmod auth_basic
+	sudo systemctl restart apache2.service
+	```
 
 ## 2. Verzeichnisstruktur
 
+* **/api** - Webservice.
+* **/css** - CSS der Webseite (Client-Anwendung).
 * **/db** - Die Skripte zum Erstellen und Befüllen der Datenbank befinden sich im Verzeichnis "db" (database -> Datenbank).  
 * **/doc** - Die Dokumentation zum Projekt, inklusive der Handbücher, befindet sich im Verzeichnis "doc" (documents -> Dokumente).
+* **/images** - Bilder und Grafiken der Webseite (Client-Anwendung).
+* **/js** - JavaScript der Webseite (Client-Anwendung).
+* **/pages** - HTML der Webseite (Client-Anwendung).
 * **/pkg** - Programmbibliotheken und -erweiterungen von Drittanbietern sind in "pkg" (packages -> Pakete) gespeichert.
-* **/prototypes** - Prozess-, Architektur- und Designstudien befinden sich in "prototypes" (prototypes -> Prototypen).
-* **/src** - Der Quellcode befindet sich unter "src" (sources -> Quellcode). Als Sprachen kommen hier HTML, JavaScript und PHP zum Einsatz.
+* **/tools** - Die Werkzeuge der Anwendung, z. B. Python3-Skript zum Herunterladen von Kartenkacheln.
 * **/tst** - Die automatisierten Tests für die Schichten der Serverseite befinden sich im Verzeichnis "tst" (test -> Test).
 * **/upgr** - Die Skripte zum Aktualisieren der Anwendung auf die neueste Version befinden sich unter "upgr" (upgrade -> Auktualisierung).
+* **/webfonts** - Schriftarten für die die Icons der Webseite (Client-Anwendung).
 
 ## 3. Verwendete Pakete
 
-* [Apache log4php](https://logging.apache.org/log4php/download.html) v2.3.0 von der **Apache Software Foundation** unter der *Apache-Lizenz 2.0*
 * [Font Awesome Icons](https://fontawesome.com/) v5.3.1 von **Fonticons, Inc.** unter der *CC BY 4.0 Lizenz*
 * [jQuery min](https://jquery.com/) v3.4.1 von der **jQuery Foundation** unter der *MIT-Lizenz*
 * [jQuery UI](https://jquery.com/) v1.12.1 von der **jQuery Foundation** unter der *MIT-Lizenz*
 * [jQuery Toast Plugin](https://github.com/kamranahmedse/jquery-toast-plugin) v1.3.2 von **Kamran Ahmed** unter der *MIT-Lizenz*
 * [jsGrid](http://js-grid.com/) v1.5.3 von **Artem Tabalin** unter der *MIT-Lizenz*
+* [leaflet](http://leafletjs.com/) v1.6.0 von **Vladimir Agafonkin** und **Community** unter der *BSD-2-Lizenz*
+* [jsQR](https://github.com/cozmo/jsQR) v1.2.0 von **Cozmo Wolfe** unter der *Apache-Lizenz 2.0*
 
 ## 4. Architektur
 
@@ -151,3 +285,8 @@ Eine wesentliche Neuerung auf der Serverseite ist das Protokollieren des Program
 Jedes Jahr soll es eine Hauptversion geben. Dazwischen soll mindestens eine Zwischenversion erscheinen. Der Zweck der Zwischenversion ist, die "Must Have"-Anforderungen umzusetzen und Rückmeldungen der Anwender für die Hauptversion zu sammeln. Die nachfolgenden Zwischenversionen oder die Hauptversion setzen das Benutzer-Feedback um und ergänzen die Anwendung um Funktionen der Kategorie "Should Have" und "Nice To Have".
 
 Im Bereich Branching ist das Ziel "Continuous Integration" zu erreichen. Zu diesem Zweck ist der Branch "main" geschützt. Bei einem Merge muss die Funktionsfähigkeit der Anwendung beachtet werden, um jederzeit ein lauffähiges und idealerweise fehlerfreies Release zu erzeugen.
+
+## 8. Sonstiges
+
+"QR Code" is registered trademark of DENSO WAVE INCORPORATED.
+"QR Code" ist eine registrierte Handelsmarke der DENSO WAVE INCORPORATED.

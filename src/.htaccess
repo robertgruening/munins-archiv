@@ -1,7 +1,0 @@
-RewriteEngine	On
-RewriteRule "^api/Services/(\w+)/?$"                                    "api/Services/$1.php"                           [NC,L]
-RewriteRule "^api/Services/(\w+)/([\d;]+)/?$"                           "api/Services/$1.php?Id=$2"                     [NC,L]
-
-RewriteRule	"^api/Services/Sitemap/?$"									"api/Services/Sitemap.php"						[NC,L]
-RewriteRule	"^api/Services/Sitemap/([\w]+)/?$"							"api/Services/Sitemap.php?PageName=$1"			[NC,L]
-RewriteRule	"^api/Services/Sitemap/([\w]+)/WithPath/?$"					"api/Services/Sitemap.php?PageName=$1&WithPath=true"							[NC,L]

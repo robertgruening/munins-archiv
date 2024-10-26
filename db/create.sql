@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.10deb1
+-- version 4.5.4.1deb2ubuntu2.1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 06, 2016 at 08:20 PM
--- Server version: 5.5.49-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.17
+-- Erstellungszeit: 26. Mrz 2020 um 00:45
+-- Server-Version: 5.7.29-0ubuntu0.16.04.1
+-- PHP-Version: 7.0.33-0ubuntu0.16.04.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,16 +14,16 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `Munins_Archiv`
+-- Datenbank: `Munins_Archiv`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Ablage`
+-- Tabellenstruktur für Tabelle `Ablage`
 --
 
 CREATE TABLE IF NOT EXISTS `Ablage` (
@@ -31,17 +31,21 @@ CREATE TABLE IF NOT EXISTS `Ablage` (
   `Typ_Id` int(11) DEFAULT NULL,
   `Bezeichnung` varchar(30) DEFAULT NULL,
   `Parent_Id` int(11) DEFAULT NULL,
-  `Ebene` int(11) DEFAULT 0,
+  `Path` varchar(1000) NOT NULL,
+  `Ebene` int(11) NOT NULL DEFAULT '0',
+  `Guid` varchar(36) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   KEY `AblageTyp_Id` (`Typ_Id`),
   KEY `Parent_Id` (`Parent_Id`),
-  KEY `IndexAblage` (`Bezeichnung`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  KEY `IndexAblage` (`Bezeichnung`),
+  UNIQUE KEY `IndexAblageGuid` (`Guid`),
+  UNIQUE KEY `IndexAblagePath` (`Path`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `AblageTyp`
+-- Tabellenstruktur für Tabelle `AblageTyp`
 --
 
 CREATE TABLE IF NOT EXISTS `AblageTyp` (
@@ -49,12 +53,12 @@ CREATE TABLE IF NOT EXISTS `AblageTyp` (
   `Bezeichnung` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `IndexAblageTyp` (`Bezeichnung`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Begehung`
+-- Tabellenstruktur für Tabelle `Begehung`
 --
 
 CREATE TABLE IF NOT EXISTS `Begehung` (
@@ -67,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `Begehung` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Fund`
+-- Tabellenstruktur für Tabelle `Fund`
 --
 
 CREATE TABLE IF NOT EXISTS `Fund` (
@@ -75,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `Fund` (
   `Anzahl` int(11) NOT NULL DEFAULT '1',
   `Kontext_Id` int(11) DEFAULT NULL,
   `Ablage_Id` int(11) DEFAULT NULL,
-  `Bezeichnung` varchar(15) DEFAULT NULL,
+  `Bezeichnung` varchar(20) DEFAULT NULL,
   `Dimension1` int(11) DEFAULT NULL,
   `Dimension2` int(11) DEFAULT NULL,
   `Dimension3` int(11) DEFAULT NULL,
@@ -83,12 +87,12 @@ CREATE TABLE IF NOT EXISTS `Fund` (
   PRIMARY KEY (`Id`),
   KEY `Kontext_Id` (`Kontext_Id`),
   KEY `Ablage_Id` (`Ablage_Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `FundAttribut`
+-- Tabellenstruktur für Tabelle `FundAttribut`
 --
 
 CREATE TABLE IF NOT EXISTS `FundAttribut` (
@@ -96,16 +100,18 @@ CREATE TABLE IF NOT EXISTS `FundAttribut` (
   `Typ_Id` int(11) NOT NULL,
   `Bezeichnung` varchar(30) NOT NULL,
   `Parent_Id` int(11) DEFAULT NULL,
-  `Ebene` int(11) DEFAULT 0,
+  `Path` varchar(1000) NOT NULL,
+  `Ebene` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Id`),
+  UNIQUE KEY `IndexFundAttributPath` (`Path`),
   KEY `Parent_Id` (`Parent_Id`),
   KEY `FundAttributTyp_Id` (`Typ_Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `FundAttributTyp`
+-- Tabellenstruktur für Tabelle `FundAttributTyp`
 --
 
 CREATE TABLE IF NOT EXISTS `FundAttributTyp` (
@@ -113,12 +119,24 @@ CREATE TABLE IF NOT EXISTS `FundAttributTyp` (
   `Bezeichnung` varchar(25) NOT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `FundAttributTyp_Bezeichnung` (`Bezeichnung`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Fund_FundAttribut`
+-- Tabellenstruktur für Tabelle `Fundstelle`
+--
+
+CREATE TABLE IF NOT EXISTS `Fundstelle` (
+  `Id` int(11) NOT NULL,
+  `GeoPoint` point DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `Fund_FundAttribut`
 --
 
 CREATE TABLE IF NOT EXISTS `Fund_FundAttribut` (
@@ -131,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `Fund_FundAttribut` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Kontext`
+-- Tabellenstruktur für Tabelle `Kontext`
 --
 
 CREATE TABLE IF NOT EXISTS `Kontext` (
@@ -139,17 +157,19 @@ CREATE TABLE IF NOT EXISTS `Kontext` (
   `Typ_Id` int(11) DEFAULT NULL,
   `Bezeichnung` varchar(30) DEFAULT NULL,
   `Parent_Id` int(11) DEFAULT NULL,
-  `Ebene` int(11) DEFAULT 0,
+  `Path` varchar(1000) NOT NULL,
+  `Ebene` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Id`),
+  UNIQUE KEY `IndexKontextPath` (`Path`),
   KEY `KontextTyp_Id` (`Typ_Id`),
   KEY `Parent_Id` (`Parent_Id`),
   KEY `IndexKontext` (`Bezeichnung`) USING BTREE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `KontextTyp`
+-- Tabellenstruktur für Tabelle `KontextTyp`
 --
 
 CREATE TABLE IF NOT EXISTS `KontextTyp` (
@@ -157,12 +177,12 @@ CREATE TABLE IF NOT EXISTS `KontextTyp` (
   `Bezeichnung` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `IndexKontextTyp` (`Bezeichnung`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Kontext_LfdNummer`
+-- Tabellenstruktur für Tabelle `Kontext_LfdNummer`
 --
 
 CREATE TABLE IF NOT EXISTS `Kontext_LfdNummer` (
@@ -175,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `Kontext_LfdNummer` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Kontext_Ort`
+-- Tabellenstruktur für Tabelle `Kontext_Ort`
 --
 
 CREATE TABLE IF NOT EXISTS `Kontext_Ort` (
@@ -189,20 +209,20 @@ CREATE TABLE IF NOT EXISTS `Kontext_Ort` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `LfdNummer`
+-- Tabellenstruktur für Tabelle `LfdNummer`
 --
 
 CREATE TABLE IF NOT EXISTS `LfdNummer` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `Bezeichnung` varchar(30) NOT NULL,
+  `Bezeichnung` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `LfdNummernBezeichnung` (`Bezeichnung`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  UNIQUE KEY `LfDNummer` (`Bezeichnung`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Ort`
+-- Tabellenstruktur für Tabelle `Ort`
 --
 
 CREATE TABLE IF NOT EXISTS `Ort` (
@@ -210,87 +230,87 @@ CREATE TABLE IF NOT EXISTS `Ort` (
   `Bezeichnung` varchar(50) NOT NULL,
   `Typ_Id` int(11) NOT NULL,
   `Parent_Id` int(11) DEFAULT NULL,
-  `Ebene` int(11) DEFAULT 0,
+  `Path` varchar(1000) NOT NULL,
+  `Ebene` int(11) DEFAULT '0',
   PRIMARY KEY (`Id`),
+  UNIQUE KEY `IndexOrtPath` (`Path`),
   KEY `Typ_Id` (`Typ_Id`),
   KEY `Parent_Id` (`Parent_Id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `OrtTyp`
+-- Tabellenstruktur für Tabelle `OrtTyp`
 --
 
 CREATE TABLE IF NOT EXISTS `OrtTyp` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Bezeichnung` varchar(25) NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Constraints for dumped tables
+-- Constraints der exportierten Tabellen
 --
 
 --
--- Constraints for table `Ablage`
+-- Constraints der Tabelle `Ablage`
 --
 ALTER TABLE `Ablage`
   ADD CONSTRAINT `Ablage_ibfk_1` FOREIGN KEY (`Typ_Id`) REFERENCES `AblageTyp` (`Id`),
   ADD CONSTRAINT `Ablage_ibfk_2` FOREIGN KEY (`Parent_Id`) REFERENCES `Ablage` (`Id`);
 
 --
--- Constraints for table `Begehung`
+-- Constraints der Tabelle `Begehung`
 --
 ALTER TABLE `Begehung`
   ADD CONSTRAINT `Begehung_ibfk_1` FOREIGN KEY (`Id`) REFERENCES `Kontext` (`Id`);
 
 --
--- Constraints for table `Fund`
+-- Constraints der Tabelle `Fund`
 --
 ALTER TABLE `Fund`
   ADD CONSTRAINT `Fund_ibfk_3` FOREIGN KEY (`Kontext_Id`) REFERENCES `Kontext` (`Id`),
   ADD CONSTRAINT `Fund_ibfk_4` FOREIGN KEY (`Ablage_Id`) REFERENCES `Ablage` (`Id`);
 
 --
--- Constraints for table `FundAttribut`
+-- Constraints der Tabelle `FundAttribut`
 --
 ALTER TABLE `FundAttribut`
   ADD CONSTRAINT `FundAttribut_ibfk_1` FOREIGN KEY (`Parent_Id`) REFERENCES `FundAttribut` (`Id`),
   ADD CONSTRAINT `FundAttribut_ibfk_2` FOREIGN KEY (`Typ_Id`) REFERENCES `FundAttributTyp` (`Id`);
 
 --
--- Constraints for table `Fund_FundAttribut`
+-- Constraints der Tabelle `Fund_FundAttribut`
 --
 ALTER TABLE `Fund_FundAttribut`
   ADD CONSTRAINT `Fund_FundAttribut_ibfk_1` FOREIGN KEY (`Fund_Id`) REFERENCES `Fund` (`Id`),
   ADD CONSTRAINT `Fund_FundAttribut_ibfk_2` FOREIGN KEY (`FundAttribut_Id`) REFERENCES `FundAttribut` (`Id`);
 
 --
--- Constraints for table `Kontext`
+-- Constraints der Tabelle `Kontext`
 --
 ALTER TABLE `Kontext`
   ADD CONSTRAINT `Kontext_ibfk_1` FOREIGN KEY (`Typ_Id`) REFERENCES `KontextTyp` (`Id`),
   ADD CONSTRAINT `Kontext_ibfk_2` FOREIGN KEY (`Parent_Id`) REFERENCES `Kontext` (`Id`);
 
 --
--- Constraints for table `Kontext_LfdNummer`
+-- Constraints der Tabelle `Kontext_LfdNummer`
 --
 ALTER TABLE `Kontext_LfdNummer`
   ADD CONSTRAINT `Kontext_LfdNummer_ibfk_2` FOREIGN KEY (`Kontext_Id`) REFERENCES `Kontext` (`Id`),
   ADD CONSTRAINT `Kontext_LfdNummer_ibfk_3` FOREIGN KEY (`LfdNummer_Id`) REFERENCES `LfdNummer` (`Id`);
 
 --
--- Constraints for table `Kontext_Ort`
+-- Constraints der Tabelle `Kontext_Ort`
 --
 ALTER TABLE `Kontext_Ort`
   ADD CONSTRAINT `Kontext_Ort_ibfk_1` FOREIGN KEY (`Kontext_Id`) REFERENCES `Kontext` (`Id`),
   ADD CONSTRAINT `Kontext_Ort_ibfk_2` FOREIGN KEY (`Ort_Id`) REFERENCES `Ort` (`Id`);
 
 --
--- Constraints for table `Ort`
+-- Constraints der Tabelle `Ort`
 --
 ALTER TABLE `Ort`
   ADD CONSTRAINT `Ort_ibfk_1` FOREIGN KEY (`Typ_Id`) REFERENCES `OrtTyp` (`Id`),

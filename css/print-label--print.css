@@ -1,0 +1,14 @@
+#content,
+.form,
+.formBlock {
+	padding: 0;
+}
+
+.ablage-print-label-page {
+	height: 297mm;
+	width: 210mm;
+}
+
+.ablage-print-label {
+	border: none;
+}

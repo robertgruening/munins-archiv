@@ -1,0 +1,373 @@
+[
+	{
+		"Title" : "Home",
+		"Icon" : "fa-home",
+		"URL" : "/pages/administration/Home.html",
+		"PageName" : "Home"
+	},
+	{
+		"Title" : "Kontexte",
+		"Icon" : "fa-flag",
+		"URL" : "/pages/Kontext/Explorer.html",
+		"Children" :
+		[
+			{
+				"Title" : "Kontexte durchsuchen",
+				"URL" : "/pages/Kontext/Explorer.html",
+				"PageName" : "KontextExplorer"
+			},
+			{
+				"Title" : "Fundstellenkarte",
+				"URL" : "/pages/Fundstelle/Map.html",
+				"PageName" : "FundstelleMap"
+			},
+			{
+				"Title" : "Fundstelle anlegen",
+				"URL" : "/pages/Fundstelle/Form.html",
+				"PageName" : "FundstelleFormNew",
+				"Visible": false
+			},
+			{
+				"Title" : "Fundstelle bearbeiten",
+				"URL" : "/pages/Fundstelle/Form.html",
+				"PageName" : "FundstelleFormEdit",
+				"Visible": false
+			},
+			{
+				"Title" : "Begehungsfläche anlegen",
+				"URL" : "/pages/Begehungsflaeche/Form.html",
+				"PageName" : "BegehungsflaecheFormNew",
+				"Visible": false
+			},
+			{
+				"Title" : "Begehungsfläche bearbeiten",
+				"URL" : "/pages/Begehungsflaeche/Form.html",
+				"PageName" : "BegehungsflaecheFormEdit",
+				"Visible": false
+			},
+			{
+				"Title" : "Begehung anlegen",
+				"URL" : "/pages/Begehung/Form.html",
+				"PageName" : "BegehungFormNew",
+				"Visible": false
+			},
+			{
+				"Title" : "Begehung bearbeiten",
+				"URL" : "/pages/Begehung/Form.html",
+				"PageName" : "BegehungFormEdit",
+				"Visible": false
+			}
+		]
+	},
+	{
+		"Title" : "Ablagen",
+		"Icon" : "fa-box",
+		"URL" : "/pages/Ablage/Explorer.html",
+		"Children" :
+		[
+			{
+				"Title" : "Ablagen durchsuchen",
+				"URL" : "/pages/Ablage/Explorer.html",
+				"PageName" : "AblageExplorer",
+				"visible" : false
+			},
+			{
+				"Title" : "Ablage scannen",
+				"URL" : "/pages/Ablage/Scan.html",
+				"PageName" : "AblageScan",
+				"visible" : false
+			},
+			{
+				"Title" : "Ablagenschilder",
+				"URL" : "/pages/Ablage/PrintLabels.html",
+				"PageName" : "AblagePrintLabels",
+				"visible" : false
+			},
+			{
+				"Title" : "Ablageschild",
+				"URL" : "/pages/Ablage/PrintLabel.html",
+				"PageName" : "AblagePrintLabel",
+				"visible" : false
+			},
+			{
+				"Title" : "Ablage anlegen",
+				"URL" : "/pages/Ablage/Form.html",
+				"PageName" : "AblageFormNew",
+				"Visible" : false
+			},
+			{
+				"Title" : "Ablage bearbeiten",
+				"URL" : "/pages/Ablage/Form.html",
+				"PageName" : "AblageFormEdit",
+				"Visible" : false
+			}
+		]
+	},
+	{
+		"Title" : "Funde",
+		"Icon" : "fa-puzzle-piece",
+		"URL" : "/pages/Fund/Search.html",
+		"Children" :
+		[
+			{
+				"Title" : "Fund anlegen",
+				"URL" : "/pages/Fund/Form.html",
+				"PageName" : "FundFormNew",
+				"Visible" : false
+			},
+			{
+				"Title" : "Fund bearbeiten",
+				"URL" : "/pages/Fund/Form.html",
+				"PageName" : "FundFormEdit",
+				"Visible" : false
+			},
+			{
+				"Title" : "Funde suchen",
+				"URL" : "/pages/Fund/Search.html",
+				"PageName" : "FundSearch",
+				"Enabled" : true,
+				"Visible" : true
+			}
+		]
+	},
+	{
+		"Title" : "Menü",
+		"Icon" : "fa-bars",
+		"Children" :
+		[
+			{
+				"Title" : "Orte",
+				"Icon" : "fa-map-marker",
+				"Children" :
+				[
+					{
+						"Title" : "Orte durchsuchen",
+						"URL" : "/pages/Ort/Explorer.html",
+						"PageName" : "OrtExplorer"
+					},
+					{
+						"Title" : "Ort anlegen",
+						"URL" : "/pages/Ort/Form.html",
+						"PageName" : "OrtFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Ort bearbeiten",
+						"URL" : "/pages/Ort/Form.html",
+						"PageName" : "OrtFormEdit",
+						"Visible" : false
+					},
+					{
+						"Title" : "Gebietskörperschaften verwalten",
+						"URL" : "/pages/Ort/Gebietskoerperschaft/Form.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Kartasterdaten verwalten",
+						"URL" : "/pages/Ort/Fundstelle/Form.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Flurnamen verwalten",
+						"URL" : "/pages/Ort/Flurname/Form.html",
+						"Enabled" : false
+					}
+				]
+			},
+			{
+				"Title" : "Fundattribute",
+				"Icon" : "fa-tag",
+				"Children" :
+				[
+					{
+						"Title" : "Fundattribute durchsuchen",
+						"URL" : "/pages/FundAttribut/Explorer.html",
+						"PageName" : "FundAttributExplorer"
+					},
+					{
+						"Title" : "Fundattribut anlegen",
+						"URL" : "/pages/FundAttribut/Form.html",
+						"PageName" : "FundAttributFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Fundattribut bearbeiten",
+						"URL" : "/pages/FundAttribut/Form.html",
+						"PageName" : "FundAttributFormEdit",
+						"Visible" : false
+					}
+				]
+			},
+			{
+				"Title" : "Typen",
+				"Icon" : "fa-cubes",
+				"Children" :
+				[
+					{
+						"Title" : "Ablagetypen durchsuchen",
+						"URL" : "/pages/AblageType/List.html",
+						"PageName" : "AblageTypeList"
+					},
+					{
+						"Title" : "Ablage anlegen",
+						"URL" : "/pages/AblageType/Form.html",
+						"PageName" : "AblageTypeFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Ablage bearbeiten",
+						"URL" : "/pages/AblageType/Form.html",
+						"PageName" : "AblageTypeFormEdit",
+						"Visible" : false
+					},
+					{
+						"Title" : "Ortstypen durchsuchen",
+						"URL" : "/pages/OrtType/List.html",
+						"PageName" : "OrtTypeList"
+					},
+					{
+						"Title" : "Ortstyp anlegen",
+						"URL" : "/pages/OrtType/Form.html",
+						"PageName" : "OrtTypeFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Ortstyp bearbeiten",
+						"URL" : "/pages/OrtType/Form.html",
+						"PageName" : "OrtTypeFormEdit",
+						"Visible" : false
+					},
+					{
+						"Title" : "Fundattributtypen durchsuchen",
+						"URL" : "/pages/FundAttributType/List.html",
+						"PageName" : "FundAttributTypeList"
+					},
+					{
+						"Title" : "Fundattributtyp anlegen",
+						"URL" : "/pages/FundAttributType/Form.html",
+						"PageName" : "FundAttributTypeFormNew",
+						"Visible" : false
+					},
+					{
+						"Title" : "Fundattributtyp bearbeiten",
+						"URL" : "/pages/FundAttributType/Form.html",
+						"PageName" : "FundAttributTypeFormEdit",
+						"Visible" : false
+					}
+				]
+			},
+			{
+				"Title" : "LfD-Nummern",
+				"Icon" : "fa-hashtag",
+				"Children" :
+				[
+					{
+						"Title" : "LfD-Nummern durchsuchen",
+						"URL" : "/pages/LfdNummer/List.html",
+						"PageName" : "LfdNummerList"
+					},
+					{
+						"Title" : "LfD-Nummer anlegen",
+						"URL" : "/pages/LfdNummer/Form.html",
+						"PageName" : "LfdNummerFormNew"
+					},
+					{
+						"Title" : "LfD-Nummer bearbeiten",
+						"URL" : "/pages/LfdNummer/Form.html",
+						"PageName" : "LfdNummerFormEdit",
+						"Visible" : false
+					}
+				]
+			},
+			{
+				"Title" : "Organisation",
+				"Icon" : "fa-users",
+				"Children" :
+				[
+					{
+						"Title" : "Organisationsprofil bearbeiten",
+						"URL" : "/pages/Organisation/Profile.html",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Mitglieder verwalten",
+						"URL" : "/pages/Member/Form.html",
+						"Enabled" : false
+					}
+				],
+				"Visible" : false
+			},
+			{
+				"Title" : "Anwendung",
+				"Icon" : "fa-cogs",
+				"Children" :
+				[
+					{
+						"Title" : "Sicherung erstellen",
+						"Icon" : "fa-hdd",
+						"Action" : "Backup();",
+						"Enabled" : false,
+						"Visible" : false
+					},
+					{
+						"Title" : "Server herunterfahren",
+						"Icon" : "fa-power-off",
+						"Action" : "Shutdown();",
+						"Enabled" : false,
+						"Visible" : false
+					},
+					{
+						"Title" : "Log einsehen",
+						"Icon" : "fa-file-alt",
+						"URL" : "/api/Logs/Log.html",
+						"Enabled" : true,
+						"Target" : "_blank"
+					},
+					{
+						"Title" : "Version 1.1",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Hilfe",
+						"Icon" : "fa-info-circle",
+						"URL" : "/doc/Benutzerhandbuch.pdf",
+						"Enabled" : false,
+						"Target" : "_blank"
+					}
+				]
+			}
+		]
+	},
+	{
+		"Title" : "Benutzer",
+		"Icon" : "fa-right-to-bracket",
+		"Id" : "navigation-item-user",
+		"Children" :
+		[
+			{
+				"Title" : "Aktionen",
+				"Icon" : "fa-bolt",
+				"Children" :
+				[
+					{
+						"Title" : "Lesezeichen setzen",
+						"Id" : "navigation-item-set-bookmark",
+						"Action" : "setBookmark();",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Lesezeichnen öffnen",
+						"Id" : "navigation-item-open-bookmark",
+						"Action" : "openBookmark();",
+						"Enabled" : false
+					},
+					{
+						"Title" : "Abmelden",
+						"Id" : "navigation-item-sign-off",
+						"Enabled" : false
+					}
+				]
+			}
+		]
+	}
+]
