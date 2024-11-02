@@ -200,13 +200,14 @@ auf den Nextcloud-Server zugreifen kann.
 
 ## 3. Verwendete Pakete
 
-* [Font Awesome Icons](https://fontawesome.com/) v5.3.1 von **Fonticons, Inc.** unter der *CC BY 4.0 Lizenz*
-* [jQuery min](https://jquery.com/) v3.4.1 von der **jQuery Foundation** unter der *MIT-Lizenz*
-* [jQuery UI](https://jquery.com/) v1.12.1 von der **jQuery Foundation** unter der *MIT-Lizenz*
+* [Font Awesome Icons](https://fontawesome.com/) v6.6.0 von **Fonticons, Inc.** unter der *CC BY 4.0 Lizenz*
+* [jQuery min](https://jquery.com/) v3.7.1 von der **jQuery Foundation** unter der *MIT-Lizenz*
+* [jQuery UI](https://jquery.com/) v1.14.1 von der **jQuery Foundation** unter der *MIT-Lizenz*
 * [jQuery Toast Plugin](https://github.com/kamranahmedse/jquery-toast-plugin) v1.3.2 von **Kamran Ahmed** unter der *MIT-Lizenz*
+* [jQuery QR Code](https://github.com/jeromeetienne/jquery-qrcode) 2020-03-29 von **jeromeetienne** und **Community** unter der *MIT-Lizenz*
 * [jsGrid](http://js-grid.com/) v1.5.3 von **Artem Tabalin** unter der *MIT-Lizenz*
-* [leaflet](http://leafletjs.com/) v1.6.0 von **Vladimir Agafonkin** und **Community** unter der *BSD-2-Lizenz*
-* [jsQR](https://github.com/cozmo/jsQR) v1.2.0 von **Cozmo Wolfe** unter der *Apache-Lizenz 2.0*
+* [leaflet](http://leafletjs.com/) v1.9.4 von **Vladimir Agafonkin** und **Community** unter der *BSD-2-Lizenz*
+* [jsQR](https://github.com/cozmo/jsQR) 2020-03-31 von **Cozmo Wolfe** unter der *Apache-Lizenz 2.0*
 
 ## 4. Architektur
 
