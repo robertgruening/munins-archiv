@@ -174,6 +174,15 @@ des Webdav-Moduls von Apache [Quelle](https://www.digitalocean.com/community/tut
 	sudo systemctl restart apache2.service
 	```
 
+_HINWEIS:_ Im Fall von Nextcloud ist mindestens seit der
+Version 28 die Erweiterung __WebAppPassword__ zu installieren
+und wie folgt zu konfigurieren. Im ersten Eintrag "WebDAV/CalDAV"
+muss die URL der Webanwendung _Munins Archiv_ eingetragen werden.
+Der Grund ist, dass es andernfalls zu einem CORS-Fehler kommt
+und _Munins Archiv_ nicht mehr über das WebDAV-Protokoll
+auf den Nextcloud-Server zugreifen kann.
+
+
 ## 2. Verzeichnisstruktur
 
 * **/api** - Webservice.

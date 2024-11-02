@@ -73,32 +73,32 @@ var WebdavClient = function () {
 	this.convertContentListXmlToJson = function(contentListXml) {
 		let items = [];
 		let responses = $(contentListXml)
-			.find("D\\:response");
+			.find("d\\:response");
 		let webdavServerUrlWithAuthentication = this.getWebdavServerUrlWithAuthentication();
 		
 		responses.each(function(i, element) {
 			let item = {
 				href : webdavServerUrlWithAuthentication +
 					$(element)
-						.find("D\\:href")
+						.find("d\\:href")
 						.text(),
 				creationDate : $(element)
-						.find("lp1\\:creationdate")
+						.find("d\\:creationdate")
 						.text(),
 				lastModifiedDate : $(element)
-						.find("lp1\\:getlastmodified")
+						.find("d\\:getlastmodified")
 						.text()
 			};
 				
 			if ($(element)
-					.find("D\\:collection")
+					.find("d\\:collection")
 					.length == 1) {
 				item.type = "directory";
 			}
 			else {
 				item.type = "file";
 				item.size = $(element)
-					.find("lp1\\:getcontentlength")
+					.find("d\\:getcontentlength")
 					.text()
 			}
 			
