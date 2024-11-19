@@ -12,4 +12,5 @@ function Fund()
 	this.FileName = null;
 	this.FolderName = null;
 	this.Rating = null;
+    this.LastCheckedDate = null;
 }

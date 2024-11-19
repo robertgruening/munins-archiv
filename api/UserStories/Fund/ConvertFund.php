@@ -286,6 +286,14 @@ class ConvertFund extends UserStory
 		}
         #endregion
 
+        #region LastCheckedDate
+        if (isset($multidimensionalArray["LastCheckedDate"]) &&
+            !empty($multidimensionalArray["LastCheckedDate"]))
+        {
+            $fund->setLastCheckedDate(strtotime($multidimensionalArray["LastCheckedDate"]));
+        }
+        #endregion
+
         $this->setFund($fund);
 
         return (count($this->getMessages()) == 0);

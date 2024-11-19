@@ -19,7 +19,8 @@ var ViewModelFormFund = function (webServiceClient) {
 			ablage: new Array(),
 			fileName: new Array(),
 			folderName: new Array(),
-			rating: new Array()
+			rating: new Array(),
+			lastCheckedDate: new Array()
 		};
 	};
 
@@ -37,6 +38,7 @@ var ViewModelFormFund = function (webServiceClient) {
 		this._update("fileName", this._model.FileName);
 		this._update("folderName", this._model.FolderName);
 		this._update("rating", this._model.Rating);
+		this._update("lastCheckedDate", this._model.LastCheckedDate);
 	};
 
 	//#region properties
@@ -178,6 +180,17 @@ var ViewModelFormFund = function (webServiceClient) {
 
 	this.setRating = function (rating) {
 		this._model.Rating = rating;
+		this._update("dataChanged");
+	};
+	//#endregion
+
+	//#region LastCheckedDate
+	this.getLastCheckedDate = function () {
+		return this._model.LastCheckedDate == null ? null : this._model.LastCheckedDate;
+	};
+
+	this.setLastCheckedDate = function (lastCheckedDate) {
+		this._model.LastCheckedDate = lastCheckedDate;
 		this._update("dataChanged");
 	};
 	//#endregion

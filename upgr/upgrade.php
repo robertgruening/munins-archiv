@@ -100,6 +100,15 @@ function Main()
 	}
 	echo "\r\n";
 
+    echo "Im Folgenden werden Funde um das Feld \"letztes Prüfdatum\" erweitert.\r\n";
+	if (readline("Weiter mit \"ja\": ") == "ja")
+	{
+		echo "\r\n";
+		UpgradeFundeByLastCheckedDate($config);
+		readline("Weiter mit [EINGABE] ...");
+	}
+	echo "\r\n";
+
     echo "Beende Upgrade von Version 1.1 auf Version 1.2.\r\n";
 }
 
@@ -975,6 +984,44 @@ function UpdateColumnPathNotNullAndUnique($config, $tableName)
 
    	$mysqli->close();
 	}
+}
+#endregion
+
+#region extent "Funde" by checked
+function InsertColumnLastCheckedDateInTableFund($config)
+{
+	if (DoesColumnExist($config, "Fund", "LastCheckedDate"))
+	{
+		echo "Die Spalte \"LastCheckedDate\" existiert bereits in der Tabelle \"Fund\".";
+	}
+	else
+	{
+        $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
+    
+            $ergebnis = $mysqli->query("ALTER TABLE `Fund` ADD COLUMN `LastCheckedDate` DATETIME NULL DEFAULT NULL;");
+        
+            if ($mysqli->errno)
+            {
+                    echo "Beim Anlegen der Spalte \"LastCheckedDate\" in der Tabelle \"Fund\" ist ein Fehler aufgetreten!\r\n";
+                    echo $mysqli->errno.": ".$mysqli->error."\r\n";
+            }
+            else
+            {
+                echo "Spalte \"LastCheckedDate\" wurde erfolgreich in Tabelle \"Fund\" angelgt.\r\n";
+            }
+        }
+
+        $mysqli->close();
+	}
+}
+
+function UpgradeFundeByLastCheckedDate($config)
+{
+	InsertColumnLastCheckedDateInTableFund($config);
 }
 #endregion
 #endregion

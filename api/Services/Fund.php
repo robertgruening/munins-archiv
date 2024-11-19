@@ -253,6 +253,11 @@ function Get()
 		{
 			$loadFunde->addSearchCondition("FileName", $_GET["fileName"]);
 		}
+		
+		if (isset($_GET["isChecked"]))
+		{
+			$loadFunde->addSearchCondition("IsChecked", $_GET["isChecked"] === "true");
+		}
 
 		$pagingConditions = array();
 

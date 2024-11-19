@@ -79,11 +79,13 @@ class FundFactory extends Factory implements iListFactory
 
     #region load
 	/**
-	* Returns the SQL SELECT statement to load Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3 and Masse as string.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Anzahl,
+    * Dimension1, Dimension2, Dimension3, Masse, FileName, Fildername,
+    * Rating and LastCheckedDate as string.
 	*/
 	protected function getSQLStatementToLoad()
 	{
-		return "SELECT Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3, Masse, FileName, FolderName, Rating
+		return "SELECT Id, Bezeichnung, Anzahl, Dimension1, Dimension2, Dimension3, Masse, FileName, FolderName, Rating, LastCheckedDate
 			FROM ".$this->getTableName();
 	}
     
@@ -204,6 +206,18 @@ class FundFactory extends Factory implements iListFactory
 		{
 			array_push($sqlSearchConditionStrings, "Rating >= ".$searchConditions["MinRating"]);
 		}
+
+		if (isset($searchConditions["IsChecked"]))
+		{
+			if ($searchConditions["IsChecked"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "LastCheckedDate IS NOT NULL");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "LastCheckedDate IS NULL");
+			}		
+		}
 		
 		if ($this->getListFactory() instanceof iSqlSearchConditionStringsProvider)
 		{
@@ -248,6 +262,7 @@ class FundFactory extends Factory implements iListFactory
 		$fund->setFileName($dataSet["FileName"]);
 		$fund->setFolderName($dataSet["FolderName"]);
 		$fund->setRating($dataSet["Rating"]);
+        $fund->setLastCheckedDate($dataSet["LastCheckedDate"] === null ? null : date(DateTime::ISO8601, strtotime($dataSet["LastCheckedDate"])));
 
         return $fund;
     }
@@ -268,7 +283,8 @@ class FundFactory extends Factory implements iListFactory
 		".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId()).",
 		".($element->getFileName() === null ? "NULL" : "'".addslashes($element->getFileName())."'").",
 		".($element->getFolderName() === null ? "NULL" : "'".addslashes($element->getFolderName())."'").",
-		".$element->getRating().");";
+		".$element->getRating().",
+        ".($element->getLastCheckedDate() === null ? "NULL" : "'".date("Y-m-d H:i:s", $element->getLastCheckedDate())."'").");";
     }
 
     protected function getSQLStatementToUpdate(iNode $element)
@@ -286,7 +302,8 @@ class FundFactory extends Factory implements iListFactory
 		Ablage_Id = ".($element->getAblage() === null ? "NULL" : $element->getAblage()->getId()).",
 		FileName = ".($element->getFileName() === null ? "NULL" : "'".addslashes($element->getFileName())."'").",
 		FolderName = ".($element->getFolderName() === null ? "NULL" : "'".addslashes($element->getFolderName())."'").",
-		Rating = ".$element->getRating()."
+		Rating = ".$element->getRating().",
+        LastCheckedDate = ".($element->getLastCheckedDate() === null ? "NULL" : "'".date("Y-m-d H:i:s", $element->getLastCheckedDate())."'")."
         WHERE Id = ".$element->getId().";";
     }
     #endregion

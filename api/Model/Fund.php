@@ -17,6 +17,7 @@ class Fund implements iNode
 	public $FileName;
 	public $FolderName;
 	public $Rating;
+    public $LastCheckedDate;
     
     
     public function getId()
@@ -139,6 +140,26 @@ class Fund implements iNode
         return false;
     }
     
+    public function getAblage()
+    {
+        return $this->Ablage;
+    }
+    
+    public function setAblage($ablage)
+    {
+        $this->Ablage = $ablage;
+    }
+    
+    public function getKontext()
+    {
+        return $this->Kontext;
+    }
+    
+    public function setKontext($kontext)
+    {
+        $this->Kontext = $kontext;
+    }
+    
     public function getFileName()
     {
         return $this->FileName;
@@ -169,6 +190,16 @@ class Fund implements iNode
         $this->Rating = $rating;
     }
     
+    public function getLastCheckedDate()
+    {
+        return $this->LastCheckedDate;
+    }
+    
+    public function setLastCheckedDate($lastCheckedDate)
+    {
+        $this->LastCheckedDate = $lastCheckedDate;
+    }
+    
     function __construct()
     {
         $this->Id = -1;
@@ -185,5 +216,6 @@ class Fund implements iNode
 		$this->FileName = null;
 		$this->FolderName = null;
 		$this->Rating = 0;
+        $this->LastCheckedDate = null;
     }
 }

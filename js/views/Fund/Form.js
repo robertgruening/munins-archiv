@@ -33,6 +33,7 @@ $(document).ready(function () {
 	InitFieldFileName();
 	InitFieldFolderName();
 	InitFieldRating();
+	InitFieldLastCheckedDate();
 
 	if (getUrlParameterValue("Id")) {
 		_viewModelFormFund.load(getUrlParameterValue("Id"));
@@ -695,6 +696,38 @@ function setRating(rating) {
 
 function showMessagesRating(messages) {
 	$("#divRating .fieldValue div[name=messages]").text(messages);
+}
+//#endregion
+
+//#region LastCheckedDate
+function InitFieldLastCheckedDate() {
+	_viewModelFormFund.register("lastCheckedDate", new GuiClient(setLastCheckedDate, showMessagesLastCheckedDate));
+	$("#checkboxLastCheckedDate").change(function () {
+		if ($("#checkboxLastCheckedDate").is(":checked")) {
+			let lastCheckedDate = new Date();
+			$("#checkboxLastCheckedDate").next().text(lastCheckedDate.toLocaleDateString());
+			_viewModelFormFund.setLastCheckedDate(lastCheckedDate.toISOString());
+		}
+		else {
+			$("#checkboxLastCheckedDate").next().text("");
+			_viewModelFormFund.setLastCheckedDate(null);
+		}
+	});
+}
+
+function setLastCheckedDate(lastCheckedDate) {
+	if (lastCheckedDate == null) {
+		$("#checkboxLastCheckedDate").next().text("");
+		$("#checkboxLastCheckedDate").prop("checked", false);
+	}
+	else {
+		$("#checkboxLastCheckedDate").next().text(new Date(lastCheckedDate).toLocaleDateString());
+		$("#checkboxLastCheckedDate").prop("checked", true);
+	}
+}
+
+function showMessagesLastCheckedDate(messages) {
+	$("#divLastCheckedDate .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 

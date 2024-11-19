@@ -399,6 +399,28 @@ LinkToFundFormField.prototype = new jsGrid.Field({
 		return link;
 	}
 });
+
+var CheckingField = function(config) {
+	jsGrid.Field.call(this, config);
+}
+
+CheckingField.prototype = new jsGrid.Field({
+	itemTemplate: function(value) {
+		let div = $("<div>")
+			.attr("title", value);
+		
+		if (value !== null) {
+			div.append($("<i>")
+				.addClass("fas fa-circle-check"));
+			div.append("&nbsp;");
+			div.append($("<span>")
+				.text(new Date(value).toLocaleDateString()));
+		}
+
+		return div;
+	}
+});
+
 var RatingField = function(config) {
 	jsGrid.Field.call(this, config);
 }
@@ -432,6 +454,7 @@ function InitGridFunde()
 	jsGrid.locale("de");
     jsGrid.fields.image = ImageField;
 	jsGrid.fields.linkToFundFormField = LinkToFundFormField;
+	jsGrid.fields.checking = CheckingField;
 	jsGrid.fields.rating = RatingField;
 
 	$("#gridFunde").jsGrid({
@@ -469,6 +492,11 @@ function InitGridFunde()
 				title: "Fundattribute",
 				name: "FundAttributAnzeigeTexte",
 				type: "text"
+			},
+			{
+				title: "Ist geprüft",
+				name: "LastCheckedDate",
+				type: "checking"
 			},
 			{
 				title: "Bewertung",
