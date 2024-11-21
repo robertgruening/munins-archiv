@@ -273,7 +273,7 @@ class FundFactory extends Factory implements iListFactory
     {
         $anzahl = intval(str_replace(">", "-", $element->getAnzahl()));
 
-        return "INSERT INTO ".$this->getTableName()." (Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse, Kontext_Id, Ablage_Id, FileName, FolderName, Rating)
+        return "INSERT INTO ".$this->getTableName()." (Anzahl, Bezeichnung, Dimension1, Dimension2, Dimension3, Masse, Kontext_Id, Ablage_Id, FileName, FolderName, Rating, LastCheckedDate)
         VALUES (".$anzahl.", '".addslashes($element->getBezeichnung())."',
         ".($element->getDimension1() === null ? "NULL" : $element->getDimension1()).",
         ".($element->getDimension2() === null ? "NULL" : $element->getDimension2()).",
