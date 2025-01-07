@@ -96,7 +96,8 @@ class KontextFactory extends Factory implements iTreeFactory
 
     #region load
 	/**
-	* Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id, path, GeoPointLatitude (for Fundstelle), GeoPointLongitude (for Fundstelle), Datum (for Begehung) and Kommentar (for Begehung) as string.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Typ_Id, path, GeoPointLatitude (for Fundstelle),
+    * GeoPointLongitude (for Fundstelle), Datum (for Begehung), Kommentar (for Begehung) and LastCheckedDate as string.
 	*/
 	protected function getSqlStatementToLoad()
 	{		
@@ -107,7 +108,8 @@ class KontextFactory extends Factory implements iTreeFactory
 			 ST_X(Fundstelle.GeoPoint) AS GeoPointLatitude, 
 			 ST_Y(Fundstelle.GeoPoint) AS GeoPointLongitude,
 			 Begehung.Datum AS Datum, 
-			 Begehung.Kommentar AS Kommentar
+			 Begehung.Kommentar AS Kommentar,
+             LastCheckedDate
 			FROM ".$this->getTableName()."
 			 LEFT JOIN Fundstelle ON ".$this->getTableName().".Id = Fundstelle.Id
 			 LEFT JOIN Begehung ON ".$this->getTableName().".Id = Begehung.Id";
@@ -144,6 +146,18 @@ class KontextFactory extends Factory implements iTreeFactory
 			{
 				array_push($sqlSearchConditionStrings, "NOT EXISTS (SELECT * FROM ".$this->getFundFactory()->getTableName()." AS fund WHERE fund.".$this->getTableName()."_Id = ".$this->getTableName().".Id)");
 			}
+		}
+
+		if (isset($searchConditions["IsChecked"]))
+		{
+			if ($searchConditions["IsChecked"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "LastCheckedDate IS NOT NULL");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "LastCheckedDate IS NULL");
+			}		
 		}
 
 		if ($this->getTreeFactory() instanceof iSqlSearchConditionStringsProvider)
@@ -214,6 +228,8 @@ class KontextFactory extends Factory implements iTreeFactory
             $entity->setDatum($dataset["Datum"]);
             $entity->setKommentar($dataset["Kommentar"]);
         }
+
+        $entity->setLastCheckedDate($dataset["LastCheckedDate"] === null ? null : date(DateTime::ISO8601, strtotime($dataset["LastCheckedDate"])));
 
         return $entity;
     }
@@ -417,8 +433,11 @@ class KontextFactory extends Factory implements iTreeFactory
 
     protected function getSQLStatementToInsert(iNode $kontext)
     {
-        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, `Path`)
-        VALUES ('".addslashes($kontext->getBezeichnung())."', ".$kontext->getType()->getId().", '".addslashes($this->calculatePathByParentId($kontext, $kontext->getParent() == null ? null : $kontext->getParent()->getId()))."');";
+        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, `Path`, LastCheckedDate)
+        VALUES ('".addslashes($kontext->getBezeichnung())."', 
+        ".$kontext->getType()->getId().",
+        '".addslashes($this->calculatePathByParentId($kontext, $kontext->getParent() == null ? null : $kontext->getParent()->getId())).",
+        ".($kontext->getLastCheckedDate() === null ? "NULL" : "'".date("Y-m-d H:i:s", $kontext->getLastCheckedDate())."'").");";
     }
 
     protected function getSQLStatementToInsertFundstelle(iNode $kontext)
@@ -534,7 +553,8 @@ class KontextFactory extends Factory implements iTreeFactory
         return "UPDATE ".$this->getTableName()."
             SET Bezeichnung = '".addslashes($kontext->getBezeichnung())."',
             Typ_Id = ".$kontext->getType()->getId().",
-			`Path` = '".addslashes($this->calculatePath($kontext))."'
+			`Path` = '".addslashes($this->calculatePath($kontext))."',
+            LastCheckedDate = ".($kontext->getLastCheckedDate() === null ? "NULL" : "'".date("Y-m-d H:i:s", $kontext->getLastCheckedDate())."'")."
             WHERE Id = ".$kontext->getId().";";
     }
 
@@ -792,12 +812,12 @@ class KontextFactory extends Factory implements iTreeFactory
 
             if ($kontext instanceof Fundstelle &&
             	isset($object["GeoPoint"]) &&
-					isset($object["GeoPoint"]["Latitude"]) &&
-					isset($object["GeoPoint"]["Longitude"]))
+				isset($object["GeoPoint"]["Latitude"]) &&
+				isset($object["GeoPoint"]["Longitude"]))
             {
-					$geoPoint = new GeoPoint();
-					$geoPoint->setLatitude($object["GeoPoint"]["Latitude"]);
-					$geoPoint->setLongitude($object["GeoPoint"]["Longitude"]);
+				$geoPoint = new GeoPoint();
+				$geoPoint->setLatitude($object["GeoPoint"]["Latitude"]);
+				$geoPoint->setLongitude($object["GeoPoint"]["Longitude"]);
                 $kontext->setGeoPoint($geoPoint);
             }
             
@@ -815,6 +835,11 @@ class KontextFactory extends Factory implements iTreeFactory
 	                $kontext->setKommentar($object["Kommentar"]);
 	            }
 			}
+
+            if (isset($object["LastCheckedDate"]))
+            {
+                $kontext->setLastCheckedDate(strtotime($object["LastCheckedDate"]));
+            }
 			
             return $kontext;
         }

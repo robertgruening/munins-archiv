@@ -207,6 +207,11 @@ function Get()
 		{
 			$loadEntites->addSearchCondition("ContainsPath", $_GET["containsPath"]);
 		}
+		
+		if (isset($_GET["isChecked"]))
+		{
+			$loadEntites->addSearchCondition("IsChecked", $_GET["isChecked"] === "true");
+		}
 
         if ($loadEntites->run())
         {

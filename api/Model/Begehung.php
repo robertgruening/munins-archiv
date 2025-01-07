@@ -9,7 +9,7 @@ class Begehung extends Kontext implements iFundContainer
     public $Datum;
     public $Kommentar;
     public $Funde;
-    public $Kontexte;    
+    public $Kontexte;
     
     public function setParent($parent)
     {

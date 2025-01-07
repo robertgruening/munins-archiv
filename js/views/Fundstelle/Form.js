@@ -28,6 +28,7 @@ $(document).ready(function () {
 	InitGeoPoint();
 	initFiles();
 	initImages();
+	InitFieldLastCheckedDate();
 });
 
 function getPageName() {
@@ -498,6 +499,38 @@ function listImages(path) {
 	$("#divImageList").KontextImageList({
 		path : path
 	});
+}
+//#endregion
+
+//#region LastCheckedDate
+function InitFieldLastCheckedDate() {
+	_viewModelFormFundstelle.register("lastCheckedDate", new GuiClient(setLastCheckedDate, showMessagesLastCheckedDate));
+	$("#checkboxLastCheckedDate").change(function () {
+		if ($("#checkboxLastCheckedDate").is(":checked")) {
+			let lastCheckedDate = new Date();
+			$("#checkboxLastCheckedDate").next().text(lastCheckedDate.toLocaleDateString());
+			_viewModelFormFundstelle.setLastCheckedDate(lastCheckedDate.toISOString());
+		}
+		else {
+			$("#checkboxLastCheckedDate").next().text("");
+			_viewModelFormFundstelle.setLastCheckedDate(null);
+		}
+	});
+}
+
+function setLastCheckedDate(lastCheckedDate) {
+	if (lastCheckedDate == null) {
+		$("#checkboxLastCheckedDate").next().text("");
+		$("#checkboxLastCheckedDate").prop("checked", false);
+	}
+	else {
+		$("#checkboxLastCheckedDate").next().text(new Date(lastCheckedDate).toLocaleDateString());
+		$("#checkboxLastCheckedDate").prop("checked", true);
+	}
+}
+
+function showMessagesLastCheckedDate(messages) {
+	$("#divLastCheckedDate .fieldValue div[name=messages]").text(messages);
 }
 //#endregion
 //#endregion

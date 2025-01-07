@@ -109,6 +109,24 @@ function Main()
 	}
 	echo "\r\n";
 
+    echo "Im Folgenden werden Ablagen um das Feld \"letztes Prüfdatum\" erweitert.\r\n";
+	if (readline("Weiter mit \"ja\": ") == "ja")
+	{
+		echo "\r\n";
+		UpgradeAblageByLastCheckedDate($config);
+		readline("Weiter mit [EINGABE] ...");
+	}
+	echo "\r\n";
+
+    echo "Im Folgenden werden Kontexte um das Feld \"letztes Prüfdatum\" erweitert.\r\n";
+	if (readline("Weiter mit \"ja\": ") == "ja")
+	{
+		echo "\r\n";
+		UpgradeKontextByLastCheckedDate($config);
+		readline("Weiter mit [EINGABE] ...");
+	}
+	echo "\r\n";
+
     echo "Beende Upgrade von Version 1.1 auf Version 1.2.\r\n";
 }
 
@@ -1022,6 +1040,82 @@ function InsertColumnLastCheckedDateInTableFund($config)
 function UpgradeFundeByLastCheckedDate($config)
 {
 	InsertColumnLastCheckedDateInTableFund($config);
+}
+#endregion
+
+#region extent "Ablage" by checked
+function InsertColumnLastCheckedDateInTableAblage($config)
+{
+	if (DoesColumnExist($config, "Ablage", "LastCheckedDate"))
+	{
+		echo "Die Spalte \"LastCheckedDate\" existiert bereits in der Tabelle \"Ablage\".";
+	}
+	else
+	{
+        $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
+    
+            $ergebnis = $mysqli->query("ALTER TABLE `Ablage` ADD COLUMN `LastCheckedDate` DATETIME NULL DEFAULT NULL;");
+        
+            if ($mysqli->errno)
+            {
+                    echo "Beim Anlegen der Spalte \"LastCheckedDate\" in der Tabelle \"Ablage\" ist ein Fehler aufgetreten!\r\n";
+                    echo $mysqli->errno.": ".$mysqli->error."\r\n";
+            }
+            else
+            {
+                echo "Spalte \"LastCheckedDate\" wurde erfolgreich in Tabelle \"Ablage\" angelgt.\r\n";
+            }
+        }
+
+        $mysqli->close();
+	}
+}
+
+function UpgradeAblageByLastCheckedDate($config)
+{
+	InsertColumnLastCheckedDateInTableAblage($config);
+}
+#endregion
+
+#region extent "Kontext" by checked
+function InsertColumnLastCheckedDateInTableKontext($config)
+{
+	if (DoesColumnExist($config, "Kontext", "LastCheckedDate"))
+	{
+		echo "Die Spalte \"LastCheckedDate\" existiert bereits in der Tabelle \"Kontext\".";
+	}
+	else
+	{
+        $mysqli = new mysqli($config["MYSQL_HOST"], $config["MYSQL_BENUTZER"], $config["MYSQL_KENNWORT"], $config["MYSQL_DATENBANK"]);
+
+        if (!$mysqli->connect_errno)
+        {
+            $mysqli->set_charset("utf8");
+    
+            $ergebnis = $mysqli->query("ALTER TABLE `Kontext` ADD COLUMN `LastCheckedDate` DATETIME NULL DEFAULT NULL;");
+        
+            if ($mysqli->errno)
+            {
+                    echo "Beim Anlegen der Spalte \"LastCheckedDate\" in der Tabelle \"Kontext\" ist ein Fehler aufgetreten!\r\n";
+                    echo $mysqli->errno.": ".$mysqli->error."\r\n";
+            }
+            else
+            {
+                echo "Spalte \"LastCheckedDate\" wurde erfolgreich in Tabelle \"Kontext\" angelgt.\r\n";
+            }
+        }
+
+        $mysqli->close();
+	}
+}
+
+function UpgradeKontextByLastCheckedDate($config)
+{
+	InsertColumnLastCheckedDateInTableKontext($config);
 }
 #endregion
 #endregion

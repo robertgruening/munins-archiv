@@ -17,7 +17,8 @@ var ViewModelFormBegehung = function (webServiceClient) {
 			datum: new Array(),
 			kommentar: new Array(),
 			funde: new Array(),
-			ablagen: new Array()
+			ablagen: new Array(),
+			lastCheckedDate: new Array()
 		};
 	};
 
@@ -33,6 +34,7 @@ var ViewModelFormBegehung = function (webServiceClient) {
 		this._update("kommentar", this._model.Kommentar);
 		this._update("funde", this._model.Funde);
 		this._update("ablagen", this._model.Ablagen);
+		this._update("lastCheckedDate", this._model.LastCheckedDate);
 	};
 
 	//#region properties
@@ -163,6 +165,17 @@ var ViewModelFormBegehung = function (webServiceClient) {
 	//#region Ablagen
 	this.getAblagen = function () {
 		return this._model.Ablagen;
+	};
+	//#endregion
+
+	//#region LastCheckedDate
+	this.getLastCheckedDate = function () {
+		return this._model.LastCheckedDate == null ? null : this._model.LastCheckedDate;
+	};
+
+	this.setLastCheckedDate = function (lastCheckedDate) {
+		this._model.LastCheckedDate = lastCheckedDate;
+		this._update("dataChanged");
 	};
 	//#endregion
 	//#endregion

@@ -7,4 +7,5 @@ function Ablage()
 	this.Children = new Array();
 	this.Funde = new Array();
     this.Kontexte = new Array();
+    this.LastCheckedDate = null;
 }

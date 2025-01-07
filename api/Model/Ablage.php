@@ -16,6 +16,7 @@ class Ablage implements iNode, iTypedNode, iTreeNode, iFundContainer
     public $Funde;
     public $Guid;
     public $Kontexte;
+    public $LastCheckedDate;
     
     
     public function getId()
@@ -182,6 +183,16 @@ class Ablage implements iNode, iTypedNode, iTreeNode, iFundContainer
         }
     }
     
+    public function getLastCheckedDate()
+    {
+        return $this->LastCheckedDate;
+    }
+    
+    public function setLastCheckedDate($lastCheckedDate)
+    {
+        $this->LastCheckedDate = $lastCheckedDate;
+    }
+    
     function __construct()
     {
         $this->Id = -1;
@@ -194,5 +205,6 @@ class Ablage implements iNode, iTypedNode, iTreeNode, iFundContainer
         $this->Funde = array();
         $this->Guid = null;
         $this->Kontexte = array();
+        $this->LastCheckedDate = null;
     }
 }

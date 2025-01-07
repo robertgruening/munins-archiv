@@ -3,6 +3,8 @@ $(document).ready(function () {
 	$("#defectiveAblagen").DefectiveAblagen();
 	$("#defectiveKontexte").DefectiveKontexte();
 	$("#checkedFunde").CheckedFunde();
+	$("#checkedAblagen").CheckedAblagen();
+	$("#checkedKontexte").CheckedKontexte();
 	$("#loginUsers").LoginUsers();
 });
 

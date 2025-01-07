@@ -303,11 +303,33 @@ IconField.prototype = new jsGrid.Field({
 	}
 });
 
+var CheckingField = function(config) {
+	jsGrid.Field.call(this, config);
+}
+
+CheckingField.prototype = new jsGrid.Field({
+	itemTemplate: function(value) {
+		let div = $("<div>")
+			.attr("title", value);
+		
+		if (value !== null) {
+			div.append($("<i>")
+				.addClass("fas fa-circle-check"));
+			div.append("&nbsp;");
+			div.append($("<span>")
+				.text(new Date(value).toLocaleDateString()));
+		}
+
+		return div;
+	}
+});
+
 function InitGrid()
 {
 	_viewModelExplorerKontext.register("children", new GuiClient(UpdateGridDataChildren, showErrorMessages));
 
 	jsGrid.fields.icon = IconField;
+	jsGrid.fields.checking = CheckingField;
 
 	$("#grid").jsGrid({
 		width: "100%",
@@ -345,6 +367,11 @@ function InitGrid()
 				type: "text",
 				validate: "required",
 				sorting: true
+			},
+			{
+				title: "Ist geprüft",
+				name: "LastCheckedDate",
+				type: "checking"
 			}
 		],
 

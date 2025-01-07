@@ -26,7 +26,7 @@
 		$.ajax(
 		{
 			type:"GET",
-			url: "../../api/Services/Fund/?isChecked=true&pageSize=0",
+			url: "../../api/Services/Fund/?isChecked=true",
 			dataType: "JSON",
 			success:function(data, textStatus, jqXHR)
 			{
@@ -37,7 +37,7 @@
 			},
 			error:function(jqXHR, textStatus, errorThrown)
 			{
-				console.log("FEHLER: \"../../api/Services/Fund/?sortingOrder=DESC&pageSize=5\" konnte nicht geladen werden!");
+				console.log("FEHLER: \"../../api/Services/Fund/?isChecked=true\" konnte nicht geladen werden!");
 			}
 		});
 	}
@@ -47,7 +47,7 @@
 		$.ajax(
 		{
 			type:"GET",
-			url: "../../api/Services/Fund/?isChecked=false&pageSize=0",
+			url: "../../api/Services/Fund/?isChecked=false",
 			dataType: "JSON",
 			success:function(data, textStatus, jqXHR)
 			{
@@ -69,7 +69,7 @@
 			},
 			error:function(jqXHR, textStatus, errorThrown)
 			{
-				console.log("FEHLER: \"../../api/Services/Fund/?sortingOrder=DESC&pageSize=5\" konnte nicht geladen werden!");
+				console.log("FEHLER: \"../../api/Services/Fund/?isChecked=false\" konnte nicht geladen werden!");
 			}
 		});
 	}

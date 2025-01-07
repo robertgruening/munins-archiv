@@ -13,6 +13,7 @@ class Kontext implements iNode, iTypedNode, iTreeNode
     public $Children;
     public $Path;
     public $LfdNummern;
+    public $LastCheckedDate;
 
 
     public function getId()
@@ -128,6 +129,16 @@ class Kontext implements iNode, iTypedNode, iTreeNode
     {
         return $this->Path;
     }
+    
+    public function getLastCheckedDate()
+    {
+        return $this->LastCheckedDate;
+    }
+    
+    public function setLastCheckedDate($lastCheckedDate)
+    {
+        $this->LastCheckedDate = $lastCheckedDate;
+    }
 
     function __construct()
     {
@@ -139,5 +150,6 @@ class Kontext implements iNode, iTypedNode, iTreeNode
         $this->Children = array();
         $this->Path = null;
         $this->LfdNummern = array();
+        $this->LastCheckedDate = null;
     }
 }

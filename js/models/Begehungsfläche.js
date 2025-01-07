@@ -7,4 +7,5 @@ function Begehungsfläche()
 	this.Children = new Array();
 	this.LfdNummern = new Array();
 	this.Orte = new Array();
+    this.LastCheckedDate = null;
 }

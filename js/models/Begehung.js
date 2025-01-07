@@ -9,4 +9,5 @@ function Begehung()
 	this.Funde = new Array();
     this.Datum = null;
     this.Kommentar = "";
+    this.LastCheckedDate = null;
 }

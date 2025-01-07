@@ -13,7 +13,8 @@ var ViewModelExplorerKontext = function (webServiceClient) {
 			path: new Array(),
 			children: new Array(),
 			type: new Array(),
-			lfdNummern: new Array()
+			lfdNummern: new Array(),
+			lastCheckedDate: new Array()
 		};
 	};
 
@@ -25,6 +26,7 @@ var ViewModelExplorerKontext = function (webServiceClient) {
 		this._update("children", this._model === null ? undefined : this._model.Children);
 		this._update("type", this._model === null ? undefined : this._model.Type);
 		this._update("lfdNummern", this._model === null ? undefined : this._model.LfdNummern);
+		this._update("lastCheckedDate", this._model === null ? undefined : this._model.LastCheckedDate);
 	};
 
 	this._createAbstractRoot = function () {
@@ -36,6 +38,7 @@ var ViewModelExplorerKontext = function (webServiceClient) {
 		abstractRoot.Children = new Array();
 		abstractRoot.Type = null;
 		abstractRoot.LfdNummern = new Array();
+		abstractRoot.LastCheckedDate = null;
 
 		return abstractRoot;
 	};

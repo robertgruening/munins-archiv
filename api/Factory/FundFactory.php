@@ -442,6 +442,11 @@ class FundFactory extends Factory implements iListFactory
             $logger->debug("Rating ist nicht gesetzt!");
         }
 
+        if (isset($object["LastCheckedDate"]))
+        {
+            $fund->setLastCheckedDate(strtotime($object["LastCheckedDate"]));
+        }
+
         return $fund;
     }
     #endregion

@@ -6,4 +6,5 @@ function Fundstelle()
     this.Path = "";
 	this.Children = new Array();
 	this.LfdNummern = new Array();
+    this.LastCheckedDate = null;
 }

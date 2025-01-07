@@ -15,7 +15,8 @@ var ViewModelFormAblage = function (webServiceClient) {
 			path: new Array(),
 			funde: new Array(),
 			guid: new Array(),
-			kontexte: new Array()
+			kontexte: new Array(),
+			lastCheckedDate: new Array()
 		};
 	};
 
@@ -29,6 +30,7 @@ var ViewModelFormAblage = function (webServiceClient) {
 		this._update("funde", this._model.Funde);
 		this._update("guid", this._model.Guid);
 		this._update("kontexte", this._model.Kontexte);
+		this._update("lastCheckedDate", this._model.LastCheckedDate);
 	};
 
 	//#region properties
@@ -131,6 +133,17 @@ var ViewModelFormAblage = function (webServiceClient) {
 	//#region Kontexte
 	this.getKontexte = function () {
 		return this._model.Kontexte;
+	};
+	//#endregion
+
+	//#region LastCheckedDate
+	this.getLastCheckedDate = function () {
+		return this._model.LastCheckedDate == null ? null : this._model.LastCheckedDate;
+	};
+
+	this.setLastCheckedDate = function (lastCheckedDate) {
+		this._model.LastCheckedDate = lastCheckedDate;
+		this._update("dataChanged");
 	};
 	//#endregion
 	//#endregion

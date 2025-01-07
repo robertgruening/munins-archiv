@@ -68,17 +68,19 @@ class AblageFactory extends Factory implements iTreeFactory
 
     #region load
 	/**
-	* Returns the SQL SELECT statement to load Id, Bezeichnung, Guid, Typ_Id and path as string.
+	* Returns the SQL SELECT statement to load Id, Bezeichnung, Guid, Typ_Id,
+    * path and LastCheckedDate as string.
 	*/
 	protected function getSqlStatementToLoad()
 	{		
-        	return "SELECT Id, Bezeichnung, `Guid`, Typ_Id, `Path`
+        	return "SELECT Id, Bezeichnung, `Guid`, Typ_Id, `Path`, LastCheckedDate
         		FROM ".$this->getTableName();
 	}
 
 	/**
 	* Returns the SQL statement search conditions as string by the given search conditions.
-	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, Path, ConatinsPath, Typ_Id, Guid, HasFunde, HasParent, Parent_Id, HasChildren and Child_Id.
+	* Search condition keys are: Id, ContainsBezeichnung, Bezeichnung, Path, ConatinsPath, Typ_Id, Guid, HasFunde,
+    * HasParent, Parent_Id, HasChildren, Child_Id and IsChecked.
 	*
 	* @param $searchConditions Array of search conditions (key, value) to be translated into SQL WHERE conditions.
 	*/
@@ -117,6 +119,18 @@ class AblageFactory extends Factory implements iTreeFactory
 		if (isset($searchConditions["Fund_Id"]))
 		{
 			array_push($sqlSearchConditionStrings, "Id = (SELECT ".$this->getFundFactory()->getTableName().".".$this->getTableName()."_Id FROM ".$this->getFundFactory()->getTableName()." WHERE ".$this->getFundFactory()->getTableName().".Id = ".$searchConditions["Fund_Id"].")");
+		}
+
+		if (isset($searchConditions["IsChecked"]))
+		{
+			if ($searchConditions["IsChecked"] === true)
+			{
+				array_push($sqlSearchConditionStrings, "LastCheckedDate IS NOT NULL");
+			}
+			else
+			{
+				array_push($sqlSearchConditionStrings, "LastCheckedDate IS NULL");
+			}		
 		}
 
 		if ($this->getTreeFactory() instanceof iSqlSearchConditionStringsProvider)
@@ -166,6 +180,7 @@ class AblageFactory extends Factory implements iTreeFactory
         $entity->setGuid($dataset["Guid"]);
 		$entity->setPath($dataset["Path"]);
         $entity->setType($this->getAblageTypeFactory()->loadById(intval($dataset["Typ_Id"])));
+        $entity->setLastCheckedDate($dataset["LastCheckedDate"] === null ? null : date(DateTime::ISO8601, strtotime($dataset["LastCheckedDate"])));
 
         return $entity;
     }
@@ -277,18 +292,24 @@ class AblageFactory extends Factory implements iTreeFactory
 	}
 
     /**
-    * Returns the SQL statement to insert Bezeichnung, Ablage type ID, GUID and path.
+    * Returns the SQL statement to insert Bezeichnung, Ablage type ID,
+    * GUID, path and last checked date.
     *
     * @param iNode $ablage Ablage to be inserted.
     */
     protected function getSQLStatementToInsert(iNode $ablage)
     {
-        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, `Guid`, `Path`)
-        VALUES ('".addslashes($ablage->getBezeichnung())."', ".$ablage->getType()->getId().", UUID(), '".addslashes($this->calculatePathByParentId($ablage, $ablage->getParent() == null ? null : $ablage->getParent()->getId()))."');";
+        return "INSERT INTO ".$this->getTableName()." (Bezeichnung, Typ_Id, `Guid`, `Path`, LastCheckedDate)
+        VALUES ('".addslashes($ablage->getBezeichnung())."',
+        ".$ablage->getType()->getId().", 
+        UUID(), 
+        '".addslashes($this->calculatePathByParentId($ablage, $ablage->getParent() == null ? null : $ablage->getParent()->getId()))."',
+        ".($ablage->getLastCheckedDate() === null ? "NULL" : "'".date("Y-m-d H:i:s", $ablage->getLastCheckedDate())."'").");";
     }
 
     /**
-    * Returns the SQL statement to update Bezeichnung, Ablage type ID and path.
+    * Returns the SQL statement to update Bezeichnung, Ablage type ID,
+    * path and last checked date.
     * Note: GUID is not allowed to be changed (updated)!
     *
     * @param iNode $ablage Ablage to be updated.
@@ -298,7 +319,8 @@ class AblageFactory extends Factory implements iTreeFactory
         return "UPDATE ".$this->getTableName()."
         SET Bezeichnung = '".addslashes($ablage->getBezeichnung())."',
         Typ_Id = ".$ablage->getType()->getId().",
-		`Path` = '".addslashes($this->calculatePath($ablage))."'
+		`Path` = '".addslashes($this->calculatePath($ablage))."',
+        LastCheckedDate = ".($ablage->getLastCheckedDate() === null ? "NULL" : "'".date("Y-m-d H:i:s", $ablage->getLastCheckedDate())."'")."
         WHERE Id = ".$ablage->getId().";";
     }
     #endregion
@@ -384,6 +406,11 @@ class AblageFactory extends Factory implements iTreeFactory
         else
         {
             $logger->debug("GUID ist nicht gesetzt!");
+        }
+
+        if (isset($object["LastCheckedDate"]))
+        {
+            $ablage->setLastCheckedDate(strtotime($object["LastCheckedDate"]));
         }
 
         return $ablage;

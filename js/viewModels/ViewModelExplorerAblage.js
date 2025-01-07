@@ -11,7 +11,8 @@ var ViewModelExplorerAblage = function (webServiceClient) {
 			bezeichnung: new Array(),
 			parent: new Array(),
 			path: new Array(),
-			children: new Array()
+			children: new Array(),
+			lastCheckedDate: new Array()
 		};
 	};
 
@@ -21,6 +22,7 @@ var ViewModelExplorerAblage = function (webServiceClient) {
 		this._update("parent", this._model === null ? undefined : this._model.Parent);
 		this._update("path", this._model === null ? undefined : this._model.Path);
 		this._update("children", this._model === null ? undefined : this._model.Children);
+		this._update("lastCheckedDate", this._model === null ? undefined : this._model.LastCheckedDate);
 	};
 
 	this._createAbstractRoot = function () {
@@ -30,6 +32,7 @@ var ViewModelExplorerAblage = function (webServiceClient) {
 		abstractRoot.Path = "/";
 		abstractRoot.Parent = null;
 		abstractRoot.Children = new Array();
+		abstractRoot.LastCheckedDate = null;
 
 		return abstractRoot;
 	};

@@ -14,7 +14,8 @@ var ViewModelFormBegehungsflaeche = function (webServiceClient) {
 			children: new Array(),
 			path: new Array(),
 			lfdNummern: new Array(),
-			orte: new Array()
+			orte: new Array(),
+			lastCheckedDate: new Array()
 		};
 	};
 
@@ -27,6 +28,7 @@ var ViewModelFormBegehungsflaeche = function (webServiceClient) {
 		this._update("path", this._model.Path);
 		this._update("lfdNummern", this._model.LfdNummern);
 		this._update("orte", this._model.Orte);
+		this._update("lastCheckedDate", this._model.LastCheckedDate);
 	};
 
 	//#region properties
@@ -129,6 +131,17 @@ var ViewModelFormBegehungsflaeche = function (webServiceClient) {
 		}
 		this._update("dataChanged");
 		this._update("orte", this._model.Orte);
+	};
+	//#endregion
+
+	//#region LastCheckedDate
+	this.getLastCheckedDate = function () {
+		return this._model.LastCheckedDate == null ? null : this._model.LastCheckedDate;
+	};
+
+	this.setLastCheckedDate = function (lastCheckedDate) {
+		this._model.LastCheckedDate = lastCheckedDate;
+		this._update("dataChanged");
 	};
 	//#endregion
 	//#endregion
