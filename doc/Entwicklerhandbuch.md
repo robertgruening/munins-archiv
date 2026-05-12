@@ -208,6 +208,7 @@ auf den Nextcloud-Server zugreifen kann.
 * [jsGrid](http://js-grid.com/) v1.5.3 von **Artem Tabalin** unter der *MIT-Lizenz*
 * [leaflet](http://leafletjs.com/) v1.9.4 von **Vladimir Agafonkin** und **Community** unter der *BSD-2-Lizenz*
 * [jsQR](https://github.com/cozmo/jsQR) 2020-03-31 von **Cozmo Wolfe** unter der *Apache-Lizenz 2.0*
+* [chartjs](https://www.chartjs.org) 3.9.1  von **Community** unter der *MIT-Lizenz*
 
 ## 4. Architektur
 

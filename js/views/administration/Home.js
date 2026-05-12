@@ -2,6 +2,7 @@ $(document).ready(function () {
 	var viewModelFactory = new ViewModelFactory();
 	$("#defectiveAblagen").DefectiveAblagen();
 	$("#defectiveKontexte").DefectiveKontexte();
+	$("#checkedFundeTimeline").CheckedFundeTimeline();
 	$("#checkedFunde").CheckedFunde();
 	$("#checkedAblagen").CheckedAblagen();
 	$("#checkedKontexte").CheckedKontexte();

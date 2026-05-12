@@ -8,6 +8,8 @@ require_once("../UserStories/Kontext/LoadKontext.php");
 require_once("../UserStories/Kontext/SaveKontext.php");
 require_once("../UserStories/Kontext/DeleteKontext.php");
 
+header("Access-Control-Allow-Origin:*");
+
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
     Create();

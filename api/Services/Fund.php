@@ -8,6 +8,8 @@ require_once("../UserStories/Fund/LoadFunde.php");
 require_once("../UserStories/Fund/SaveFund.php");
 require_once("../UserStories/Fund/DeleteFund.php");
 
+header("Access-Control-Allow-Origin:*");
+
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
     Create();

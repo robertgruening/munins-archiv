@@ -8,6 +8,8 @@ require_once("../UserStories/FundAttribut/LoadFundAttribut.php");
 require_once("../UserStories/FundAttribut/SaveFundAttribut.php");
 require_once("../UserStories/FundAttribut/DeleteFundAttribut.php");
 
+header("Access-Control-Allow-Origin:*");
+
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
     Create();
