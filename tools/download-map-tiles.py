@@ -68,8 +68,14 @@ def download_tiles(zoom, xmin, ymin, xmax, ymax):
 # 1 : 4.000
 #download_tiles(17, 69298, 44725, 69540, 44846)
 
+#download_tiles(16, 34624, 22336, 34783, 22431)
+#download_tiles(15, 17312, 11168, 17391, 11215)
+#download_tiles(14, 8656, 5584, 8695, 5607)
+
 # 1 : 35.000
 #download_tiles(13, 4331, 2795, 4346, 2802)
+
+#download_tiles(12, 2164, 1396, 2173, 1401)
 
 # 1 : 250.000
 #download_tiles(11, 1082, 698, 1086, 700)
